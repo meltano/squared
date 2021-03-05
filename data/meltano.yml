@@ -11,6 +11,9 @@ plugins:
       projects: meltano/meltano
       ultimate_license: true
       start_date: '2020-05-01T00:00:00Z'
+    select:
+      - users.*
+      - epics.*
   loaders:
   - name: target-snowflake
     variant: datamill-co
@@ -18,6 +21,6 @@ plugins:
     config:
       snowflake_account: im83497.us-central1.gcp
       snowflake_username: meltano_loader
-      snowflake_role: loader
-      snowflake_database: raw
-      snowflake_warehouse: loader
+      snowflake_role: LOADER
+      snowflake_database: RAW
+      snowflake_warehouse: LOADER
