@@ -1,0 +1,23 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
+plugins:
+  extractors:
+  - name: tap-gitlab
+    variant: meltano
+    pip_url: git+https://gitlab.com/meltano/tap-gitlab.git
+    config:
+      groups: meltano
+      projects: meltano/meltano
+      ultimate_license: true
+      start_date: '2020-05-01T00:00:00Z'
+  loaders:
+  - name: target-snowflake
+    variant: datamill-co
+    pip_url: target-snowflake
+    config:
+      snowflake_account: im83497.us-central1.gcp
+      snowflake_username: meltano_loader
+      snowflake_role: loader
+      snowflake_database: raw
+      snowflake_warehouse: loader
