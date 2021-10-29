@@ -1,0 +1,14 @@
+[
+  {
+    "name": "events",
+    "dimensions": [
+      "ga:date",
+      "ga:eventCategory",
+      "ga:eventAction",
+      "ga:eventLabel"
+    ],
+    "metrics": [
+      "ga:totalEvents"
+    ]
+  }
+]
