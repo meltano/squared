@@ -1,0 +1,28 @@
+
+[sqlfluff]
+dialect = hive
+templater = dbt
+output_line_length = 80
+ignore_templated_areas = True
+runaway_limit = 100
+
+[sqlfluff:templater:dbt]
+project_dir = transform
+profiles_dir = transform/profile
+profile = meltano
+target = athena
+
+[sqlfluff:rules]
+tab_space_size = 4
+max_line_length = 80
+indent_unit = space
+comma_style = trailing
+
+[sqlfluff:rules:L010] # Keywords
+capitalisation_policy = upper
+
+[sqlfluff:rules:L014] # Unquoted Identifiers
+extended_capitalisation_policy = lower
+
+[sqlfluff:rules:L030] # Function Names
+capitalisation_policy = upper

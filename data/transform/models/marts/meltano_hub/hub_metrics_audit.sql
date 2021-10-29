@@ -1,12 +1,12 @@
-select
-    max(event_date) as updated_at,
-    'meltano_metrics' as metric_type
-from {{ ref('cli_plugin_events__unioned') }}
+SELECT
+  MAX(event_date) AS updated_date,
+  'meltano_metrics' AS metric_type
+FROM {{ ref('cli_plugin_usage') }}
 
-union all
+UNION ALL
 
-select
-    -- TODO: cast to timestamp in stage model
-    max(date_parse(batch_timestamp, '%Y-%m-%d %H:%i:%s.%f')),
-    'github_metrics'
-from {{ source('hub_meltano', 'fact_repo_metrics') }}
+SELECT
+  -- TODO: cast to timestamp in stage model
+  MAX(DATE_PARSE(batch_timestamp, '%Y-%m-%d %H:%i:%s.%f')) AS updated_date,
+  'github_metrics' AS metric_type
+FROM {{ source('hub_meltano', 'fact_repo_metrics') }}

@@ -6,3 +6,6 @@ hub_metrics_elt:
 
 s3_upload:
 	@echo "TODO: upload to s3"
+
+lint:
+	meltano invoke sqlfluff lint -v
