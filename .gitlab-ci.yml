@@ -1,3 +1,4 @@
+
 stages:
   - test
   - deploy
@@ -37,3 +38,20 @@ hub-metrics:
     - state.json
     when: always
 
+test-hub-metrics:
+  extends:
+  - .meltano-extracts-prod
+  stage: test
+  only: 
+    refs:
+      - merge_requests
+  script:
+  - meltano elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID --dump=state > state.json
+  - meltano invoke dbt:run
+  - meltano elt tap-athena-metrics target-yaml-metrics
+  - meltano elt tap-athena-audit target-yaml-audit
+  - make s3_upload S3_BUCKET=$S3_BUCKET
+  artifacts:
+    paths:
+    - state.json
+    when: always
