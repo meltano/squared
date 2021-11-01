@@ -2,6 +2,7 @@ name: my_meltano_project
 version: '1.0'
 profile: meltano
 config-version: 2
+
 source-paths:
 - models
 analysis-paths:
