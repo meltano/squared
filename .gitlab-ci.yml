@@ -32,7 +32,8 @@ hub-metrics:
   - meltano invoke dbt:run
   - meltano elt tap-athena-metrics target-yaml-metrics
   - meltano elt tap-athena-audit target-yaml-audit
-  - make s3_upload S3_BUCKET=$S3_BUCKET
+  - meltano invoke awscli s3 cp audit.yml s3://$S3_BUCKET/hub_metrics/
+  - meltano invoke awscli s3 cp metrics.yml s3://$S3_BUCKET/hub_metrics/
   - meltano elt tap-athena-audit target-yaml-audit --job_id=ga_athena_$JOB_ID --dump=state > state.json
   artifacts:
     paths:
