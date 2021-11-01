@@ -30,8 +30,8 @@ rename_join AS (
     CAST(fact_repo_metrics.num_open_issues AS INT) AS num_open_issues,
     CAST(fact_repo_metrics.num_stargazers AS INT) AS num_stargazers,
     CAST(fact_repo_metrics.num_watchers AS INT) AS num_watchers,
-    COALESCE(plugin_use_3m.execution_count, 0) AS meltano_executions_3m,
-    COALESCE(plugin_use_3m.project_count, 0) AS meltano_projects_count_3m
+    COALESCE(plugin_use_3m.execution_count, 0) AS meltano_exec_count_3m,
+    COALESCE(plugin_use_3m.project_count, 0) AS meltano_project_id_count_3m
   FROM fact_repo_metrics
   LEFT JOIN plugin_use_3m
     ON fact_repo_metrics.connector_name = plugin_use_3m.plugin_name

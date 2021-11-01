@@ -11,7 +11,7 @@ plugins:
     - name: client_secrets
       kind: object
     config:
-      start_date: '2021-10-27'
+      start_date: '2021-10-30'
       view_id: '188392047' # CLI
       # view_id: '188274549' # Meltano Website
       # view_id: '188384771' # Meltano UI
@@ -53,12 +53,12 @@ plugins:
     - '*fact_hub_metrics.num_open_issues'
     - '*fact_hub_metrics.num_stargazers'
     - '*fact_hub_metrics.num_watchers'
-    - '*fact_hub_metrics.meltano_executions_3m'
-    - '*fact_hub_metrics.meltano_projects_count_3m'
+    - '*fact_hub_metrics.meltano_exec_count_3m'
+    - '*fact_hub_metrics.meltano_project_id_count_3m'
   - name: tap-athena-audit
     inherit_from: tap-athena
     select:
-    - '*hub_metrics_audit.updated_at'
+    - '*hub_metrics_audit.updated_date'
     - '*hub_metrics_audit.metric_type'
   loaders:
   - name: target-athena
@@ -115,7 +115,7 @@ plugins:
     inherit_from: target-yaml
     config:
       file_naming_scheme: metrics.yml
-      overwrite_behavior: replace_records
+      overwrite_behavior: replace_file
       record_insert_jsonpath: $.metrics
       record_key_property_name: repo_full_name
       record_sort_property_name: repo_full_name
@@ -127,7 +127,7 @@ plugins:
     inherit_from: target-yaml
     config:
       file_naming_scheme: audit.yml
-      overwrite_behavior: "append_records"
+      overwrite_behavior: replace_file
       record_insert_jsonpath: "$.audit_log"
       record_key_property_name: metric_type
       default_yaml_template: |
@@ -147,3 +147,7 @@ plugins:
     namespace: sqlfluff
     pip_url: sqlfluff[dbt]==0.7.1; sqlfluff-templater-dbt==0.7.1; git+https://github.com/Tomme/dbt-athena.git@c8e0458f85aaa8f9b693f99903ba95c41b90573b
     executable: sqlfluff
+  - name: awscli
+    namespace: awscli
+    pip_url: awscli==1.21.7
+    executable: aws

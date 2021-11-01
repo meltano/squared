@@ -1,0 +1,39 @@
+stages:
+  - test
+  - deploy
+
+##########################
+# Daily data pipeline
+##########################
+
+.meltano-extracts-prod:
+  image: python:3.8
+  variables:
+    STAGE: prod
+    JOB_ID: HUB-METRICS-PROD
+
+  before_script:
+  - apt-get update && apt-get install -y jq
+  - cd meltano/
+  - pip3 install meltano
+  - meltano install
+  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
+
+hub-metrics:
+  extends:
+  - .meltano-extracts-prod
+  stage: deploy
+  only:
+  - schedule
+  needs: []
+  script:
+  - meltano elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID --dump=state > state.json
+  - meltano invoke dbt:run
+  - meltano elt tap-athena-metrics target-yaml-metrics
+  - meltano elt tap-athena-audit target-yaml-audit
+  - make s3_upload S3_BUCKET=$S3_BUCKET
+  artifacts:
+    paths:
+    - state.json
+    when: always
+
