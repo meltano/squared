@@ -28,11 +28,12 @@ hub-metrics:
   - schedule
   needs: []
   script:
-  - meltano elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID --dump=state > state.json
+  - meltano elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
   - meltano invoke dbt:run
   - meltano elt tap-athena-metrics target-yaml-metrics
   - meltano elt tap-athena-audit target-yaml-audit
   - make s3_upload S3_BUCKET=$S3_BUCKET
+  - meltano elt tap-athena-audit target-yaml-audit --job_id=ga_athena_$JOB_ID --dump=state > state.json
   artifacts:
     paths:
     - state.json
