@@ -174,6 +174,7 @@ environments:
     DBT_TARGET: athena
     DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
     RAW_SCHEMA_NAME: prod_01raw
+    HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
 - name: userdev
   config:
     plugins:
@@ -199,4 +200,4 @@ environments:
     DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
     RAW_SCHEMA_NAME: dev_melty_01raw
     USER_PREFIX: melty
-
+    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
