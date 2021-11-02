@@ -38,11 +38,3 @@ hub-metrics-prod:
     paths:
     - state.json
     when: always
-
-test-hub-metrics:
-  extends:
-  - hub-metrics
-  stage: test
-  only: 
-    refs:
-      - merge_requests
