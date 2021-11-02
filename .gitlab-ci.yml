@@ -27,14 +27,10 @@ hub-metrics-prod:
   - schedule
   needs: []
   script:
-  - meltano --environment=userdev elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
-  # - meltano --environment=userdev invoke dbt:run
-  # - meltano --environment=userdev elt tap-athena-metrics target-yaml-metrics
-  # - meltano --environment=userdev elt tap-athena-audit target-yaml-audit
-  # - meltano invoke awscli s3 cp audit.yml s3://$S3_BUCKET/hub_metrics/
-  # - meltano invoke awscli s3 cp metrics.yml s3://$S3_BUCKET/hub_metrics/
-  - meltano --environment=userdev elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID --dump=state > state.json
-  artifacts:
-    paths:
-    - state.json
-    when: always
+  - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
+  - meltano --environment=prod invoke dbt:run
+  - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
+  - meltano --environment=prod elt tap-athena-audit target-yaml-audit
+  - meltano invoke awscli s3 cp audit.yml s3://$S3_BUCKET/hub_metrics/
+  - meltano invoke awscli s3 cp metrics.yml s3://$S3_BUCKET/hub_metrics/
+

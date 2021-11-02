@@ -174,15 +174,15 @@ environments:
       extractors:
       - name: tap-google-analytics
         config:
-          start_date: '2021-10-30'
+          start_date: '2021-11-01'
       - name: tap-athena
         config:
-          schema_name: dbt_dev
+          schema_name: dbt_dev_${USER_PREFIX}
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/tap-athena/
           s3_bucket: devtest-meltano-bucket-01
       loaders:
       - name: target-athena
         config:
           s3_bucket: devtest-meltano-bucket-01
-          athena_database: dbt_dev
+          athena_database: dbt_dev_${USER_PREFIX}
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
