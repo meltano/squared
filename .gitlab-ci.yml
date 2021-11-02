@@ -7,12 +7,8 @@ stages:
 # Daily data pipeline
 ##########################
 
-.meltano-extracts-prod:
+.meltano-extracts:
   image: python:3.8
-  variables:
-    STAGE: prod
-    JOB_ID: HUB-METRICS-PROD
-
   before_script:
   - apt-get update && apt-get install -y jq
   - cd data/
@@ -20,21 +16,24 @@ stages:
   - meltano install
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
 
-hub-metrics:
+hub-metrics-prod:
   extends:
-  - .meltano-extracts-prod
+  - .meltano-extracts
+  variables:
+    STAGE: prod
+    JOB_ID: HUB-METRICS-PROD
   stage: deploy
   only:
   - schedule
   needs: []
   script:
-  - meltano elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
-  - meltano invoke dbt:run
-  - meltano elt tap-athena-metrics target-yaml-metrics
-  - meltano elt tap-athena-audit target-yaml-audit
+  - meltano --environment=userdev elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
+  - meltano --environment=userdev invoke dbt:run
+  - meltano --environment=userdev elt tap-athena-metrics target-yaml-metrics
+  - meltano --environment=userdev elt tap-athena-audit target-yaml-audit
   - meltano invoke awscli s3 cp audit.yml s3://$S3_BUCKET/hub_metrics/
   - meltano invoke awscli s3 cp metrics.yml s3://$S3_BUCKET/hub_metrics/
-  - meltano elt tap-athena-audit target-yaml-audit --job_id=ga_athena_$JOB_ID --dump=state > state.json
+  - meltano --environment=userdev elt tap-athena-audit target-yaml-audit --job_id=ga_athena_$JOB_ID --dump=state > state.json
   artifacts:
     paths:
     - state.json
