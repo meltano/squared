@@ -156,7 +156,7 @@ environments:
       extractors:
       - name: tap-google-analytics
         config:
-          start_date: '2020-11-01'
+          start_date: '2021-11-01'
       - name: tap-athena
         config:
           schema_name: ${DBT_OUTPUT_SCHEMA_NAME}
@@ -173,8 +173,7 @@ environments:
     ATHENA_CATALOG: awsdatacatalog
     DBT_TARGET: athena
     DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
-    RAW_SCHEMA_NAME: prod_01raw
-    HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
+    RAW_SCHEMA_NAME: prod01_raw
 - name: userdev
   config:
     plugins:
@@ -191,13 +190,12 @@ environments:
       - name: target-athena
         config:
           s3_bucket: devtest-meltano-bucket-01
-          athena_database: dev_${USER_PREFIX}_01raw
+          athena_database: dev01_${USER_PREFIX}_raw
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
   env:
     DBT_OUTPUT_SCHEMA_NAME: dbt_dev_melty
     ATHENA_CATALOG: awsdatacatalog
     DBT_TARGET: athena
     DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
-    RAW_SCHEMA_NAME: dev_melty_01raw
+    RAW_SCHEMA_NAME: dev01_melty_raw
     USER_PREFIX: melty
-    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
