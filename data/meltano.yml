@@ -159,15 +159,21 @@ environments:
           start_date: '2020-11-01'
       - name: tap-athena
         config:
-          schema_name: dbt_prod
+          schema_name: ${DBT_OUTPUT_SCHEMA_NAME}
           s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/tap-athena/
           s3_bucket: prod-meltano-bucket-01
       loaders:
       - name: target-athena
         config:
           s3_bucket: prod-meltano-bucket-01
-          athena_database: dbt_prod
+          athena_database: ${RAW_SCHEMA_NAME}
           s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
+  env:
+    DBT_OUTPUT_SCHEMA_NAME: dbt_prod
+    ATHENA_CATALOG: awsdatacatalog
+    DBT_TARGET: athena
+    DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
+    RAW_SCHEMA_NAME: prod_01raw
 - name: userdev
   config:
     plugins:
@@ -184,5 +190,13 @@ environments:
       - name: target-athena
         config:
           s3_bucket: devtest-meltano-bucket-01
-          athena_database: dbt_dev_${USER_PREFIX}
+          athena_database: dev_${USER_PREFIX}_01raw
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
+  env:
+    DBT_OUTPUT_SCHEMA_NAME: dbt_dev_melty
+    ATHENA_CATALOG: awsdatacatalog
+    DBT_TARGET: athena
+    DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
+    RAW_SCHEMA_NAME: dev_melty_01raw
+    USER_PREFIX: melty
+
