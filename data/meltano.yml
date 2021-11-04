@@ -168,12 +168,15 @@ environments:
           s3_bucket: prod-meltano-bucket-01
           athena_database: ${RAW_SCHEMA_NAME}
           s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
+      transformers:
+      - name: dbt
+        config:
+          target: athena
+          source_schema: prod01_raw
+          target_schema: dbt_prod
   env:
-    DBT_OUTPUT_SCHEMA_NAME: dbt_prod
-    ATHENA_CATALOG: awsdatacatalog
-    DBT_TARGET: athena
     DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
-    RAW_SCHEMA_NAME: prod01_raw
+    ATHENA_CATALOG: awsdatacatalog
 - name: userdev
   config:
     plugins:
@@ -192,10 +195,13 @@ environments:
           s3_bucket: devtest-meltano-bucket-01
           athena_database: dev01_${USER_PREFIX}_raw
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
+      transformers:
+      - name: dbt
+        config:
+          target: athena
+          source_schema: dev01_${USER_PREFIX}_raw
+          target_schema: dbt_dev_${USER_PREFIX}
   env:
-    DBT_OUTPUT_SCHEMA_NAME: dbt_dev_melty
-    ATHENA_CATALOG: awsdatacatalog
-    DBT_TARGET: athena
-    DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
-    RAW_SCHEMA_NAME: dev01_melty_raw
     USER_PREFIX: melty
+    DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
+    ATHENA_CATALOG: awsdatacatalog
