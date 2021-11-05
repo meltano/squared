@@ -1,6 +1,8 @@
 version: 1
 send_anonymous_usage_stats: true
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
+include_paths:
+  - ./*.meltano.yml
 plugins:
   extractors:
   - name: tap-google-analytics
@@ -149,53 +151,4 @@ plugins:
     namespace: awscli
     pip_url: awscli==1.21.7
     executable: aws
-environments:
-- name: prod
-  config:
-    plugins:
-      extractors:
-      - name: tap-google-analytics
-        config:
-          start_date: '2021-11-01'
-      - name: tap-athena
-        config:
-          schema_name: ${DBT_OUTPUT_SCHEMA_NAME}
-          s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/tap-athena/
-          s3_bucket: prod-meltano-bucket-01
-      loaders:
-      - name: target-athena
-        config:
-          s3_bucket: prod-meltano-bucket-01
-          athena_database: ${RAW_SCHEMA_NAME}
-          s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
-  env:
-    DBT_OUTPUT_SCHEMA_NAME: dbt_prod
-    ATHENA_CATALOG: awsdatacatalog
-    DBT_TARGET: athena
-    DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
-    RAW_SCHEMA_NAME: prod01_raw
-- name: userdev
-  config:
-    plugins:
-      extractors:
-      - name: tap-google-analytics
-        config:
-          start_date: '2021-11-01'
-      - name: tap-athena
-        config:
-          schema_name: dbt_dev_${USER_PREFIX}
-          s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/tap-athena/
-          s3_bucket: devtest-meltano-bucket-01
-      loaders:
-      - name: target-athena
-        config:
-          s3_bucket: devtest-meltano-bucket-01
-          athena_database: dev01_${USER_PREFIX}_raw
-          s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
-  env:
-    DBT_OUTPUT_SCHEMA_NAME: dbt_dev_melty
-    ATHENA_CATALOG: awsdatacatalog
-    DBT_TARGET: athena
-    DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
-    RAW_SCHEMA_NAME: dev01_melty_raw
-    USER_PREFIX: melty
+environments: []
