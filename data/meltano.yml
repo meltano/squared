@@ -9,6 +9,10 @@ plugins:
     namespace: tap_google_analytics
     pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
     executable: tap-google-analytics
+    capabilities:
+    - catalog
+    - discover
+    - state
     settings:
     - name: start_date
       kind: date_iso8601
@@ -139,6 +143,8 @@ plugins:
   transformers:
   - name: dbt
     pip_url: git+https://github.com/Tomme/dbt-athena.git@c8e0458f85aaa8f9b693f99903ba95c41b90573b
+    config:
+      target: athena
   files:
   - name: dbt
     pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
@@ -147,6 +153,13 @@ plugins:
     namespace: sqlfluff
     pip_url: sqlfluff[dbt]==0.7.1; sqlfluff-templater-dbt==0.7.1; git+https://github.com/Tomme/dbt-athena.git@c8e0458f85aaa8f9b693f99903ba95c41b90573b
     executable: sqlfluff
+    config:
+      athena_catalog: 'test'
+      dbt_source_schema: 'abc'
+      target: athena
+      target_schema: target
+      source_schema: source
+      s3_stage: s3://test/foo
   - name: awscli
     namespace: awscli
     pip_url: awscli==1.21.7
