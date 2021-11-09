@@ -8,11 +8,11 @@ config:
   send_anonymous_usage_stats: True
   use_colors: True
 meltano:
-  target: "{{ env_var('DBT_TARGET') }}"
+  target: "{{ env_var('DBT_TARGET', env_var('SQLFLUFF_TARGET')) }}"
   outputs:
     athena:
       type: athena
-      database: "{{ env_var('ATHENA_CATALOG') }}"
-      schema: "{{ env_var('DBT_OUTPUT_SCHEMA_NAME') }}"
-      s3_staging_dir: "{{ env_var('DBT_ATHENA_S3_STAGE') }}"
+      database: "{{ env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG')) }}"
+      schema: "{{ env_var('DBT_TARGET_SCHEMA', env_var('SQLFLUFF_TARGET_SCHEMA')) }}"
+      s3_staging_dir: "{{ env_var('DBT_ATHENA_S3_STAGE', env_var('SQLFLUFF_S3_STAGE')) }}"
       region_name: us-east-2
