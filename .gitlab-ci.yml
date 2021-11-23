@@ -3,28 +3,39 @@ stages:
   - test
   - deploy
 
-##########################
-# Daily data pipeline
-##########################
-
-.meltano-extracts:
+.meltano:
   image: python:3.8
   before_script:
-  - apt-get update && apt-get install -y jq
   - cd data/
   - pip3 install meltano
   - meltano install
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
 
+##########################
+# Testing
+##########################
+
+sqlfluff:
+  extends:
+  - .meltano
+  stage: test
+  script:
+    - meltano invoke sqlfluff lint -v
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
+
+##########################
+# Daily data pipeline
+##########################
+
 hub-metrics-prod:
   extends:
-  - .meltano-extracts
+  - .meltano
   variables:
     STAGE: prod
     JOB_ID: HUB-METRICS-PROD
   stage: deploy
-  only:
-  - schedule
   needs: []
   script:
   - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
@@ -33,4 +44,8 @@ hub-metrics-prod:
   - meltano --environment=prod elt tap-athena-audit target-yaml-audit
   - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
   - meltano --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
-
+  rules:
+  - if: $CI_COMMIT_BRANCH == "main"
+    when: always
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: always
