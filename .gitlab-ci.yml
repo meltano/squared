@@ -17,9 +17,8 @@ sqlfluff:
   extends:
   - .meltano
   stage: test
-  before_script:
-  - meltano install utilities sqlfluff
   script:
+  - meltano install utilities sqlfluff
   - meltano invoke sqlfluff lint -v
   rules:
   - if: $CI_PIPELINE_SOURCE == "schedule"
@@ -38,10 +37,9 @@ hub-metrics-prod:
     JOB_ID: HUB-METRICS-PROD
   stage: deploy
   needs: []
-  before_script:
+  script:
   - meltano install
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
-  script:
   - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
   - meltano --environment=prod invoke dbt:run
   - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
