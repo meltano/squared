@@ -3,34 +3,51 @@ stages:
   - test
   - deploy
 
+.meltano:
+  image: python:3.8
+  before_script:
+  - cd data/
+  - pip3 install meltano
+
+##########################
+# Testing
+##########################
+
+sqlfluff:
+  extends:
+  - .meltano
+  stage: test
+  script:
+  - meltano install utilities sqlfluff
+  - meltano invoke sqlfluff lint -v
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: never
+  - when: always
+
 ##########################
 # Daily data pipeline
 ##########################
 
-.meltano-extracts:
-  image: python:3.8
-  before_script:
-  - apt-get update && apt-get install -y jq
-  - cd data/
-  - pip3 install meltano
-  - meltano install
-  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
-
 hub-metrics-prod:
   extends:
-  - .meltano-extracts
+  - .meltano
   variables:
     STAGE: prod
     JOB_ID: HUB-METRICS-PROD
   stage: deploy
-  only:
-  - schedule
   needs: []
   script:
+  - meltano install
+  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
   - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
   - meltano --environment=prod invoke dbt:run
   - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
   - meltano --environment=prod elt tap-athena-audit target-yaml-audit
   - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
   - meltano --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
-
+  rules:
+  - if: $CI_COMMIT_BRANCH == "main"
+    when: always
+  - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: always
