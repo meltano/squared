@@ -7,7 +7,7 @@ data "aws_eks_cluster" "eks" {
 }
 
 data "aws_eks_cluster_auth" "eks" {
-  name = local.eks.cluster_id
+  name = local.eks_cluster_id
 }
 
 provider "kubernetes" {
