@@ -24,3 +24,6 @@ clean-targets:
 - logs
 models:
   my_meltano_project: null
+
+seeds:
+  quote_columns: false
