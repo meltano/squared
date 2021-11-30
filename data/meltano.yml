@@ -67,6 +67,23 @@ plugins:
     select:
     - '*hub_metrics_audit.updated_date'
     - '*hub_metrics_audit.metric_type'
+  - name: tap-gitlab
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-gitlab.git
+    # Excludes are for fields that cause errors
+    select:
+    - projects.*
+    - '!projects.shared_with_groups'
+    - '!projects.tag_list'
+    - users.*
+    - merge_requests.*
+    - issues.*
+    - branches.*
+    - commits.*
+    - '!commits.parent_ids'
+    - groups.*
+    - '!groups.projects'
+    - project_labels.*
   loaders:
   - name: target-athena
     namespace: target_athena

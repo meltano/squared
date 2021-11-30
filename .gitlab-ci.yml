@@ -41,7 +41,7 @@ hub-metrics-prod:
   - meltano install
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
   - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
-  - meltano --environment=prod invoke dbt:run
+  - meltano --environment=prod invoke dbt:run --models marts.publish.meltano_hub.*
   - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
   - meltano --environment=prod elt tap-athena-audit target-yaml-audit
   - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
