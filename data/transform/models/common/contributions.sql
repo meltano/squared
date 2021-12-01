@@ -27,7 +27,8 @@ combine AS (
     SELECT
         all_contributions.*,
         stg_gitlab__projects.project_name,
-        (team_gitlab_ids.user_id IS NOT NULL) AS is_team_contribution
+        (team_gitlab_ids.user_id IS NOT NULL AND all_contributions.created_at >= cast(team_gitlab_ids.start_date as date)) AS is_team_contribution
+
     FROM all_contributions
     LEFT JOIN
         {{ ref('stg_gitlab__projects') }} ON
