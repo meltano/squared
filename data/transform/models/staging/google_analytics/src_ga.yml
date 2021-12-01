@@ -6,3 +6,4 @@ sources:
     schema: "{{ env_var('DBT_SOURCE_SCHEMA', env_var('SQLFLUFF_SOURCE_SCHEMA', '')) }}"
     tables:
       - name: events
+      - name: active_users_28d

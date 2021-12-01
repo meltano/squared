@@ -10,5 +10,14 @@
     "metrics": [
       "ga:totalEvents"
     ]
+  },
+  {
+    "name": "active_users_28d",
+    "dimensions": [
+      "ga:date"
+    ],
+    "metrics": [
+      "ga:28dayUsers"
+    ]
   }
 ]
