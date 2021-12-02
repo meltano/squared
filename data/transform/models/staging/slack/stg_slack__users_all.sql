@@ -1,4 +1,4 @@
--- The slack_users table comes from running tap-csv target-athena
+-- The slack_users_all table comes from running tap-csv target-athena
 -- given a local CSV from orbit
 
 WITH source AS (
@@ -10,7 +10,7 @@ WITH source AS (
                 id
             ORDER BY DATE_PARSE(_sdc_batched_at, '%Y-%m-%d %H:%i:%s.%f') DESC
         ) AS row_num
-    FROM {{ source('tap_slack', 'slack_users') }}
+    FROM {{ source('tap_slack', 'slack_users_all') }}
 
 ),
 
