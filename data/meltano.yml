@@ -5,6 +5,15 @@ include_paths:
   - ./*.meltano.yml
 plugins:
   extractors:
+  - name: tap-csv
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
+    config:
+      files:
+      - entity: slack_users
+        path: /Users/pnadolny/Documents/Git/GitLab/squared/data/extract/orbit_slack_data/slack_users.csv
+        keys:
+        - Id
   - name: tap-google-analytics
     namespace: tap_google_analytics
     pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
