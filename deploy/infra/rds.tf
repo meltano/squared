@@ -7,14 +7,11 @@ module "db_security_group" {
   description = "Security group for Meltano platform RDS database"
   vpc_id      = module.vpc.vpc_id
 
-  ingress_cidr_blocks      = module.vpc.private_subnets
+  ingress_cidr_blocks      = [local.vpc_cidr]
   ingress_with_source_security_group_id = [
     {
-      from_port                = local.rds_port
-      to_port                  = local.rds_port
-      protocol                 = "tcp"
-      description              = "Custom Postgres Port"
-      source_security_group_id = module.eks_worker_additional_security_group.security_group_id
+      rule        = "postgresql-tcp"
+      source_security_group_id = module.eks.worker_security_group_id
     }
   ]
 }

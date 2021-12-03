@@ -6,8 +6,8 @@ module "ecr_airflow" {
   name                   = "airflow"
   principals_full_access = [
     module.eks.cluster_iam_role_arn,
-    module.eks.fargate_iam_role_arn,
-    module.eks.worker_iam_role_arn]
+    module.eks.worker_iam_role_arn
+  ]
 }
 
 module "ecr_meltano" {
@@ -18,7 +18,6 @@ module "ecr_meltano" {
   name                   = "meltano"
   principals_full_access = [
     module.eks.cluster_iam_role_arn,
-    module.eks.fargate_iam_role_arn,
     module.eks.worker_iam_role_arn
   ]
 }

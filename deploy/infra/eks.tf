@@ -10,10 +10,7 @@ module "eks_worker_additional_security_group" {
   ingress_cidr_blocks      = module.vpc.private_subnets
   egress_with_source_security_group_id = [
     {
-      from_port                = local.rds_port
-      to_port                  = local.rds_port
-      protocol                 = "tcp"
-      description              = "Custom Postgres Port"
+      rule = "postgresql-tcp"
       source_security_group_id = module.db_security_group.security_group_id
     }
   ]
@@ -27,61 +24,22 @@ module "eks" {
   cluster_version = local.cluster_version
 
   vpc_id          = module.vpc.vpc_id
-  subnets         = [module.vpc.private_subnets[0], module.vpc.private_subnets[1]]
-  fargate_subnets = [module.vpc.private_subnets[2]]
+  subnets         = concat(module.vpc.public_subnets, module.vpc.private_subnets)
 
   cluster_endpoint_private_access = true
   cluster_endpoint_public_access  = true
 
-  # You require a node group to schedule coredns which is critical for running correctly internal DNS.
-  # If you want to use only fargate you must follow docs `(Optional) Update CoreDNS`
-  # available under https://docs.aws.amazon.com/eks/latest/userguide/fargate-getting-started.html
-  node_groups = {
-    core_dns = {
-      desired_capacity = 1
-
-      instance_types = ["t3.medium"]
-      k8s_labels = {
-        GitlabRepo = "squared"
-        GitlabOrg  = "meltano"
-      }
-      additional_tags = {}
-      update_config = {
-        max_unavailable_percentage = 50 # or set `max_unavailable`
-      }
+  worker_groups = [
+    {
+      instance_type = "t3.small"
+      asg_max_size  = 4
+      asg_desired_capacity = 4
+      additional_security_group_ids = [module.eks_worker_additional_security_group.security_group_id]
+      subnets = module.vpc.private_subnets
     }
-  }
+  ]
 
-  fargate_profiles = {
-    default = {
-      name = "default"
-      selectors = [
-        {
-          namespace = "kube-system"
-          labels = {
-            k8s-app = "kube-dns"
-          }
-        },
-        {
-          namespace = "default"
-          labels = {
-            WorkerType = "fargate"
-          }
-        }
-      ]
-
-      tags = {
-        Owner = "default"
-      }
-
-      timeouts = {
-        create = "20m"
-        delete = "20m"
-      }
-    }
-  }
-
-  manage_aws_auth = false
+  manage_aws_auth = true
 
   tags = {
     GitlabRepo = "squared"
