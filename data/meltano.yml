@@ -100,7 +100,7 @@ plugins:
   loaders:
   - name: target-athena
     namespace: target_athena
-    pip_url: git+https://github.com/pnadolny13/target-athena.git@fix_camel_case
+    pip_url: git+https://github.com/MeltanoLabs/target-athena.git@7db569316a5acdd30af344f8119f5928a9824cbe
     settings:
     - name: aws_access_key_id
       kind: password
