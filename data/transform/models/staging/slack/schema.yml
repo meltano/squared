@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: stg_slack__messages
+    columns:
+      - name: message_surrogate_key
+        tests:
+          - unique
+          - not_null
