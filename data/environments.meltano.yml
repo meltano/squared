@@ -11,6 +11,10 @@ environments:
           schema_name: dbt_prod
           s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/tap-athena/
           s3_bucket: prod-meltano-bucket-01
+      - name: tap-gitlab
+        config:
+          groups: meltano
+          start_date: '2021-07-01T00:00:00Z'
       loaders:
       - name: target-athena
         config:
@@ -37,6 +41,10 @@ environments:
           schema_name: dbt_dev_${USER_PREFIX}
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/tap-athena/
           s3_bucket: devtest-meltano-bucket-01
+      - name: tap-gitlab
+        config:
+          projects: meltano/meltano meltano/sdk
+          start_date: '2021-11-29T00:00:00Z'
       loaders:
       - name: target-athena
         config:
