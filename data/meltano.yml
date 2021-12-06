@@ -5,6 +5,30 @@ include_paths:
   - ./*.meltano.yml
 plugins:
   extractors:
+  - name: tap-slack
+    namespace: tap_slack
+    pip_url: git+https://github.com/pnadolny13/tap-slack.git@auto_join_fix_and_channels_filter
+    executable: tap-slack
+    capabilities:
+    - catalog
+    - state
+    - discover
+    - about
+    - stream-maps
+    settings:
+    - name: api_key
+      type: password
+    config:
+      start_date: '2021-01-01'
+      auto_join_channels: false
+      channels:
+      - C01SK13R9NJ
+      channel_types:
+      - private_channel
+    select:
+    - users.*
+    - channels.*
+    - messages.*
   - name: tap-csv
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
@@ -128,6 +152,10 @@ plugins:
       temp_dir: .output
       add_record_metadata: true
       flatten_records: true
+  - name: target-athena-slack
+    inherit_from: target-athena
+    config:
+      flatten_records: false
   - name: target-yaml
     namespace: target_yaml
     pip_url: git+https://github.com/MeltanoLabs/target-yaml.git
