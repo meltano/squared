@@ -1,6 +1,7 @@
 
 stages:
   - test
+  - publish
   - deploy
 
 .meltano:
@@ -50,4 +51,31 @@ hub-metrics-prod:
   - if: $CI_COMMIT_BRANCH == "main"
     when: always
   - if: $CI_PIPELINE_SOURCE == "schedule"
+    when: always
+
+# Build & Publish Docker Images
+docker-build-publish:
+  stage: publish
+  variables:
+    DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
+    AWS_DEFAULT_REGION: us-east-1
+    DOCKER_HOST: tcp://docker:2375
+  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  services:
+  - docker:dind
+  before_script:
+  - amazon-linux-extras install docker
+  - aws --version
+  - docker --version
+  script:
+  # Login to AWS
+  - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+  # Build and Publish Meltano Image
+  - docker build -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID -f data/meltano/Dockerfile data/
+  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
+  # Build and Publish Airflow Image
+  - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f data/airflow/Dockerfile data/
+  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
+  rules:
+  - if: $CI_COMMIT_BRANCH == "deploy"
     when: always
