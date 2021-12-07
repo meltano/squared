@@ -24,6 +24,8 @@ sqlfluff:
   rules:
   - if: $CI_PIPELINE_SOURCE == "schedule"
     when: never
+  - if:  $CI_COMMIT_BRANCH == "deploy"
+    when: never
   - when: always
 
 ##########################
@@ -64,10 +66,13 @@ docker-build-publish:
   services:
   - docker:dind
   before_script:
+  - echo "before_script started.."
   - amazon-linux-extras install docker
   - aws --version
   - docker --version
+  - echo "before_script done ✅"
   script:
+  - echo "script started.."
   # Login to AWS
   - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
   # Build and Publish Meltano Image
@@ -76,6 +81,7 @@ docker-build-publish:
   # Build and Publish Airflow Image
   - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f data/airflow/Dockerfile data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
+  - echo "script done ✅"
   rules:
   - if: $CI_COMMIT_BRANCH == "deploy"
     when: always
