@@ -60,7 +60,7 @@ docker-build-publish:
     DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
     AWS_DEFAULT_REGION: us-east-1
     DOCKER_HOST: tcp://docker:2375
-  image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  image: amazon/aws-cli
   services:
   - docker:dind
   before_script:
