@@ -77,5 +77,5 @@ docker-build-publish:
   - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f data/airflow/Dockerfile data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
   rules:
-  - if: $CI_COMMIT_BRANCH == "master"
+  - if: $CI_COMMIT_BRANCH == "deploy"
     when: always
