@@ -78,10 +78,10 @@ docker-build-publish:
   # Login to AWS
   - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
   # Build and Publish Meltano Image
-  - docker build -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID -f data/meltano/Dockerfile data/
+  - docker build -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID -f deploy/meltano/data/meltano/Dockerfile data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
   # Build and Publish Airflow Image
-  - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f data/airflow/Dockerfile data/
+  - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f deploy/meltano/data/airflow/Dockerfile data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
   - echo "script done ✅"
   rules:
