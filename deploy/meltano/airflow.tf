@@ -11,11 +11,7 @@ locals {
   ]
 }
 
-# ECR Repositories
-data "aws_ecr_repository" "meltano" {
-  name = "m5o-prod-meltano"
-}
-
+# ECR Repository
 data "aws_ecr_repository" "airflow" {
   name = "m5o-prod-airflow"
 }
@@ -50,15 +46,15 @@ resource "helm_release" "airflow" {
   ]
   values = [file("${path.module}/data/airflow/values.yaml")]
 
-  # set {
-  #   name = "images.airflow.repository"
-  #   value = data.aws_ecr_repository.airflow.repository_url
-  # }
+  set {
+    name = "images.airflow.repository"
+    value = data.aws_ecr_repository.airflow.repository_url
+  }
 
-  # set {
-  #   name = "images.pod_template.repository"
-  #   value = data.aws_ecr_repository.airflow.repository_url
-  # }
+  set {
+    name = "images.pod_template.repository"
+    value = data.aws_ecr_repository.airflow.repository_url
+  }
 
   set {
     name = "fernetKey"

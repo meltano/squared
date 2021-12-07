@@ -10,6 +10,10 @@ locals {
   meltano_db_credentials = jsondecode(data.aws_ssm_parameter.meltano_db_credentials.value)
 }
 
+data "aws_ecr_repository" "meltano" {
+  name = "m5o-prod-meltano"
+}
+
 resource "helm_release" "meltano" {
   name        = "meltano"
   repository  = "https://meltano.gitlab.io/infra/helm-meltano/meltano"
@@ -26,10 +30,10 @@ resource "helm_release" "meltano" {
     value = yamlencode(local.meltano_env_variables)
   }
 
-  # set {
-  #   name = "image.repository"
-  #   value =
-  # }
+  set {
+    name = "image.repository"
+    value = data.aws_ecr_repository.meltano.url
+  }
 
   # set {
   #   name = "image.tag"
