@@ -1,0 +1,86 @@
+# Airflow version (Used to make some decisions based on Airflow Version being deployed)
+airflowVersion: "2.2.1"
+
+executor: KubernetesExecutor
+
+ingress:
+  enabled: true
+  web:
+    annotations:
+      # No option in current Helm chart to use ingressClassName yet
+      kubernetes.io/ingress.class: ingress-nginx-internal
+
+postgresql:
+  enabled: false
+
+data:
+  metadataConnection:
+    user: airflow
+    protocol: postgresql  # or 'mysql'
+    port: 5432
+    db: airflow
+
+webserver:
+  replicas: 1
+  args: ["bash", "-c", "exec airflow webserver -d"]
+
+  webserverConfig: |-
+      AUTH_ROLE_PUBLIC = 'Admin'
+
+  serviceAccount:
+    create: false
+    name: default
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 1Gi
+    limits:
+      cpu: 2
+      memory: 1.25Gi
+
+config:
+  webserver:
+    expose_config: "True"
+    rbac: "False"
+    authenticate: "False"
+
+  kubernetes:
+    delete_worker_pods: "False"
+
+scheduler:
+  serviceAccount:
+    create: false
+    name: default
+
+  replicas: 1
+  podDisruptionBudget:
+    enabled: true
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 2
+      memory: 768Mi
+
+workers:
+  serviceAccount:
+    create: false
+    name: default
+
+statsd:
+  serviceAccount:
+    create: false
+    name: default
+
+cleanup:
+  serviceAccount:
+    create: false
+    name: default
+
+createUserJob:
+  serviceAccount:
+    create: false
+    name: default
