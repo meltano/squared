@@ -70,7 +70,7 @@ locals {
     user = module.db.db_instance_username
     password = module.db.db_instance_password
     database = module.db.db_instance_name
-    url = "postgresql://${module.db.db_instance_username}:${module.db.db_instance_password}@${module.db.db_instance_endpoint}:${module.db.db_instance_port}/${module.db.db_instance_name}"
+    url = "postgresql://${module.db.db_instance_username}:${module.db.db_instance_password}@${module.db.db_instance_endpoint}/${module.db.db_instance_name}"
   }
 }
 

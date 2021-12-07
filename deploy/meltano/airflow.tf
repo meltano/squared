@@ -7,8 +7,28 @@ locals {
     {
       name  = "AWS_DEFAULT_REGION"
       value = local.region
+    },
+    {
+      name = "MELTANO_PROJECT_ROOT"
+      value = "/opt/airflow/meltano"
     }
   ]
+  base64_meltano_uri = base64encode("${local.meltano_db_credentials.url}?sslmode=disable")
+  airflow_extra_secrets = <<EOT
+extraSecrets:
+  meltano-database-uri:
+    data: |
+      uri: "${local.base64_meltano_uri}"
+EOT
+  airflow_secrets = {
+    secret = [
+      {
+        envName = "MELTANO_DATABASE_URI"
+        secretKey = "uri"
+        secretName = "meltano-database-uri"
+      }
+    ]
+  }
 }
 
 # ECR Repository
@@ -44,7 +64,16 @@ resource "helm_release" "airflow" {
   depends_on = [
     kubernetes_namespace.meltano
   ]
-  values = [file("${path.module}/data/airflow/values.yaml")]
+  values = [
+    file("${path.module}/data/airflow/values.yaml"),
+    yamlencode(local.airflow_secrets),
+    local.airflow_extra_secrets
+  ]
+
+  set {
+    name  = "extraEnv"
+    value = yamlencode(local.airflow_env_variables)
+  }
 
   set {
     name = "images.airflow.repository"
@@ -52,8 +81,18 @@ resource "helm_release" "airflow" {
   }
 
   set {
+    name = "images.airflow.tag"
+    value = "latest"
+  }
+
+  set {
     name = "images.pod_template.repository"
     value = data.aws_ecr_repository.airflow.repository_url
+  }
+
+  set {
+    name = "images.pod_template.repository"
+    value = "latest"
   }
 
   set {
@@ -64,11 +103,6 @@ resource "helm_release" "airflow" {
   set {
     name = "webserverSecretKey"
     value = data.aws_ssm_parameter.airflow_webserver_secret_key.value
-  }
-
-  set {
-    name  = "extraEnv"
-    value = yamlencode(local.airflow_env_variables)
   }
 
   set {

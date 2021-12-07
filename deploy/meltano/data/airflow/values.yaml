@@ -21,7 +21,8 @@ data:
     db: airflow
 
 webserver:
-  replicas: 2
+  replicas: 1
+  args: ["bash", "-c", "exec airflow webserver -d"]
 
   webserverConfig: |-
       AUTH_ROLE_PUBLIC = 'Admin'
@@ -52,7 +53,7 @@ scheduler:
     create: false
     name: default
 
-  replicas: 2
+  replicas: 1
   podDisruptionBudget:
     enabled: true
 

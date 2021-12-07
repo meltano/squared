@@ -32,12 +32,12 @@ resource "helm_release" "meltano" {
 
   set {
     name = "image.repository"
-    value = data.aws_ecr_repository.meltano.url
+    value = data.aws_ecr_repository.meltano.repository_url
   }
 
   # set {
   #   name = "image.tag"
-  #   value =
+  #   value = "latest"
   # }
 
   set {
