@@ -144,7 +144,7 @@ terraform-plan:
     - terraform-validate
   artifacts:
     paths:
-      - planfile
+      - deploy/meltano/planfile
 
 terraform-apply:
   extends:
