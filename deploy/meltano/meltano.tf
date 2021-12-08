@@ -35,10 +35,10 @@ resource "helm_release" "meltano" {
     value = data.aws_ecr_repository.meltano.repository_url
   }
 
-  # set {
-  #   name = "image.tag"
-  #   value = "latest"
-  # }
+  set {
+    name = "image.tag"
+    value = var.meltano_image_tag
+  }
 
   set {
     name = "meltano.database_uri"

@@ -1,14 +1,50 @@
 
 stages:
   - test
-  - publish
   - deploy
+  - publish
+  - validate
+  - plan
+  - apply
 
 .meltano:
   image: python:3.8
   before_script:
   - cd data/
   - pip3 install meltano
+
+.docker:
+  variables:
+    DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
+    AWS_DEFAULT_REGION: us-east-1
+    DOCKER_HOST: tcp://docker:2375
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  services:
+  - docker:dind
+  before_script:
+  - amazon-linux-extras install docker
+  - aws --version
+  - docker --version
+  rules:
+  - if: $CI_COMMIT_BRANCH == "deploy"
+    when: always
+
+.terraform:
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  before_script:
+  - cd deploy/meltano
+  - rm -rf .terraform
+  - terraform --version
+  - terraform init
+  rules:
+  - if: $CI_COMMIT_BRANCH == "deploy"
+    when: always
 
 ##########################
 # Testing
@@ -56,34 +92,44 @@ hub-metrics-prod:
     when: always
 
 # Build & Publish Docker Images
-docker-build-publish:
+docker-build-meltano:
+  extends:
+  - .docker
   stage: publish
-  variables:
-    DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
-    AWS_DEFAULT_REGION: us-east-1
-    DOCKER_HOST: tcp://docker:2375
-  image:
-    name: amazon/aws-cli
-    entrypoint: [""]
-  services:
-  - docker:dind
-  before_script:
-  - echo "before_script started.."
-  - amazon-linux-extras install docker
-  - aws --version
-  - docker --version
-  - echo "before_script done ✅"
   script:
-  - echo "script started.."
-  # Login to AWS
   - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
-  # Build and Publish Meltano Image
   - docker build -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID -f deploy/meltano/data/meltano/Dockerfile data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
-  # Build and Publish Airflow Image
+
+# Build and Publish Airflow Image
+docker-build-airflow:
+  extends:
+  - .docker
+  stage: publish
+  script:
   - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f deploy/meltano/data/airflow/Dockerfile data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
-  - echo "script done ✅"
-  rules:
-  - if: $CI_COMMIT_BRANCH == "deploy"
-    when: always
+
+# Deploy New Images
+tf-validate:
+  stage: validate
+  script:
+    - terraform validate
+
+tf-plan:
+  stage: plan
+  script:
+    - terraform plan -out "planfile" -var "airflow_image_tag=$CI_PIPELINE_IID" -var "meltano_image_tag=$CI_PIPELINE_IID"
+  dependencies:
+    - validate
+  artifacts:
+    paths:
+      - planfile
+
+tf-apply:
+  stage: apply
+  script:
+    - terraform apply -input=false -var "airflow_image_tag=$CI_PIPELINE_IID" -var "meltano_image_tag=$CI_PIPELINE_IID" "planfile"
+  dependencies:
+    - plan
+#  when: manual

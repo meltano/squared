@@ -82,7 +82,7 @@ resource "helm_release" "airflow" {
 
   set {
     name = "images.airflow.tag"
-    value = "latest"
+    value = var.airflow_image_tag
   }
 
   set {
@@ -92,7 +92,7 @@ resource "helm_release" "airflow" {
 
   set {
     name = "images.pod_template.repository"
-    value = "latest"
+    value = var.airflow_image_tag
   }
 
   set {
