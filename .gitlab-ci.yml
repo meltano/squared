@@ -103,10 +103,10 @@ docker-build-meltano:
     docker build
     --cache-from $DOCKER_REGISTRY/m5o-prod-meltano:latest
     -t $DOCKER_REGISTRY/m5o-prod-meltano:latest
-    -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
+    -t $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
     -f deploy/meltano/data/meltano/Dockerfile
     data/
-  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
+  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
 
 # Build and Publish Airflow Image
@@ -120,10 +120,10 @@ docker-build-airflow:
     docker build
     --cache-from $DOCKER_REGISTRY/m5o-prod-airflow:latest
     -t $DOCKER_REGISTRY/m5o-prod-airflow:latest
-    -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
+    -t $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
     -f deploy/meltano/data/airflow/Dockerfile
     data/
-  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
+  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
 
 # Deploy New Images
@@ -139,7 +139,7 @@ terraform-plan:
   - .terraform
   stage: plan
   script:
-    - terraform plan -out "planfile" -var "airflow_image_tag=$CI_PIPELINE_IID" -var "meltano_image_tag=$CI_PIPELINE_IID"
+    - terraform plan -out "planfile" -var "airflow_image_tag=${CI_COMMIT_SHORT_SHA}" -var "meltano_image_tag=${CI_COMMIT_SHORT_SHA}"
   dependencies:
     - terraform-validate
   artifacts:
