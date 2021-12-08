@@ -27,6 +27,7 @@ stages:
   - amazon-linux-extras install docker
   - aws --version
   - docker --version
+  - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
   rules:
   - if: $CI_COMMIT_BRANCH == "deploy"
     when: always
@@ -97,9 +98,16 @@ docker-build-meltano:
   - .docker
   stage: publish
   script:
-  - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
-  - docker build -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID -f deploy/meltano/data/meltano/Dockerfile data/
+  - docker pull $DOCKER_REGISTRY/m5o-prod-meltano:latest || true
+  - >
+    docker build
+    --cache-from $DOCKER_REGISTRY/m5o-prod-meltano:latest
+    -t $DOCKER_REGISTRY/m5o-prod-meltano:latest
+    -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
+    -f deploy/meltano/data/meltano/Dockerfile
+    data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_PIPELINE_IID
+  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
 
 # Build and Publish Airflow Image
 docker-build-airflow:
@@ -107,8 +115,16 @@ docker-build-airflow:
   - .docker
   stage: publish
   script:
-  - docker build -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID -f deploy/meltano/data/airflow/Dockerfile data/
+  - docker pull $DOCKER_REGISTRY/m5o-prod-airflow:latest || true
+  - >
+    docker build
+    --cache-from $DOCKER_REGISTRY/m5o-prod-airflow:latest
+    -t $DOCKER_REGISTRY/m5o-prod-airflow:latest
+    -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
+    -f deploy/meltano/data/airflow/Dockerfile
+    data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_PIPELINE_IID
+  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
 
 # Deploy New Images
 validate:
