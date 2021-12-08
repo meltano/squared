@@ -151,7 +151,7 @@ terraform-apply:
   - .terraform
   stage: apply
   script:
-    - terraform apply -input=false -var "airflow_image_tag=$CI_PIPELINE_IID" -var "meltano_image_tag=$CI_PIPELINE_IID" "planfile"
+    - terraform apply -input=false "planfile"
   dependencies:
     - terraform-plan
 #  when: manual
