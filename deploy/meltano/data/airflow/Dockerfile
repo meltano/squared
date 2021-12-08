@@ -32,13 +32,13 @@ RUN meltano install
 # Pin `discovery.yml` manifest by copying cached version to project root
 RUN cp -n ${MELTANO_HOME}/.meltano/cache/discovery.yml . 2>/dev/null || :
 
+# Copy over remaining meltano project files
+COPY . ${MELTANO_HOME}
+
 # Install any additional Airflow requirements
 ENV PIP_USER=true
 COPY orchestrate/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy over remaining meltano project files
-COPY . ${MELTANO_HOME}
-
 # Copy over airflow/orchestrate dir
-COPY orchestrate/ .
+COPY orchestrate/ ${AIRFLOW_HOME}}

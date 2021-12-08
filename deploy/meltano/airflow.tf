@@ -1,4 +1,32 @@
+# ECR Repository
+data "aws_ecr_repository" "airflow" {
+  name = "m5o-prod-airflow"
+}
+
+# Meltano Secrets
+data "aws_ssm_parameter" "meltano_hub_metrics_s3_path" {
+  name = "/prod/meltano/hub_metrics_s3_path"
+}
+
+data "aws_ssm_parameter" "meltano_env_file" {
+  name = "/prod/meltano/env_file"
+}
+
+# Airflow Secrets
+data "aws_ssm_parameter" "airflow_fernet_key" {
+  name = "/prod/meltano/airflow/fernet_key"
+}
+
+data "aws_ssm_parameter" "airflow_webserver_secret_key" {
+  name = "/prod/meltano/airflow/webserver_secret_key"
+}
+
+data "aws_ssm_parameter" "airflow_db_credentials" {
+  name = "/prod/meltano/airflow/db_credentials"
+}
+
 locals {
+  airflow_db_credentials = jsondecode(data.aws_ssm_parameter.airflow_db_credentials.value)
   airflow_env_variables = [
     {
       name  = "AWS_REGION"
@@ -19,38 +47,76 @@ extraSecrets:
   meltano-database-uri:
     data: |
       uri: "${local.base64_meltano_uri}"
+  meltano-hub-metrics-s3-path:
+    data: |
+      path: "${base64encode(data.aws_ssm_parameter.meltano_hub_metrics_s3_path.value)}"
+  meltano-env-file:
+    data: |
+      file: "${base64encode(data.aws_ssm_parameter.meltano_env_file.value)}"
 EOT
+
   airflow_secrets = {
     secret = [
       {
         envName = "MELTANO_DATABASE_URI"
-        secretKey = "uri"
         secretName = "meltano-database-uri"
+        secretKey = "uri"
+      },
+      {
+        envName = "HUB_METRICS_S3_PATH"
+        secretName = "meltano-hub-metrics-s3-path"
+        secretKey = "path"
       }
     ]
   }
-}
 
-# ECR Repository
-data "aws_ecr_repository" "airflow" {
-  name = "m5o-prod-airflow"
-}
+  meltano_env_volumes = [
+    {
+      name = "env-file"
+      secret = {
+        secretName = "meltano-env-file"
+        items = [
+          {
+            key = "file"
+          }
+        ]
+      }
+    }
+  ]
 
-# Secrets
-data "aws_ssm_parameter" "airflow_fernet_key" {
-  name = "/prod/meltano/airflow/fernet_key"
-}
+  meltano_env_volume_mounts = [
+    {
+      name = "env-file"
+      mountPath = "/opt/airflow/meltano/.env"
+      readOnly = true
+    }
+  ]
 
-data "aws_ssm_parameter" "airflow_webserver_secret_key" {
-  name = "/prod/meltano/airflow/webserver_secret_key"
-}
+  airflow_worker_volumes = {
+    workers = {
+      extraVolumes = local.meltano_env_volumes
+    }
+  }
 
-data "aws_ssm_parameter" "airflow_db_credentials" {
-  name = "/prod/meltano/airflow/db_credentials"
-}
+  airflow_worker_volume_mounts = {
+    workers = {
+      extraVolumeMounts = local.meltano_env_volume_mounts
+    }
+  }
 
-locals {
-  airflow_db_credentials = jsondecode(data.aws_ssm_parameter.airflow_db_credentials.value)
+  airflow_webserver_volumes = {
+    webserver = {
+      extraVolumes = local.meltano_env_volumes
+    }
+  }
+
+  airflow_webserver_volume_mounts = {
+    webserver = {
+      extraVolumeMounts = local.meltano_env_volume_mounts
+    }
+  }
+
+
 }
 
 resource "helm_release" "airflow" {
@@ -67,7 +133,11 @@ resource "helm_release" "airflow" {
   values = [
     file("${path.module}/data/airflow/values.yaml"),
     yamlencode(local.airflow_secrets),
-    local.airflow_extra_secrets
+    local.airflow_extra_secrets,
+    yamlencode(local.airflow_worker_volumes),
+    yamlencode(local.airflow_worker_volume_mounts),
+    yamlencode(local.airflow_webserver_volumes),
+    yamlencode(local.airflow_webserver_volume_mounts),
   ]
 
   set {
