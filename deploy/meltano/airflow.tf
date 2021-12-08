@@ -78,6 +78,7 @@ EOT
         items = [
           {
             key = "file"
+            path = ".env"
           }
         ]
       }
@@ -87,7 +88,7 @@ EOT
   meltano_env_volume_mounts = [
     {
       name = "env-file"
-      mountPath = "/opt/airflow/meltano/.env"
+      mountPath = "/opt/airflow/meltano"
       readOnly = true
     }
   ]
