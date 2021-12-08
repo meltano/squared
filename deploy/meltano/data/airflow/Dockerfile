@@ -37,5 +37,8 @@ ENV PIP_USER=true
 COPY orchestrate/requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy over remaining project files
-COPY . .
+# Copy over remaining meltano project files
+COPY . ${MELTANO_HOME}
+
+# Copy over airflow/orchestrate dir
+COPY orchestrate/ .
