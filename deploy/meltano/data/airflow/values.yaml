@@ -10,6 +10,12 @@ ingress:
       # No option in current Helm chart to use ingressClassName yet
       kubernetes.io/ingress.class: ingress-nginx-internal
 
+images:
+  airflow:
+    pullPolicy: Always
+  pod_template:
+    pullPolicy: Always
+
 postgresql:
   enabled: false
 
@@ -22,7 +28,7 @@ data:
 
 webserver:
   replicas: 1
-  args: ["bash", "-c", "exec airflow webserver -d"]
+  args: ["bash", "-c", "exec airflow webserver -d"] # airflow webserver only runs in debug mode. probably a permissions thing, todo with write access to the airflow home folder
 
   webserverConfig: |-
       AUTH_ROLE_PUBLIC = 'Admin'

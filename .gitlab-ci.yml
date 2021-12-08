@@ -1,11 +1,9 @@
-
 stages:
   - test
-  - deploy
   - publish
   - validate
   - plan
-  - apply
+  - deploy
 
 .meltano:
   image: python:3.8
@@ -47,10 +45,7 @@ stages:
   - if: $CI_COMMIT_BRANCH == "deploy"
     when: always
 
-##########################
-# Testing
-##########################
-
+# SQL linting
 sqlfluff:
   extends:
   - .meltano
@@ -58,42 +53,6 @@ sqlfluff:
   script:
   - meltano install utilities sqlfluff
   - meltano invoke sqlfluff lint -v
-  rules:
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: never
-  - if:  $CI_COMMIT_BRANCH == "deploy"
-    when: never
-  - when: always
-
-##########################
-# Daily data pipeline
-##########################
-
-hub-metrics-prod:
-  extends:
-  - .meltano
-  variables:
-    STAGE: prod
-    JOB_ID: HUB-METRICS-PROD
-  stage: deploy
-  needs: []
-  script:
-  - meltano install
-  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
-  - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
-  - meltano --environment=prod invoke dbt:run --models marts.publish.meltano_hub.*
-
-  - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
-  - meltano --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
-
-  - meltano --environment=prod elt tap-athena-audit target-yaml-audit
-  - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
-
-  rules:
-  - if: $CI_COMMIT_BRANCH == "main"
-    when: always
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: always
 
 # Build & Publish Docker Images
 docker-build-meltano:
@@ -152,9 +111,8 @@ terraform-plan:
 terraform-apply:
   extends:
   - .terraform
-  stage: apply
+  stage: deploy
   script:
     - terraform apply -input=false "planfile"
   dependencies:
     - terraform-plan
-#  when: manual
