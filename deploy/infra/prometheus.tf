@@ -15,11 +15,4 @@ resource "helm_release" "prometheus" {
   depends_on = [
     kubernetes_namespace.prometheus
   ]
-
-  # This is not a chart value, but just a way to trick helm_release into running every time.
-  # Without this, helm_release only updates the release if the chart version (in Chart.yaml) has been updated.
-  set {
-    name  = "timestamp"
-    value = timestamp()
-  }
 }
