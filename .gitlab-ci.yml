@@ -127,25 +127,31 @@ docker-build-airflow:
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
 
 # Deploy New Images
-validate:
+terraform-validate:
+  extends:
+  - .terraform
   stage: validate
   script:
     - terraform validate
 
-plan:
+terraform-plan:
+  extends:
+  - .terraform
   stage: plan
   script:
     - terraform plan -out "planfile" -var "airflow_image_tag=$CI_PIPELINE_IID" -var "meltano_image_tag=$CI_PIPELINE_IID"
   dependencies:
-    - validate
+    - terraform-validate
   artifacts:
     paths:
       - planfile
 
-apply:
+terraform-apply:
+  extends:
+  - .terraform
   stage: apply
   script:
     - terraform apply -input=false -var "airflow_image_tag=$CI_PIPELINE_IID" -var "meltano_image_tag=$CI_PIPELINE_IID" "planfile"
   dependencies:
-    - plan
+    - terraform-plan
 #  when: manual
