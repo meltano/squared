@@ -26,6 +26,11 @@ data:
     port: 5432
     db: airflow
 
+# logs:
+#   persistence:
+#     enabled: true
+#     existingClaim: airflow-logs-pv-claim
+
 webserver:
   replicas: 1
   args: ["bash", "-c", "exec airflow webserver -d"] # airflow webserver only runs in debug mode. probably a permissions thing, todo with write access to the airflow home folder

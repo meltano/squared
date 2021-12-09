@@ -46,3 +46,10 @@ module "eks" {
     GitlabOrg  = "meltano"
   }
 }
+
+resource "kubernetes_namespace" "meltano" {
+  metadata {
+    name = "meltano"
+  }
+  depends_on = [module.eks]
+}

@@ -70,7 +70,7 @@ EOT
     ]
   }
 
-  meltano_env_volumes = [
+  extra_volumes = [
     {
       name = "env-file"
       secret = {
@@ -85,7 +85,7 @@ EOT
     }
   ]
 
-  meltano_env_volume_mounts = [
+  extra_volume_mounts = [
     {
       name = "env-file"
       mountPath = "/opt/airflow/meltano/.env"
@@ -96,25 +96,25 @@ EOT
 
   airflow_worker_volumes = {
     workers = {
-      extraVolumes = local.meltano_env_volumes
+      extraVolumes = local.extra_volumes
     }
   }
 
   airflow_worker_volume_mounts = {
     workers = {
-      extraVolumeMounts = local.meltano_env_volume_mounts
+      extraVolumeMounts = local.extra_volume_mounts
     }
   }
 
   airflow_webserver_volumes = {
     webserver = {
-      extraVolumes = local.meltano_env_volumes
+      extraVolumes = local.extra_volumes
     }
   }
 
   airflow_webserver_volume_mounts = {
     webserver = {
-      extraVolumeMounts = local.meltano_env_volume_mounts
+      extraVolumeMounts = local.extra_volume_mounts
     }
   }
 
@@ -129,9 +129,6 @@ resource "helm_release" "airflow" {
   version     = "1.3.0"
   max_history = 10
   wait        = false
-  depends_on = [
-    kubernetes_namespace.meltano
-  ]
   values = [
     file("${path.module}/data/airflow/values.yaml"),
     yamlencode(local.airflow_secrets),
