@@ -13,19 +13,6 @@ module "efs" {
     module.eks.cluster_security_group_id,
     module.eks.worker_security_group_id
   ]
-  access_points = {
-    airflow = {
-      posix_user = {
-        gid  = 0
-        uid  = 0
-      },
-      creation_info = {
-        gid         = 0
-        uid         = 0
-        permissions = 0700
-      }
-    }
-  }
 }
 
 resource "aws_efs_file_system_policy" "efs-policy" {
@@ -72,37 +59,13 @@ resource "kubernetes_storage_class" "efs_storage_class" {
     name = "efs-dsc"
   }
   storage_provisioner = "efs.csi.aws.com"
-  # parameters = {
-  #   provisioningMode: "efs-ap"
-  #   fileSystemId:  module.efs.id
-  #   directoryPerms: "775"
-  # }
-  # reclaim_policy      = "Retain"
-  depends_on = [module.eks_efs_csi_driver]
-}
-
-resource "kubernetes_manifest" "efs_persistant_volume" {
-  manifest = {
-    apiVersion = "v1"
-    kind       = "PersistentVolume"
-    metadata = {
-      name = "efs-pv"
-    }
-    spec = {
-      capacity = {
-        storage = "5Gi"
-      }
-      volumeMode = "Filesystem"
-      accessModes = ["ReadWriteMany"]
-      storageClassName = "efs-sc"
-      persistentVolumeReclaimPolicy = "Retain"
-      csi = {
-        driver = "efs.csi.aws.com"
-        volumeHandle = "${module.efs.id}::${module.efs.access_point_ids.airflow}"
-      }
-    }
+  parameters = {
+    provisioningMode: "efs-ap"
+    fileSystemId:  module.efs.id
+    directoryPerms: "775"
   }
-  depends_on = [kubernetes_storage_class.efs_storage_class]
+  reclaim_policy      = "Retain"
+  depends_on = [module.eks_efs_csi_driver]
 }
 
 resource "kubernetes_manifest" "efs_persistant_volume_claim" {

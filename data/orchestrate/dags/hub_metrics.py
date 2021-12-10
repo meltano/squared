@@ -42,20 +42,21 @@ with DAG(
     tags=['hub'],
 ) as dag:
 
+    # `cd $MELTANO_PROJECT_ROOT &&` is a hack until we resolve the issue of mutli-yaml not referencing $MELTANO_PROJECT_ROOT
     t1 = BashOperator(
         task_id='ga_athena_hub_metrics',
-        bash_command='meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_hub_metrics',
+        bash_command='cd $MELTANO_PROJECT_ROOT && meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_hub_metrics',
     )
 
     t2 = BashOperator(
         task_id='dbt_hub_metrics',
-        bash_command='meltano --environment=prod invoke dbt:run --models marts.publish.meltano_hub.*',
+        bash_command='cd $MELTANO_PROJECT_ROOT && meltano --environment=prod invoke dbt:run --models marts.publish.meltano_hub.*',
     )
 
     publish_metrics_command = dedent(
         f"""
-        meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
-        meltano --environment=prod invoke awscli s3 cp metrics.yml { os.getenv('HUB_METRICS_S3_PATH') }
+        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
+        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod invoke awscli s3 cp metrics.yml { os.getenv('HUB_METRICS_S3_PATH') }
         """
     )
 
@@ -66,8 +67,8 @@ with DAG(
 
     publish_audit_command = dedent(
         f"""
-        meltano --environment=prod elt tap-athena-audit target-yaml-audit
-        meltano --environment=prod invoke awscli s3 cp audit.yml { os.getenv('HUB_METRICS_S3_PATH') }
+        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod elt tap-athena-audit target-yaml-audit
+        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod invoke awscli s3 cp audit.yml { os.getenv('HUB_METRICS_S3_PATH') }
         """
     )
 

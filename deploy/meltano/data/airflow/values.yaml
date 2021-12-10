@@ -1,8 +1,8 @@
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
 airflowVersion: "2.2.1"
 
-uid: 1000
-gid: 1337
+uid: 50000
+gid: 0
 
 executor: KubernetesExecutor
 

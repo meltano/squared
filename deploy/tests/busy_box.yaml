@@ -16,6 +16,6 @@ spec:
         - name: my-efs-volume
           mountPath: /data
   securityContext:
-    runAsUser: 1000
-    runAsGroup: 1337
-    fsGroup: 1337
+    runAsUser: 50000
+    runAsGroup: 0
+    fsGroup: 0
