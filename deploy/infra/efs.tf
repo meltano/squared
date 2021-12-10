@@ -16,52 +16,112 @@ module "efs" {
   access_points = {
     airflow = {
       posix_user = {
-        gid            = "1001"
-        uid            = "5000"
-        secondary_gids = "1002,1003"
-      }
+        gid  = 0
+        uid  = 0
+      },
       creation_info = {
-        gid         = "1001"
-        uid         = "5000"
-        permissions = "0755"
+        gid         = 0
+        uid         = 0
+        permissions = 0700
       }
     }
   }
 }
 
-resource "helm_release" "aws-efs-csi-driver" {
-  name        = "aws-efs-csi-driver"
-  namespace   = "kube-system"
-  repository  = "https://kubernetes-sigs.github.io/aws-efs-csi-driver/"
-  chart       = "aws-efs-csi-driver"
-  version     = "2.2.0"
-  max_history = 10
-  wait        = false
-
-  # This is not a chart value, but just a way to trick helm_release into running every time.
-  # Without this, helm_release only updates the release if the chart version (in Chart.yaml) has been updated
-  set {
-    name  = "timestamp"
-    value = timestamp()
-  }
+resource "aws_efs_file_system_policy" "efs-policy" {
+  file_system_id = module.efs.id
+  bypass_policy_lockout_safety_check = true
+  policy = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Id": "EfsFsPolicy",
+    "Statement": [
+        {
+            "Sid": "efs-fs-policy",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Resource": "${module.efs.arn}",
+            "Action": [
+                "elasticfilesystem:ClientRootAccess",
+                "elasticfilesystem:ClientMount",
+                "elasticfilesystem:ClientWrite"
+            ]
+        }
+    ]
+}
+POLICY
 }
 
-resource "helm_release" "aws-efs-pv" {
-  name        = "aws-efs-pv"
-  namespace   = "meltano"
-  chart       = "${path.module}/aws-efs-pv"
-  max_history = 10
-  depends_on = [kubernetes_namespace.meltano]
+# Install the EFS CSI Driver
+module "eks_efs_csi_driver" {
+  source  = "DNXLabs/eks-efs-csi-driver/aws"
+  version = "0.1.4"
 
-  set {
-    name = "efs.id"
-    value = "${module.efs.id}::${module.efs.access_point_ids.airflow}"
-  }
+  cluster_name                     = module.eks.cluster_id
+  cluster_identity_oidc_issuer     = module.eks.cluster_oidc_issuer_url
+  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
+  create_namespace = false
+  create_storage_class = false
+}
 
-  # This is not a chart value, but just a way to trick helm_release into running every time.
-  # Without this, helm_release only updates the release if the chart version (in Chart.yaml) has been updated
-  set {
-    name  = "timestamp"
-    value = timestamp()
+# Create
+resource "kubernetes_storage_class" "efs_storage_class" {
+  metadata {
+    name = "efs-dsc"
   }
+  storage_provisioner = "efs.csi.aws.com"
+  # parameters = {
+  #   provisioningMode: "efs-ap"
+  #   fileSystemId:  module.efs.id
+  #   directoryPerms: "775"
+  # }
+  # reclaim_policy      = "Retain"
+  depends_on = [module.eks_efs_csi_driver]
+}
+
+resource "kubernetes_manifest" "efs_persistant_volume" {
+  manifest = {
+    apiVersion = "v1"
+    kind       = "PersistentVolume"
+    metadata = {
+      name = "efs-pv"
+    }
+    spec = {
+      capacity = {
+        storage = "5Gi"
+      }
+      volumeMode = "Filesystem"
+      accessModes = ["ReadWriteMany"]
+      storageClassName = "efs-sc"
+      persistentVolumeReclaimPolicy = "Retain"
+      csi = {
+        driver = "efs.csi.aws.com"
+        volumeHandle = "${module.efs.id}::${module.efs.access_point_ids.airflow}"
+      }
+    }
+  }
+  depends_on = [kubernetes_storage_class.efs_storage_class]
+}
+
+resource "kubernetes_manifest" "efs_persistant_volume_claim" {
+  manifest = {
+    apiVersion = "v1"
+    kind       = "PersistentVolumeClaim"
+    metadata = {
+      name = "efs-claim"
+      namespace = "meltano"
+    }
+    spec = {
+      accessModes = ["ReadWriteMany"]
+      storageClassName = "efs-dsc"
+      resources = {
+        requests = {
+          storage = "5Gi"  # Not actually used - see https://aws.amazon.com/blogs/containers/introducing-efs-csi-dynamic-provisioning/
+        }
+      }
+    }
+  }
+  depends_on = [kubernetes_manifest.efs_persistant_volume]
 }

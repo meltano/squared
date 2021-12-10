@@ -38,8 +38,11 @@ module "eks" {
       subnets = module.vpc.private_subnets
     }
   ]
+  # additional IAM policies attached to worker nodes
+  workers_additional_policies = []
 
   manage_aws_auth = true
+  enable_irsa = true
 
   tags = {
     GitlabRepo = "squared"
@@ -52,4 +55,13 @@ resource "kubernetes_namespace" "meltano" {
     name = "meltano"
   }
   depends_on = [module.eks]
+}
+module "eks-efs-csi-driver" {
+  source  = "DNXLabs/eks-efs-csi-driver/aws"
+  version = "0.1.4"
+
+  cluster_name                     = module.eks.cluster_id
+  cluster_identity_oidc_issuer     = module.eks.cluster_oidc_issuer_url
+  cluster_identity_oidc_issuer_arn = module.eks.oidc_provider_arn
+  create_namespace = false
 }

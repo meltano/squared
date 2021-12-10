@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-busybox
+spec:
+  volumes:
+  - name: my-efs-volume
+    persistentVolumeClaim:
+      claimName: efs-claim
+  containers:
+    - name: my-container
+      image: busybox:latest
+      command: ["/bin/sh"]
+      args: ["-c", "while true; do echo $(date -u) >> /data/out3.txt; sleep 5; done"]
+      volumeMounts:
+        - name: my-efs-volume
+          mountPath: /data
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1337
+    fsGroup: 1337

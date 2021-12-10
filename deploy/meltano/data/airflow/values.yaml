@@ -1,6 +1,9 @@
 # Airflow version (Used to make some decisions based on Airflow Version being deployed)
 airflowVersion: "2.2.1"
 
+uid: 1000
+gid: 1337
+
 executor: KubernetesExecutor
 
 ingress:
@@ -26,10 +29,12 @@ data:
     port: 5432
     db: airflow
 
-# logs:
-#   persistence:
-#     enabled: true
-#     existingClaim: airflow-logs-pv-claim
+logs:
+  persistence:
+    enabled: true
+    # storageClassName: efs-sc
+    # size: 5Gi
+    existingClaim: efs-claim
 
 webserver:
   replicas: 1
