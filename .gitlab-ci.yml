@@ -1,6 +1,8 @@
-
 stages:
   - test
+  - publish
+  - validate
+  - plan
   - deploy
 
 .meltano:
@@ -9,10 +11,41 @@ stages:
   - cd data/
   - pip3 install meltano
 
-##########################
-# Testing
-##########################
+.docker:
+  variables:
+    DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
+    AWS_DEFAULT_REGION: us-east-1
+    DOCKER_HOST: tcp://docker:2375
+  image:
+    name: amazon/aws-cli
+    entrypoint: [""]
+  services:
+  - docker:dind
+  before_script:
+  - amazon-linux-extras install docker
+  - aws --version
+  - docker --version
+  - aws ecr get-login-password | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+  rules:
+  - if: $CI_COMMIT_BRANCH == "master"
+    when: always
 
+.terraform:
+  image:
+    name: hashicorp/terraform:light
+    entrypoint:
+      - '/usr/bin/env'
+      - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  before_script:
+  - cd deploy/meltano
+  - rm -rf .terraform
+  - terraform --version
+  - terraform init
+  rules:
+  - if: $CI_COMMIT_BRANCH == "master"
+    when: always
+
+# SQL linting
 sqlfluff:
   extends:
   - .meltano
@@ -20,34 +53,66 @@ sqlfluff:
   script:
   - meltano install utilities sqlfluff
   - meltano invoke sqlfluff lint -v
-  rules:
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: never
-  - when: always
 
-##########################
-# Daily data pipeline
-##########################
-
-hub-metrics-prod:
+# Build & Publish Docker Images
+docker-build-meltano:
   extends:
-  - .meltano
-  variables:
-    STAGE: prod
-    JOB_ID: HUB-METRICS-PROD
-  stage: deploy
-  needs: []
+  - .docker
+  stage: publish
   script:
-  - meltano install
-  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
-  - meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_$JOB_ID
-  - meltano --environment=prod invoke dbt:run --models marts.publish.meltano_hub.*
-  - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
-  - meltano --environment=prod elt tap-athena-audit target-yaml-audit
-  - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
-  - meltano --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
-  rules:
-  - if: $CI_COMMIT_BRANCH == "main"
-    when: always
-  - if: $CI_PIPELINE_SOURCE == "schedule"
-    when: always
+  - docker pull $DOCKER_REGISTRY/m5o-prod-meltano:latest || true
+  - >
+    docker build
+    --cache-from $DOCKER_REGISTRY/m5o-prod-meltano:latest
+    -t $DOCKER_REGISTRY/m5o-prod-meltano:latest
+    -t $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
+    -f deploy/meltano/data/meltano/Dockerfile
+    data/
+  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
+  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
+
+# Build and Publish Airflow Image
+docker-build-airflow:
+  extends:
+  - .docker
+  stage: publish
+  script:
+  - docker pull $DOCKER_REGISTRY/m5o-prod-airflow:latest || true
+  - >
+    docker build
+    --cache-from $DOCKER_REGISTRY/m5o-prod-airflow:latest
+    -t $DOCKER_REGISTRY/m5o-prod-airflow:latest
+    -t $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
+    -f deploy/meltano/data/airflow/Dockerfile
+    data/
+  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
+  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
+
+# Deploy New Images
+terraform-validate:
+  extends:
+  - .terraform
+  stage: validate
+  script:
+    - terraform validate
+
+terraform-plan:
+  extends:
+  - .terraform
+  stage: plan
+  script:
+    - terraform plan -out "planfile" -var "airflow_image_tag=${CI_COMMIT_SHORT_SHA}" -var "meltano_image_tag=${CI_COMMIT_SHORT_SHA}"
+  dependencies:
+    - terraform-validate
+  artifacts:
+    paths:
+      - deploy/meltano/planfile
+
+terraform-apply:
+  extends:
+  - .terraform
+  stage: deploy
+  script:
+    - terraform apply -input=false "planfile"
+  dependencies:
+    - terraform-plan
