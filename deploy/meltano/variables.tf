@@ -1,12 +1,7 @@
-
-variable "meltano_image_tag" {
-  type        = string
-  description = "The Docker image tag to deploy."
+variable "airflow_image_tag" {
   default = "latest"
 }
 
-variable "airflow_image_tag" {
-  type        = string
-  description = "The Docker image tag to deploy."
+variable "meltano_image_tag" {
   default = "latest"
 }
