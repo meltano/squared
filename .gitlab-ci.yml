@@ -82,10 +82,10 @@ docker-build-airflow:
     docker build
     --cache-from $DOCKER_REGISTRY/m5o-prod-airflow:latest
     -t $DOCKER_REGISTRY/m5o-prod-airflow:latest
-    -t $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
+    -t $DOCKER_REGISTRY/m5o-prod-airflow:$CI_COMMIT_SHA
     -f deploy/meltano/Dockerfile.airflow
     data/
-  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
+  - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
 
 # Deploy New Images
@@ -101,8 +101,8 @@ terraform-plan:
   - .terraform
   stage: plan
   script:
-    - export TF_VAR_airflow_image_tag='$CI_COMMIT_SHORT_SHA'
-    - export TF_VAR_meltano_image_tag='$CI_COMMIT_SHORT_SHA'
+    - export TF_VAR_airflow_image_tag=$CI_COMMIT_SHA
+    - export TF_VAR_meltano_image_tag=$CI_COMMIT_SHA
     - terraform plan -out "planfile"
   dependencies:
     - terraform-validate
