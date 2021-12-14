@@ -65,10 +65,10 @@ docker-build-meltano:
     docker build
     --cache-from $DOCKER_REGISTRY/m5o-prod-meltano:latest
     -t $DOCKER_REGISTRY/m5o-prod-meltano:latest
-    -t $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
+    -t $DOCKER_REGISTRY/m5o-prod-meltano:$CI_COMMIT_SHA
     -f deploy/meltano/Dockerfile.meltano
     data/
-  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
+  - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
 
 # Build and Publish Airflow Image
