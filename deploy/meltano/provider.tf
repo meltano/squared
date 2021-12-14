@@ -1,13 +1,13 @@
 provider "aws" {
-  region = local.region
+  region = local.aws_region
 }
 
 data "aws_eks_cluster" "eks" {
-  name = local.eks_cluster_id
+  name = local.inventory.kubernetes_cluster.cluster_id
 }
 
 data "aws_eks_cluster_auth" "eks" {
-  name = local.eks_cluster_id
+  name = local.inventory.kubernetes_cluster.cluster_id
 }
 
 provider "kubernetes" {
