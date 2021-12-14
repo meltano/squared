@@ -66,7 +66,7 @@ docker-build-meltano:
     --cache-from $DOCKER_REGISTRY/m5o-prod-meltano:latest
     -t $DOCKER_REGISTRY/m5o-prod-meltano:latest
     -t $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
-    -f deploy/meltano/data/meltano/Dockerfile
+    -f deploy/meltano/Dockerfile.meltano
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:${CI_COMMIT_SHORT_SHA}
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
@@ -83,7 +83,7 @@ docker-build-airflow:
     --cache-from $DOCKER_REGISTRY/m5o-prod-airflow:latest
     -t $DOCKER_REGISTRY/m5o-prod-airflow:latest
     -t $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
-    -f deploy/meltano/data/airflow/Dockerfile
+    -f deploy/meltano/Dockerfile.airflow
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:${CI_COMMIT_SHORT_SHA}
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
