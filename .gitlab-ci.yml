@@ -101,7 +101,9 @@ terraform-plan:
   - .terraform
   stage: plan
   script:
-    - terraform plan -out "planfile" -var 'airflow_image_tag="${CI_COMMIT_SHORT_SHA}"' -var 'meltano_image_tag="${CI_COMMIT_SHORT_SHA}"'
+    - export TF_VAR_airflow_image_tag='$CI_COMMIT_SHORT_SHA'
+    - export TF_VAR_meltano_image_tag='$CI_COMMIT_SHORT_SHA'
+    - terraform plan -out "planfile"
   dependencies:
     - terraform-validate
   artifacts:
