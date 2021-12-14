@@ -23,8 +23,8 @@ locals {
 }
 
 module "meltano" {
-  #source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
-  source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
+  source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
+  # source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
   # aws
   aws_region = local.inventory.aws.region
   # airflow
