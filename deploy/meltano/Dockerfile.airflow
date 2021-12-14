@@ -15,7 +15,8 @@ ENV AIRFLOW_HOME=/opt/airflow
 ENV MELTANO_HOME=$AIRFLOW_HOME/meltano
 
 # Install meltano
-RUN pip install 'meltano==1.89.0'
+RUN pip install pipx
+RUN pipx install 'meltano==1.89.0'
 
 RUN mkdir $MELTANO_HOME
 RUN mkdir $MELTANO_HOME/.meltano/
