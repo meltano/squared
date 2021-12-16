@@ -6,7 +6,7 @@ from textwrap import dedent
 from airflow import DAG
 
 # Operators; we need this to operate!
-from airflow.operators.bash import BashOperator
+from meltano_k8_operator import MeltanoKubernetesPodOperator
 # These args will get passed on to each operator
 # You can override them on a per-task basis during operator initialization
 default_args = {
@@ -42,39 +42,39 @@ with DAG(
     tags=['hub'],
 ) as dag:
 
-    # `cd $MELTANO_PROJECT_ROOT &&` is a hack until we resolve the issue of mutli-yaml not referencing $MELTANO_PROJECT_ROOT
-    t1 = BashOperator(
+    t1 = MeltanoKubernetesPodOperator(
         task_id='ga_athena_hub_metrics',
-        bash_command='cd $MELTANO_PROJECT_ROOT && meltano --environment=prod elt tap-google-analytics target-athena --job_id=ga_athena_hub_metrics',
+        name='hub-metrics-ga-athena-hub-metrics',
+        environment='prod',
+        debug=True,
+        arguments=["elt", "tap-google-analytics", "target-athena", "--job_id=ga_athena_hub_metrics"]
     )
 
-    t2 = BashOperator(
+    t2 = MeltanoKubernetesPodOperator(
         task_id='dbt_hub_metrics',
-        bash_command='cd $MELTANO_PROJECT_ROOT && meltano --environment=prod invoke dbt:run --models marts.publish.meltano_hub.*',
+        name='hub-metrics-dbt-hub-metrics',
+        environment='prod',
+        arguments=["invoke", "dbt:run", "--models marts.publish.meltano_hub.*"]
     )
 
-    publish_metrics_command = dedent(
-        f"""
-        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
-        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod invoke awscli s3 cp metrics.yml { os.getenv('HUB_METRICS_S3_PATH') }
-        """
+    t3 = MeltanoKubernetesPodOperator(
+        task_id='publish_hub_metrics',
+        name='hub-metrics-publish-hub-metrics',
+        environment='prod',
+        arguments=[
+            "elt", "tap-athena-metrics", "target-yaml-metrics", "&&",
+            "meltano", "invoke", "awscli", "s3", "cp", "metrics.yml", "$HUB_METRICS_S3_PATH"
+        ]
     )
 
-    t3 = BashOperator(
-        task_id='publish_metrics',
-        bash_command=publish_metrics_command
-    )
-
-    publish_audit_command = dedent(
-        f"""
-        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod elt tap-athena-audit target-yaml-audit
-        cd $MELTANO_PROJECT_ROOT && meltano --environment=prod invoke awscli s3 cp audit.yml { os.getenv('HUB_METRICS_S3_PATH') }
-        """
-    )
-
-    t4 = BashOperator(
+    t4 = MeltanoKubernetesPodOperator(
         task_id='publish_audit',
-        bash_command=publish_audit_command
+        name='hub-metrics-publish-hub-metrics',
+        environment='prod',
+        arguments=[
+            "elt", "tap-athena-audit", "target-yaml-audit", "&&",
+            "meltano", "invoke", "awscli", "s3", "cp", "audit.yml", "$HUB_METRICS_S3_PATH"
+        ]
     )
 
     t1 >> t2 >> [t3, t4]
