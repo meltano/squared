@@ -4,6 +4,7 @@ stages:
   - validate
   - plan
   - deploy
+  - run
 
 .meltano:
   image: python:3.8
