@@ -4,6 +4,7 @@ stages:
   - validate
   - plan
   - deploy
+  - run
 
 .meltano:
   image: python:3.8
@@ -118,3 +119,19 @@ terraform-apply:
     - terraform apply -input=false "planfile"
   dependencies:
     - terraform-plan
+
+hub-metrics-prod:
+  extends:
+  - .meltano
+  variables:
+    JOB_ID: HUB-METRICS-PROD
+  stage: run
+  only:
+  - schedule
+  needs: []
+  script:
+  - meltano install
+  - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
+  - meltano --environment=prod elt tap-athena-audit target-yaml-audit
+  - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
+  - meltano --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
