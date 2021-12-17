@@ -54,7 +54,7 @@ with DAG(
         task_id='dbt_hub_metrics',
         name='hub-metrics-dbt-hub-metrics',
         environment='prod',
-        arguments=["invoke", "dbt:run", "--models marts.publish.meltano_hub.*"]
+        arguments=["invoke", "dbt:run", "--models", "marts.publish.meltano_hub.*"]
     )
 
     t3 = MeltanoKubernetesPodOperator(
