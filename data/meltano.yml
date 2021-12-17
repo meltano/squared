@@ -7,7 +7,7 @@ plugins:
   extractors:
   - name: tap-slack
     namespace: tap_slack
-    pip_url: git+https://github.com/pnadolny13/tap-slack.git@auto_join_fix_and_channels_filter
+    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
     executable: tap-slack
     capabilities:
     - catalog
@@ -21,7 +21,7 @@ plugins:
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
-      channels:
+      selected_channels:
       - C01SK13R9NJ
       channel_types:
       - private_channel
@@ -107,24 +107,19 @@ plugins:
   - name: tap-gitlab
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-gitlab.git
-    # Excludes are for fields that cause errors
     select:
     - projects.*
-    - '!projects.shared_with_groups'
-    - '!projects.tag_list'
     - users.*
     - merge_requests.*
     - issues.*
     - branches.*
     - commits.*
-    - '!commits.parent_ids'
     - groups.*
-    - '!groups.projects'
     - project_labels.*
   loaders:
   - name: target-athena
     namespace: target_athena
-    pip_url: git+https://github.com/MeltanoLabs/target-athena.git@7db569316a5acdd30af344f8119f5928a9824cbe
+    pip_url: git+https://github.com/pnadolny13/target-athena.git@bump_sdk_version
     settings:
     - name: aws_access_key_id
       kind: password
