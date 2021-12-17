@@ -133,7 +133,7 @@ hub-metrics-prod:
   - meltano install extractors tap-athena-metrics tap-athena-audit
   - meltano install loaders target-yaml-metrics target-yaml-audit
   - meltano install utilities awscli
-  - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
+  - meltano --log-level=debug --environment=prod elt tap-athena-metrics target-yaml-metrics
   - meltano --log-level=debug --environment=prod elt tap-athena-audit target-yaml-audit
   - meltano --log-level=debug --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
   - meltano --log-level=debug --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
