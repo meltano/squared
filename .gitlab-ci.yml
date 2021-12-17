@@ -4,6 +4,7 @@ stages:
   - validate
   - plan
   - deploy
+  - run
 
 .meltano:
   image: python:3.8
@@ -118,3 +119,21 @@ terraform-apply:
     - terraform apply -input=false "planfile"
   dependencies:
     - terraform-plan
+
+# Temporary schedule job until airflow S3 push is working
+hub-metrics-prod:
+  extends:
+  - .meltano
+  stage: run
+  only:
+  - schedule
+  needs: []
+  script:
+  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
+  - meltano install extractors tap-athena-metrics tap-athena-audit
+  - meltano install loaders target-yaml-metrics target-yaml-audit
+  - meltano install utilities awscli
+  - meltano --environment=prod elt tap-athena-metrics target-yaml-metrics
+  - meltano --environment=prod elt tap-athena-audit target-yaml-audit
+  - meltano --environment=prod invoke awscli s3 cp audit.yml $HUB_METRICS_S3_PATH
+  - meltano --environment=prod invoke awscli s3 cp metrics.yml $HUB_METRICS_S3_PATH
