@@ -62,7 +62,7 @@ with DAG(
         name='hub-metrics-publish-hub-metrics',
         environment='prod',
         arguments=[
-            "meltano elt tap-athena-metrics target-yaml-metrics && meltano invoke awscli s3 cp metrics.yml $(HUB_METRICS_S3_PATH)"
+            "meltano elt tap-athena-metrics target-yaml-metrics && meltano invoke awscli s3 cp metrics.yml s3://prod-meltano-bucket-01/hub_metrics/"
         ]
     )
 
@@ -71,7 +71,7 @@ with DAG(
         name='hub-metrics-publish-hub-metrics',
         environment='prod',
         arguments=[
-            "meltano elt tap-athena-audit target-yaml-audit && meltano invoke awscli s3 cp audit.yml $(HUB_METRICS_S3_PATH)"
+            "meltano elt tap-athena-audit target-yaml-audit && meltano invoke awscli s3 cp audit.yml s3://prod-meltano-bucket-01/hub_metrics/"
         ]
     )
 
