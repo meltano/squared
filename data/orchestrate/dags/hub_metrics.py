@@ -47,22 +47,22 @@ with DAG(
         name='hub-metrics-ga-athena-hub-metrics',
         environment='prod',
         debug=True,
-        arguments=["elt", "tap-google-analytics", "target-athena", "--job_id=ga_athena_hub_metrics"]
+        cmds=["meltano", "elt", "tap-google-analytics", "target-athena", "--job_id=ga_athena_hub_metrics"]
     )
 
     t2 = MeltanoKubernetesPodOperator(
         task_id='dbt_hub_metrics',
         name='hub-metrics-dbt-hub-metrics',
         environment='prod',
-        arguments=["invoke", "dbt:run", "--models", "marts.publish.meltano_hub.*"]
+        cmds=["meltano", "invoke", "dbt:run", "--models", "marts.publish.meltano_hub.*"]
     )
 
     t3 = MeltanoKubernetesPodOperator(
         task_id='publish_hub_metrics',
         name='hub-metrics-publish-hub-metrics',
         environment='prod',
-        arguments=[
-            "elt", "tap-athena-metrics", "target-yaml-metrics", "&&",
+        cmds=[
+            "meltano", "elt", "tap-athena-metrics", "target-yaml-metrics", "&&",
             "meltano", "invoke", "awscli", "s3", "cp", "metrics.yml", "$HUB_METRICS_S3_PATH"
         ]
     )
@@ -71,8 +71,8 @@ with DAG(
         task_id='publish_audit',
         name='hub-metrics-publish-hub-metrics',
         environment='prod',
-        arguments=[
-            "elt", "tap-athena-audit", "target-yaml-audit", "&&",
+        cmds=[
+            "meltano", "elt", "tap-athena-audit", "target-yaml-audit", "&&",
             "meltano", "invoke", "awscli", "s3", "cp", "audit.yml", "$HUB_METRICS_S3_PATH"
         ]
     )

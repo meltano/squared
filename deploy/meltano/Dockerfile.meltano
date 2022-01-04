@@ -19,3 +19,6 @@ ENV MELTANO_PROJECT_READONLY 1
 
 # Copy over remaining project files
 COPY . .
+
+ENTRYPOINT [ "/bin/sh", "-c" ]
+CMD ["meltano"]
