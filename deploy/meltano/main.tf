@@ -2,10 +2,6 @@ locals {
   aws_region = "us-east-1"
 }
 
-data "aws_ssm_parameter" "inventory" {
-  name = "/prod/meltano/inventory"
-}
-
 data "aws_ssm_parameter" "airflow_fernet_key" {
   name = "/prod/meltano/airflow/fernet_key"
 }
@@ -16,6 +12,10 @@ data "aws_ssm_parameter" "airflow_webserver_secret" {
 
 data "aws_ssm_parameter" "meltano_env_file" {
   name = "/prod/meltano/env_file"
+}
+
+data "aws_ssm_parameter" "inventory" {
+  name = "/prod/meltano/inventory"
 }
 
 locals {
