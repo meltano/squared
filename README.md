@@ -1,10 +1,8 @@
 # Squared - Meltano for Meltano
 
-@tayloramurphy is working to setup Meltano for the Meltano to pull in data from:
+This is the project the Meltano team uses to manage their Meltano instance. 
 
-* GitLab
-* Slack
-* Intercom
-* Zendesk
-* Twitter?
-* Google Analytics
+This project is used to process data for [MeltanoHub](https://hub.meltano.com/) and for internal metrics as defined in the [Handbook](https://handbook.meltano.com/data-team/). 
+
+The primary maintainer is @pnadolny13. 
+The primary slack channel for discussion is [#meltano-cubed](https://meltano.slack.com/archives/C02GH7KNPAL).
