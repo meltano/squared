@@ -244,4 +244,23 @@ plugins:
     namespace: awscli
     pip_url: awscli==1.21.7
     executable: aws
+  - name: superset
+    namespace: superset
+    commands:
+      up:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml up -d
+      down:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml down -v
+      export:
+        executable: python
+        args: analyze/superset/export.py
+      import:
+        executable: python
+        args: analyze/superset/import.py
+    env:
+      API_URL: http://localhost:8088
+      USER: admin
+      PASS: admin
 environments: []
