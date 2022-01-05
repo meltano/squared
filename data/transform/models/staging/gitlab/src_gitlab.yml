@@ -5,6 +5,6 @@ sources:
     database: "{{ env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
     schema: "{{ env_var('DBT_SOURCE_SCHEMA', env_var('SQLFLUFF_SOURCE_SCHEMA', '')) }}"
     tables:
-      - name: issues
-      - name: merge_requests
-      - name: projects
+      - name: gitlab_issues
+      - name: gitlab_merge_requests
+      - name: gitlab_projects
