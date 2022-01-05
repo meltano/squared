@@ -1,3 +1,5 @@
 /venv
 /.meltano
 .env
+
+/analyze/**/*.pyc
