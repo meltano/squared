@@ -22,7 +22,7 @@ company_domain_first_joined AS (
     SELECT
         email_domain,
         MIN(first_joined_date) AS first_join_date
-    FROM company_domains GROUP BY 2 ORDER BY 1 DESC
+    FROM company_domains GROUP BY 1 ORDER BY 1 DESC
 )
 
 SELECT * FROM company_domain_first_joined

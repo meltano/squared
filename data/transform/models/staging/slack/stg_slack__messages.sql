@@ -7,7 +7,7 @@ WITH source AS (
                 ts, COALESCE(client_msg_id, (COALESCE("user", bot_id) || ts))
             ORDER BY DATE_PARSE(_sdc_batched_at, '%Y-%m-%d %H:%i:%s.%f') DESC
         ) AS row_num
-    FROM {{ source('tap_slack', 'messages') }}
+    FROM {{ source('tap_slack', 'slack_messages') }}
 
 ),
 
