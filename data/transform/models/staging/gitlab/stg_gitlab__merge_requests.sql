@@ -14,7 +14,7 @@ WITH source AS (
                     ) AS TIMESTAMP
                 )) DESC
         ) AS row_num
-    FROM {{ source('tap_gitlab', 'merge_requests') }}
+    FROM {{ source('tap_gitlab', 'gitlab_merge_requests') }}
 
 ),
 
