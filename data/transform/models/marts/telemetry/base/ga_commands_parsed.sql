@@ -16,7 +16,7 @@ exec_event AS (
             'meltano invoke', 'meltano elt', 'meltano ui', 'meltano test'
         )
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -45,7 +45,7 @@ singer AS (
     FROM unique_commands
     WHERE command_category = 'meltano elt'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -55,7 +55,7 @@ singer AS (
             OR SPLIT_PART(command, ' ', 3) LIKE 'target%'
         )
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -71,20 +71,20 @@ dbt AS (
     WHERE command_category = 'meltano elt'
         AND command LIKE 'meltano elt% --transform run%'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command LIKE 'meltano invoke dbt%'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add transformers'
         AND SPLIT_PART(command, ' ', 4) LIKE 'dbt'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -99,20 +99,20 @@ airflow AS (
     WHERE command_category = 'meltano invoke'
         AND SPLIT_PART(command, ' ', 3) LIKE 'airflow%'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano schedule'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add orchestrators'
         AND SPLIT_PART(command, ' ', 4) LIKE 'airflow'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -128,7 +128,7 @@ dagster AS (
     WHERE command_category = 'meltano invoke'
         AND SPLIT_PART(command, ' ', 3) LIKE 'dagster'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -144,14 +144,14 @@ lightdash AS (
     WHERE command_category = 'meltano invoke'
         AND SPLIT_PART(command, ' ', 3) LIKE 'lighdash'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add utilities'
         AND SPLIT_PART(command, ' ', 4) LIKE 'lighdash'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -167,7 +167,7 @@ superset AS (
     WHERE command_category = 'meltano invoke'
         AND SPLIT_PART(command, ' ', 3) LIKE 'superset'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
@@ -183,14 +183,14 @@ sqlfluff AS (
     WHERE command_category = 'meltano invoke'
         AND SPLIT_PART(command, ' ', 3) LIKE 'sqlfluff'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add files'
         AND SPLIT_PART(command, ' ', 4) LIKE 'sqlfluff'
 
-    UNION DISTINCT
+    UNION ALL
 
     SELECT command
     FROM unique_commands
