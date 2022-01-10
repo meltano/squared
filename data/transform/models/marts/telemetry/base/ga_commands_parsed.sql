@@ -2,7 +2,9 @@ WITH unique_commands AS (
 
     SELECT DISTINCT
         command,
-        command_category
+        command_category,
+        SPLIT_PART(command, ' ', 3) AS split_part_3,
+        SPLIT_PART(command, ' ', 4) AS split_part_4
     FROM {{ ref('stg_ga__cli_events') }}
 
 ),
@@ -21,7 +23,7 @@ exec_event AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano schedule'
-        AND SPLIT_PART(command, ' ', 3) LIKE 'run%'
+        AND split_part_3 LIKE 'run%'
 
 ),
 
@@ -51,8 +53,8 @@ singer AS (
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
         AND (
-            SPLIT_PART(command, ' ', 3) LIKE 'tap%'
-            OR SPLIT_PART(command, ' ', 3) LIKE 'target%'
+            split_part_3 LIKE 'tap%'
+            OR split_part_3 LIKE 'target%'
         )
 
     UNION ALL
@@ -82,14 +84,14 @@ dbt AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add transformers'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'dbt'
+        AND split_part_4 LIKE 'dbt'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add files'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'dbt'
+        AND split_part_4 LIKE 'dbt'
 
 ),
 
@@ -97,7 +99,7 @@ airflow AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
-        AND SPLIT_PART(command, ' ', 3) LIKE 'airflow%'
+        AND split_part_3 LIKE 'airflow%'
 
     UNION ALL
 
@@ -110,14 +112,14 @@ airflow AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add orchestrators'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'airflow'
+        AND split_part_4 LIKE 'airflow'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add files'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'airflow'
+        AND split_part_4 LIKE 'airflow'
 
 ),
 
@@ -126,14 +128,14 @@ dagster AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
-        AND SPLIT_PART(command, ' ', 3) LIKE 'dagster'
+        AND split_part_3 LIKE 'dagster'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add utilities'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'dagster'
+        AND split_part_4 LIKE 'dagster'
 
 ),
 
@@ -142,21 +144,21 @@ lightdash AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
-        AND SPLIT_PART(command, ' ', 3) LIKE 'lighdash'
+        AND split_part_3 LIKE 'lighdash'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add utilities'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'lighdash'
+        AND split_part_4 LIKE 'lighdash'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add files'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'lighdash'
+        AND split_part_4 LIKE 'lighdash'
 
 ),
 
@@ -165,14 +167,14 @@ superset AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
-        AND SPLIT_PART(command, ' ', 3) LIKE 'superset'
+        AND split_part_3 LIKE 'superset'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add files'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'superset'
+        AND split_part_4 LIKE 'superset'
 
 ),
 
@@ -181,21 +183,21 @@ sqlfluff AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
-        AND SPLIT_PART(command, ' ', 3) LIKE 'sqlfluff'
+        AND split_part_3 LIKE 'sqlfluff'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add files'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'sqlfluff'
+        AND split_part_4 LIKE 'sqlfluff'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano add utilities'
-        AND SPLIT_PART(command, ' ', 4) LIKE 'sqlfluff'
+        AND split_part_4 LIKE 'sqlfluff'
 ),
 
 -- Features
