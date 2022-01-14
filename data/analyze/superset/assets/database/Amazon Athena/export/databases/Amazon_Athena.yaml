@@ -1,0 +1,15 @@
+database_name: Amazon Athena
+sqlalchemy_uri: awsathena+rest://AKIAUIM62HCRTCGJ5T7W:XXXXXXXXXX@athena.us-east-2.amazonaws.com/dbt_prod?s3_staging_dir=s3%3A%2F%2Fprod-meltano-bucket-01%2Fdata%2Fraw01%2Fdbt%2F
+cache_timeout: null
+expose_in_sqllab: true
+allow_run_async: false
+allow_ctas: false
+allow_cvas: false
+allow_csv_upload: false
+extra:
+  metadata_params: {}
+  engine_params: {}
+  metadata_cache_timeout: {}
+  schemas_allowed_for_csv_upload: []
+uuid: 75930016-3d6e-4338-b9e6-40cc545534b4
+version: 1.0.0

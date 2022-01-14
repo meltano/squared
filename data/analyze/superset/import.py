@@ -5,16 +5,16 @@ import shutil
 
 import requests
 
-API_URL = os.environ["SUPERSET__ENV_API_URL"] + "/api/v1/"
+API_URL = os.environ["SUPERSET_API_URL"] + "/api/v1/"
 ASSETS_PATH = os.path.join(pathlib.Path(__file__).parent.resolve(), "assets")
 
 
 def get_jwt_token():
     payload = {
-        "password": os.environ["SUPERSET__ENV_PASS"],
+        "password": os.environ["SUPERSET_PASS"],
         "provider": "db",
         "refresh": True,
-        "username": os.environ["SUPERSET__ENV_USER"]
+        "username": os.environ["SUPERSET_USER"]
     }
     resp = requests.post(API_URL + "security/login", json=payload)
     return resp.json().get("access_token")

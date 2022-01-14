@@ -1,0 +1,106 @@
+slice_name: Monthly Plugin Usage Percentage
+viz_type: echarts_timeseries_line
+params:
+  adhoc_filters: []
+  annotation_layers: []
+  color_scheme: supersetColors
+  comparison_type: values
+  datasource: 2__table
+  extra_form_data: {}
+  forecastInterval: 0.8
+  forecastPeriods: 10
+  granularity_sqla: event_date
+  groupby: []
+  legendOrientation: top
+  legendType: scroll
+  markerSize: 6
+  metrics:
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: dbt
+    optionName: metric_r84c5qm5q1n_k25kv86pcsr
+    sqlExpression: count(distinct case when is_plugin_dbt then project_id else null
+      end)*1.0/count(distinct project_id)
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Singer
+    optionName: metric_awqupv4mfxa_rpwp5sxb4fr
+    sqlExpression: count(distinct case when is_plugin_singer then project_id else
+      null end)*1.0/count(distinct project_id)
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Airflow
+    optionName: metric_78lr0peuras_sschlupahud
+    sqlExpression: count(distinct case when is_plugin_airflow then project_id else
+      null end)*1.0/count(distinct project_id)
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Dagster
+    optionName: metric_y2jmd2mceqc_4bimfmjnjn7
+    sqlExpression: count(distinct case when is_plugin_dagster then project_id else
+      null end)*1.0/count(distinct project_id)
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Lightdash
+    optionName: metric_f44qn4q0lhm_un3xqbltvf
+    sqlExpression: count(distinct case when is_plugin_lightdash then project_id else
+      null end)*1.0/count(distinct project_id)
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Superset
+    optionName: metric_16zt16v48bi_3yi4jyumssk
+    sqlExpression: count(distinct case when is_plugin_superset then project_id else
+      null end)*1.0/count(distinct project_id)
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Sqlfluff
+    optionName: metric_66ntwg70mbf_ktfuuns1cr
+    sqlExpression: count(distinct case when is_plugin_sqlfluff then project_id else
+      null end)*1.0/count(distinct project_id)
+  only_total: true
+  order_desc: true
+  rich_tooltip: true
+  row_limit: 10000
+  show_legend: true
+  time_grain_sqla: P1M
+  time_range: No filter
+  time_range_endpoints:
+  - inclusive
+  - exclusive
+  tooltipTimeFormat: smart_date
+  url_params: {}
+  viz_type: echarts_timeseries_line
+  x_axis_time_format: smart_date
+  x_axis_title_margin: 15
+  y_axis_bounds:
+  - null
+  - null
+  y_axis_format: ',.1%'
+  y_axis_title_margin: 15
+  y_axis_title_position: Left
+  zoomable: true
+cache_timeout: null
+uuid: 871f4297-f4c0-4fa9-96fd-c484224227bc
+version: 1.0.0
+dataset_uuid: 90320e58-b0d0-40c7-bea0-6e67b27ed2a9
