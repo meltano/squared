@@ -61,3 +61,6 @@ environments:
     USER_PREFIX: melty
     DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
     ATHENA_CATALOG: awsdatacatalog
+    SUPERSET_API_URL: http://localhost:8088
+    SUPERSET_USER: admin
+    SUPERSET_PASS: admin

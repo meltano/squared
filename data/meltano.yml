@@ -17,7 +17,7 @@ plugins:
     - stream-maps
     settings:
     - name: api_key
-      type: password
+      kind: password
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
@@ -259,8 +259,4 @@ plugins:
       import:
         executable: python
         args: analyze/superset/import.py
-    env:
-      API_URL: http://localhost:8088
-      USER: admin
-      PASS: admin
 environments: []
