@@ -6,7 +6,8 @@ This analyze module includes utilities to get Superset up and running locally us
 The following are the steps to get it running on your local:
 
 -  Run the `up` command to start up all the Superset containers.
-Once its done starting up you can go to http://localhost:8088/ and login using the default credenditals (user: admin, pass:admin).
+
+Once its done starting up you can go to http://localhost:8088/ and login using the default credentials (user: admin, pass: admin).
 
     ```bash
     meltano --environment=userdev invoke superset:up
