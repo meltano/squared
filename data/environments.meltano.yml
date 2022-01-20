@@ -30,6 +30,8 @@ environments:
     DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
     ATHENA_CATALOG: awsdatacatalog
     HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
+    RAW_SCHEMA: prod01_raw
+    DBT_SCHEMA: dbt_prod
 - name: userdev
   config:
     plugins:

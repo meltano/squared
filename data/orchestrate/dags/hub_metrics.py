@@ -51,13 +51,29 @@ with DAG(
     )
 
     t2 = MeltanoKubernetesPodOperator(
+        task_id='ge_raw_validate',
+        name='hub-metrics-ge-raw-validate',
+        environment='prod',
+        debug=True,
+        arguments=["meltano invoke great_expectations checkpoint run google_analytics_raw"]
+    )
+
+    t3 = MeltanoKubernetesPodOperator(
         task_id='dbt_hub_metrics',
         name='hub-metrics-dbt-hub-metrics',
         environment='prod',
         arguments=["meltano invoke dbt:run --models +marts.publish.meltano_hub.*"]
     )
 
-    t3 = MeltanoKubernetesPodOperator(
+    t4 = MeltanoKubernetesPodOperator(
+        task_id='ge_consumption_validate',
+        name='hub-metrics-ge-consumption-validate',
+        environment='prod',
+        debug=True,
+        arguments=["meltano invoke great_expectations checkpoint run dbt_hub_metrics"]
+    )
+
+    t5 = MeltanoKubernetesPodOperator(
         task_id='publish_hub_metrics',
         name='hub-metrics-publish-hub-metrics',
         environment='prod',
@@ -66,7 +82,7 @@ with DAG(
         ]
     )
 
-    t4 = MeltanoKubernetesPodOperator(
+    t6 = MeltanoKubernetesPodOperator(
         task_id='publish_audit',
         name='hub-metrics-publish-hub-metrics',
         environment='prod',
@@ -75,4 +91,4 @@ with DAG(
         ]
     )
 
-    t1 >> t2 >> [t3, t4]
+    t1 >> t2 >> t3 >> t4 >> [t5, t6]

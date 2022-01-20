@@ -1,0 +1,140 @@
+{
+  "data_asset_type": null,
+  "expectation_suite_name": "google_analytics_raw.events.warning",
+  "expectations": [
+    {
+      "expectation_type": "expect_table_columns_to_match_ordered_list",
+      "kwargs": {
+        "column_list": [
+          "ga_date",
+          "ga_eventcategory",
+          "ga_eventaction",
+          "ga_eventlabel",
+          "ga_totalevents",
+          "report_start_date",
+          "report_end_date",
+          "_sdc_received_at",
+          "_sdc_extracted_at",
+          "_sdc_batched_at",
+          "_sdc_deleted_at",
+          "_sdc_table_version",
+          "_sdc_sequence"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "min_value": 640282
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "ga_date"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_equal",
+      "kwargs": {
+        "column": "ga_date",
+        "value": 8
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "ga_eventcategory"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_in_set",
+      "kwargs": {
+        "column": "ga_eventcategory",
+        "value_set": [
+          "meltano add clis",
+          "meltano add dashboards",
+          "meltano add extractors",
+          "meltano add files",
+          "meltano add loaders",
+          "meltano add models",
+          "meltano add orchestrators",
+          "meltano add transformers",
+          "meltano add transforms",
+          "meltano add utilities",
+          "meltano discover",
+          "meltano elt",
+          "meltano init",
+          "meltano install",
+          "meltano invoke",
+          "meltano run",
+          "meltano schedule",
+          "meltano select",
+          "meltano test",
+          "meltano ui"
+        ]
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "ga_eventaction"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "ga_eventlabel"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_equal",
+      "kwargs": {
+        "column": "ga_eventlabel",
+        "value": 36,
+        "mostly": 0.99999
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "ga_totalevents"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "report_start_date"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "report_end_date"
+      },
+      "meta": {}
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "column": "_sdc_batched_at"
+      },
+      "meta": {}
+    }
+  ],
+  "ge_cloud_id": null,
+  "meta": {
+    "great_expectations_version": "0.14.1"
+  }
+}
