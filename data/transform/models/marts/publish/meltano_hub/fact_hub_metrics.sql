@@ -1,6 +1,15 @@
 WITH fact_repo_metrics AS (
 
-    SELECT *
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY
+                repo_full_name
+            ORDER BY
+                PARSE_DATETIME(
+                    created_at_timestamp, 'YYYY-MM-dd HH:mm:ssZ'
+                ) DESC
+        ) AS row_num
     FROM {{ source('hub_meltano', 'fact_repo_metrics') }}
 
 ),
@@ -35,6 +44,7 @@ rename_join AS (
     FROM fact_repo_metrics
     LEFT JOIN plugin_use_3m
         ON fact_repo_metrics.connector_name = plugin_use_3m.plugin_name
+    WHERE fact_repo_metrics.row_num = 1
 
 )
 

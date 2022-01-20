@@ -3,6 +3,7 @@ send_anonymous_usage_stats: true
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
 include_paths:
   - ./*.meltano.yml
+  - ../../*.meltano.yml
 plugins:
   extractors:
   - name: tap-slack
@@ -259,4 +260,8 @@ plugins:
       import:
         executable: python
         args: analyze/superset/import.py
+  - name: great_expectations
+    namespace: great_expectations
+    pip_url: great_expectations; sqlalchemy; PyAthenaJDBC>1.0.9; PyAthena>1.2.0
+    executable: great_expectations
 environments: []

@@ -8,6 +8,7 @@ WITH source AS (
             ORDER BY DATE_PARSE(_sdc_batched_at, '%Y-%m-%d %H:%i:%s.%f') DESC
         ) AS row_num
     FROM {{ source('tap_google_analytics', 'events') }}
+    WHERE ga_eventlabel != '(not set)'
 
 ),
 
