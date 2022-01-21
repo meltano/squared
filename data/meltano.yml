@@ -36,19 +36,6 @@ plugins:
     - users.*
     - channels.*
     - messages.*
-  - name: tap-csv
-    variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-csv.git
-    config:
-      files:
-      - entity: slack_users_all
-        path: /Users/pnadolny/Documents/Git/GitLab/squared/data/extract/orbit_slack_data/slack_users_all.csv
-        keys:
-        - Id
-      - entity: slack_users_prior
-        path: /Users/pnadolny/Documents/Git/GitLab/squared/data/extract/orbit_slack_data/slack_users_prior.csv
-        keys:
-        - Id
   - name: tap-google-analytics
     namespace: tap_google_analytics
     pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
