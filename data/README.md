@@ -1,0 +1,54 @@
+# Squared Meltano Project
+
+README files for installed plugins can be found in their respective subdirectories.
+For a few plugins they dont have subdiretories so they are described here.
+
+## SQLFluff
+
+This is a utility for linting and fixing SQL, including dbt templated SQL.
+Refer to their [GitHub repo](https://github.com/sqlfluff/sqlfluff) for more details.
+
+### Add and Install
+
+Use [this example](https://gitlab.com/rabidaudio/meltano-sqlfluff-example) to get SQLFluff installed and configured in your project.
+
+If this plugin is run in an ephemeral environment or is run on a machine with a fresh clone of the repo, you will need to install the configured python packages before you can execute the plugin:
+
+```bash
+meltano install utility sqlfluff
+# For example: Run linting
+meltano invoke sqlfluff lint -v
+```
+
+### Linting in CI
+
+Refer to [.gitlab-ci.yml](../.gitlab-ci.yml) to see an exmaple of using SQLFluff in CI for linting.
+
+
+## AWS CLI
+
+This is the CLI that lets you manage AWS services.
+Refer to their [GitHub repo](https://github.com/aws/aws-cli) for more details.
+
+## Adding and Installing
+
+Run the following command to get aws-cli installed in your Meltano project.
+
+```bash
+meltano add --custom utility awscli
+# (namespace) [awscli]:
+# (pip_url) [awscli]: awscli==1.21.7
+# (executable) [aws]:
+
+meltano invoke awscli s3 cp file1.txt s3://bucket-name/
+```
+
+The utility requires AWS credentials to be set in the environment - Refer to their [GitHub repo](https://github.com/aws/aws-cli) for more details.
+This can be done using configuration files but the easiest way is to add `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to your `.env` file.
+
+If this plugin is run in an ephemeral environment or is run on a machine with a fresh clone of the repo, you will need to install the configured python packages before you can execute the plugin:
+
+```bash
+meltano install utility awscli
+```
+
