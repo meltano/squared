@@ -1,4 +1,4 @@
-slice_name: Active Project View
+slice_name: Active Project Detail
 viz_type: table
 params:
   adhoc_filters:

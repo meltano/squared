@@ -1,11 +1,11 @@
-slice_name: Events By Category
+slice_name: Monthly Events By Category
 viz_type: echarts_timeseries_line
 params:
   adhoc_filters: []
   annotation_layers: []
   color_scheme: supersetColors
   comparison_type: values
-  datasource: 5__table
+  datasource: 2__table
   extra_form_data: {}
   forecastInterval: 0.8
   forecastPeriods: 10
@@ -45,7 +45,7 @@ params:
   row_limit: 10000
   show_legend: true
   show_value: true
-  slice_id: 3
+  slice_id: 2
   time_grain_sqla: P1M
   time_range: No filter
   time_range_endpoints:
@@ -62,11 +62,6 @@ params:
   y_axis_format: SMART_NUMBER
   y_axis_title_margin: 15
   y_axis_title_position: Left
-  remote_id: 3
-  datasource_name: fact_cli_events
-  schema: dbt_prod
-  database_name: Amazon Athena
-  import_time: 1642194051
 cache_timeout: null
 uuid: 06aead0d-56df-4007-b66c-39021310a556
 version: 1.0.0
