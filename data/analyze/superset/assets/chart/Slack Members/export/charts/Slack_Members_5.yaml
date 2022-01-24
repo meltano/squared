@@ -52,6 +52,6 @@ params:
   viz_type: big_number_total
   y_axis_format: ',d'
 cache_timeout: null
-uuid: 1b7b6a6b-7182-4482-9a8b-8db95a575955
+uuid: 4e086de9-79ce-407d-ab7a-46423fe46a9f
 version: 1.0.0
-dataset_uuid: ad7f0469-8ce1-407c-9882-bca9cea15562
+dataset_uuid: bcc7f014-00fa-41fa-b213-e5a81a379828
