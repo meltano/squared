@@ -55,6 +55,17 @@ columns:
   description: null
   python_date_format: null
   extra: '{}'
+- column_name: is_deleted
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BOOLEAN
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{}'
 - column_name: message_created_at
   verbose_name: null
   is_dttm: true
