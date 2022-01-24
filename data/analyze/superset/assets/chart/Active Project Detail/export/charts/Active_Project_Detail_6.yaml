@@ -1,0 +1,73 @@
+slice_name: Active Project Detail
+viz_type: table
+params:
+  adhoc_filters:
+  - clause: WHERE
+    comparator: false
+    expressionType: SIMPLE
+    filterOptionName: filter_fhl2yflwg35_y6zoob0q1p
+    isExtra: false
+    isNew: false
+    operator: ==
+    operatorId: IS_FALSE
+    sqlExpression: null
+    subject: is_churned
+  - clause: WHERE
+    comparator: false
+    expressionType: SIMPLE
+    filterOptionName: filter_0klfk138qwr_03n2u0tp4av5
+    isExtra: false
+    isNew: false
+    operator: ==
+    operatorId: IS_FALSE
+    sqlExpression: null
+    subject: is_tracking_disabled
+  align_pn: false
+  all_columns:
+  - project_id
+  - first_event_date
+  - events_total
+  - unique_commands
+  - unique_command_categories
+  - singer_event_total
+  - dbt_event_total
+  - airflow_event_total
+  - test_event_total
+  - run_event_total
+  - environments_event_total
+  - sqlfluff_event_total
+  - superset_event_total
+  - lightdash_event_total
+  - dagster_event_total
+  - lifespan_days
+  color_pn: true
+  column_config:
+    lifespan_days:
+      alignPositiveNegative: false
+  conditional_formatting: []
+  datasource: 4__table
+  extra_form_data: {}
+  granularity_sqla: first_event_date
+  groupby: []
+  include_search: true
+  order_by_cols:
+  - '["events_total", false]'
+  order_desc: true
+  percent_metrics: []
+  query_mode: raw
+  row_limit: 10000
+  server_page_length: 10
+  show_cell_bars: true
+  slice_id: 6
+  table_timestamp_format: smart_date
+  time_grain_sqla: P1D
+  time_range: No filter
+  time_range_endpoints:
+  - inclusive
+  - exclusive
+  url_params: {}
+  viz_type: table
+cache_timeout: null
+uuid: 1fce391c-5ccd-4dc1-9648-0063e564408e
+version: 1.0.0
+dataset_uuid: 712e1d99-a982-4ba7-9e76-984e67c610a9
