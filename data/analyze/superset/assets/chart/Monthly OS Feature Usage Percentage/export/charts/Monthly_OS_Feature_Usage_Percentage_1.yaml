@@ -65,6 +65,11 @@ params:
   y_axis_title_margin: 15
   y_axis_title_position: Left
   zoomable: true
+  remote_id: 1
+  datasource_name: fact_cli_events
+  schema: dbt_prod
+  database_name: Amazon Athena
+  import_time: 1642194051
 cache_timeout: null
 uuid: a25db429-1ea2-4b7a-bc1c-6b933d87f3c5
 version: 1.0.0
