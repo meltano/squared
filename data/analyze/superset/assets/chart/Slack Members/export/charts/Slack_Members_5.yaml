@@ -1,7 +1,17 @@
 slice_name: Slack Members
 viz_type: big_number_total
 params:
-  adhoc_filters: []
+  adhoc_filters:
+  - clause: WHERE
+    comparator: false
+    expressionType: SIMPLE
+    filterOptionName: filter_vu66k6i3l7n_ercv8ezowyi
+    isExtra: false
+    isNew: false
+    operator: ==
+    operatorId: IS_FALSE
+    sqlExpression: null
+    subject: is_deleted
   datasource: 3__table
   extra_form_data: {}
   granularity_sqla: message_created_at
@@ -30,6 +40,7 @@ params:
     label: COUNT(email)
     optionName: metric_udom78dd3r_2zx1b6164bk
     sqlExpression: null
+  slice_id: 5
   subheader_font_size: 0.15
   time_format: smart_date
   time_grain_sqla: P1D
