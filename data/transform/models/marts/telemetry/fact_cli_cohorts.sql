@@ -1,6 +1,6 @@
 WITH cohort_snapshots AS (
     SELECT
-        DATE_TRUNC('month', fact_cli_projects.first_event_date) as cohort_id,
+        DATE_TRUNC('month', fact_cli_projects.first_event_date) AS cohort_id,
         DATE_TRUNC('month', stg_ga__cli_events.event_date) AS snapshot_month,
         COUNT(DISTINCT stg_ga__cli_events.project_id) AS project_id_cnt,
         SUM(stg_ga__cli_events.event_count) AS event_cnt
