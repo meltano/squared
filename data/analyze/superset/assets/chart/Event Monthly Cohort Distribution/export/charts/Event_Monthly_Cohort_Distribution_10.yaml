@@ -1,0 +1,63 @@
+slice_name: Event Monthly Cohort Distribution
+viz_type: pivot_table_v2
+params:
+  adhoc_filters: []
+  aggregateFunction: Sum
+  colOrder: key_a_to_z
+  conditional_formatting:
+  - colorScheme: rgb(255,0,0)
+    column: Event Percentage
+    operator: None
+  - colorScheme: rgb(255,255,0)
+    column: Event Percentage
+    operator: "\u2264"
+    targetValue: 0
+  datasource: 7__table
+  date_format: smart_date
+  extra_form_data: {}
+  granularity_sqla: cohort_id
+  groupbyColumns:
+  - month_start_total
+  groupbyRows:
+  - cohort_id
+  metrics:
+  - aggregate: MAX
+    column:
+      certification_details: null
+      certified_by: null
+      column_name: pct
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 71
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: DOUBLE
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    expressionType: SIMPLE
+    hasCustomLabel: true
+    isNew: false
+    label: Event Percentage
+    optionName: metric_ibkp8bg64n_z1z3tqjrpxs
+    sqlExpression: null
+  metricsLayout: COLUMNS
+  order_desc: true
+  rowOrder: key_a_to_z
+  row_limit: 10000
+  slice_id: 10
+  time_grain_sqla: P1D
+  time_range: No filter
+  time_range_endpoints:
+  - inclusive
+  - exclusive
+  url_params: {}
+  valueFormat: ',.1%'
+  viz_type: pivot_table_v2
+cache_timeout: null
+uuid: ccb16dda-cffb-486c-89d1-9d8d0895243d
+version: 1.0.0
+dataset_uuid: 95aafe56-d7ad-49de-9c05-b6e6d35fa251
