@@ -1,0 +1,42 @@
+slice_name: Active Projects - Acquired
+viz_type: big_number_total
+params:
+  adhoc_filters:
+  - clause: WHERE
+    comparator: false
+    expressionType: SIMPLE
+    filterOptionName: filter_lckfl66m0d9_3wlq7vg2x3c
+    isExtra: false
+    isNew: false
+    operator: ==
+    operatorId: IS_FALSE
+    sqlExpression: null
+    subject: is_churned
+  - clause: WHERE
+    comparator: null
+    expressionType: SQL
+    filterOptionName: filter_dwnm4uiauv4_7i5tvzhh0oy
+    isExtra: false
+    isNew: false
+    operator: null
+    sqlExpression: first_event_date > CURRENT_DATE - INTERVAL '28' day
+    subject: null
+  datasource: 3__table
+  extra_form_data: {}
+  granularity_sqla: first_event_date
+  header_font_size: 0.4
+  metric: count
+  subheader_font_size: 0.2
+  time_format: smart_date
+  time_grain_sqla: P1D
+  time_range: No filter
+  time_range_endpoints:
+  - inclusive
+  - exclusive
+  url_params: {}
+  viz_type: big_number_total
+  y_axis_format: ',d'
+cache_timeout: null
+uuid: 5a5ab1b2-8924-4146-990a-8520b2fa833d
+version: 1.0.0
+dataset_uuid: bcb6c477-5d29-4f47-8f63-c76b8a702ab0

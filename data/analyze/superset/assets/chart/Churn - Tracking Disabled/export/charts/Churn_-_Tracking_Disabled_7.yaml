@@ -1,4 +1,4 @@
-slice_name: Active - Tracking Disabled
+slice_name: Churn - Tracking Disabled
 viz_type: big_number_total
 params:
   adhoc_filters:
@@ -13,16 +13,26 @@ params:
     sqlExpression: null
     subject: is_tracking_disabled
   - clause: WHERE
-    comparator: false
+    comparator: true
     expressionType: SIMPLE
     filterOptionName: filter_vplh7o6pr1_u79zr6v3wod
     isExtra: false
     isNew: false
     operator: ==
-    operatorId: IS_FALSE
+    operatorId: IS_TRUE
     sqlExpression: null
     subject: is_churned
-  datasource: 4__table
+  - clause: WHERE
+    comparator: null
+    expressionType: SQL
+    filterOptionName: filter_6kzk78c7tm9_1dqkoknfl35
+    isExtra: false
+    isNew: false
+    operator: null
+    sqlExpression: first_event_date between CURRENT_DATE - INTERVAL '56' day  and
+      CURRENT_DATE - INTERVAL '28' day
+    subject: null
+  datasource: 3__table
   extra_form_data: {}
   granularity_sqla: first_event_date
   header_font_size: 0.4
@@ -39,6 +49,6 @@ params:
   viz_type: big_number_total
   y_axis_format: SMART_NUMBER
 cache_timeout: null
-uuid: d96ab203-fd43-4c2a-84d0-e22e9ab14f70
+uuid: 4508a01a-a4be-42a8-a0ce-25ebf431112d
 version: 1.0.0
-dataset_uuid: 712e1d99-a982-4ba7-9e76-984e67c610a9
+dataset_uuid: bcb6c477-5d29-4f47-8f63-c76b8a702ab0
