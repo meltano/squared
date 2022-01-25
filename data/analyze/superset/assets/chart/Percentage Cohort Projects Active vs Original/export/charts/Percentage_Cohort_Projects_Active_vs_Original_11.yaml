@@ -40,7 +40,12 @@ params:
   url_params: {}
   valueFormat: ',.1%'
   viz_type: pivot_table_v2
+  remote_id: 12
+  datasource_name: fact_cli_cohorts
+  schema: dbt_prod
+  database_name: Amazon Athena
+  import_time: 1643147082
 cache_timeout: null
-uuid: 9fe51261-6892-4d68-8463-a2eae4c844d5
+uuid: 82572bf4-6825-4921-819c-0ef3e2b6ba88
 version: 1.0.0
-dataset_uuid: e7350138-e800-40d8-9e0f-ccd04ee30384
+dataset_uuid: cb2848b0-c69d-4ce8-ad9c-978ac78b1b66

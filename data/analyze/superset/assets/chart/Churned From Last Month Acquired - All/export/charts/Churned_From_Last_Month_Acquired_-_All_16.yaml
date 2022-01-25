@@ -1,4 +1,4 @@
-slice_name: Active Projects - Churned
+slice_name: Churned From Last Month Acquired - All
 viz_type: big_number_total
 params:
   adhoc_filters:
@@ -10,19 +10,19 @@ params:
     isNew: false
     operator: null
     sqlExpression: first_event_date between CURRENT_DATE - INTERVAL '56' day  and
-      CURRENT_DATE - INTERVAL '28' day
+      CURRENT_DATE - INTERVAL '29' day
     subject: null
   - clause: WHERE
     comparator: true
     expressionType: SIMPLE
-    filterOptionName: filter_b832u2cwz8_7sjhqez84kv
+    filterOptionName: filter_500ipuhuza6_7s99vxqnncr
     isExtra: false
     isNew: false
     operator: ==
     operatorId: IS_TRUE
     sqlExpression: null
     subject: is_churned
-  datasource: 3__table
+  datasource: 4__table
   extra_form_data: {}
   granularity_sqla: first_event_date
   header_font_size: 0.4
@@ -38,6 +38,6 @@ params:
   viz_type: big_number_total
   y_axis_format: ',d'
 cache_timeout: null
-uuid: b98012be-eef8-49e0-a215-de26e1664ef4
+uuid: 437b53a2-3b85-41c1-8f06-dfa3ceb0f5a8
 version: 1.0.0
-dataset_uuid: bcb6c477-5d29-4f47-8f63-c76b8a702ab0
+dataset_uuid: ad1a8f0e-261f-476e-92cf-d7641af6ef55
