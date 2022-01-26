@@ -1,0 +1,43 @@
+slice_name: Active Projects This Month - Acquired
+viz_type: big_number_total
+params:
+  adhoc_filters:
+  - clause: WHERE
+    comparator: false
+    expressionType: SIMPLE
+    filterOptionName: filter_lckfl66m0d9_3wlq7vg2x3c
+    isExtra: false
+    isNew: false
+    operator: ==
+    operatorId: IS_FALSE
+    sqlExpression: null
+    subject: is_churned
+  - clause: WHERE
+    comparator: null
+    expressionType: SQL
+    filterOptionName: filter_dwnm4uiauv4_7i5tvzhh0oy
+    isExtra: false
+    isNew: false
+    operator: null
+    sqlExpression: first_event_date > CURRENT_DATE - INTERVAL '28' day
+    subject: null
+  datasource: 4__table
+  extra_form_data: {}
+  granularity_sqla: first_event_date
+  header_font_size: 0.4
+  metric: count
+  slice_id: 12
+  subheader_font_size: 0.2
+  time_format: smart_date
+  time_grain_sqla: P1D
+  time_range: No filter
+  time_range_endpoints:
+  - inclusive
+  - exclusive
+  url_params: {}
+  viz_type: big_number_total
+  y_axis_format: ',d'
+cache_timeout: null
+uuid: 9e4a3eb2-56f6-437c-aece-8a56cd25a296
+version: 1.0.0
+dataset_uuid: ad1a8f0e-261f-476e-92cf-d7641af6ef55

@@ -1,34 +1,33 @@
-slice_name: Active - Tracking Disabled
+slice_name: Active Projects - Existing
 viz_type: big_number_total
 params:
   adhoc_filters:
   - clause: WHERE
-    comparator: true
-    expressionType: SIMPLE
-    filterOptionName: filter_aohunzsvq8_kyuzxe8tw9f
-    isExtra: false
-    isNew: false
-    operator: ==
-    operatorId: IS_TRUE
-    sqlExpression: null
-    subject: is_tracking_disabled
-  - clause: WHERE
     comparator: false
     expressionType: SIMPLE
-    filterOptionName: filter_vplh7o6pr1_u79zr6v3wod
+    filterOptionName: filter_lckfl66m0d9_3wlq7vg2x3c
     isExtra: false
     isNew: false
     operator: ==
     operatorId: IS_FALSE
     sqlExpression: null
     subject: is_churned
+  - clause: WHERE
+    comparator: null
+    expressionType: SQL
+    filterOptionName: filter_dwnm4uiauv4_7i5tvzhh0oy
+    isExtra: false
+    isNew: false
+    operator: null
+    sqlExpression: first_event_date <= CURRENT_DATE - INTERVAL '28' day
+    subject: null
   datasource: 4__table
   extra_form_data: {}
   granularity_sqla: first_event_date
   header_font_size: 0.4
   metric: count
-  slice_id: 7
-  subheader_font_size: 0.15
+  slice_id: 15
+  subheader_font_size: 0.2
   time_format: smart_date
   time_grain_sqla: P1D
   time_range: No filter
@@ -37,8 +36,8 @@ params:
   - exclusive
   url_params: {}
   viz_type: big_number_total
-  y_axis_format: SMART_NUMBER
+  y_axis_format: ',d'
 cache_timeout: null
-uuid: d96ab203-fd43-4c2a-84d0-e22e9ab14f70
+uuid: 51f141f9-4c84-4d51-b5ab-4196d3fca1c1
 version: 1.0.0
-dataset_uuid: 712e1d99-a982-4ba7-9e76-984e67c610a9
+dataset_uuid: ad1a8f0e-261f-476e-92cf-d7641af6ef55
