@@ -1,0 +1,92 @@
+table_name: fact_cli_cohorts
+main_dttm_col: cohort_id
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: dbt_prod
+sql: null
+params: null
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: e7350138-e800-40d8-9e0f-ccd04ee30384
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  extra: null
+  warning_text: null
+columns:
+- column_name: snapshot_month
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: cohort_id
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: DATE
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: orig_project_id_cnt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: project_id_cnt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: orig_event_cnt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: event_cnt
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BIGINT
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: e53a0416-4366-4775-b525-e3ece3329600

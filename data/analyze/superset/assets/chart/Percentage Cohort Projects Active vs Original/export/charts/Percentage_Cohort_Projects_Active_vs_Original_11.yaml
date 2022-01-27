@@ -1,0 +1,51 @@
+slice_name: Percentage Cohort Projects Active vs Original
+viz_type: pivot_table_v2
+params:
+  adhoc_filters: []
+  aggregateFunction: Sum
+  colOrder: key_a_to_z
+  conditional_formatting:
+  - colorScheme: rgb(0,255,0)
+    column: Percentage of Cohort Projects Active
+    operator: < x <
+    targetValueLeft: '0'
+    targetValueRight: '0.2'
+  datasource: 8__table
+  date_format: smart_date
+  extra_form_data: {}
+  granularity_sqla: cohort_id
+  groupbyColumns:
+  - snapshot_month
+  groupbyRows:
+  - cohort_id
+  metrics:
+  - aggregate: null
+    column: null
+    expressionType: SQL
+    hasCustomLabel: true
+    isNew: false
+    label: Percentage of Cohort Projects Active
+    optionName: metric_69i8nqhlzbp_hyulnzhup2f
+    sqlExpression: MAX(project_id_cnt*1.0/orig_project_id_cnt)
+  metricsLayout: COLUMNS
+  order_desc: true
+  rowOrder: key_a_to_z
+  row_limit: 1000
+  slice_id: 12
+  time_grain_sqla: P1D
+  time_range: No filter
+  time_range_endpoints:
+  - inclusive
+  - exclusive
+  url_params: {}
+  valueFormat: ',.1%'
+  viz_type: pivot_table_v2
+  remote_id: 12
+  datasource_name: fact_cli_cohorts
+  schema: dbt_prod
+  database_name: Amazon Athena
+  import_time: 1643147082
+cache_timeout: null
+uuid: 82572bf4-6825-4921-819c-0ef3e2b6ba88
+version: 1.0.0
+dataset_uuid: cb2848b0-c69d-4ce8-ad9c-978ac78b1b66

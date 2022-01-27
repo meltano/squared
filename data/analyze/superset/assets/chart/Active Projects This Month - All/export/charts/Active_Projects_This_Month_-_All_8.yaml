@@ -1,4 +1,4 @@
-slice_name: Active Projects Count 28d
+slice_name: Active Projects This Month - All
 viz_type: big_number_total
 params:
   adhoc_filters:
@@ -52,6 +52,6 @@ params:
   viz_type: big_number_total
   y_axis_format: ',d'
 cache_timeout: null
-uuid: cf4e0566-dfc0-4e9b-ace3-d905737204dd
+uuid: 743763ae-99e4-455d-a5a0-bad397b3bbd6
 version: 1.0.0
-dataset_uuid: 712e1d99-a982-4ba7-9e76-984e67c610a9
+dataset_uuid: ad1a8f0e-261f-476e-92cf-d7641af6ef55
