@@ -32,6 +32,10 @@ environments:
     HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
     RAW_SCHEMA: prod01_raw
     DBT_SCHEMA: dbt_prod
+    PERMISSION_BOT_USER: permission_bot
+    PERMISSION_BOT_WAREHOUSE: ADMIN
+    PERMISSION_BOT_DATABASE: SNOWFLAKE_SAMPLE_DATA
+    PERMISSION_BOT_ROLE: SECURITYADMIN
 - name: userdev
   config:
     plugins:

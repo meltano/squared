@@ -1,0 +1,308 @@
+version: "1.0"
+
+# ==========================================
+# Databases
+# ==========================================
+databases:
+  # Production
+    - prep:
+        shared: no
+    - prod:
+        shared: no
+    - raw:
+        shared: no
+    - snowflake:
+        shared: yes
+
+  # User / Testing
+    - pnadolny_raw:
+        shared: no
+    - pnadolny_prep:
+        shared: no
+    - pnadolny_prod:
+        shared: no
+
+# ==========================================
+# Roles
+# ==========================================
+roles:
+    ## Admin Roles
+    - accountadmin:
+        warehouses:
+            - admin
+        member_of:
+            - securityadmin
+            - sysadmin
+
+    - securityadmin:
+        warehouses:
+            - admin
+        member_of:
+            - useradmin
+
+    - useradmin:
+        warehouses:
+            - admin
+
+    - sysadmin:
+        member_of:
+          include:
+            - "*"
+          exclude:
+            - accountadmin
+            - securityadmin
+            - useradmin
+        warehouses:
+            - admin
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+                    - raw
+                    - snowflake
+                write:
+                    - prep
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+                    - snowflake.*
+                write:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+            tables:
+                read:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
+                    - snowflake.*.*
+                write:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
+
+# ==========================================
+# Functional Roles
+# ==========================================
+
+    - core:
+        privileges:
+            databases:
+                read:
+                    - prep
+                    - prod
+                    - raw
+                    - snowflake
+                write:
+                    - prep
+                    - prod
+                    - raw
+            schemas:
+                read:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+                    - snowflake.*
+                write:
+                    - prep.*
+                    - prod.*
+                    - raw.*
+            tables:
+                read:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
+                    - snowflake.*.*
+                write:
+                    - prep.*.*
+                    - prod.*.*
+                    - raw.*.*
+
+    - loader:
+        warehouses:
+            - loader
+        privileges:
+            databases:
+                read:
+                    - raw
+                write:
+                    - raw
+            schemas:
+                read:
+                    - raw.*
+                write:
+                    - raw.*
+            tables:
+                read:
+                    - raw.*.*
+                write:
+                    - raw.*.*
+
+    - reporter:
+        warehouses:
+            - reporter
+        privileges:
+            databases:
+                read:
+                    - prod
+            schemas:
+                read:
+                    - prod.*
+            tables:
+                read:
+                    - prod.*.*
+
+    - transformer:
+        warehouses:
+            - transformer
+        privileges:
+            databases:
+                read:
+                    - raw
+                    - prep
+                    - prod
+                write:
+                    - prep
+                    - prod
+            schemas:
+                read:
+                    - raw.*
+                    - prep.*
+                    - prod.*
+                write:
+                    - prep.*
+                    - prod.*
+            tables:
+                read:
+                    - raw.*.*
+                    - prep.*.*
+                    - prod.*.*
+                write:
+                    - prep.*.*
+                    - prod.*.*
+
+# ==========================================
+# User Roles
+# ==========================================
+    
+    - permission_bot:
+        warehouses:
+            - admin
+
+    - meltano:
+        member_of:
+            - loader
+            - reporter
+            - transformer
+
+    - pnadolny:
+        member_of:
+            - core
+        warehouses:
+            - core
+        owns:
+            databases:
+                - pnadolny_prep
+                - pnadolny_prod
+                - pnadolny_raw
+            schemas:
+                - pnadolny_prep.*
+                - pnadolny_prod.*
+                - pnadolny_raw.*
+            tables:
+                - pnadolny_prep.*.*
+                - pnadolny_prod.*.*
+                - pnadolny_raw.*.*
+        privileges:
+            databases:
+                read:
+                    - pnadolny_prep
+                    - pnadolny_prod
+                    - pnadolny_raw
+                write:
+                    - pnadolny_prep
+                    - pnadolny_prod
+                    - pnadolny_raw
+            schemas:
+                read:
+                    - pnadolny_prep.*
+                    - pnadolny_prod.*
+                    - pnadolny_raw.*
+                write:
+                    - pnadolny_prep.*
+                    - pnadolny_prod.*
+                    - pnadolny_raw.*
+            tables:
+                read:
+                    - pnadolny_prep.*.*
+                    - pnadolny_prod.*.*
+                    - pnadolny_raw.*.*
+                write:
+                    - pnadolny_prep.*.*
+                    - pnadolny_prod.*.*
+                    - pnadolny_raw.*.*
+
+    - tmurphy:
+        member_of:
+            - core
+        warehouses:
+            - core
+
+# ==========================================
+# Users
+# ==========================================
+users:
+
+    - meltano:
+        can_login: yes
+        member_of:
+            - meltano
+
+    - permission_bot:
+        can_login: yes
+        member_of:
+            - securityadmin
+            - sysadmin
+            - permission_bot
+
+    - pnadolny:
+        can_login: yes
+        member_of:
+            - pnadolny
+            - accountadmin
+            - securityadmin
+            - useradmin
+            - sysadmin
+
+    - tmurphy:
+        can_login: yes
+        member_of:
+            - tmurphy
+            - accountadmin
+            - securityadmin
+            - useradmin
+            - sysadmin
+
+# ==========================================
+# Warehouses
+# ==========================================
+warehouses:
+    - admin:
+        size: x-small
+
+    - core:
+        size: x-small
+
+    - loader:
+        size: x-small
+
+    - reporter:
+        size: x-small
+
+    - transformer:
+        size: x-small

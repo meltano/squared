@@ -254,4 +254,11 @@ plugins:
       - name: ge_home
         value: $MELTANO_PROJECT_ROOT/utilities/great_expectations
         env: GE_HOME
+  - name: permifrost
+    namespace: permifrost
+    pip_url: permifrost
+    executable: permifrost
+    commands:
+      run: run utilities/permifrost/roles.yml
+      spec-test: spec-test utilities/permifrost/roles.yml
 environments: []
