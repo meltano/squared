@@ -34,4 +34,5 @@ Utilities:
 - [AWS CLI](https://github.com/aws/aws-cli) - Refer to the Squared [General README](./data/README.md) for more detail on how its used in this repo.
 - [SqlFluff](https://github.com/sqlfluff/sqlfluff) - Refer to the Squared [General README](./data//README.md) for more detail on how its used in this repo.
 - [Great Expectations](https://github.com/great-expectations/great_expectations) - Refer to the Squared [Great Expectations README](./data/utilities/great_expectations/README.md) for more detail on how its used in this repo.
+- [Permifrost](https://gitlab.com/gitlab-data/permifrost) - Refer to the Squared [Permifrost README](./data/utilities/permifrost/README.md) for more detail on how its used in this repo.
 
