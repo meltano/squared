@@ -118,3 +118,15 @@ terraform-apply:
     - terraform apply -input=false "planfile"
   dependencies:
     - terraform-plan
+
+# Deploy dbt Seed file changes
+dbt_seed:
+  extends:
+  - .meltano
+  stage: deploy
+  script:
+  - meltano install transformer dbt
+  - meltano --environment=prod invoke dbt:seed
+  rules:
+  - if: $CI_COMMIT_BRANCH == "master"
+    when: always
