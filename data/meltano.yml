@@ -254,6 +254,9 @@ plugins:
       - name: ge_home
         value: $MELTANO_PROJECT_ROOT/utilities/great_expectations
         env: GE_HOME
+    commands:
+       test_ga_raw: checkpoint run google_analytics_raw
+       test_dbt_hub_metrics: checkpoint run dbt_hub_metrics
   - name: permifrost
     namespace: permifrost
     pip_url: permifrost

@@ -55,7 +55,7 @@ with DAG(
         name='hub-metrics-ge-raw-validate',
         environment='prod',
         debug=True,
-        arguments=["meltano invoke great_expectations checkpoint run google_analytics_raw"]
+        arguments=["meltano test great_expectations:test_ga_raw"]
     )
 
     t3 = MeltanoKubernetesPodOperator(
@@ -70,7 +70,7 @@ with DAG(
         name='hub-metrics-ge-consumption-validate',
         environment='prod',
         debug=True,
-        arguments=["meltano invoke great_expectations checkpoint run dbt_hub_metrics"]
+        arguments=["meltano test great_expectations:test_dbt_hub_metrics"]
     )
 
     t5 = MeltanoKubernetesPodOperator(
