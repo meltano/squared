@@ -1,0 +1,93 @@
+table_name: slack_members
+main_dttm_col: null
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: dbt_prod
+sql: select *, coalesce(message_created_at, cast('2021-04-02' as date)) as dt from
+  dbt_prod.slack_new_members
+params: '{"remote_id": 6, "database_name": "Amazon Athena", "import_time": 1643325162}'
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: 29b4f7ac-eae1-4505-a4cc-660aaadb30d0
+metrics:
+- metric_name: count
+  verbose_name: null
+  metric_type: null
+  expression: count(*)
+  description: null
+  d3format: null
+  extra: '{"warning_markdown":""}'
+  warning_text: null
+columns:
+- column_name: email_domain
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{"warning_markdown":null}'
+- column_name: user_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{"warning_markdown":null}'
+- column_name: email
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{"warning_markdown":null}'
+- column_name: is_deleted
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: BOOLEAN
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{"warning_markdown":null}'
+- column_name: message_created_at
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{"warning_markdown":null}'
+- column_name: dt
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: '{"warning_markdown":null}'
+version: 1.0.0
+database_uuid: 656bd400-833b-4278-a0b1-8a71f89d5908
