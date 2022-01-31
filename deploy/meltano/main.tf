@@ -52,4 +52,10 @@ module "meltano" {
   meltano_image_repository_url = local.inventory.meltano_registry.repository_url
   meltano_image_tag = var.meltano_image_tag
   meltano_env_file = data.aws_ssm_parameter.meltano_env_file.value
+  # superset
+  superset_db_host = local.inventory.superset_database.host
+  superset_db_user = local.inventory.superset_database.user
+  superset_db_password = local.inventory.superset_database.password
+  superset_db_database = local.inventory.superset_database.database
+  superset_db_port = local.inventory.superset_database.port
 }

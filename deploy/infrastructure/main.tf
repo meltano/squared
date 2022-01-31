@@ -27,6 +27,7 @@ locals {
     meltano_registry = {
       repository_url = module.infrastructure.meltano_registry.repository_url
     }
+    superset_database = module.infrastructure.superset_database
   }
 }
 
