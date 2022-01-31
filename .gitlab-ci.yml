@@ -16,6 +16,7 @@ stages:
     DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
     AWS_DEFAULT_REGION: us-east-1
     DOCKER_HOST: tcp://docker:2375
+    AWS_PROFILE: production
   image:
     name: amazon/aws-cli
     entrypoint: [""]
@@ -36,6 +37,8 @@ stages:
     entrypoint:
       - '/usr/bin/env'
       - 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+  variables:
+    AWS_PROFILE: production
   before_script:
   - cd deploy/meltano
   - rm -rf .terraform
@@ -124,6 +127,8 @@ dbt_seed:
   extends:
   - .meltano
   stage: deploy
+  variables:
+    AWS_PROFILE: legacy
   script:
   - meltano install transformer dbt
   - meltano --environment=prod invoke dbt:seed
