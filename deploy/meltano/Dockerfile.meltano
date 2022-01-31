@@ -1,4 +1,4 @@
-FROM meltano/meltano:v1.89.0-python3.8
+FROM meltano/meltano:v1.93.0-python3.8
 
 WORKDIR /project
 
