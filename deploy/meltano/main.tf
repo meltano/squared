@@ -22,6 +22,18 @@ locals {
   inventory = jsondecode(data.aws_ssm_parameter.inventory.value)
 }
 
+resource "random_password" "superset_password" {
+  length           = 25
+  special          = true
+  override_special = "_%@"
+}
+
+resource "aws_ssm_parameter" "superset_admin" {
+  name  = "/prod/meltano/superset/admin_password"
+  type  = "SecureString"
+  value = random_password.superset_password.result
+}
+
 module "meltano" {
   # source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
   source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
@@ -58,4 +70,6 @@ module "meltano" {
   superset_db_password = local.inventory.superset_database.password
   superset_db_database = local.inventory.superset_database.database
   superset_db_port = local.inventory.superset_database.port
+  superset_admin_password = random_password.superset_password.result
+  superset_dependencies = "PyAthenaJDBC>1.0.9 PyAthena>1.2.0"
 }
