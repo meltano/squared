@@ -33,9 +33,9 @@ SELECT
     ga_commands_parsed.is_os_feature_test,
     ga_commands_parsed.is_os_feature_run,
     COALESCE(retention.first_event_date = stg_ga__cli_events.event_date,
-    FALSE) AS is_acquired_date,
+        FALSE) AS is_acquired_date,
     COALESCE(retention.last_event_date = stg_ga__cli_events.event_date,
-    FALSE) AS is_churned_date,
+        FALSE) AS is_churned_date,
     COALESCE(stg_ga__cli_events.event_date >= DATE_TRUNC(
         'month', retention.first_event_date
     ) + INTERVAL '1' MONTH AND stg_ga__cli_events.event_date < DATE_TRUNC(
