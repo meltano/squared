@@ -2,7 +2,7 @@
 
 This analyze module includes utilities to get Superset up and running locally using Docker along with the assets you need to be able to view the current state of the charts and dashboards.
 
-> :warning: **WARNING**: The current dashboards are a work in progress and there are known limitations, most importantly with undercounting usage due to the limitations of the current google analytics data.
+> :warning: **WARNING**: The Superset assets in this repo are no longer the latest production assets, view the production instance for the most up to date versions of the assets.
 
 ## Installing
 
