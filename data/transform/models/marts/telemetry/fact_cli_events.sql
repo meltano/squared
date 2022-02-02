@@ -1,8 +1,22 @@
+WITH retention AS (
+    SELECT
+        project_id,
+        MIN(event_date) AS first_event_date,
+        MAX(event_date) AS last_event_date,
+        COALESCE(SUM(
+            event_count
+        ) = 1 AND MAX(command_category) = 'meltano init',
+        FALSE) AS tracking_disabled
+    FROM {{ ref('stg_ga__cli_events') }}
+    GROUP BY project_id
+)
+
 SELECT
     stg_ga__cli_events.event_date,
     stg_ga__cli_events.command_category,
     stg_ga__cli_events.command,
     stg_ga__cli_events.project_id,
+    retention.tracking_disabled AS is_tracking_disabled,
     stg_ga__cli_events.event_count,
     ga_commands_parsed.is_exec_event,
     ga_commands_parsed.is_legacy_event,
@@ -17,7 +31,18 @@ SELECT
     -- OS Features
     ga_commands_parsed.is_os_feature_environments,
     ga_commands_parsed.is_os_feature_test,
-    ga_commands_parsed.is_os_feature_run
+    ga_commands_parsed.is_os_feature_run,
+    COALESCE(retention.first_event_date = stg_ga__cli_events.event_date,
+        FALSE) AS is_acquired_date,
+    COALESCE(retention.last_event_date = stg_ga__cli_events.event_date,
+        FALSE) AS is_churned_date,
+    COALESCE(stg_ga__cli_events.event_date >= DATE_TRUNC(
+        'month', retention.first_event_date
+    ) + INTERVAL '1' MONTH AND stg_ga__cli_events.event_date < DATE_TRUNC(
+        'month', retention.last_event_date
+    ),
+    FALSE) AS is_retained_date
 FROM {{ ref('stg_ga__cli_events') }}
 LEFT JOIN {{ ref('ga_commands_parsed') }}
     ON stg_ga__cli_events.command = ga_commands_parsed.command
+LEFT JOIN retention ON stg_ga__cli_events.project_id = retention.project_id
