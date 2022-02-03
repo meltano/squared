@@ -1,0 +1,64 @@
+dags:
+  daily_dashboard:
+    interval: '@daily'
+    steps:
+      - name: dbt
+        cmd: 'meltano --environment=userdev --log-level=debug invoke dbt:run --models marts.telemetry.*'
+        retries: 2
+  hub_metrics:
+    interval: '@daily'
+    steps:
+      - name: ga_athena_hub_metrics
+        cmd: 'meltano elt tap-google-analytics target-athena --job_id=ga_athena_hub_metrics'
+        retries: 2
+      - name: ge_raw_validate
+        cmd: 'meltano test great_expectations:test_ga_raw'
+        retries: 2
+        depends_on:
+          - ga_athena_hub_metrics
+      - name: dbt_hub_metrics
+        cmd: 'meltano invoke dbt:run --models +marts.publish.meltano_hub.*'
+        retries: 2
+        depends_on:
+          - ge_raw_validate
+      - name: ge_consumption_validate
+        cmd: 'meltano test great_expectations:test_dbt_hub_metrics'
+        retries: 2
+        depends_on:
+          - dbt_hub_metrics
+      - name: publish_hub_metrics
+        cmd: 'meltano elt tap-athena-metrics target-yaml-metrics && meltano invoke awscli s3 cp metrics.yml s3://prod-meltano-bucket-01/hub_metrics/'
+        retries: 2
+        depends_on:
+          - ge_consumption_validate
+      - name: publish_audit
+        cmd: 'meltano elt tap-athena-audit target-yaml-audit && meltano invoke awscli s3 cp audit.yml s3://prod-meltano-bucket-01/hub_metrics/'
+        retries: 2
+        depends_on:
+          - ge_consumption_validate
+  slack:
+    interval: '@daily'
+    steps:
+      - name: tap_slack_target_athena
+        cmd: 'meltano elt tap-slack target-athena-slack --job_id=tap_slack_target_athena'
+        retries: 2
+      - name: dbt_slack_run_stage
+        cmd: 'meltano invoke dbt:run --models staging.slack.*'
+        retries: 2
+        depends_on:
+          - tap_slack_target_athena
+      - name: dbt_slack_test_stage
+        cmd: 'meltano invoke dbt:test --models staging.slack.*'
+        retries: 2
+        depends_on:
+          - dbt_slack_run_stage
+      - name: dbt_slack_run_models
+        cmd: 'meltano invoke dbt:run --models common.slack_new_members analysis.slack_company_domains'
+        retries: 2
+        depends_on:
+          - dbt_slack_test_stage
+      - name: dbt_slack_test_models
+        cmd: 'meltano invoke dbt:test --models common.slack_new_members analysis.slack_company_domains'
+        retries: 2
+        depends_on:
+          - dbt_slack_run_models
