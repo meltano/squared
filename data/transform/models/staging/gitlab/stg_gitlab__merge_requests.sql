@@ -43,21 +43,21 @@ renamed AS (
         TRY(CAST(
             PARSE_DATETIME(
                 created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
-            ) AS TIMESTAMP)) AS created_at,
+            ) AS TIMESTAMP)) AS created_at_ts,
         TRY(CAST(
             PARSE_DATETIME(
                 updated_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
-            ) AS TIMESTAMP)) AS updated_at,
+            ) AS TIMESTAMP)) AS updated_at_ts,
         TRY(CAST(
             PARSE_DATETIME(
                 merged_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
             ) AS TIMESTAMP
-        )) AS merged_at,
+        )) AS merged_at_ts,
         TRY(CAST(
             PARSE_DATETIME(
                 closed_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
             ) AS TIMESTAMP
-        )) AS closed_at,
+        )) AS closed_at_ts,
         CAST(upvotes AS INT) AS up_votes,
         CAST(downvotes AS INT) AS down_votes,
         CAST(user_notes_count AS INT) AS comment_count

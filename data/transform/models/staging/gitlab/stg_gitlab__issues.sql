@@ -35,15 +35,15 @@ renamed AS (
         closed_by_id,
         TRY(CAST(PARSE_DATETIME(
             created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
-                ) AS TIMESTAMP)) AS created_at,
+                ) AS TIMESTAMP)) AS created_at_ts,
         TRY(CAST(PARSE_DATETIME(
             updated_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
-                ) AS TIMESTAMP)) AS updated_at,
+                ) AS TIMESTAMP)) AS updated_at_ts,
         TRY(CAST(
             PARSE_DATETIME(
                 closed_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
             ) AS TIMESTAMP
-        )) AS closed_at,
+        )) AS closed_at_ts,
         CAST(upvotes AS INT) AS upvotes,
         CAST(downvotes AS INT) AS downvotes,
         CAST(merge_requests_count AS INT) AS merge_requests_count,
