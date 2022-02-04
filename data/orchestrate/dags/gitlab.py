@@ -47,7 +47,7 @@ with DAG(
         name='gitlab-tap-gitlab-target-athena',
         environment='prod',
         debug=True,
-        arguments=["meltano elt tap-gitlab target-athena --job_id=tap_gitlab_target_athena"]
+        arguments=["meltano elt tap-gitlab target-athena-gitlab --job_id=tap_gitlab_target_athena"]
     )
 
     t2 = MeltanoKubernetesPodOperator(
