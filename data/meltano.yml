@@ -113,7 +113,7 @@ plugins:
   loaders:
   - name: target-athena
     namespace: target_athena
-    pip_url: git+https://github.com/pnadolny13/target-athena.git@bump_sdk_version
+    pip_url: git+https://github.com/MeltanoLabs/target-athena.git@bump-sdk-to-0_4x
     settings:
     - name: aws_access_key_id
       kind: password
@@ -209,7 +209,7 @@ plugins:
         audit_log: {}
   transformers:
   - name: dbt
-    pip_url: git+https://github.com/Tomme/dbt-athena.git@9baa80c40a833c958a7b56c1585157da965eb799
+    pip_url: git+https://github.com/courentin/dbt-athena.git@upgrade-dbt-1.0.0
     config:
       target: athena
   files:
@@ -218,7 +218,7 @@ plugins:
   utilities:
   - name: sqlfluff
     namespace: sqlfluff
-    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; git+https://github.com/Tomme/dbt-athena.git@9baa80c40a833c958a7b56c1585157da965eb799
+    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; git+https://github.com/courentin/dbt-athena.git@upgrade-dbt-1.0.0
     executable: sqlfluff
     config:
       athena_catalog: 'test'
