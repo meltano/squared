@@ -3,7 +3,7 @@ dags:
     interval: '@daily'
     steps:
       - name: dbt
-        cmd: 'meltano --environment=userdev --log-level=debug invoke dbt:run --models marts.telemetry.*'
+        cmd: 'meltano invoke dbt:run --models marts.telemetry.*'
         retries: 2
   hub_metrics:
     interval: '@daily'
