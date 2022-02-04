@@ -14,7 +14,7 @@ environments:
       - name: tap-gitlab
         config:
           groups: meltano
-          start_date: '2021-07-01T00:00:00Z'
+          start_date: '2020-01-01T00:00:00Z'
       loaders:
       - name: target-athena
         config:
