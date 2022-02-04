@@ -85,7 +85,8 @@ for dag_name, dag_def in dags.items():
                 name=task_name,
                 environment="prod",
                 debug=True,
-                arguments=[cmd]
+                arguments=[cmd],
+                dag=dag
             )
         else:
             task = BashOperator(
