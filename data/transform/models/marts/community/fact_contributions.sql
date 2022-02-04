@@ -1,16 +1,17 @@
 WITH base AS (
     SELECT
-        CAST(created_at_ts AS DATE) AS created_at_date,
         platform,
         project_name,
         contribution_type,
+        CAST(created_at_ts AS DATE) AS created_at_date,
         COUNT(DISTINCT contribution_id) AS contributions,
         COUNT(DISTINCT author_id) AS authors,
         SUM(comment_count) AS comments
     FROM {{ ref('contributions') }}
     WHERE is_team_contribution = FALSE
-    GROUP BY 1,2,3,4
+    GROUP BY 1, 2, 3, 4
 )
+
 SELECT
     dim_date.date_day AS created_at_date,
     base.platform,

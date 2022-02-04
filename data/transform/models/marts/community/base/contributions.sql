@@ -27,6 +27,7 @@ WITH gitlab_all AS (
     WHERE created_at_ts IS NOT NULL
 
 ),
+
 gitlab_combined AS (
     SELECT
         gitlab_all.*,

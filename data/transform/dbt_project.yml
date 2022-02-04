@@ -3,13 +3,13 @@ version: '1.0'
 profile: meltano
 config-version: 2
 
-model-paths:
+source-paths:
 - models
 analysis-paths:
-- analyses
+- analysis
 test-paths:
 - tests
-seed-paths:
+data-paths:
 - data
 macro-paths:
 - macros
@@ -17,10 +17,10 @@ snapshot-paths:
 - snapshots
 target-path: ../.meltano/transformers/dbt/target
 log-path: logs
-packages-install-path : dbt_packages
+modules-path: dbt_modules
 clean-targets:
 - ../.meltano/transformers/dbt/target
-- dbt_packages
+- dbt_modules
 - logs
 models:
   my_meltano_project: null

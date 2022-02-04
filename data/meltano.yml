@@ -209,7 +209,7 @@ plugins:
         audit_log: {}
   transformers:
   - name: dbt
-    pip_url: git+https://github.com/courentin/dbt-athena.git@upgrade-dbt-1.0.0
+    pip_url: git+https://github.com/Tomme/dbt-athena.git@9baa80c40a833c958a7b56c1585157da965eb799
     config:
       target: athena
   files:
@@ -218,7 +218,7 @@ plugins:
   utilities:
   - name: sqlfluff
     namespace: sqlfluff
-    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; git+https://github.com/courentin/dbt-athena.git@upgrade-dbt-1.0.0
+    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; git+https://github.com/Tomme/dbt-athena.git@9baa80c40a833c958a7b56c1585157da965eb799
     executable: sqlfluff
     config:
       athena_catalog: 'test'

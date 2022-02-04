@@ -62,3 +62,19 @@ dags:
         retries: 2
         depends_on:
           - dbt_slack_run_models
+  gitlab:
+    interval: '0 5 * * *'
+    steps:
+      - name: tap_gitlab_target_athena
+        cmd: 'meltano elt tap-gitlab target-athena-gitlab --job_id=tap_gitlab_target_athena'
+        retries: 2
+      - name: dbt_gitlab_run_models
+        cmd: 'meltano invoke dbt:run --models staging.gitlab.*'
+        retries: 2
+        depends_on:
+          - tap_gitlab_target_athena
+      - name: dbt_gitlab_test_models
+        cmd: 'meltano invoke dbt:test --models staging.gitlab.*'
+        retries: 2
+        depends_on:
+          - dbt_gitlab_run_models
