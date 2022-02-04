@@ -15,6 +15,9 @@ environments:
         config:
           groups: meltano
           start_date: '2020-01-01T00:00:00Z'
+      - name: tap-github
+        config:
+          start_date: '2020-01-01'
       loaders:
       - name: target-athena
         config:
@@ -52,6 +55,9 @@ environments:
         config:
           projects: meltano/meltano meltano/sdk
           start_date: '2022-01-27T00:00:00Z'
+      - name: tap-github
+        config:
+          start_date: '2022-02-01'
       loaders:
       - name: target-athena
         config:
