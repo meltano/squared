@@ -51,7 +51,7 @@ environments:
       - name: tap-gitlab
         config:
           projects: meltano/meltano meltano/sdk
-          start_date: '2021-11-29T00:00:00Z'
+          start_date: '2022-01-27T00:00:00Z'
       loaders:
       - name: target-athena
         config:
@@ -70,3 +70,8 @@ environments:
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin
+    # https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html
+    AIRFLOW__CORE__PLUGINS_FOLDER: $MELTANO_PROJECT_ROOT/orchestrate/plugins_local
+    AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: '30'
+    AIRFLOW_VAR_MELTANO_ENVIRONMENT: userdev
+    AIRFLOW_VAR_OPERATOR_TYPE: bash

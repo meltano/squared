@@ -264,4 +264,7 @@ plugins:
     commands:
       run: run utilities/permifrost/roles.yml
       spec-test: spec-test utilities/permifrost/roles.yml
+  orchestrators:
+  - name: airflow
+    pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
 environments: []

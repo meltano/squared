@@ -25,7 +25,7 @@ Transformers:
 - [dbt](https://github.com/dbt-labs/dbt-core) -  Refer to the Squared [dbt README](./data/transform/README.md) for more detail on how its used in this repo.
 
 Orchestrators:
-- [Apache Airflow](https://github.com/apache/airflow/) -  Refer to the Squared [plugin subdirectory](./data/orchestrate/) for more detail on how its used in this repo.
+- [Apache Airflow](https://github.com/apache/airflow/) -  Refer to the Squared [Airflow README](./data/orchestrate/README.md) for more detail on how its used in this repo.
 
 Analyzers:
 - [Apache Superset](https://github.com/apache/superset) - Refer to the Squared [Superset README](./data/analyze/README.md) for more detail on how its used in this repo.
