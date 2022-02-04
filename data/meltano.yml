@@ -110,6 +110,45 @@ plugins:
     - commits.*
     - groups.*
     - project_labels.*
+  - name: tap-github
+    namespace: tap_github
+    pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
+    capabilities:
+    - catalog
+    - discover
+    - state
+    config:
+      organizations:
+      - MeltanoLabs
+      stream_maps:
+        repositories:
+          __alias__: "github_repositories"
+        # contributors:
+        #   __alias__: "github_contributors"
+        pull_requests:
+          __alias__: "github_pull_requests"
+        issues:
+          __alias__: "github_issues"
+        review_comments:
+          __alias__: "github_review_comments"
+        # commits:
+        #   __alias__: "github_commits"
+        comments:
+          __alias__: "github_comments"
+        stargazers:
+          __alias__: "github_stargazers"
+        # stats_contributors:
+        #   __alias__: "github_stats_contributors"
+    select:
+    - repositories.*
+    # - contributors.*
+    - pull_requests.*
+    - issues.*
+    - review_comments.*
+    # - commits.*
+    - comments.*
+    - stargazers.*
+    # - stats_contributors.*
   loaders:
   - name: target-athena
     namespace: target_athena
@@ -165,6 +204,10 @@ plugins:
           __alias__: "gitlab_groups"
         project_labels:
           __alias__: "gitlab_project_labels"
+  - name: target-athena-github
+    inherit_from: target-athena
+    config:
+      flatten_records: false
   - name: target-yaml
     namespace: target_yaml
     pip_url: git+https://github.com/MeltanoLabs/target-yaml.git
