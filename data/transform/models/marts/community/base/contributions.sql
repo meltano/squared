@@ -10,6 +10,7 @@ WITH gitlab_all AS (
         COALESCE((merged_at_ts IS NOT NULL OR closed_at_ts IS NOT NULL),
             FALSE) AS is_completed
     FROM {{ ref('stg_gitlab__merge_requests') }}
+    WHERE created_at_ts IS NOT NULL
 
     UNION ALL
 
@@ -23,6 +24,8 @@ WITH gitlab_all AS (
         comment_count,
         COALESCE((closed_at_ts IS NOT NULL), FALSE) AS is_completed
     FROM {{ ref('stg_gitlab__issues') }}
+    WHERE created_at_ts IS NOT NULL
+
 ),
 gitlab_combined AS (
     SELECT
