@@ -53,8 +53,8 @@ environments:
           s3_bucket: devtest-meltano-bucket-01
       - name: tap-gitlab
         config:
-          projects: meltano/meltano meltano/sdk
-          start_date: '2022-01-27T00:00:00Z'
+          groups: meltano
+          start_date: '2022-02-06T00:00:00Z'
       - name: tap-github
         config:
           start_date: '2022-02-01'

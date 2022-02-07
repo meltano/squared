@@ -103,13 +103,8 @@ plugins:
     pip_url: git+https://github.com/MeltanoLabs/tap-gitlab.git
     select:
     - projects.*
-    - users.*
     - merge_requests.*
     - issues.*
-    - branches.*
-    - commits.*
-    - groups.*
-    - project_labels.*
   - name: tap-github
     namespace: tap_github
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
@@ -123,32 +118,15 @@ plugins:
       stream_maps:
         repositories:
           __alias__: "github_repositories"
-        # contributors:
-        #   __alias__: "github_contributors"
         pull_requests:
           __alias__: "github_pull_requests"
         issues:
           __alias__: "github_issues"
-        review_comments:
-          __alias__: "github_review_comments"
-        # commits:
-        #   __alias__: "github_commits"
-        comments:
-          __alias__: "github_comments"
-        stargazers:
-          __alias__: "github_stargazers"
-        # stats_contributors:
-        #   __alias__: "github_stats_contributors"
+          __filter__: record['type'] = 'issue'
     select:
     - repositories.*
-    # - contributors.*
     - pull_requests.*
     - issues.*
-    - review_comments.*
-    # - commits.*
-    - comments.*
-    - stargazers.*
-    # - stats_contributors.*
   loaders:
   - name: target-athena
     namespace: target_athena
@@ -190,20 +168,10 @@ plugins:
       stream_maps:
         projects:
           __alias__: "gitlab_projects"
-        users:
-          __alias__: "gitlab_users"
         merge_requests:
           __alias__: "gitlab_merge_requests"
         issues:
           __alias__: "gitlab_issues"
-        branches:
-          __alias__: "gitlab_branches"
-        commits:
-          __alias__: "gitlab_commits"
-        groups:
-          __alias__: "gitlab_groups"
-        project_labels:
-          __alias__: "gitlab_project_labels"
   - name: target-athena-github
     inherit_from: target-athena
     config:

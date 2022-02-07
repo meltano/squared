@@ -17,5 +17,5 @@ meltano --environment=userdev invoke airflow webserver
 # Create an admin user for UI login
 meltano --environment=userdev invoke airflow users create --username melty --firstname melty --lastname meltano --role Admin --password melty --email melty@meltano.com
 # Scheduler
-meltano --environment=userdev --log-level=debug invoke airflow scheduler
+meltano --environment=userdev invoke airflow scheduler
 ```

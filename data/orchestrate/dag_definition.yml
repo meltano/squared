@@ -79,3 +79,19 @@ dags:
         retries: 2
         depends_on:
           - dbt_gitlab_run_models
+  github:
+    interval: '0 6 * * *'
+    steps:
+      - name: tap_github_target_athena
+        cmd: 'meltano elt tap-github target-athena-github --job_id=tap_github_target_athena'
+        retries: 2
+      - name: dbt_github_run_models
+        cmd: 'meltano invoke dbt:run --models staging.github.*'
+        retries: 2
+        depends_on:
+          - tap_github_target_athena
+      - name: dbt_github_test_models
+        cmd: 'meltano invoke dbt:test --models staging.github.*'
+        retries: 2
+        depends_on:
+          - dbt_github_run_models

@@ -6,7 +6,7 @@ WITH source AS (
         *,
         ROW_NUMBER() OVER (
             PARTITION BY
-                id
+                CAST(id AS INT)
             ORDER BY
                 TRY(CAST(
                     PARSE_DATETIME(
@@ -21,25 +21,25 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        project_id,
-        id AS merge_request_id,
-        iid AS merge_request_internal_id,
-        milestone_id,
-        author_id,
-        assignee_id,
-        merged_by_id,
-        closed_by_id,
+        CAST(id AS INT) AS merge_request_id,
+        CAST(project_id AS INT) AS project_id,
+        CAST(iid AS INT) AS merge_request_internal_id,
+        CAST(milestone_id AS INT) AS milestone_id,
+        CAST(author_id AS INT) AS author_id,
+        CAST(assignee_id AS INT) AS assignee_id,
+        CAST(merged_by_id AS INT) AS merged_by_id,
+        CAST(closed_by_id AS INT) AS closed_by_id,
         title,
         description,
         state,
-        target_project_id,
+        CAST(target_project_id AS INT) AS target_project_id,
         target_branch,
-        source_project_id,
+        CAST(source_project_id AS INT) AS source_project_id,
         source_branch,
         labels,
-        work_in_progress,
+        CAST(work_in_progress AS BOOLEAN) AS is_work_in_progress,
         merge_status,
-        allow_collaboration,
+        CAST(allow_collaboration AS BOOLEAN) AS is_collaboration_allowed,
         TRY(CAST(
             PARSE_DATETIME(
                 created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
