@@ -16,15 +16,19 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        CAST(id AS INT) AS repo_id,
         node_id AS graphql_node_id,
         org AS organization_name,
         name AS repo_name,
         full_name AS repo_full_name,
         description,
         html_url,
-        CAST(json_extract(license, '$.name') as varchar) AS license,
         default_branch,
+        homepage AS homepage_url,
+        topics,
+        visibility,
+        "language" AS programming_language,
+        CAST(id AS INT) AS repo_id,
+        CAST(JSON_EXTRACT(license, '$.name') AS VARCHAR) AS license,
         TRY(CAST(PARSE_DATETIME(
             updated_at, 'YYYY-MM-dd HH:mm:ssZ'
                 ) AS TIMESTAMP)) AS updated_at_ts,
@@ -34,16 +38,12 @@ renamed AS (
         TRY(CAST(PARSE_DATETIME(
             pushed_at, 'YYYY-MM-dd HH:mm:ssZ'
                 ) AS TIMESTAMP)) AS pushed_at_ts,
-        homepage AS homepage_url,
         CAST(private AS BOOLEAN) AS is_private,
         CAST(archived AS BOOLEAN) AS is_archived,
         CAST(disabled AS BOOLEAN) AS is_disabled,
         CAST("size" AS INT) AS repo_size_kb,
         CAST(stargazers_count AS INT) AS stargazers_count,
         CAST(fork AS BOOLEAN) AS is_fork,
-        topics,
-        visibility,
-        "language" AS programming_language,
         CAST(forks_count AS INT) AS forks_count,
         CAST(watchers_count AS INT) AS watchers_count,
         CAST(network_count AS INT) AS network_count,

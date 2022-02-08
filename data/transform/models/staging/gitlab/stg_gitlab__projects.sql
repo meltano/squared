@@ -21,7 +21,6 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        CAST(id AS INT) AS project_id,
         archived,
         avatar_url,
         creator_id,
@@ -29,7 +28,6 @@ renamed AS (
         description,
         merge_method,
         name AS project_name,
-        REPLACE(name_with_namespace, ' ', '') AS repo_full_name,
         namespace AS project_namespace,
         only_allow_merge_if_all_discussions_are_resolved,
         only_allow_merge_if_build_succeeds,
@@ -44,6 +42,8 @@ renamed AS (
         visibility,
         web_url,
         wiki_enabled,
+        CAST(id AS INT) AS project_id,
+        REPLACE(name_with_namespace, ' ', '') AS repo_full_name,
         TRY(CAST(PARSE_DATETIME(
             created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
                 ) AS TIMESTAMP)) AS created_at_ts,

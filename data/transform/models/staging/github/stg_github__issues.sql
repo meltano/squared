@@ -16,10 +16,18 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        CAST(id AS INT) AS issue_id,
         node_id AS graphql_node_id,
         repo AS repo_name,
         org AS organization_name,
+        state,
+        title,
+        author_association,
+        body,
+        labels,
+        reactions,
+        assignees,
+        milestone,
+        CAST(id AS INT) AS issue_id,
         CAST("number" AS INT) AS issue_number,
         TRY(CAST(PARSE_DATETIME(
             updated_at, 'YYYY-MM-dd HH:mm:ssZ'
@@ -30,23 +38,15 @@ renamed AS (
         TRY(CAST(PARSE_DATETIME(
             closed_at, 'YYYY-MM-dd HH:mm:ssZ'
                 ) AS TIMESTAMP)) AS closed_at_ts,
-        state,
-        title,
         CAST(comments AS INT) AS comment_count,
-        author_association,
-        body,
-        CAST(json_extract("user", '$.id') as INT) AS author_id,
-        CAST(json_extract("user", '$.login') as varchar) AS author_username,
-        labels,
-        reactions,
-        CAST(json_extract(assignee, '$.id') as INT) AS assignee_id,
-        CAST(json_extract(assignee, '$.login') as varchar) AS assignee_username,
-        assignees,
-        milestone,
+        CAST(JSON_EXTRACT("user", '$.id') AS INT) AS author_id,
+        CAST(JSON_EXTRACT("user", '$.login') AS VARCHAR) AS author_username,
+        CAST(JSON_EXTRACT(assignee, '$.id') AS INT) AS assignee_id,
+        CAST(JSON_EXTRACT(assignee, '$.login') AS VARCHAR) AS assignee_username,
         CAST(locked AS BOOLEAN) AS is_locked
     FROM source
     WHERE row_num = 1
-    AND "type" != 'pull_request'
+        AND "type" != 'pull_request'
 
 )
 

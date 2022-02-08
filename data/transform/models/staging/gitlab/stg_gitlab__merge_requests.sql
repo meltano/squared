@@ -21,6 +21,13 @@ WITH source AS (
 renamed AS (
 
     SELECT
+        title,
+        description,
+        state,
+        target_branch,
+        source_branch,
+        labels,
+        merge_status,
         CAST(id AS INT) AS merge_request_id,
         CAST(project_id AS INT) AS project_id,
         CAST(iid AS INT) AS merge_request_internal_id,
@@ -29,16 +36,9 @@ renamed AS (
         CAST(assignee_id AS INT) AS assignee_id,
         CAST(merged_by_id AS INT) AS merged_by_id,
         CAST(closed_by_id AS INT) AS closed_by_id,
-        title,
-        description,
-        state,
         CAST(target_project_id AS INT) AS target_project_id,
-        target_branch,
         CAST(source_project_id AS INT) AS source_project_id,
-        source_branch,
-        labels,
         CAST(work_in_progress AS BOOLEAN) AS is_work_in_progress,
-        merge_status,
         CAST(allow_collaboration AS BOOLEAN) AS is_collaboration_allowed,
         TRY(CAST(
             PARSE_DATETIME(

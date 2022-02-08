@@ -21,13 +21,13 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        CAST(id AS INT) AS issue_id,
-        CAST(project_id AS INT) AS project_id,
-        CAST(iid AS INT) AS issue_internal_id,
         title,
         description,
         state,
         labels,
+        CAST(id AS INT) AS issue_id,
+        CAST(project_id AS INT) AS project_id,
+        CAST(iid AS INT) AS issue_internal_id,
         CAST(milestone_id AS INT) AS milestone_id,
         CAST(epic_id AS INT) AS epic_id,
         CAST(author_id AS INT) AS author_id,

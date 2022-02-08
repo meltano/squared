@@ -30,6 +30,7 @@ WITH gitlab_all AS (
     WHERE created_at_ts IS NOT NULL
 
 ),
+
 github_all AS (
     SELECT
         repo_name,
@@ -59,6 +60,7 @@ github_all AS (
     FROM {{ ref('stg_github__issues') }}
 
 ),
+
 gitlab_combined AS (
     SELECT
         gitlab_all.project_id,
@@ -76,11 +78,13 @@ gitlab_combined AS (
         ) AS is_team_contribution
     FROM gitlab_all
     LEFT JOIN
-        {{ ref('team_gitlab_ids') }} ON gitlab_all.author_id = team_gitlab_ids.user_id
+        {{ ref('team_gitlab_ids') }} ON
+            gitlab_all.author_id = team_gitlab_ids.user_id
     LEFT JOIN
         {{ ref('stg_gitlab__projects') }} ON
             gitlab_all.project_id = stg_gitlab__projects.project_id
 ),
+
 github_combined AS (
     SELECT
         stg_github__repositories.repo_id AS project_id,
@@ -100,11 +104,11 @@ github_combined AS (
     LEFT JOIN
         {{ ref('team_github_ids') }} ON
             github_all.author_id = team_github_ids.user_id
-    LEFT JOIN
-        {{ ref('stg_github__repositories') }} ON
-            github_all.organization_name = stg_github__repositories.organization_name
-            AND github_all.repo_name = stg_github__repositories.repo_name
+    LEFT JOIN {{ ref('stg_github__repositories') }} ON
+        github_all.organization_name = stg_github__repositories.organization_name -- noqa: L016
+        AND github_all.repo_name = stg_github__repositories.repo_name
 )
+
 SELECT * FROM gitlab_combined
 UNION ALL
 SELECT * FROM github_combined
