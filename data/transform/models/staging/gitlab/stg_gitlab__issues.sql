@@ -33,9 +33,17 @@ renamed AS (
         CAST(author_id AS INT) AS author_id,
         CAST(assignee_id AS INT) AS assignee_id,
         CAST(closed_by_id AS INT) AS closed_by_id,
-        TRY(CAST(PARSE_DATETIME(
-            created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
-                ) AS TIMESTAMP)) AS created_at_ts,
+        TRY(COALESCE(
+            TRY(CAST(
+                PARSE_DATETIME(
+                    created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
+                ) AS TIMESTAMP)),
+            TRY(CAST(
+                PARSE_DATETIME(
+                    created_at, 'YYYY-MM-dd HH:mm:ssZ'
+                ) AS TIMESTAMP))
+            )
+        ) AS created_at_ts,
         TRY(CAST(PARSE_DATETIME(
             updated_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
                 ) AS TIMESTAMP)) AS updated_at_ts,
