@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: stg_gitlab__issues
+    columns:
+      - name: issue_id
+        description: The unique identifier for the issue.
+        tests:
+          - unique
+          - not_null
+      - name: project_id
+        description: The foreign key to the projects table.
+        tests:
+          - not_null
+      - name: author_id
+        description: The authors unique identifier.
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null
+
+  - name: stg_gitlab__merge_requests
+    columns:
+      - name: merge_request_id
+        description: The unique identifier for the merge request.
+        tests:
+          - unique
+          - not_null
+      - name: project_id
+        description: The foreign key to the projects table.
+        tests:
+          - not_null
+      - name: author_id
+        description: The authors unique identifier.
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null
+
+  - name: stg_gitlab__projects
+    columns:
+      - name: project_id
+        description: The unique identifier for the project.
+        tests:
+          - unique
+          - not_null
+      - name: repo_full_name
+        description: The full name including namespace for the repository.
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null

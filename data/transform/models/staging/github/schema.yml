@@ -1,0 +1,74 @@
+version: 2
+
+models:
+  - name: stg_github__issues
+    columns:
+      - name: issue_id
+        description: The unique identifier for the issue.
+        tests:
+          - unique
+          - not_null
+      - name: author_id
+        description: The authors unique identifier.
+        tests:
+          - not_null
+      - name: organization_name
+        description: The repository organization namespace.
+        tests:
+          - not_null
+      - name: repo_name
+        description: The repository name without namespace.
+        tests:
+          - not_null 
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null
+
+  - name: stg_github__pull_requests
+    columns:
+      - name: pull_request_id
+        description: The unique identifier for the pull request.
+        tests:
+          - unique
+          - not_null
+      - name: author_id
+        description: The authors unique identifier.
+        tests:
+          - not_null
+      - name: organization_name
+        description: The repository organization namespace.
+        tests:
+          - not_null
+      - name: repo_name
+        description: The repository name without namespace.
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null
+
+  - name: stg_github__repositories
+    columns:
+      - name: repo_id
+        description: The unique identifier for the repository.
+        tests:
+          - unique
+          - not_null
+      - name: organization_name
+        description: The repository organization namespace.
+        tests:
+          - not_null
+      - name: repo_name
+        description: The repository name without namespace.
+        tests:
+          - not_null
+      - name: repo_full_name
+        description: The repository full name with namespace.
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null

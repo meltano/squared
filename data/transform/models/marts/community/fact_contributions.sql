@@ -1,7 +1,7 @@
 WITH base AS (
     SELECT
         platform,
-        project_name,
+        repo_full_name,
         contribution_type,
         CAST(created_at_ts AS DATE) AS created_at_date,
         COUNT(DISTINCT contribution_id) AS contributions,
@@ -15,7 +15,7 @@ WITH base AS (
 SELECT
     dim_date.date_day AS created_at_date,
     base.platform,
-    base.project_name,
+    base.repo_full_name,
     base.contribution_type,
     base.contributions,
     base.authors,
