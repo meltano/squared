@@ -40,10 +40,17 @@ renamed AS (
         CAST(source_project_id AS INT) AS source_project_id,
         CAST(work_in_progress AS BOOLEAN) AS is_work_in_progress,
         CAST(allow_collaboration AS BOOLEAN) AS is_collaboration_allowed,
-        TRY(CAST(
-            PARSE_DATETIME(
-                created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
-            ) AS TIMESTAMP)) AS created_at_ts,
+        TRY(COALESCE(
+            TRY(CAST(
+                PARSE_DATETIME(
+                    created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
+                ) AS TIMESTAMP)),
+            TRY(CAST(
+                PARSE_DATETIME(
+                    created_at, 'YYYY-MM-dd HH:mm:ssZ'
+                ) AS TIMESTAMP))
+            )
+        ) AS created_at_ts,
         TRY(CAST(
             PARSE_DATETIME(
                 updated_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'

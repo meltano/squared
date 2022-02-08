@@ -16,3 +16,4 @@ meltano:
       schema: "{{ env_var('DBT_TARGET_SCHEMA', env_var('SQLFLUFF_TARGET_SCHEMA', '')) }}"
       s3_staging_dir: "{{ env_var('DBT_ATHENA_S3_STAGE', env_var('SQLFLUFF_S3_STAGE', '')) }}"
       region_name: us-east-2
+      threads: 4
