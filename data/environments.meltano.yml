@@ -24,6 +24,12 @@ environments:
           s3_bucket: prod-meltano-bucket-01
           athena_database: prod01_raw
           s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
+      - name: target-snowflake
+        config:
+          dbname: RAW
+          user: MELTANO
+          role: LOADER
+          warehouse: LOADER
       transformers:
       - name: dbt
         config:
@@ -64,6 +70,12 @@ environments:
           s3_bucket: devtest-meltano-bucket-01
           athena_database: dev01_${USER_PREFIX}_raw
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
+      - name: target-snowflake
+        config:
+          dbname: ${USER_PREFIX}_RAW
+          user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
+          warehouse: CORE
       transformers:
       - name: dbt
         config:
