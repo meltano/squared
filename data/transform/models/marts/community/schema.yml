@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: fact_contributions
+    columns:
+      - name: created_at_date
+        description: The date contributions were created.
+        tests:
+          - not_null
+      - name: platform
+        description: The platform where the contribution was made (i.e. GitLab, GitHub).
+        tests:
+          - not_null
+      - name: repo_full_name
+        description: The repository/project name including the organization/group namespace.
+        tests:
+          - not_null
+      - name: contribution_type
+        description: The type of contribution (i.e. Issue, Merge Request).
+        tests:
+          - not_null
+      - name: contributions
+        description: The count of contributions excluding core team members.
+      - name: authors
+        description: The count of distinct authors that made the contributions.
+      - name: comments
+        description: The comments on the issues or merge requests.

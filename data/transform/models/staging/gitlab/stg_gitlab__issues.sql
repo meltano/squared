@@ -6,7 +6,7 @@ WITH source AS (
         *,
         ROW_NUMBER() OVER (
             PARTITION BY
-                id
+                CAST(id AS INT)
             ORDER BY
                 TRY(CAST(
                     PARSE_DATETIME(
@@ -25,14 +25,14 @@ renamed AS (
         description,
         state,
         labels,
-        project_id,
-        id AS issue_id,
-        iid AS issue_internal_id,
-        milestone_id,
-        epic_id,
-        author_id,
-        assignee_id,
-        closed_by_id,
+        CAST(id AS INT) AS issue_id,
+        CAST(project_id AS INT) AS project_id,
+        CAST(iid AS INT) AS issue_internal_id,
+        CAST(milestone_id AS INT) AS milestone_id,
+        CAST(epic_id AS INT) AS epic_id,
+        CAST(author_id AS INT) AS author_id,
+        CAST(assignee_id AS INT) AS assignee_id,
+        CAST(closed_by_id AS INT) AS closed_by_id,
         TRY(CAST(PARSE_DATETIME(
             created_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
                 ) AS TIMESTAMP)) AS created_at_ts,
