@@ -18,12 +18,25 @@ environments:
       - name: tap-github
         config:
           start_date: '2020-01-01'
+      - name: tap-snowflake
+        config:
+          dbname: PROD
+          user: MELTANO
+          role: REPORTER
+          tables: PROD.*.*
+          warehouse: REPORTER
       loaders:
       - name: target-athena
         config:
           s3_bucket: prod-meltano-bucket-01
           athena_database: prod01_raw
           s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
+      - name: target-snowflake
+        config:
+          dbname: RAW
+          user: MELTANO
+          role: LOADER
+          warehouse: LOADER
       transformers:
       - name: dbt
         config:
@@ -58,12 +71,28 @@ environments:
       - name: tap-github
         config:
           start_date: '2022-02-01'
+      - name: tap-snowflake
+        config:
+          dbname: ${USER_PREFIX}_PROD
+          user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
+          warehouse: CORE
+      - name: tap-snowflake-metrics
+        config:
+          # TODO: once the table exists filter for it properly
+          tables: ${USER_PREFIX}_PROD.PUBLIC.FACT_HUB_METRICS
       loaders:
       - name: target-athena
         config:
           s3_bucket: devtest-meltano-bucket-01
           athena_database: dev01_${USER_PREFIX}_raw
           s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
+      - name: target-snowflake
+        config:
+          dbname: ${USER_PREFIX}_RAW
+          user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
+          warehouse: CORE
       transformers:
       - name: dbt
         config:
