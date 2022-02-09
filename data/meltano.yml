@@ -129,7 +129,7 @@ plugins:
     - issues.*
   - name: tap-snowflake
     namespace: tap_snowflake
-    pip_url: git+https://github.com/pnadolny13/pipelinewise-tap-snowflake.git@wildcard_discovery
+    pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@v2.0.3
     executable: tap-snowflake
     capabilities:
     - properties

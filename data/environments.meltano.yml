@@ -76,12 +76,11 @@ environments:
           dbname: ${USER_PREFIX}_PROD
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
-          tables: ${USER_PREFIX}_PROD.*.*
           warehouse: CORE
-      # TODO: once the table exists filter for it 
-      # - name: tap-snowflake-metrics
-      #   config:
-      #     tables: ${USER_PREFIX}_PROD.PUBLIC.FACT_HUB_METRICS
+      - name: tap-snowflake-metrics
+        config:
+          # TODO: once the table exists filter for it properly
+          tables: ${USER_PREFIX}_PROD.PUBLIC.FACT_HUB_METRICS
       loaders:
       - name: target-athena
         config:
