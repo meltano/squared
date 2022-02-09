@@ -127,6 +127,50 @@ plugins:
     - repositories.*
     - pull_requests.*
     - issues.*
+  - name: tap-snowflake
+    namespace: tap_snowflake
+    pip_url: git+https://github.com/pnadolny13/pipelinewise-tap-snowflake.git@wildcard_discovery
+    executable: tap-snowflake
+    capabilities:
+    - properties
+    - discover
+    - state
+    settings:
+    - name: account
+    - name: dbname
+    - name: user
+    - name: password
+      kind: password
+    - name: warehouse
+    - name: tables
+    - name: role
+    config:
+      account: epa06486
+      password: ${SNOWFLAKE_PASSWORD}
+  - name: tap-snowflake-metrics
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+      - '*FACT_HUB_METRICS.REPO_FULL_NAME'
+      - '*FACT_HUB_METRICS.CREATED_AT_TIMESTAMP'
+      - '*FACT_HUB_METRICS.LAST_PUSH_TIMESTAMP'
+      - '*FACT_HUB_METRICS.LAST_UPDATED_TIMESTAMP'
+      - '*FACT_HUB_METRICS.NUM_FORKS'
+      - '*FACT_HUB_METRICS.NUM_OPEN_ISSUES'
+      - '*FACT_HUB_METRICS.NUM_STARGAZERS'
+      - '*FACT_HUB_METRICS.NUM_WATCHERS'
+      - '*FACT_HUB_METRICS.MELTANO_EXEC_COUNT_3M'
+      - '*FACT_HUB_METRICS.MELTANO_PROJECT_ID_COUNT_3M'
+  - name: tap-snowflake-audit
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+    - '*HUB_METRICS_AUDIT.UPDATED_DATE'
+    - '*HUB_METRICS_AUDIT.METRIC_TYPE'
   loaders:
   - name: target-athena
     namespace: target_athena

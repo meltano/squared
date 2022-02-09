@@ -18,6 +18,13 @@ environments:
       - name: tap-github
         config:
           start_date: '2020-01-01'
+      - name: tap-snowflake
+        config:
+          dbname: PROD
+          user: MELTANO
+          role: REPORTER
+          tables: PROD.*.*
+          warehouse: REPORTER
       loaders:
       - name: target-athena
         config:
@@ -64,6 +71,17 @@ environments:
       - name: tap-github
         config:
           start_date: '2022-02-01'
+      - name: tap-snowflake
+        config:
+          dbname: ${USER_PREFIX}_PROD
+          user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
+          tables: ${USER_PREFIX}_PROD.*.*
+          warehouse: CORE
+      # TODO: once the table exists filter for it 
+      # - name: tap-snowflake-metrics
+      #   config:
+      #     tables: ${USER_PREFIX}_PROD.PUBLIC.FACT_HUB_METRICS
       loaders:
       - name: target-athena
         config:
