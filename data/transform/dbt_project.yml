@@ -1,4 +1,4 @@
-name: my_meltano_project
+name: squared
 version: '1.0'
 profile: meltano
 config-version: 2
@@ -23,7 +23,7 @@ clean-targets:
 - dbt_modules
 - logs
 models:
-  my_meltano_project: null
+  squared: null
 
 seeds:
   quote_columns: false

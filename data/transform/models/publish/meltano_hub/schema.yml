@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: fact_hub_metrics
+    description: This table includes metrics that are published to S3 and are consumed by MeltanoHub for displaying plugin usage metrics.
+    columns:
+      - name: repo_full_name
+        description: The full name of the GitHub repo including namespace.
+        tests:
+          - not_null
+
+      - name: created_at_timestamp
+        description: The timestamp of when the repo was created.
+        tests:
+          - not_null
+
+      - name: last_push_timestamp
+        description: The timestamp of when the repo last had a commit pushed.
+        tests:
+          - not_null
+
+      - name: last_updated_timestamp
+        description: The timestamp of when the repo was last updated which includes commits pushed but also other repo updates like a wiki change, etc.
+        tests:
+          - not_null
+
+      - name: num_forks
+        description: The count of the number of forks off the repository.
+        tests:
+          - not_null
+
+      - name: num_open_issues
+        description: The count of the number of open issues.
+        tests:
+          - not_null
+
+      - name: num_stargazers
+        description: The count of the number of repo stargazers.
+        tests:
+          - not_null
+
+      - name: num_watchers
+        description: The count of the number of repo watchers.
+        tests:
+          - not_null
+
+      - name: meltano_exec_count_3m
+        description: The sum of execution events via meltano elt or meltano invoke that used the plugin matching this repo name in the last 3 months. The join does not include namespace so all forks share the same value.
+        tests:
+          - not_null
+          
+      - name: meltano_project_id_count_3m
+        description: The distinct count of project IDs that sent at least one execution event via meltano elt or meltano invoke that used the plugin matching this repo name in the last 3 months. The join does not include namespace so all forks share the same value.
+        tests:
+          - not_null
+
+  - name: hub_metrics_audit
+    description: This table includes audit details to be used in determining how fresh the fact_hub_metrics are.
+    columns:
+      - name: updated_date
+        description: The timestamp of when the metric type was updated.
+        tests:
+          - not_null
+
+      - name: metric_type
+        description: The metric type (i.e. meltano_metrics, github_metrics)
+        tests:
+          - not_null
+
+  - name: cli_plugin_usage
+    description: This table includes information about plugin usage via CLI events.
+    columns:
+      - name: event_date
+        description: The date the event was executed.
+        tests:
+          - not_null
+
+      - name: project_id
+        description: The unique identifier for a Meltano project, found in the meltano.yml file.
+        tests:
+          - not_null
+
+      - name: event_count
+        description: The count of the amount of times the command was executed on that date. Google Analytics summarizes to the day grain.
+        tests:
+          - not_null
+
+      - name: plugin_name
+        description: The name of the plugin (e.g. tap-postgres) not including the variant.
+        tests:
+          - not_null
+
+      - name: plugin_type
+        description: The plugin type (i.e. tap or target)
+        tests:
+          - not_null
+
+      - name: command_category
+        description: The category of the command (i.e. meltano elt, meltano init, etc.)
+        tests:
+          - not_null

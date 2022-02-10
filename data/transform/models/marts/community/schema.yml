@@ -2,6 +2,7 @@ version: 2
 
 models:
   - name: fact_contributions
+    description: This table includes details about community contributions to Meltano code bases in both the GitLab group and the GitHub MeltanoLabs organization.
     columns:
       - name: created_at_date
         description: The date contributions were created.

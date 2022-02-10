@@ -34,6 +34,21 @@ As part of a CI deployment to production `dbt:seed` is run in order to persist a
 Seed tables should be static unless a change is made to the code base so by updating them in CI it avoids redundant seed calls in the DAGs.
 All DAGs can assume that seed tables are always up to date with the master branch.
 
+### Code Gen
+The dbt `codegen` [package](https://github.com/dbt-labs/dbt-codegen) is a useful accelerator to help create source, model, and base files.
+To use it you need to add the following to the [packages.yml](packages.yml) file.
+
+```yaml
+packages:
+  - package: fishtown-analytics/codegen
+    version: 0.3.2
+```
+Then run the following and paste the output into the appropriate file and finish editing:
+
+```bash
+meltano invoke dbt:deps
+meltano invoke dbt run-operation generate_model_yaml --args '{"model_name": "fact_cli_events"}'
+```
 
 ### Style Guide
 
