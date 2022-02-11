@@ -17,7 +17,7 @@ dags:
         cmd: 'meltano invoke dbt:run --models publish.meltano_hub.*'
         retries: 2
       - name: ge_consumption_validate
-        cmd: 'meltano test great_expectations:test_dbt_hub_metrics'
+        cmd: 'meltano invoke great_expectations:test_dbt_hub_metrics'
         retries: 2
         depends_on:
           - dbt_hub_metrics
@@ -38,7 +38,7 @@ dags:
         cmd: 'meltano elt tap-google-analytics target-athena --job_id=ga_athena_hub_metrics'
         retries: 2
       - name: ge_raw_validate
-        cmd: 'meltano test great_expectations:test_ga_raw'
+        cmd: 'meltano invoke great_expectations:test_ga_raw'
         retries: 2
         depends_on:
           - tap_google_analytics_target_athena
