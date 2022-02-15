@@ -1,0 +1,10 @@
+config-version: 2
+version: 2
+sources:
+  - name: tap_github_search
+    database: '{{ env_var("SF_DATABASE_RAW") }}'
+    schema: GITHUB_SEARCH
+    tables:
+      - name: issues
+      - name: issues_comments
+      - name: repositories

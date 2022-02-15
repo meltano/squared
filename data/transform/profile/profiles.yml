@@ -17,3 +17,13 @@ meltano:
       s3_staging_dir: "{{ env_var('DBT_ATHENA_S3_STAGE', env_var('SQLFLUFF_S3_STAGE', '')) }}"
       region_name: us-east-2
       threads: 4
+    snowflake:
+      type: snowflake
+      threads: 4
+      account: "{{ env_var('SF_ACCOUNT') }}"
+      user: "{{ env_var('SF_USER') }}"
+      password: "{{ env_var('SF_PASSWORD') }}"
+      role: "{{ env_var('SF_ROLE') }}"
+      database: "{{ env_var('SF_DATABASE_PREP') }}"
+      warehouse: "{{ env_var('SF_WAREHOUSE') }}"
+      schema: "DEFAULT"
