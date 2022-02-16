@@ -310,6 +310,12 @@ plugins:
       models: squared
       sf_password: ${SNOWFLAKE_PASSWORD}
       sf_account: epa06486
+      sf_user: foo
+      sf_role: foo
+      sf_database_raw: foo
+      sf_database_prep: foo
+      sf_database_prod: foo
+      sf_warehouse: foo
   files:
   - name: dbt
     pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
