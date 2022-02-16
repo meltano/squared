@@ -20,10 +20,10 @@ meltano:
     snowflake:
       type: snowflake
       threads: 4
-      account: "{{ env_var('SF_ACCOUNT') }}"
-      user: "{{ env_var('SF_USER') }}"
-      password: "{{ env_var('SF_PASSWORD') }}"
-      role: "{{ env_var('SF_ROLE') }}"
-      database: "{{ env_var('SF_DATABASE_PREP') }}"
-      warehouse: "{{ env_var('SF_WAREHOUSE') }}"
+      account: "{{ env_var('DBT_SF_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SF_USER') }}"
+      password: "{{ env_var('DBT_SF_PASSWORD') }}"
+      role: "{{ env_var('DBT_SF_ROLE') }}"
+      database: "{{ env_var('DBT_SF_DATABASE_PREP') }}"
+      warehouse: "{{ env_var('DBT_SF_WAREHOUSE') }}"
       schema: "DEFAULT"

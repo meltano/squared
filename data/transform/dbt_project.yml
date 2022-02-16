@@ -28,8 +28,20 @@ seeds:
 
 models:
   squared:
+
+    # ------------------
+    # Staging
+    # ------------------
     staging:
-      +database: "{{ env_var('SF_DATABASE_PREP') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      +database: "{{ env_var('DBT_SF_DATABASE_PREP') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
       github_search:
         +materialized: table
         +schema: github_search
+    # ------------------
+    # Publish
+    # ------------------
+    publish:
+      +materialized: table
+      +database: "{{ env_var('DBT_SF_DATABASE_PROD') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      meltano_hub:
+        +schema: meltano_hub

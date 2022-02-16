@@ -297,6 +297,7 @@ plugins:
       account: epa06486
       file_format: CSV
       add_metadata_columns: true
+      password: ${SNOWFLAKE_PASSWORD}
   - name: target-snowflake-github-search
     inherit_from: target-snowflake
     config:
@@ -305,8 +306,10 @@ plugins:
   - name: dbt
     pip_url: 'git+https://github.com/Tomme/dbt-athena.git@5991fc4267fd50a0de34152cb7789f4bb67bad70 dbt-core~=1.0.0 dbt-snowflake~=1.0.0'
     config:
-      target: athena
+      target: snowflake
       models: squared
+      sf_password: ${SNOWFLAKE_PASSWORD}
+      sf_account: epa06486
   files:
   - name: dbt
     pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
@@ -322,6 +325,7 @@ plugins:
       target_schema: target
       source_schema: source
       s3_stage: s3://test/foo
+      sf_database: foo
   - name: awscli
     namespace: awscli
     pip_url: awscli==1.21.7

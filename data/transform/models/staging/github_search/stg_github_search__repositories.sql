@@ -8,10 +8,10 @@ WITH source AS (
         ) AS row_num
     FROM {{ source('tap_github_search', 'repositories') }}
     WHERE (
-        (name like 'tap-%' OR name like '%-tap-%') OR
-        (name like 'target-%' OR name like '%-target-%')
+        (name LIKE 'tap-%' OR name LIKE '%-tap-%')
+        OR (name LIKE 'target-%' OR name LIKE '%-target-%')
     )
-      AND name not like 'tap-practica-%'
+    AND name NOT LIKE 'tap-practica-%'
 ),
 
 renamed AS (
@@ -19,22 +19,22 @@ renamed AS (
     SELECT
         id AS repo_id,
         name AS repo_name,
-        CASE
-            WHEN name LIKE 'tap-%'
-              OR name LIKE '%-tap-%'
-            THEN 'tap'
-            ELSE 'target'
-        END AS connector_type,
         full_name AS repo_full_name,
         fork AS is_fork,
         forks AS num_forks,
         open_issues_count AS num_open_issues,
         watchers_count AS num_watchers,
         stargazers_count AS num_stargazers,
-        created_at AS created_at_timestamp,
-        pushed_at AS last_push_timestamp,
-        updated_at AS last_updated_timestamp,
-        search_name AS repo_search_name
+        created_at AS created_at_ts,
+        pushed_at AS last_push_ts,
+        updated_at AS last_updated_ts,
+        search_name AS repo_search_name,
+        CASE
+            WHEN name LIKE 'tap-%'
+                 OR name LIKE '%-tap-%'
+                THEN 'tap'
+            ELSE 'target'
+        END AS connector_type
     FROM source
     WHERE row_num = 1
 
