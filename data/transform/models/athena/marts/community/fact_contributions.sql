@@ -11,11 +11,6 @@ WITH base AS (
     WHERE is_team_contribution = FALSE
     GROUP BY 1, 2, 3, 4
 )
--- ,
--- spine AS (
---     select distinct platform, repo_full_name, contribution_type
---     from {{ ref('contributions') }}
--- )
 
 SELECT
     dim_date.date_day AS created_at_date,
