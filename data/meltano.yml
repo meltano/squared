@@ -132,6 +132,7 @@ plugins:
   - name: tap-github-search
     inherit_from: tap-github
     config:
+      start_date: '2022-02-13'
       searches:
       - name: tap forks
         query: tap- fork:only language:Python singer in:readme
