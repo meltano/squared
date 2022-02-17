@@ -10,7 +10,7 @@ runaway_limit = 100
 project_dir = transform
 profiles_dir = transform/profile
 profile = meltano
-target = snowflake
+target = athena
 
 [sqlfluff:rules]
 tab_space_size = 4
