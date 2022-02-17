@@ -3,13 +3,13 @@ version: '1.0'
 profile: meltano
 config-version: 2
 
-source-paths:
+model-paths:
 - models
 analysis-paths:
 - analysis
 test-paths:
 - tests
-data-paths:
+seed-paths:
 - data
 macro-paths:
 - macros
@@ -17,13 +17,31 @@ snapshot-paths:
 - snapshots
 target-path: ../.meltano/transformers/dbt/target
 log-path: logs
-modules-path: dbt_modules
+packages-install-path: dbt_packages
 clean-targets:
 - ../.meltano/transformers/dbt/target
-- dbt_modules
+- dbt_packages
 - logs
-models:
-  squared: null
 
 seeds:
   quote_columns: false
+
+models:
+  squared:
+
+    # ------------------
+    # Staging
+    # ------------------
+    staging:
+      +database: "{{ env_var('DBT_SF_DATABASE_PREP') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      github_search:
+        +materialized: table
+        +schema: github_search
+    # ------------------
+    # Publish
+    # ------------------
+    publish:
+      +materialized: table
+      +database: "{{ env_var('DBT_SF_DATABASE_PROD') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      meltano_hub:
+        +schema: meltano_hub
