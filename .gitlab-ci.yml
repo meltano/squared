@@ -55,7 +55,7 @@ sqlfluff:
   stage: test
   script:
   - meltano install utilities sqlfluff
-  - meltano invoke sqlfluff lint -v
+  - meltano --environment=userdev invoke sqlfluff lint -v
 
 # Build & Publish Docker Images
 docker-build-meltano:
