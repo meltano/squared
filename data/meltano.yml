@@ -328,7 +328,7 @@ plugins:
     config:
       athena_catalog: 'test'
       dbt_source_schema: 'abc'
-      target: athena
+      target: snowflake
       target_schema: target
       source_schema: source
       s3_stage: s3://test/foo
