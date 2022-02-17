@@ -131,7 +131,7 @@ dbt_seed:
     AWS_PROFILE: legacy
   script:
   - meltano install transformer dbt
-  - meltano --environment=prod invoke dbt:seed
+  - export DBT_TARGET=athena; meltano --environment=prod invoke dbt:seed
   rules:
   - if: $CI_COMMIT_BRANCH == "master"
     when: always
