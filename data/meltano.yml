@@ -306,6 +306,10 @@ plugins:
     inherit_from: target-snowflake
     config:
       default_target_schema: GITHUB_SEARCH
+  - name: target-snowflake-google-analytics
+    inherit_from: target-snowflake
+    config:
+      default_target_schema: GOOGLE_ANALYTICS
   transformers:
   - name: dbt
     pip_url: 'git+https://github.com/Tomme/dbt-athena.git@5991fc4267fd50a0de34152cb7789f4bb67bad70 dbt-core~=1.0.0 dbt-snowflake~=1.0.0'

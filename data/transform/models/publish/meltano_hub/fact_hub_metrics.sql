@@ -1,20 +1,4 @@
-WITH fact_repo_metrics AS (
-
-    SELECT
-        *,
-        ROW_NUMBER() OVER (
-            PARTITION BY
-                repo_full_name
-            ORDER BY
-                PARSE_DATETIME(
-                    created_at_timestamp, 'YYYY-MM-dd HH:mm:ssZ'
-                ) DESC
-        ) AS row_num
-    FROM {{ source('hub_meltano', 'fact_repo_metrics') }}
-
-),
-
-plugin_use_3m AS (
+WITH plugin_use_3m AS (
 
     SELECT
         plugin_name,
@@ -22,7 +6,7 @@ plugin_use_3m AS (
         COUNT(DISTINCT project_id) AS project_count
     FROM {{ ref('cli_plugin_usage') }}
     WHERE plugin_type IN ('tap', 'target')
-        AND event_date >= CURRENT_DATE - INTERVAL '3' MONTH -- noqa: PRS, L048
+        AND event_date >= DATEADD(month, -3, CURRENT_DATE) -- noqa: PRS, L048
     GROUP BY 1
 
 ),
@@ -41,10 +25,9 @@ rename_join AS (
         CAST(fact_repo_metrics.num_watchers AS INT) AS num_watchers,
         COALESCE(plugin_use_3m.execution_count, 0) AS meltano_exec_count_3m,
         COALESCE(plugin_use_3m.project_count, 0) AS meltano_project_id_count_3m
-    FROM fact_repo_metrics
+    FROM {{ ref('fact_repo_metrics') }}
     LEFT JOIN plugin_use_3m
         ON fact_repo_metrics.connector_name = plugin_use_3m.plugin_name
-    WHERE fact_repo_metrics.row_num = 1
 
 )
 

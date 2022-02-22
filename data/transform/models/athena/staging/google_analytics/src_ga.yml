@@ -1,8 +1,0 @@
-config-version: 2
-version: 2
-sources:
-  - name: tap_google_analytics
-    database: "{{ env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
-    schema: "{{ env_var('DBT_SOURCE_SCHEMA', env_var('SQLFLUFF_SOURCE_SCHEMA', '')) }}"
-    tables:
-      - name: events

@@ -2,7 +2,7 @@ SELECT
     project_id,
     MIN(event_date) AS first_event_date,
     MAX(event_date) AS last_event_date,
-    DATE_DIFF('day', MIN(event_date), MAX(event_date)) AS lifespan_days,
+    DATEDIFF('day', MIN(event_date), MAX(event_date)) AS lifespan_days,
     SUM(event_count) AS events_total,
     COUNT(DISTINCT command) AS unique_commands,
     COUNT(DISTINCT command_category) AS unique_command_categories,
@@ -40,7 +40,7 @@ SELECT
     FALSE) AS is_tracking_disabled,
     COALESCE(MAX(
         event_date
-    ) < CURRENT_DATE - INTERVAL '1' MONTH,
+    ) < DATEADD(month, -1, CURRENT_DATE),
     FALSE) AS is_churned
 FROM {{ ref('fact_cli_events') }}
 GROUP BY project_id

@@ -1,6 +1,9 @@
 version: 2
 
 models:
+  - name: fact_repo_metrics
+    description: This table includes metrics about Singer GitHub repos.
+
   - name: fact_hub_metrics
     description: This table includes metrics that are published to S3 and are consumed by MeltanoHub for displaying plugin usage metrics.
     columns:
