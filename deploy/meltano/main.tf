@@ -71,5 +71,5 @@ module "meltano" {
   superset_db_database = local.inventory.superset_database.database
   superset_db_port = local.inventory.superset_database.port
   superset_admin_password = random_password.superset_password.result
-  superset_dependencies = "PyAthenaJDBC>1.0.9 PyAthena>1.2.0"
+  superset_dependencies = "PyAthenaJDBC>1.0.9 PyAthena>1.2.0 snowflake-sqlalchemy<=1.2.4"
 }
