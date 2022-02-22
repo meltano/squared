@@ -83,7 +83,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_github_target_athena
-        cmd: 'meltano elt tap-github target-athena-github --job_id=tap_github_target_athena'
+        cmd: 'meltano elt tap-github-labs target-athena-github --job_id=tap_github_target_athena'
         retries: 2
       - name: dbt_github_run_models
         cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.staging.github.*'
