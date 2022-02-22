@@ -112,6 +112,9 @@ plugins:
     - catalog
     - discover
     - state
+    settings:
+    - name: auth_token
+      kind: password
   - name: tap-github-labs
     inherit_from: tap-github
     config:
