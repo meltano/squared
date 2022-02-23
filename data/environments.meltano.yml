@@ -5,7 +5,7 @@ environments:
       extractors:
       - name: tap-google-analytics
         config:
-          start_date: '2021-11-08'
+          start_date: '2022-02-20'
       - name: tap-athena
         config:
           schema_name: dbt_prod
@@ -64,7 +64,7 @@ environments:
       extractors:
       - name: tap-google-analytics
         config:
-          start_date: '2021-11-01'
+          start_date: '2022-02-20'
       - name: tap-athena
         config:
           schema_name: dbt_dev_${USER_PREFIX}
@@ -85,8 +85,10 @@ environments:
           warehouse: CORE
       - name: tap-snowflake-metrics
         config:
-          # TODO: once the table exists filter for it properly
-          tables: ${USER_PREFIX}_PROD.PUBLIC.FACT_HUB_METRICS
+          tables: ${USER_PREFIX}_PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-audit
+        config:
+          tables: ${USER_PREFIX}_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-athena
         config:
