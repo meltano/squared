@@ -36,10 +36,10 @@ SELECT
         FALSE) AS is_acquired_date,
     COALESCE(retention.last_event_date = stg_ga__cli_events.event_date,
         FALSE) AS is_churned_date,
-    COALESCE(stg_ga__cli_events.event_date >= DATEADD(month, 1, DATE_TRUNC(
+    COALESCE(stg_ga__cli_events.event_date >= DATEADD(MONTH, 1, DATE_TRUNC(
         'MONTH', retention.first_event_date
-    )) AND stg_ga__cli_events.event_date < DATE_TRUNC(
-        'MONTH', retention.last_event_date
+            )) AND stg_ga__cli_events.event_date < DATE_TRUNC(
+            'MONTH', retention.last_event_date
     ),
     FALSE) AS is_retained_date
 FROM {{ ref('stg_ga__cli_events') }}

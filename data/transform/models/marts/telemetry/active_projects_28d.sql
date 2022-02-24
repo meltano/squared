@@ -2,83 +2,124 @@
     config(materialized='table')
 }}
 
-with exec_projects as (
+WITH exec_projects AS (
     SELECT
         project_id,
-        SUM(CASE WHEN command_category in ('meltano elt', 'meltano invoke') THEN event_count ELSE 0 END) AS exec_count
+        SUM(
+            CASE
+                WHEN
+                    command_category IN (
+                        'meltano elt', 'meltano invoke'
+                    ) THEN event_count
+                ELSE 0
+            END
+        ) AS exec_count
     FROM {{ ref('fact_cli_events') }}
-    GROUP BY project_id
+    GROUP BY 1
 )
-select
+
+SELECT
     event_date,
     (
-        select
-            count(distinct project_id)
-        from (
+        SELECT COUNT(DISTINCT project_id)
+        FROM (
 
-            select
-                distinct event_date, project_id
-            from {{ ref('stg_ga__cli_events') }}
-        ) as d2
-        where
-            d2.event_date between dateadd(day,-28,d.event_date) and d.event_date
-    ) as count_all,
+            SELECT DISTINCT
+                event_date,
+                project_id
+            FROM {{ ref('stg_ga__cli_events') }}
+        ) AS d2
+        WHERE
+            d2.event_date BETWEEN DATEADD(
+                DAY, -28, d.event_date
+            ) AND d.event_date
+    ) AS count_all,
     (
-        select
-            count(distinct project_id)
-        from (
-            select distinct stg_ga__cli_events.event_date, stg_ga__cli_events.project_id
-            from {{ ref('stg_ga__cli_events') }}
-            LEFT JOIN exec_projects ON stg_ga__cli_events.project_id = exec_projects.project_id
+        SELECT COUNT(DISTINCT project_id)
+        FROM (
+            SELECT DISTINCT
+
+                stg_ga__cli_events.event_date,
+                stg_ga__cli_events.project_id
+            FROM {{ ref('stg_ga__cli_events') }}
+            LEFT JOIN
+                exec_projects ON
+                    stg_ga__cli_events.project_id = exec_projects.project_id
             WHERE exec_projects.exec_count > 1
-        ) as d2
-        where
-            d2.event_date between dateadd(day,-28,d.event_date) and d.event_date
-    ) as count_elt_invoke_lifetime_greater_1,
+        ) AS d2
+        WHERE
+            d2.event_date BETWEEN DATEADD(
+                DAY, -28, d.event_date
+            ) AND d.event_date
+    ) AS count_elt_invoke_lifetime_greater_1,
     (
-        select
-            count(distinct project_id)
-        from (
-            select distinct stg_ga__cli_events.event_date, stg_ga__cli_events.project_id
-            from {{ ref('stg_ga__cli_events') }}
-            LEFT JOIN exec_projects ON stg_ga__cli_events.project_id = exec_projects.project_id
+        SELECT COUNT(DISTINCT project_id)
+        FROM (
+            SELECT DISTINCT
+
+                stg_ga__cli_events.event_date,
+                stg_ga__cli_events.project_id
+            FROM {{ ref('stg_ga__cli_events') }}
+            LEFT JOIN
+                exec_projects ON
+                    stg_ga__cli_events.project_id = exec_projects.project_id
             WHERE exec_projects.exec_count > 0
-        ) as d2
-        where
-            d2.event_date between dateadd(day,-28,d.event_date) and d.event_date
-    ) as count_elt_invoke_lifetime_greater_0,
+        ) AS d2
+        WHERE
+            d2.event_date BETWEEN DATEADD(
+                DAY, -28, d.event_date
+            ) AND d.event_date
+    ) AS count_elt_invoke_lifetime_greater_0,
     (
-        select
-            count(distinct project_id)
-        from 
-        (
-            select
-                stg_ga__cli_events.event_date,
-                stg_ga__cli_events.project_id,
-                SUM(CASE WHEN command_category in ('meltano elt', 'meltano invoke') THEN event_count ELSE 0 END) AS exec_count
-            from {{ ref('stg_ga__cli_events') }}
-            group by 1, 2
-        ) as d2
-        where
-            d2.event_date between dateadd(day,-28,d.event_date) and d.event_date
-            and d2.exec_count > 1
-    ) as count_elt_invoke_greater_1_per_month,
+        SELECT COUNT(DISTINCT project_id)
+        FROM
+            (
+                SELECT
+                    stg_ga__cli_events.event_date,
+                    stg_ga__cli_events.project_id,
+                    SUM(
+                        CASE
+                            WHEN
+                                command_category IN (
+                                    'meltano elt', 'meltano invoke'
+                                ) THEN event_count
+                            ELSE 0
+                        END
+                    ) AS exec_count
+                FROM {{ ref('stg_ga__cli_events') }}
+                GROUP BY 1, 2
+            ) AS d2
+        WHERE
+            d2.event_date BETWEEN DATEADD(
+                DAY, -28, d.event_date
+            ) AND d.event_date
+            AND d2.exec_count > 1
+    ) AS count_elt_invoke_greater_1_per_month,
     (
-        select
-            count(distinct project_id)
-        from 
-        (
-            select
-                stg_ga__cli_events.event_date,
-                stg_ga__cli_events.project_id,
-                SUM(CASE WHEN command_category in ('meltano elt', 'meltano invoke') THEN event_count ELSE 0 END) AS exec_count
-            from {{ ref('stg_ga__cli_events') }}
-            group by 1, 2
-        ) as d2
-        where
-            d2.event_date between dateadd(day,-28,d.event_date) and d.event_date
-            and d2.exec_count > 0
-    ) as count_elt_invoke_greater_0_per_month
-from (
-    select distinct event_date from {{ ref('stg_ga__cli_events') }}
-) as d
+        SELECT COUNT(DISTINCT project_id)
+        FROM
+            (
+                SELECT
+                    stg_ga__cli_events.event_date,
+                    stg_ga__cli_events.project_id,
+                    SUM(
+                        CASE
+                            WHEN
+                                command_category IN (
+                                    'meltano elt', 'meltano invoke'
+                                ) THEN event_count
+                            ELSE 0
+                        END
+                    ) AS exec_count
+                FROM {{ ref('stg_ga__cli_events') }}
+                GROUP BY 1, 2
+            ) AS d2
+        WHERE
+            d2.event_date BETWEEN DATEADD(
+                DAY, -28, d.event_date
+            ) AND d.event_date
+            AND d2.exec_count > 0
+    ) AS count_elt_invoke_greater_0_per_month
+FROM (
+    SELECT DISTINCT event_date FROM {{ ref('stg_ga__cli_events') }}
+) AS d

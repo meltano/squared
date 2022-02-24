@@ -40,7 +40,7 @@ SELECT
     FALSE) AS is_tracking_disabled,
     COALESCE(MAX(
         event_date
-    ) < DATEADD(month, -1, CURRENT_DATE),
+    ) < DATEADD(MONTH, -1, CURRENT_DATE),
     FALSE) AS is_churned
 FROM {{ ref('fact_cli_events') }}
 GROUP BY project_id

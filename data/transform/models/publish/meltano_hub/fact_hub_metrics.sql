@@ -6,7 +6,7 @@ WITH plugin_use_3m AS (
         COUNT(DISTINCT project_id) AS project_count
     FROM {{ ref('cli_plugin_usage') }}
     WHERE plugin_type IN ('tap', 'target')
-        AND event_date >= DATEADD(month, -3, CURRENT_DATE) -- noqa: PRS, L048
+        AND event_date >= DATEADD(MONTH, -3, CURRENT_DATE) -- noqa: PRS, L048
     GROUP BY 1
 
 ),
