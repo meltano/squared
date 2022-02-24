@@ -40,4 +40,4 @@ FROM cohort_snapshots
 LEFT JOIN
     monthly_totals ON
         cohort_snapshots.snapshot_month = monthly_totals.snapshot_month
-LEFT JOIN orig_counts ON cohort_snapshots.cohort_id = orig_counts.cohort_id;
+LEFT JOIN orig_counts ON cohort_snapshots.cohort_id = orig_counts.cohort_id
