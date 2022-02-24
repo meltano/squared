@@ -28,6 +28,18 @@ SELECT
     ga_commands_parsed.is_plugin_lightdash,
     ga_commands_parsed.is_plugin_superset,
     ga_commands_parsed.is_plugin_sqlfluff,
+    ga_commands_parsed.is_plugin_great_ex,
+    CASE WHEN NOT
+        (ga_commands_parsed.is_plugin_dbt
+        OR ga_commands_parsed.is_plugin_singer
+        OR ga_commands_parsed.is_plugin_airflow
+        OR ga_commands_parsed.is_plugin_dagster
+        OR ga_commands_parsed.is_plugin_lightdash
+        OR ga_commands_parsed.is_plugin_superset
+        OR ga_commands_parsed.is_plugin_sqlfluff
+        OR ga_commands_parsed.is_plugin_great_ex
+        )
+     THEN TRUE ELSE FALSE END AS is_plugin_other,
     -- OS Features
     ga_commands_parsed.is_os_feature_environments,
     ga_commands_parsed.is_os_feature_test,
