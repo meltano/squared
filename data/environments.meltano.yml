@@ -23,8 +23,13 @@ environments:
           dbname: PROD
           user: MELTANO
           role: REPORTER
-          tables: PROD.*.*
           warehouse: REPORTER
+      - name: tap-snowflake-metrics
+        config:
+          tables: PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-audit
+        config:
+          tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-athena
         config:
