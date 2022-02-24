@@ -28,6 +28,7 @@ renamed AS (
         created_at AS created_at_ts,
         pushed_at AS last_push_ts,
         updated_at AS last_updated_ts,
+        _sdc_batched_at AS batch_ts,
         search_name AS repo_search_name,
         CASE
             WHEN name LIKE 'tap-%'
