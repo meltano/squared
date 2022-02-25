@@ -10,7 +10,7 @@ WITH source AS (
             ORDER BY
                 TRY(CAST(
                     PARSE_DATETIME(
-                        last_activity_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
+                        _sdc_batched_at, 'YYYY-MM-dd HH:mm:ss.SSSSSS'
                     ) AS TIMESTAMP
                 )) DESC
         ) AS row_num

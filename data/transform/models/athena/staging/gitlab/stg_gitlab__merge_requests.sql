@@ -10,7 +10,7 @@ WITH source AS (
             ORDER BY
                 TRY(CAST(
                     PARSE_DATETIME(
-                        updated_at, 'YYYY-MM-dd HH:mm:ss.SSSSSSZ'
+                        _sdc_batched_at, 'YYYY-MM-dd HH:mm:ss.SSSSSS'
                     ) AS TIMESTAMP
                 )) DESC
         ) AS row_num
@@ -28,6 +28,7 @@ renamed AS (
         source_branch,
         labels,
         merge_status,
+        author_username,
         CAST(id AS INT) AS merge_request_id,
         CAST(project_id AS INT) AS project_id,
         CAST(iid AS INT) AS merge_request_internal_id,

@@ -65,7 +65,7 @@ gitlab_combined AS (
         stg_gitlab__projects.repo_full_name,
         gitlab_all.platform,
         gitlab_all.created_at_ts,
-        gitlab_all.author_id,
+        username_mapping.user_surrogate_key,
         gitlab_all.contribution_type,
         gitlab_all.contribution_id,
         gitlab_all.comment_count,
@@ -81,6 +81,10 @@ gitlab_combined AS (
     LEFT JOIN
         {{ ref('stg_gitlab__projects') }} ON
             gitlab_all.project_id = stg_gitlab__projects.project_id
+    LEFT JOIN
+        {{ ref('username_mapping') }} ON
+            gitlab_all.author_id = username_mapping.gitlab_author_id
+    WHERE stg_gitlab__projects.visibility = 'public'
 ),
 
 github_combined AS (
@@ -89,7 +93,7 @@ github_combined AS (
         stg_github__repositories.repo_full_name,
         github_all.platform,
         github_all.created_at_ts,
-        github_all.author_id,
+        username_mapping.user_surrogate_key,
         github_all.contribution_type,
         github_all.contribution_id,
         github_all.comment_count,
@@ -105,6 +109,10 @@ github_combined AS (
     LEFT JOIN {{ ref('stg_github__repositories') }} ON
         github_all.organization_name = stg_github__repositories.organization_name -- noqa: L016
         AND github_all.repo_name = stg_github__repositories.repo_name
+    LEFT JOIN
+        {{ ref('username_mapping') }} ON
+            github_all.author_id = username_mapping.github_author_id
+    WHERE stg_github__repositories.visibility = 'public'
 )
 
 SELECT * FROM gitlab_combined
