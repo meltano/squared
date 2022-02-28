@@ -341,6 +341,7 @@ users:
             - useradmin
             - sysadmin
             - developer
+            - maintainer
 
     - tmurphy:
         can_login: yes
@@ -351,6 +352,7 @@ users:
             - useradmin
             - sysadmin
             - developer
+            - maintainer
 
     - aaronsteers:
         can_login: yes
