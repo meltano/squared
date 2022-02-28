@@ -105,33 +105,27 @@ roles:
                     - prod
                     - raw
                     - snowflake
-                    - userdev
                 write:
                     - prep
                     - prod
-                    - userdev
             schemas:
                 read:
                     - prep.*
                     - prod.*
                     - raw.*
                     - snowflake.*
-                    - userdev.*
                 write:
                     - prep.*
                     - prod.*
-                    - userdev.*
             tables:
                 read:
                     - prep.*.*
                     - prod.*.*
                     - raw.*.*
                     - snowflake.*.*
-                    - userdev.*.*
                 write:
                     - prep.*.*
                     - prod.*.*
-                    - userdev.*.*
 
     - loader:
         # Provides write access to `raw`
@@ -154,28 +148,8 @@ roles:
                 write:
                     - raw.*.*
 
-    - maintainer:
-        # Adds maintenance-related access to `core` permissions:
-        # Includes write access on `prep` and `prop`
-        # Includes write access on `raw` (inherited from `loader` role)
-        member_of:
-            - core
-            - loader
-        privileges:
-            databases:
-                write:
-                    - prep
-                    - prod
-            schemas:
-                write:
-                    - prep.*
-                    - prod.*
-            tables:
-                write:
-                    - prep.*.*
-                    - prod.*.*
-
     - reporter:
+        # Reporter role, a constrained role for BI tools
         warehouses:
             - reporter
         privileges:
@@ -282,24 +256,62 @@ roles:
                     - pnadolny_prod.*.*
                     - pnadolny_raw.*.*
 
-    - tmurphy:
-        member_of:
-            - core
-            - developer
-            - maintainer
-        warehouses:
-            - core
-
     - developer:
         # Every Meltano team member has developer permissions.
         # This gives full permissions to analyze and develop, with
         # zero permissions to break anything in production processes
         # or workloads:
         # - Allows read on all non-protected / non-special data.
-        # - Allows write on `userdev`.
         # - Disallows write on `raw`, `prep`, or `prod`.
+        # - Allows read/write on `userdev` shared DB.
+        # - Allows creating new schemas in `userdev`.
         member_of:
             - core
+        warehouses:
+            - core
+        privileges:
+            databases:
+                read:
+                    - userdev
+                write:
+                    - userdev
+            schemas:
+                read:
+                    - userdev.*
+                write:
+                    - userdev.*
+            tables:
+                read:
+                    - userdev.*.*
+                write:
+                    - userdev.*.*
+
+    - maintainer:
+        # Adds maintenance-related access to `developer` permissions:
+        # Includes write access on `prep` and `prod`
+        # Includes write access on `raw` (inherited from `loader` role)
+        member_of:
+            - developer
+            - loader
+        privileges:
+            databases:
+                write:
+                    - prep
+                    - prod
+            schemas:
+                write:
+                    - prep.*
+                    - prod.*
+            tables:
+                write:
+                    - prep.*.*
+                    - prod.*.*
+
+    - tmurphy:
+        member_of:
+            - core
+            - developer
+            - maintainer
         warehouses:
             - core
 
