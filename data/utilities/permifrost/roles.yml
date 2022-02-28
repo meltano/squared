@@ -354,7 +354,7 @@ users:
             - developer
             - maintainer
 
-    - aaronsteers:
+    - "aj@meltano.com":
         can_login: yes
         member_of:
             - developer
