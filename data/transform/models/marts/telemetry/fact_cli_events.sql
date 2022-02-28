@@ -29,8 +29,11 @@ SELECT
     ga_commands_parsed.is_plugin_superset,
     ga_commands_parsed.is_plugin_sqlfluff,
     ga_commands_parsed.is_plugin_great_ex,
-    CASE WHEN NOT
-        (ga_commands_parsed.is_plugin_dbt
+    ga_commands_parsed.is_os_feature_environments,
+    -- OS Features
+    ga_commands_parsed.is_os_feature_test,
+    ga_commands_parsed.is_os_feature_run,
+    COALESCE(NOT(ga_commands_parsed.is_plugin_dbt
         OR ga_commands_parsed.is_plugin_singer
         OR ga_commands_parsed.is_plugin_airflow
         OR ga_commands_parsed.is_plugin_dagster
@@ -38,12 +41,7 @@ SELECT
         OR ga_commands_parsed.is_plugin_superset
         OR ga_commands_parsed.is_plugin_sqlfluff
         OR ga_commands_parsed.is_plugin_great_ex
-        )
-     THEN TRUE ELSE FALSE END AS is_plugin_other,
-    -- OS Features
-    ga_commands_parsed.is_os_feature_environments,
-    ga_commands_parsed.is_os_feature_test,
-    ga_commands_parsed.is_os_feature_run,
+    ), FALSE) AS is_plugin_other,
     COALESCE(retention.first_event_date = stg_ga__cli_events.event_date,
         FALSE) AS is_acquired_date,
     COALESCE(retention.last_event_date = stg_ga__cli_events.event_date,

@@ -78,10 +78,10 @@ environments:
       - name: tap-gitlab
         config:
           groups: meltano
-          start_date: '2022-02-06T00:00:00Z'
+          start_date: '2020-01-01T00:00:00Z'
       - name: tap-github
         config:
-          start_date: '2022-02-15'
+          start_date: '2021-05-01'
       - name: tap-snowflake
         config:
           dbname: ${USER_PREFIX}_PROD

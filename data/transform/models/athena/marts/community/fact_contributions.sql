@@ -5,7 +5,7 @@ WITH base AS (
         contribution_type,
         CAST(created_at_ts AS DATE) AS created_at_date,
         COUNT(DISTINCT contribution_id) AS contributions,
-        COUNT(DISTINCT author_id) AS authors,
+        COUNT(DISTINCT user_surrogate_key) AS authors,
         SUM(comment_count) AS comments
     FROM {{ ref('contributions') }}
     WHERE is_team_contribution = FALSE

@@ -100,7 +100,7 @@ plugins:
     - '*hub_metrics_audit.metric_type'
   - name: tap-gitlab
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-gitlab.git
+    pip_url: git+https://github.com/pnadolny13/tap-gitlab.git@author_usernames
     select:
     - projects.*
     - merge_requests.*
