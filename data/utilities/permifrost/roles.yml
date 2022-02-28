@@ -22,6 +22,10 @@ databases:
     - pnadolny_prod:
         shared: no
 
+    - userdev:
+        # Common working space, schemas created by users
+        shared: no
+
 # ==========================================
 # Roles
 # ==========================================
@@ -91,6 +95,9 @@ roles:
 # ==========================================
 
     - core:
+        # "Core" permission level.
+        # Excludes write access to `raw`
+        # Excludes write access to `prep` and `prod`
         privileges:
             databases:
                 read:
@@ -98,32 +105,36 @@ roles:
                     - prod
                     - raw
                     - snowflake
+                    - userdev
                 write:
                     - prep
                     - prod
-                    - raw
+                    - userdev
             schemas:
                 read:
                     - prep.*
                     - prod.*
                     - raw.*
                     - snowflake.*
+                    - userdev.*
                 write:
                     - prep.*
                     - prod.*
-                    - raw.*
+                    - userdev.*
             tables:
                 read:
                     - prep.*.*
                     - prod.*.*
                     - raw.*.*
                     - snowflake.*.*
+                    - userdev.*.*
                 write:
                     - prep.*.*
                     - prod.*.*
-                    - raw.*.*
+                    - userdev.*.*
 
     - loader:
+        # Provides write access to `raw`
         warehouses:
             - loader
         privileges:
@@ -143,6 +154,27 @@ roles:
                 write:
                     - raw.*.*
 
+    - maintainer:
+        # Adds maintenance-related access to `core` permissions:
+        # Includes write access on `prep` and `prop`
+        # Includes write access on `raw` (inherited from `loader` role)
+        member_of:
+            - core
+            - loader
+        privileges:
+            databases:
+                write:
+                    - prep
+                    - prod
+            schemas:
+                write:
+                    - prep.*
+                    - prod.*
+            tables:
+                write:
+                    - prep.*.*
+                    - prod.*.*
+
     - reporter:
         warehouses:
             - reporter
@@ -158,6 +190,7 @@ roles:
                     - prod.*.*
 
     - transformer:
+        # Transformation role, excludes write access to `raw`
         warehouses:
             - transformer
         privileges:
@@ -203,6 +236,8 @@ roles:
     - pnadolny:
         member_of:
             - core
+            - loader
+            - maintainer
         warehouses:
             - core
         owns:
@@ -250,6 +285,21 @@ roles:
     - tmurphy:
         member_of:
             - core
+            - developer
+            - maintainer
+        warehouses:
+            - core
+
+    - developer:
+        # Every Meltano team member has developer permissions.
+        # This gives full permissions to analyze and develop, with
+        # zero permissions to break anything in production processes
+        # or workloads:
+        # - Allows read on all non-protected / non-special data.
+        # - Allows write on `userdev`.
+        # - Disallows write on `raw`, `prep`, or `prod`.
+        member_of:
+            - core
         warehouses:
             - core
 
@@ -273,20 +323,27 @@ users:
     - pnadolny:
         can_login: yes
         member_of:
-            - pnadolny
+            - pnadolny  # TODO - migrate to generic 'developer' role?
             - accountadmin
             - securityadmin
             - useradmin
             - sysadmin
+            - developer
 
     - tmurphy:
         can_login: yes
         member_of:
-            - tmurphy
+            - tmurphy  # TODO - migrate to generic 'developer' role?
             - accountadmin
             - securityadmin
             - useradmin
             - sysadmin
+            - developer
+
+    - aaronsteers:
+        can_login: yes
+        member_of:
+            - developer
 
 # ==========================================
 # Warehouses
