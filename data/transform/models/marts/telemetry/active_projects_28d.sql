@@ -9,7 +9,11 @@ WITH exec_projects AS (
             CASE
                 WHEN
                     command_category IN (
-                        'meltano elt', 'meltano invoke', 'meltano run', 'meltano test', 'meltano ui'
+                        'meltano elt',
+                        'meltano invoke',
+                        'meltano run',
+                        'meltano test',
+                        'meltano ui'
                     ) THEN event_count
                 ELSE 0
             END
@@ -81,7 +85,11 @@ SELECT
                         CASE
                             WHEN
                                 command_category IN (
-                                    'meltano elt', 'meltano invoke', 'meltano run', 'meltano test', 'meltano ui'
+                                    'meltano elt',
+                                    'meltano invoke',
+                                    'meltano run',
+                                    'meltano test',
+                                    'meltano ui'
                                 ) THEN event_count
                             ELSE 0
                         END
@@ -106,7 +114,11 @@ SELECT
                         CASE
                             WHEN
                                 command_category IN (
-                                    'meltano elt', 'meltano invoke', 'meltano run', 'meltano test', 'meltano ui'
+                                    'meltano elt',
+                                    'meltano invoke',
+                                    'meltano run',
+                                    'meltano test',
+                                    'meltano ui'
                                 ) THEN event_count
                             ELSE 0
                         END
@@ -131,9 +143,10 @@ SELECT
                         CASE
                             WHEN
                                 command_category IN (
-                                    'meltano elt', 'meltano invoke', 'meltano run'
+                                    'meltano elt',
+                                    'meltano invoke',
+                                    'meltano run'
                                 ) THEN command
-                            ELSE NULL
                         END
                     ) AS pipeline_count
                 FROM {{ ref('stg_ga__cli_events') }}
