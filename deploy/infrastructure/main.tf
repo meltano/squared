@@ -4,10 +4,9 @@ locals {
 }
 
 module "infrastructure" {
-  # source = "git::https://gitlab.com/meltano/infra/terraform.git//aws/modules/infrastructure"
-  source = "../../../infrastructure/terraform/aws/modules/infrastructure"
+  source = "git::https://gitlab.com/meltano/infra/terraform.git//aws/modules/infrastructure"
+  # source = "../../../infrastructure/terraform/aws/modules/infrastructure"
   aws_region = local.aws_region
-  enable_vpn_gateway = true
 }
 
 locals {
