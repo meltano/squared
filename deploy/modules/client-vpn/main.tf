@@ -70,18 +70,6 @@ resource "aws_ec2_client_vpn_network_association" "client-vpn-network-associatio
   subnet_id              = element(var.subnet_id, count.index)
 }
 
-resource "aws_ec2_client_vpn_route" "client-vpn-route" {
-  count                  = length(var.subnet_id)
-  client_vpn_endpoint_id = aws_ec2_client_vpn_endpoint.client-vpn-endpoint.id
-  destination_cidr_block = "0.0.0.0/0"
-  target_vpc_subnet_id   = element(var.subnet_id, count.index)
-  description            = "Internet Access"
-
-  depends_on = [
-    aws_ec2_client_vpn_endpoint.client-vpn-endpoint,
-    aws_ec2_client_vpn_network_association.client-vpn-network-association
-  ]
-}
 
 ################################
 ###  Null Resource
