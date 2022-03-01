@@ -200,6 +200,28 @@ sqlfluff AS (
         AND split_part_4 LIKE 'sqlfluff'
 ),
 
+great_expectations AS (
+
+    SELECT command
+    FROM unique_commands
+    WHERE command_category = 'meltano invoke'
+        AND split_part_3 IN ('great-expectations', 'great_expectations')
+
+    UNION ALL
+
+    SELECT command
+    FROM unique_commands
+    WHERE command_category = 'meltano add files'
+        AND split_part_4 IN ('great-expectations', 'great_expectations')
+
+    UNION ALL
+
+    SELECT command
+    FROM unique_commands
+    WHERE command_category = 'meltano add utilities'
+        AND split_part_4 IN ('great-expectations', 'great_expectations')
+),
+
 -- Features
 environments AS (
 
@@ -238,6 +260,9 @@ SELECT
     NOT COALESCE(superset.command IS NULL, FALSE) AS is_plugin_superset,
     NOT COALESCE(sqlfluff.command IS NULL, FALSE) AS is_plugin_sqlfluff,
     NOT COALESCE(
+        great_expectations.command IS NULL, FALSE
+    ) AS is_plugin_great_ex,
+    NOT COALESCE(
         environments.command IS NULL, FALSE
     ) AS is_os_feature_environments,
     NOT COALESCE(cli_test.command IS NULL, FALSE) AS is_os_feature_test,
@@ -252,6 +277,8 @@ LEFT JOIN dagster ON unique_commands.command = dagster.command
 LEFT JOIN lightdash ON unique_commands.command = lightdash.command
 LEFT JOIN superset ON unique_commands.command = superset.command
 LEFT JOIN sqlfluff ON unique_commands.command = sqlfluff.command
+LEFT JOIN
+    great_expectations ON unique_commands.command = great_expectations.command
 LEFT JOIN environments ON unique_commands.command = environments.command
 LEFT JOIN cli_test ON unique_commands.command = cli_test.command
 LEFT JOIN cli_run ON unique_commands.command = cli_run.command

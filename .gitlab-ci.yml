@@ -73,6 +73,7 @@ docker-build-meltano:
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
+  # needs: ["sqlfluff"]
 
 # Build and Publish Airflow Image
 docker-build-airflow:
@@ -90,6 +91,7 @@ docker-build-airflow:
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
+  # needs: ["sqlfluff"]
 
 # Deploy New Images
 terraform-validate:
@@ -98,6 +100,7 @@ terraform-validate:
   stage: validate
   script:
     - terraform validate
+  needs: ["docker-build-airflow", "docker-build-meltano"]
 
 terraform-plan:
   extends:
@@ -112,6 +115,7 @@ terraform-plan:
   artifacts:
     paths:
       - deploy/meltano/planfile
+  needs: ["terraform-validate"]
 
 terraform-apply:
   extends:
@@ -121,6 +125,7 @@ terraform-apply:
     - terraform apply -input=false "planfile"
   dependencies:
     - terraform-plan
+  needs: ["terraform-plan"]
 
 # Deploy dbt Seed file changes
 dbt_seed:
@@ -131,7 +136,8 @@ dbt_seed:
     AWS_PROFILE: legacy
   script:
   - meltano install transformer dbt
-  - meltano --environment=prod invoke dbt:seed
+  - export DBT_TARGET=athena; meltano --environment=prod invoke dbt:seed
   rules:
   - if: $CI_COMMIT_BRANCH == "master"
     when: always
+  needs: ["terraform-apply"]

@@ -5,7 +5,7 @@ WITH source AS (
         ROW_NUMBER() OVER (
             PARTITION BY
                 ga_date, ga_eventcategory, ga_eventaction, ga_eventlabel
-            ORDER BY DATE_PARSE(_sdc_batched_at, '%Y-%m-%d %H:%i:%s.%f') DESC
+            ORDER BY _sdc_batched_at DESC
         ) AS row_num
     FROM {{ source('tap_google_analytics', 'events') }}
     WHERE ga_eventlabel != '(not set)'

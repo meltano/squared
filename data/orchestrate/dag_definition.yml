@@ -5,16 +5,20 @@ dags:
       - name: mart_dbt
         cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.marts.*'
         retries: 2
+      - name: mart_dbt_snowflake
+        cmd: 'meltano invoke dbt:run --models marts.*'
+        retries: 2
       - name: mart_dbt_test
         cmd: 'export DBT_TARGET=athena; meltano invoke dbt:test --models athena.marts.*'
         retries: 2
         depends_on:
           - mart_dbt
+          - mart_dbt_snowflake
   hub_metrics:
     interval: '0 10 * * *'
     steps:
       - name: dbt_hub_metrics
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.publish.meltano_hub.*'
+        cmd: 'meltano invoke dbt:run --models publish.meltano_hub.*'
         retries: 2
       - name: ge_consumption_validate
         cmd: 'meltano invoke great_expectations:test_dbt_hub_metrics'
@@ -22,28 +26,28 @@ dags:
         depends_on:
           - dbt_hub_metrics
       - name: publish_hub_metrics
-        cmd: 'meltano elt tap-athena-metrics target-yaml-metrics && meltano invoke awscli s3 cp metrics.yml s3://prod-meltano-bucket-01/hub_metrics/'
+        cmd: 'meltano elt tap-snowflake-metrics target-yaml-metrics && meltano invoke awscli s3 cp metrics.yml s3://prod-meltano-bucket-01/hub_metrics/'
         retries: 2
         depends_on:
           - ge_consumption_validate
       - name: publish_audit
-        cmd: 'meltano elt tap-athena-audit target-yaml-audit && meltano invoke awscli s3 cp audit.yml s3://prod-meltano-bucket-01/hub_metrics/'
+        cmd: 'meltano elt tap-snowflake-audit target-yaml-audit && meltano invoke awscli s3 cp audit.yml s3://prod-meltano-bucket-01/hub_metrics/'
         retries: 2
         depends_on:
           - ge_consumption_validate
   google_analytics:
     interval: '0 6 * * *'
     steps:
-      - name: tap_google_analytics_target_athena
-        cmd: 'meltano elt tap-google-analytics target-athena --job_id=ga_athena_hub_metrics'
+      - name: tap_google_analytics_target_snowflake
+        cmd: 'meltano elt tap-google-analytics target-snowflake-google-analytics --job_id=ga_snowflake'
         retries: 2
       - name: ge_raw_validate
         cmd: 'meltano invoke great_expectations:test_ga_raw'
         retries: 2
         depends_on:
-          - tap_google_analytics_target_athena
+          - tap_google_analytics_target_snowflake
       - name: dbt_google_analytics_run_stage
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.staging.google_analytics.*'
+        cmd: 'meltano invoke dbt:run --models staging.google_analytics.*'
         retries: 2
         depends_on:
           - ge_raw_validate
@@ -83,7 +87,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_github_target_athena
-        cmd: 'meltano elt tap-github target-athena-github --job_id=tap_github_target_athena'
+        cmd: 'meltano elt tap-github-labs target-athena-github --job_id=tap_github_target_athena'
         retries: 2
       - name: dbt_github_run_models
         cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.staging.github.*'
@@ -102,7 +106,7 @@ dags:
         cmd: 'meltano elt tap-github-search target-snowflake-github-search --job_id=tap_github_search_target_snowflake'
         retries: 2
       - name: dbt_github_search_run_models
-        cmd: 'meltano invoke dbt:run --models staging.github_search.* publish.meltano_hub.*'
+        cmd: 'meltano invoke dbt:run --models staging.github_search.*'
         retries: 2
         depends_on:
           - tap_github_search_target_snowflake

@@ -5,7 +5,7 @@ environments:
       extractors:
       - name: tap-google-analytics
         config:
-          start_date: '2021-11-08'
+          start_date: '2022-02-20'
       - name: tap-athena
         config:
           schema_name: dbt_prod
@@ -23,8 +23,13 @@ environments:
           dbname: PROD
           user: MELTANO
           role: REPORTER
-          tables: PROD.*.*
           warehouse: REPORTER
+      - name: tap-snowflake-metrics
+        config:
+          tables: PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-audit
+        config:
+          tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-athena
         config:
@@ -64,7 +69,7 @@ environments:
       extractors:
       - name: tap-google-analytics
         config:
-          start_date: '2021-11-01'
+          start_date: '2022-02-20'
       - name: tap-athena
         config:
           schema_name: dbt_dev_${USER_PREFIX}
@@ -73,10 +78,10 @@ environments:
       - name: tap-gitlab
         config:
           groups: meltano
-          start_date: '2022-02-06T00:00:00Z'
+          start_date: '2020-01-01T00:00:00Z'
       - name: tap-github
         config:
-          start_date: '2022-02-15'
+          start_date: '2021-05-01'
       - name: tap-snowflake
         config:
           dbname: ${USER_PREFIX}_PROD
@@ -85,8 +90,10 @@ environments:
           warehouse: CORE
       - name: tap-snowflake-metrics
         config:
-          # TODO: once the table exists filter for it properly
-          tables: ${USER_PREFIX}_PROD.PUBLIC.FACT_HUB_METRICS
+          tables: ${USER_PREFIX}_PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-audit
+        config:
+          tables: ${USER_PREFIX}_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-athena
         config:
