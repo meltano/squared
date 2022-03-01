@@ -35,8 +35,8 @@ resource "aws_ssm_parameter" "superset_admin" {
 }
 
 module "meltano" {
-  # source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
-  source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
+  source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
+  # source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
   # aws
   aws_region = local.inventory.aws.region
   # airflow
@@ -46,7 +46,6 @@ module "meltano" {
   airflow_logs_pvc_claim_name = local.inventory.kubernetes_cluster.storage.logs_storage_claim_name
   airflow_meltano_project_root = "/opt/airflow/meltano"
   airflow_webserver_secret_key = data.aws_ssm_parameter.airflow_webserver_secret.value
-  airflow_webserver_base_url = "http://internal-095a2699-meltano-airflowai-4cc5-561943628.us-east-1.elb.amazonaws.com/airflow"
   # airflow database
   airflow_db_database = local.inventory.airflow_database.database
   airflow_db_host = local.inventory.airflow_database.host
