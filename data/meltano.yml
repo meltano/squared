@@ -329,16 +329,11 @@ plugins:
   utilities:
   - name: sqlfluff
     namespace: sqlfluff
-    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; git+https://github.com/Tomme/dbt-athena.git@5991fc4267fd50a0de34152cb7789f4bb67bad70
+    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; dbt-core~=1.0.0; dbt-snowflake~=1.0.0
     executable: sqlfluff
     config:
-      athena_catalog: 'test'
-      dbt_source_schema: 'abc'
-      target: athena
-      target_schema: target
-      source_schema: source
-      s3_stage: s3://test/foo
       sf_database: foo
+      sf_account: epa06486
   - name: awscli
     namespace: awscli
     pip_url: awscli==1.21.7

@@ -49,13 +49,13 @@ stages:
     when: always
 
 # SQL linting
-# sqlfluff:
-#   extends:
-#   - .meltano
-#   stage: test
-#   script:
-#   - meltano install utilities sqlfluff
-#   - meltano --environment=userdev invoke sqlfluff lint -v
+sqlfluff:
+  extends:
+  - .meltano
+  stage: test
+  script:
+  - meltano install utilities sqlfluff
+  - meltano --environment=prod invoke sqlfluff lint -v
 
 # Build & Publish Docker Images
 docker-build-meltano:

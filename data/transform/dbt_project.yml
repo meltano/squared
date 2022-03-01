@@ -33,19 +33,16 @@ models:
     # Staging
     # ------------------
     staging:
-      +database: "{{ env_var('DBT_SF_DATABASE_PREP') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      +database: "{{ env_var('DBT_SF_DATABASE_PREP', 'sqlfluff_placeholder') }}"
       github_search:
         +materialized: table
         +schema: github_search
-      google_analytics:
-        +materialized: table
-        +schema: google_analytics
     # ------------------
     # Publish
     # ------------------
     publish:
       +materialized: table
-      +database: "{{ env_var('DBT_SF_DATABASE_PROD') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      +database: "{{ env_var('DBT_SF_DATABASE_PROD', 'sqlfluff_placeholder') }}"
       meltano_hub:
         +schema: meltano_hub
     # ------------------
@@ -53,6 +50,6 @@ models:
     # ------------------
     marts:
       +materialized: table
-      +database: "{{ env_var('DBT_SF_DATABASE_PROD') if target.name == 'snowflake' else env_var('ATHENA_CATALOG', env_var('SQLFLUFF_ATHENA_CATALOG', '')) }}"
+      +database: "{{ env_var('DBT_SF_DATABASE_PROD', 'sqlfluff_placeholder') }}"
       telemetry:
         +schema: telemetry
