@@ -35,8 +35,8 @@ resource "aws_ssm_parameter" "superset_admin" {
 }
 
 module "meltano" {
-  # source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
   source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
+  # source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
   # aws
   aws_region = local.inventory.aws.region
   # airflow
@@ -72,4 +72,5 @@ module "meltano" {
   superset_db_port = local.inventory.superset_database.port
   superset_admin_password = random_password.superset_password.result
   superset_dependencies = "PyAthenaJDBC>1.0.9 PyAthena>1.2.0 'snowflake-sqlalchemy<=1.2.4'"
+  superset_webserver_host = "internal-095a2699-meltano-superset-608a-2127736714.us-east-1.elb.amazonaws.com"
 }
