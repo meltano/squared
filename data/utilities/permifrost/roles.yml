@@ -14,6 +14,10 @@ databases:
     - snowflake:
         shared: yes
 
+    - userdev:
+        # Common working space, schemas created by users
+        shared: no
+
   # User / Testing
     - pnadolny_raw:
         shared: no
@@ -22,8 +26,14 @@ databases:
     - pnadolny_prod:
         shared: no
 
-    - userdev:
-        # Common working space, schemas created by users
+    - asteers_prep:
+        shared: no
+    - asteers_prod:
+        shared: no
+
+    - tmurphy_prep:
+        shared: no
+    - tmurphy_prod:
         shared: no
 
 # ==========================================
@@ -105,27 +115,18 @@ roles:
                     - prod
                     - raw
                     - snowflake
-                write:
-                    - prep
-                    - prod
             schemas:
                 read:
                     - prep.*
                     - prod.*
                     - raw.*
                     - snowflake.*
-                write:
-                    - prep.*
-                    - prod.*
             tables:
                 read:
                     - prep.*.*
                     - prod.*.*
                     - raw.*.*
                     - snowflake.*.*
-                write:
-                    - prep.*.*
-                    - prod.*.*
 
     - loader:
         # Provides write access to `raw`
@@ -193,10 +194,49 @@ roles:
                     - prep.*.*
                     - prod.*.*
 
+    - developer:
+        # Every Meltano team member has developer permissions.
+        # This gives full permissions to analyze and develop, with
+        # zero permissions to break anything in production processes
+        # or workloads:
+        # - Allows read on all non-protected / non-special data.
+        # - Disallows write on `raw`, `prep`, or `prod`.
+        # - Allows read/write on `userdev` shared DB.
+        # - Allows creating new schemas in `userdev`.
+        member_of:
+            - core
+        warehouses:
+            - core
+        privileges:
+            databases:
+                read:
+                    - userdev
+                write:
+                    - userdev
+            schemas:
+                read:
+                    - userdev.*
+                write:
+                    - userdev.*
+            tables:
+                read:
+                    - userdev.*.*
+                write:
+                    - userdev.*.*
+
+    - maintainer:
+        # Adds maintenance-related access to `developer` permissions:
+        # Includes write access on `prep` and `prod` (inherited from `transformer` role)
+        # Includes write access on `raw` (inherited from `loader` role)
+        member_of:
+            - developer
+            - loader
+            - transformer
+
 # ==========================================
-# User Roles
+# User Roles ("Special" or elevated users)
 # ==========================================
-    
+
     - permission_bot:
         warehouses:
             - admin
@@ -256,67 +296,92 @@ roles:
                     - pnadolny_prod.*.*
                     - pnadolny_raw.*.*
 
-    - developer:
-        # Every Meltano team member has developer permissions.
-        # This gives full permissions to analyze and develop, with
-        # zero permissions to break anything in production processes
-        # or workloads:
-        # - Allows read on all non-protected / non-special data.
-        # - Disallows write on `raw`, `prep`, or `prod`.
-        # - Allows read/write on `userdev` shared DB.
-        # - Allows creating new schemas in `userdev`.
-        member_of:
-            - core
-        warehouses:
-            - core
-        privileges:
-            databases:
-                read:
-                    - userdev
-                write:
-                    - userdev
-            schemas:
-                read:
-                    - userdev.*
-                write:
-                    - userdev.*
-            tables:
-                read:
-                    - userdev.*.*
-                write:
-                    - userdev.*.*
-
-    - maintainer:
-        # Adds maintenance-related access to `developer` permissions:
-        # Includes write access on `prep` and `prod`
-        # Includes write access on `raw` (inherited from `loader` role)
-        member_of:
-            - developer
-            - loader
-        privileges:
-            databases:
-                write:
-                    - prep
-                    - prod
-            schemas:
-                write:
-                    - prep.*
-                    - prod.*
-            tables:
-                write:
-                    - prep.*.*
-                    - prod.*.*
-
     - tmurphy:
         member_of:
             - core
             - developer
             - maintainer
-        warehouses:
-            - core
+        owns:
+            databases:
+                - tmurphy_prep
+                - tmurphy_prod
+            schemas:
+                - tmurphy_prep.*
+                - tmurphy_prod.*
+            tables:
+                - tmurphy_prep.*.*
+                - tmurphy_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - tmurphy_prep
+                    - tmurphy_prod
+                write:
+                    - tmurphy_prep
+                    - tmurphy_prod
+            schemas:
+                read:
+                    - tmurphy_prep.*
+                    - tmurphy_prod.*
+                write:
+                    - tmurphy_prep.*
+                    - tmurphy_prod.*
+            tables:
+                read:
+                    - tmurphy_prep.*.*
+                    - tmurphy_prod.*.*
+                write:
+                    - tmurphy_prep.*.*
+                    - tmurphy_prod.*.*
 
 # ==========================================
-# Users
+# User Roles (standard, non-elevated)
+# ==========================================
+
+    # Adding new users:
+    # 1. Copy-paste below `asteers` entry as a template for the new user.
+    # 2. Alpha sort the new user amongst other user names.
+    # 3. Users are named by first-initial-last-name ("jsmith" for "John Smith").
+    # 4. Be sure to also add the new DB names at the top of the file.
+
+    - asteers:
+        member_of:
+            - developer
+        owns:
+            databases:
+                - asteers_prep
+                - asteers_prod
+            schemas:
+                - asteers_prep.*
+                - asteers_prod.*
+            tables:
+                - asteers_prep.*.*
+                - asteers_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - asteers_prep
+                    - asteers_prod
+                write:
+                    - asteers_prep
+                    - asteers_prod
+            schemas:
+                read:
+                    - asteers_prep.*
+                    - asteers_prod.*
+                write:
+                    - asteers_prep.*
+                    - asteers_prod.*
+            tables:
+                read:
+                    - asteers_prep.*.*
+                    - asteers_prod.*.*
+                write:
+                    - asteers_prep.*.*
+                    - asteers_prod.*.*
+
+# ==========================================
+# Users (Data Team and Service Accounts)
 # ==========================================
 users:
 
@@ -354,9 +419,14 @@ users:
             - developer
             - maintainer
 
-    - "aj@meltano.com":
+# ==========================================
+# Users (non-elevated)
+# ==========================================
+
+    - asteers:
         can_login: yes
         member_of:
+            - asteers
             - developer
 
 # ==========================================
