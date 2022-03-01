@@ -46,6 +46,7 @@ module "meltano" {
   airflow_logs_pvc_claim_name = local.inventory.kubernetes_cluster.storage.logs_storage_claim_name
   airflow_meltano_project_root = "/opt/airflow/meltano"
   airflow_webserver_secret_key = data.aws_ssm_parameter.airflow_webserver_secret.value
+  airflow_webserver_base_url = "http://internal-095a2699-meltano-airflowai-4cc5-561943628.us-east-1.elb.amazonaws.com/airflow"
   # airflow database
   airflow_db_database = local.inventory.airflow_database.database
   airflow_db_host = local.inventory.airflow_database.host
@@ -72,4 +73,5 @@ module "meltano" {
   superset_db_port = local.inventory.superset_database.port
   superset_admin_password = random_password.superset_password.result
   superset_dependencies = "PyAthenaJDBC>1.0.9 PyAthena>1.2.0 'snowflake-sqlalchemy<=1.2.4'"
+  superset_webserver_host = "internal-095a2699-meltano-superset-608a-2127736714.us-east-1.elb.amazonaws.com"
 }
