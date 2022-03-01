@@ -4,8 +4,10 @@ locals {
 }
 
 module "infrastructure" {
-  source = "git::https://gitlab.com/meltano/infra/terraform.git//aws/modules/infrastructure"
+  # source = "git::https://gitlab.com/meltano/infra/terraform.git//aws/modules/infrastructure"
+  source = "../../../infrastructure/terraform/aws/modules/infrastructure"
   aws_region = local.aws_region
+  enable_vpn_gateway = true
 }
 
 locals {
@@ -35,4 +37,27 @@ resource "aws_ssm_parameter" "inventory" {
   name  = "/prod/meltano/inventory"
   type  = "SecureString"
   value = jsonencode(local.inventory)
+}
+
+data "aws_acm_certificate" "vpn_server" {
+  domain   = "server.aws-vpn.meltano.com"
+  statuses = ["ISSUED"]
+}
+
+
+data "aws_acm_certificate" "vpn_client" {
+  domain   = "client.aws-vpn.meltano.com"
+  statuses = ["ISSUED"]
+}
+
+module "client-vpn" {
+  source            = "../modules/client-vpn"
+  region            = local.aws_region
+  client_cidr_block = "10.22.0.0/22"
+  vpc_id            = module.infrastructure.vpc.vpc_id
+  subnet_id         = module.infrastructure.vpc.private_subnets // ["subnet-*****", "subnet-*****"] // central-backend w/ route table 0.0.0.0/0 which has central-public EIPs
+  domain            = "aws-vpn.meltano.com"
+  server_cert       = data.aws_acm_certificate.vpn_server.arn
+  client_cert       = data.aws_acm_certificate.vpn_client.arn
+  split_tunnel      = "true"
 }
