@@ -6,11 +6,6 @@ environments:
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'
-      - name: tap-athena
-        config:
-          schema_name: dbt_prod
-          s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/tap-athena/
-          s3_bucket: prod-meltano-bucket-01
       - name: tap-gitlab
         config:
           groups: meltano
@@ -31,11 +26,6 @@ environments:
         config:
           tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
-      - name: target-athena
-        config:
-          s3_bucket: prod-meltano-bucket-01
-          athena_database: prod01_raw
-          s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
       - name: target-snowflake
         config:
           dbname: RAW
@@ -58,8 +48,6 @@ environments:
         config:
           sf_user: MELTANO
   env:
-    DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
-    ATHENA_CATALOG: awsdatacatalog
     HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
     RAW_SCHEMA: prod01_raw
     DBT_SCHEMA: dbt_prod
@@ -74,11 +62,6 @@ environments:
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'
-      - name: tap-athena
-        config:
-          schema_name: dbt_dev_${USER_PREFIX}
-          s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/tap-athena/
-          s3_bucket: devtest-meltano-bucket-01
       - name: tap-gitlab
         config:
           groups: meltano
@@ -99,11 +82,6 @@ environments:
         config:
           tables: ${USER_PREFIX}_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
-      - name: target-athena
-        config:
-          s3_bucket: devtest-meltano-bucket-01
-          athena_database: dev01_${USER_PREFIX}_raw
-          s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
       - name: target-snowflake
         config:
           dbname: ${USER_PREFIX}_RAW
@@ -127,8 +105,6 @@ environments:
           sf_user: ${USER_PREFIX}
   env:
     USER_PREFIX: melty
-    DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
-    ATHENA_CATALOG: awsdatacatalog
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin

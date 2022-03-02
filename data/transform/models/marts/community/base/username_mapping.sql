@@ -2,13 +2,13 @@ WITH github AS (
     SELECT DISTINCT
         author_id,
         author_username
-    FROM dbt_prod.stg_github__issues
+    FROM {{ ref('stg_github__issues') }}
     UNION DISTINCT
     SELECT DISTINCT
         author_id,
         author_username
 
-    FROM dbt_prod.stg_github__pull_requests
+    FROM {{ ref('stg_github__pull_requests') }}
 ),
 
 gitlab AS (
