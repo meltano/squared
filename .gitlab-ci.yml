@@ -77,7 +77,7 @@ docker-build-meltano:
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
-  # needs: ["sqlfluff"]
+  needs: ["sqlfluff"]
 
 # Build and Publish Airflow Image
 docker-build-airflow:
@@ -95,7 +95,7 @@ docker-build-airflow:
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
-  # needs: ["sqlfluff"]
+  needs: ["sqlfluff"]
 
 # Deploy New Images
 terraform-validate:

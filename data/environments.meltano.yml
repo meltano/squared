@@ -53,6 +53,10 @@ environments:
           sf_database_prep: PREP
           sf_database_prod: PROD
           sf_warehouse: TRANSFORMER
+      utilities:
+      - name: sqlfluff
+        config:
+          sf_user: MELTANO
   env:
     DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
     ATHENA_CATALOG: awsdatacatalog
@@ -117,6 +121,10 @@ environments:
           sf_database_prep: ${USER_PREFIX}_PREP
           sf_database_prod: ${USER_PREFIX}_PROD
           sf_warehouse: CORE
+      utilities:
+      - name: sqlfluff
+        config:
+          sf_user: ${USER_PREFIX}
   env:
     USER_PREFIX: melty
     DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
