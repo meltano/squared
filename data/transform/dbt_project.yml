@@ -37,6 +37,9 @@ models:
       github_search:
         +materialized: table
         +schema: github_search
+      google_analytics:
+        +materialized: table
+        +schema: google_analytics
     # ------------------
     # Publish
     # ------------------
