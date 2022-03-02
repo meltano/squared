@@ -1,0 +1,41 @@
+{
+    "Version": "2008-10-17",
+    "Id": "PolicyForDestinationBucket",
+    "Statement": [
+        {
+            "Sid": "1",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::432522370782:root"
+            },
+            "Action": [
+                "s3:GetBucketVersioning",
+                "s3:PutBucketVersioning",
+                "s3:ReplicateObject",
+                "s3:ObjectOwnerOverrideToBucketOwner"
+            ],
+            "Resource": [
+                "arn:aws:s3:::mirror-sc-data-snowcat.meltano.com",
+                "arn:aws:s3:::mirror-sc-data-snowcat.meltano.com/*"
+            ]
+        },
+        {
+            "Sid": "2",
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "arn:aws:iam::432522370782:root"
+            },
+            "Action": "s3:List*",
+            "Resource": "arn:aws:s3:::mirror-sc-data-snowcat.meltano.com"
+        },
+        {
+            "Sid": "3",
+            "Effect": "Deny",
+            "Principal": {
+                "AWS": "arn:aws:iam::432522370782:root"
+            },
+            "Action": "s3:ReplicateTags",
+            "Resource": "arn:aws:s3:::mirror-sc-data-snowcat.meltano.com/*"
+        }
+    ]
+}
