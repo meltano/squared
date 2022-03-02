@@ -54,7 +54,6 @@ sqlfluff:
   - .meltano
   stage: test
   variables:
-    SQLFLUFF_SF_USER: MELTANO
     SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
