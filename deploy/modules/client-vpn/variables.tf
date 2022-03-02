@@ -12,7 +12,7 @@ variable "vpc_id" {
 }
 
 variable "subnet_id" {
-  type        = list
+  type        = list(any)
   description = "The ID of the subnet to associate with the Client VPN endpoint."
 }
 
@@ -33,7 +33,7 @@ variable "split_tunnel" {
 }
 
 variable "dns_servers" {
-  type = list
+  type = list(any)
   default = [
     "8.8.8.8",
     "1.1.1.1"

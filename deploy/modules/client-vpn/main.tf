@@ -2,7 +2,7 @@
 ###  Security Group
 ################################
 
-resource aws_security_group "client-vpn-access" {
+resource "aws_security_group" "client-vpn-access" {
   name   = "terraform-shared-client-vpn-access"
   vpc_id = var.vpc_id
 
@@ -91,7 +91,7 @@ resource "null_resource" "authorize-client-vpn-ingress" {
   ]
 }
 
-resource null_resource "client-vpn-security-group" {
+resource "null_resource" "client-vpn-security-group" {
   provisioner "local-exec" {
     when    = create
     command = "aws ec2 apply-security-groups-to-client-vpn-target-network --client-vpn-endpoint-id ${aws_ec2_client_vpn_endpoint.client-vpn-endpoint.id} --vpc-id ${aws_security_group.client-vpn-access.vpc_id} --security-group-ids ${aws_security_group.client-vpn-access.id}"

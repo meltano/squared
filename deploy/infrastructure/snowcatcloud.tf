@@ -1,6 +1,6 @@
 # Setup snowcatcloud S3 bucket in us-west-2
 
-resource aws_s3_bucket "snowcat" {
+resource "aws_s3_bucket" "snowcat" {
   bucket = "mirror-sc-data-snowcat.meltano.com"
   acl    = "private"
 
@@ -13,7 +13,7 @@ resource aws_s3_bucket "snowcat" {
 }
 
 resource "aws_s3_bucket_policy" "allow_access_from_snowcat_account" {
-  bucket = aws_s3_bucket.snowcat.id
-  policy = file("templates/snowcat_s3_policy.json")
+  bucket   = aws_s3_bucket.snowcat.id
+  policy   = file("templates/snowcat_s3_policy.json")
   provider = aws.us-west-2
 }
