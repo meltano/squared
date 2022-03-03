@@ -267,12 +267,25 @@ plugins:
         args: analyze/superset/import.py
   - name: great_expectations
     namespace: great_expectations
-    pip_url: great_expectations; sqlalchemy; PyAthenaJDBC>1.0.9; PyAthena>1.2.0
+    pip_url: great_expectations; sqlalchemy; snowflake-sqlalchemy
     executable: great_expectations
     settings:
       - name: ge_home
         value: $MELTANO_PROJECT_ROOT/utilities/great_expectations
         env: GE_HOME
+      - name: raw_database
+        env: GE_RAW_DATABASE
+      - name: prod_database
+        env: GE_PROD_DATABASE
+      - name: username
+        env: GE_USERNAME
+      - name: role
+        env: GE_ROLE
+      - name: warehouse
+        env: GE_WAREHOUSE
+    config:
+      host: epa06486
+      password: ${SNOWFLAKE_PASSWORD}
     commands:
        test_ga_raw: checkpoint run google_analytics_raw
        test_dbt_hub_metrics: checkpoint run dbt_hub_metrics

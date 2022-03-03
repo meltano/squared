@@ -6,19 +6,16 @@
       "expectation_type": "expect_table_columns_to_match_ordered_list",
       "kwargs": {
         "column_list": [
-          "ga_date",
-          "ga_eventcategory",
-          "ga_eventaction",
-          "ga_eventlabel",
-          "ga_totalevents",
-          "report_start_date",
-          "report_end_date",
-          "_sdc_received_at",
-          "_sdc_extracted_at",
           "_sdc_batched_at",
           "_sdc_deleted_at",
-          "_sdc_table_version",
-          "_sdc_sequence"
+          "_sdc_extracted_at",
+          "ga_date",
+          "ga_eventaction",
+          "ga_eventcategory",
+          "ga_eventlabel",
+          "ga_totalevents",
+          "report_end_date",
+          "report_start_date"
         ]
       },
       "meta": {}
@@ -26,7 +23,7 @@
     {
       "expectation_type": "expect_table_row_count_to_be_between",
       "kwargs": {
-        "min_value": 640282
+        "min_value": 263472
       },
       "meta": {}
     },
@@ -99,8 +96,8 @@
       "expectation_type": "expect_column_value_lengths_to_equal",
       "kwargs": {
         "column": "ga_eventlabel",
-        "value": 36,
-        "mostly": 0.99999
+        "mostly": 0.99997,
+        "value": 36
       },
       "meta": {}
     },
@@ -135,6 +132,18 @@
   ],
   "ge_cloud_id": null,
   "meta": {
+    "citations": [
+      {
+        "batch_request": {
+          "data_asset_name": "google_analytics.events",
+          "data_connector_name": "default_inferred_data_connector_name",
+          "datasource_name": "snowflake_raw",
+          "limit": 1000
+        },
+        "citation_date": "2022-03-03T21:10:33.252506Z",
+        "comment": "Created suite added via CLI"
+      }
+    ],
     "great_expectations_version": "0.14.1"
   }
 }

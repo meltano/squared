@@ -6,7 +6,7 @@ dags:
         cmd: 'meltano invoke dbt:run --models marts.*'
         retries: 2
       - name: mart_dbt_test
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:test --models marts.*'
+        cmd: 'meltano invoke dbt:test --models marts.*'
         retries: 2
         depends_on:
           - mart_dbt_snowflake
