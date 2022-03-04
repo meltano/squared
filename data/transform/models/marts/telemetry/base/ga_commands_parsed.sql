@@ -15,7 +15,11 @@ exec_event AS (
     FROM unique_commands
     WHERE
         command_category IN (
-            'meltano invoke', 'meltano elt', 'meltano ui', 'meltano test'
+            'meltano invoke',
+            'meltano elt',
+            'meltano ui',
+            'meltano test',
+            'meltano run'
         )
 
     UNION ALL

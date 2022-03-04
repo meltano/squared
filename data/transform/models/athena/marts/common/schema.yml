@@ -1,8 +1,0 @@
-version: 2
-
-models:
-  - name: dim_date
-    description: This table includes a simple date mapping. Once migrated to Snowflake this will have more atrributes.
-    columns:
-      - name: date_day
-        description: The day date key

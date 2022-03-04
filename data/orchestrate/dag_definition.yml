@@ -2,17 +2,13 @@ dags:
   daily_dashboard:
     interval: '0 10 * * *'
     steps:
-      - name: mart_dbt
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.marts.*'
-        retries: 2
       - name: mart_dbt_snowflake
         cmd: 'meltano invoke dbt:run --models marts.*'
         retries: 2
       - name: mart_dbt_test
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:test --models athena.marts.*'
+        cmd: 'meltano invoke dbt:test --models marts.*'
         retries: 2
         depends_on:
-          - mart_dbt
           - mart_dbt_snowflake
   hub_metrics:
     interval: '0 10 * * *'
@@ -54,51 +50,51 @@ dags:
   slack:
     interval: '0 6 * * *'
     steps:
-      - name: tap_slack_target_athena
-        cmd: 'meltano elt tap-slack target-athena-slack --job_id=tap_slack_target_athena'
+      - name: tap_slack_target_snowflake
+        cmd: 'meltano elt tap-slack target-snowflake-slack --job_id=tap_slack_target_snowflake'
         retries: 2
       - name: dbt_slack_run_stage
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.staging.slack.*'
+        cmd: 'meltano invoke dbt:run --models staging.slack.*'
         retries: 2
         depends_on:
-          - tap_slack_target_athena
+          - tap_slack_target_snowflake
       - name: dbt_slack_test_stage
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:test --models athena.staging.slack.*'
+        cmd: 'meltano invoke dbt:test --models staging.slack.*'
         retries: 2
         depends_on:
           - dbt_slack_run_stage
   gitlab:
     interval: '0 6 * * *'
     steps:
-      - name: tap_gitlab_target_athena
-        cmd: 'meltano elt tap-gitlab target-athena-gitlab --job_id=tap_gitlab_target_athena'
+      - name: tap_gitlab_target_snowflake
+        cmd: 'meltano elt tap-gitlab target-snowflake-gitlab --job_id=tap_gitlab_target_snowflake'
         retries: 2
       - name: dbt_gitlab_run_models
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.staging.gitlab.*'
+        cmd: 'meltano invoke dbt:run --models staging.gitlab.*'
         retries: 2
         depends_on:
-          - tap_gitlab_target_athena
+          - tap_gitlab_target_snowflake
       - name: dbt_gitlab_test_models
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:test --models athena.staging.gitlab.*'
+        cmd: 'meltano invoke dbt:test --models staging.gitlab.*'
         retries: 2
         depends_on:
           - dbt_gitlab_run_models
-  github:
+  github_labs:
     interval: '0 6 * * *'
     steps:
-      - name: tap_github_target_athena
-        cmd: 'meltano elt tap-github-labs target-athena-github --job_id=tap_github_target_athena'
+      - name: tap_github_target_snowflake
+        cmd: 'meltano elt tap-github-labs target-snowflake-github --job_id=tap_github_labs_target_snowflake'
         retries: 2
-      - name: dbt_github_run_models
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:run --models athena.staging.github.*'
-        retries: 2
-        depends_on:
-          - tap_github_target_athena
-      - name: dbt_github_test_models
-        cmd: 'export DBT_TARGET=athena; meltano invoke dbt:test --models athena.staging.github.*'
+      - name: dbt_github_labs_run_models
+        cmd: 'meltano invoke dbt:run --models staging.github_labs.*'
         retries: 2
         depends_on:
-          - dbt_github_run_models
+          - tap_github_target_snowflake
+      - name: dbt_github_labs_test_models
+        cmd: 'meltano invoke dbt:test --models staging.github_labs.*'
+        retries: 2
+        depends_on:
+          - dbt_github_labs_run_models
   github_search:
     interval: '0 6 * * *'
     steps:

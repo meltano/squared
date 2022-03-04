@@ -13,41 +13,7 @@ config_version: 3.0
 # Datasources tell Great Expectations where your data lives and how to get it.
 # You can use the CLI command `great_expectations datasource new` to help you
 # add a new datasource. Read more at https://docs.greatexpectations.io/en/latest/reference/core_concepts/datasource.html
-datasources:
-  Athena_raw:
-    module_name: great_expectations.datasource
-    data_connectors:
-      default_runtime_data_connector_name:
-        module_name: great_expectations.datasource.data_connector
-        batch_identifiers:
-          - default_identifier_name
-        class_name: RuntimeDataConnector
-      default_inferred_data_connector_name:
-        module_name: great_expectations.datasource.data_connector
-        include_schema_name: true
-        class_name: InferredAssetSqlDataConnector
-    execution_engine:
-      module_name: great_expectations.execution_engine
-      connection_string: awsathena+rest://${AWS_ACCESS_KEY_ID}:${AWS_SECRET_ACCESS_KEY}@athena.us-east-2.amazonaws.com/${RAW_SCHEMA}?s3_staging_dir=${DBT_ATHENA_S3_STAGE}
-      class_name: SqlAlchemyExecutionEngine
-    class_name: Datasource
-  Athena_dbt:
-    module_name: great_expectations.datasource
-    data_connectors:
-      default_runtime_data_connector_name:
-        module_name: great_expectations.datasource.data_connector
-        batch_identifiers:
-          - default_identifier_name
-        class_name: RuntimeDataConnector
-      default_inferred_data_connector_name:
-        module_name: great_expectations.datasource.data_connector
-        include_schema_name: true
-        class_name: InferredAssetSqlDataConnector
-    execution_engine:
-      module_name: great_expectations.execution_engine
-      connection_string: awsathena+rest://${AWS_ACCESS_KEY_ID}:${AWS_SECRET_ACCESS_KEY}@athena.us-east-2.amazonaws.com/${DBT_SCHEMA}?s3_staging_dir=${DBT_ATHENA_S3_STAGE}
-      class_name: SqlAlchemyExecutionEngine
-    class_name: Datasource
+
 # This config file supports variable substitution which enables: 1) keeping
 # secrets out of source control & 2) environment-based configuration changes
 # such as staging vs prod.
@@ -128,3 +94,56 @@ anonymous_usage_statistics:
   enabled: true
   data_context_id: fc8c3e3c-d4aa-43d1-bc7b-4518a2e23d46
 notebooks:
+datasources:
+  snowflake_raw:
+    data_connectors:
+      default_runtime_data_connector_name:
+        batch_identifiers:
+          - default_identifier_name
+        module_name: great_expectations.datasource.data_connector
+        class_name: RuntimeDataConnector
+      default_inferred_data_connector_name:
+        include_schema_name: true
+        module_name: great_expectations.datasource.data_connector
+        class_name: InferredAssetSqlDataConnector
+    module_name: great_expectations.datasource
+    class_name: Datasource
+    execution_engine:
+      credentials:
+        host: ${GREAT_EXPECTATIONS_HOST}
+        username: ${GE_USERNAME}
+        database: ${GE_RAW_DATABASE}
+        query:
+          schema: GREAT_EXPECTATIONS
+          warehouse: ${GE_WAREHOUSE}
+          role: ${GE_ROLE}
+        password: ${GREAT_EXPECTATIONS_PASSWORD}
+        drivername: snowflake
+      module_name: great_expectations.execution_engine
+      class_name: SqlAlchemyExecutionEngine
+  snowflake_dbt:
+    data_connectors:
+      default_runtime_data_connector_name:
+        batch_identifiers:
+          - default_identifier_name
+        module_name: great_expectations.datasource.data_connector
+        class_name: RuntimeDataConnector
+      default_inferred_data_connector_name:
+        include_schema_name: true
+        module_name: great_expectations.datasource.data_connector
+        class_name: InferredAssetSqlDataConnector
+    module_name: great_expectations.datasource
+    class_name: Datasource
+    execution_engine:
+      credentials:
+        host: ${GREAT_EXPECTATIONS_HOST}
+        username: ${GE_USERNAME}
+        database: ${GE_PROD_DATABASE}
+        query:
+          schema: GREAT_EXPECTATIONS
+          warehouse: ${GE_WAREHOUSE}
+          role: ${GE_ROLE}
+        password: ${GREAT_EXPECTATIONS_PASSWORD}
+        drivername: snowflake
+      module_name: great_expectations.execution_engine
+      class_name: SqlAlchemyExecutionEngine

@@ -25,12 +25,12 @@ WITH exec_projects AS (
 SELECT
     event_date,
     (
-        SELECT COUNT(DISTINCT project_id)
+        SELECT COUNT(DISTINCT d2.project_id)
         FROM (
 
             SELECT DISTINCT
-                event_date,
-                project_id
+                stg_ga__cli_events.event_date,
+                stg_ga__cli_events.project_id
             FROM {{ ref('stg_ga__cli_events') }}
         ) AS d2
         WHERE
@@ -39,7 +39,7 @@ SELECT
             ) AND d.event_date
     ) AS all_greater_0_life,
     (
-        SELECT COUNT(DISTINCT project_id)
+        SELECT COUNT(DISTINCT d2.project_id)
         FROM (
             SELECT DISTINCT
 
@@ -57,7 +57,7 @@ SELECT
             ) AND d.event_date
     ) AS exec_greater_1_life,
     (
-        SELECT COUNT(DISTINCT project_id)
+        SELECT COUNT(DISTINCT d2.project_id)
         FROM (
             SELECT DISTINCT
 
@@ -75,7 +75,7 @@ SELECT
             ) AND d.event_date
     ) AS exec_greater_0_life,
     (
-        SELECT COUNT(DISTINCT project_id)
+        SELECT COUNT(DISTINCT d2.project_id)
         FROM
             (
                 SELECT
@@ -84,13 +84,13 @@ SELECT
                     SUM(
                         CASE
                             WHEN
-                                command_category IN (
+                                stg_ga__cli_events.command_category IN (
                                     'meltano elt',
                                     'meltano invoke',
                                     'meltano run',
                                     'meltano test',
                                     'meltano ui'
-                                ) THEN event_count
+                                ) THEN stg_ga__cli_events.event_count
                             ELSE 0
                         END
                     ) AS exec_count
@@ -104,7 +104,7 @@ SELECT
             AND d2.exec_count > 1
     ) AS exec_greater_1_monthly,
     (
-        SELECT COUNT(DISTINCT project_id)
+        SELECT COUNT(DISTINCT d2.project_id)
         FROM
             (
                 SELECT
@@ -113,13 +113,13 @@ SELECT
                     SUM(
                         CASE
                             WHEN
-                                command_category IN (
+                                stg_ga__cli_events.command_category IN (
                                     'meltano elt',
                                     'meltano invoke',
                                     'meltano run',
                                     'meltano test',
                                     'meltano ui'
-                                ) THEN event_count
+                                ) THEN stg_ga__cli_events.event_count
                             ELSE 0
                         END
                     ) AS exec_count
@@ -133,7 +133,7 @@ SELECT
             AND d2.exec_count > 0
     ) AS exec_greater_0_monthly,
     (
-        SELECT COUNT(DISTINCT project_id)
+        SELECT COUNT(DISTINCT d2.project_id)
         FROM
             (
                 SELECT
@@ -142,11 +142,11 @@ SELECT
                     COUNT(DISTINCT
                         CASE
                             WHEN
-                                command_category IN (
+                                stg_ga__cli_events.command_category IN (
                                     'meltano elt',
                                     'meltano invoke',
                                     'meltano run'
-                                ) THEN command
+                                ) THEN stg_ga__cli_events.command
                         END
                     ) AS pipeline_count
                 FROM {{ ref('stg_ga__cli_events') }}

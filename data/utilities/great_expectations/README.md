@@ -8,7 +8,7 @@ Depending on your datasource you might need to install additional python depende
 ```bash
 meltano add --custom utility great_expectations
 # (namespace) [great_expectations]:
-# (pip_url) [great_expectations]: great_expectations; sqlalchemy; PyAthenaJDBC>1.0.9; PyAthena>1.2.0
+# (pip_url) [great_expectations]: great_expectations; sqlalchemy; snowflake-sqlalchemy
 # (executable) [great_expectations]:
 ```
 
@@ -46,7 +46,7 @@ Usually we will have a DAG which runs EL, a checkpoint for the raw data, all dbt
 # Run the dbt_hub_metrics checkpoint to validate for failures
 meltano --environment=prod invoke great_expectations checkpoint run dbt_hub_metrics
 
-# Add a new expecation suite
+# Add a new expectation suite
 meltano --environment=prod invoke great_expectations suite new
 
 # Edit an existing suite
@@ -58,4 +58,6 @@ meltano --environment=prod invoke great_expectations checkpoint add my_new_check
 
 ## Other Details
 
-In our `great_expecations.yml` file and `checkpoints/*.yml` we templated out our secrets (i.e. AWS keys) and environment specific configurations (i.e. schema) so that we could pass those from our `.env` and `*meltano.yml` configurations.
+In our `great_expectations.yml` file and `checkpoints/*.yml` we templated out our secrets (i.e. AWS keys) and environment specific configurations (i.e. schema) so that we could pass those from our `.env` and `*meltano.yml` configurations.
+
+List of available expectations can be found at https://greatexpectations.io/expectations/.
