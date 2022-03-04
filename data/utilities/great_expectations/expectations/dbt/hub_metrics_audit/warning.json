@@ -37,26 +37,10 @@
       "meta": {}
     },
     {
-      "expectation_type": "expect_column_values_to_be_in_type_list",
+      "expectation_type": "expect_column_values_to_be_of_type",
       "kwargs": {
         "column": "updated_date",
-        "type_list": [
-          "DATE",
-          "TIME",
-          "DATETIME",
-          "DATETIME2",
-          "DATETIME64",
-          "SMALLDATETIME",
-          "DATETIMEOFFSET",
-          "TIMESTAMP",
-          "Timestamp",
-          "TimestampType",
-          "DateType",
-          "datetime64",
-          "datetime64[ns]",
-          "timedelta[ns]",
-          "<M8[ns]"
-        ]
+        "type_":"TIMESTAMP_NTZ"
       },
       "meta": {}
     },

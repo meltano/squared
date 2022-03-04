@@ -1,6 +1,6 @@
 
 [sqlfluff]
-dialect = hive
+dialect = snowflake
 templater = dbt
 output_line_length = 80
 ignore_templated_areas = True

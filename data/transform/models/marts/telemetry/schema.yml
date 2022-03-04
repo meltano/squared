@@ -4,7 +4,7 @@ models:
   - name: active_projects_28d
     description: This table includes the rolling 28 day active projects over a 365 day window.
     columns:
-      - name: active_as_of_date
+      - name: event_date
         description: The date that the 28d rolling window is relative to.
         tests:
           - not_null

@@ -6,11 +6,6 @@ environments:
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'
-      - name: tap-athena
-        config:
-          schema_name: dbt_prod
-          s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/tap-athena/
-          s3_bucket: prod-meltano-bucket-01
       - name: tap-gitlab
         config:
           groups: meltano
@@ -31,11 +26,6 @@ environments:
         config:
           tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
-      - name: target-athena
-        config:
-          s3_bucket: prod-meltano-bucket-01
-          athena_database: prod01_raw
-          s3_staging_dir: s3://prod-meltano-bucket-01/data/raw01/target-athena/
       - name: target-snowflake
         config:
           dbname: RAW
@@ -45,8 +35,6 @@ environments:
       transformers:
       - name: dbt
         config:
-          source_schema: prod01_raw
-          target_schema: dbt_prod
           sf_user: MELTANO
           sf_role: TRANSFORMER
           sf_database_raw: RAW
@@ -57,12 +45,15 @@ environments:
       - name: sqlfluff
         config:
           sf_user: MELTANO
+      - name: great_expectations
+        config:
+          prod_database: PROD
+          raw_database: RAW
+          username: MELTANO
+          role: TRANSFORMER
+          warehouse: TRANSFORMER
   env:
-    DBT_ATHENA_S3_STAGE: s3://prod-meltano-bucket-01/data/raw01/dbt/
-    ATHENA_CATALOG: awsdatacatalog
     HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
-    RAW_SCHEMA: prod01_raw
-    DBT_SCHEMA: dbt_prod
     PERMISSION_BOT_USER: permission_bot
     PERMISSION_BOT_WAREHOUSE: ADMIN
     PERMISSION_BOT_DATABASE: SNOWFLAKE_SAMPLE_DATA
@@ -74,11 +65,6 @@ environments:
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'
-      - name: tap-athena
-        config:
-          schema_name: dbt_dev_${USER_PREFIX}
-          s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/tap-athena/
-          s3_bucket: devtest-meltano-bucket-01
       - name: tap-gitlab
         config:
           groups: meltano
@@ -99,11 +85,6 @@ environments:
         config:
           tables: ${USER_PREFIX}_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
-      - name: target-athena
-        config:
-          s3_bucket: devtest-meltano-bucket-01
-          athena_database: dev01_${USER_PREFIX}_raw
-          s3_staging_dir: s3://devtest-meltano-bucket-01/data/raw01/target-athena/
       - name: target-snowflake
         config:
           dbname: ${USER_PREFIX}_RAW
@@ -113,8 +94,6 @@ environments:
       transformers:
       - name: dbt
         config:
-          source_schema: dev01_${USER_PREFIX}_raw
-          target_schema: dbt_dev_${USER_PREFIX}
           sf_user: ${USER_PREFIX}
           sf_role: ${USER_PREFIX}
           sf_database_raw: ${USER_PREFIX}_RAW
@@ -125,10 +104,15 @@ environments:
       - name: sqlfluff
         config:
           sf_user: ${USER_PREFIX}
+      - name: great_expectations
+        config:
+          prod_database: ${USER_PREFIX}_PROD
+          raw_database: ${USER_PREFIX}_RAW
+          username: ${USER_PREFIX}
+          role: ${USER_PREFIX}
+          warehouse: CORE
   env:
     USER_PREFIX: melty
-    DBT_ATHENA_S3_STAGE: s3://devtest-meltano-bucket-01/data/raw01/dbt/
-    ATHENA_CATALOG: awsdatacatalog
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin
