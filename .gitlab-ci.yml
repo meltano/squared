@@ -137,10 +137,11 @@ dbt_seed:
   stage: deploy
   variables:
     AWS_PROFILE: legacy
+    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install transformer dbt
-  - export DBT_TARGET=athena; meltano --environment=prod invoke dbt:seed
+  - meltano --environment=prod invoke dbt:seed
   rules:
   - if: $CI_COMMIT_BRANCH == "master"
     when: always

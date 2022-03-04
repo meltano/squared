@@ -83,7 +83,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_github_target_snowflake
-        cmd: 'meltano elt tap-github-labs target-snowflake-github --job_id=tap_github_labs_target_snowflake'
+        cmd: 'meltano elt tap-github-labs target-snowflake-github-labs --job_id=tap_github_labs_target_snowflake'
         retries: 2
       - name: dbt_github_labs_run_models
         cmd: 'meltano invoke dbt:run --models staging.github_labs.*'
