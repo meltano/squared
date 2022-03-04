@@ -112,7 +112,7 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
   env:
-    USER_PREFIX: pnadolny
+    USER_PREFIX: melty
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin

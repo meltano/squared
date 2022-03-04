@@ -42,10 +42,6 @@ renamed AS (
         user AS user_id,
         user_team,
         username AS slack_username,
-        COALESCE(
-            client_msg_id, (COALESCE(user, bot_id) || ts)
-        ) AS message_surrogate_key,
-        TO_TIMESTAMP_NTZ(ts::INT) AS message_created_at,
         display_as_bot AS display_as_bot,
         is_delayed_message AS is_delayed_message,
         is_intro AS is_intro,
@@ -54,9 +50,13 @@ renamed AS (
         reply_count AS reply_count,
         reply_users_count AS reply_users_count,
         subscribed AS subscribed,
-        TO_TIMESTAMP_NTZ(thread_ts::INT) AS thread_ts,
         unread_count AS unread_count,
-        upload AS upload
+        upload AS upload,
+        COALESCE(
+            client_msg_id, (COALESCE(user, bot_id) || ts)
+        ) AS message_surrogate_key,
+        TO_TIMESTAMP_NTZ(ts::INT) AS message_created_at,
+        TO_TIMESTAMP_NTZ(thread_ts::INT) AS thread_ts
     FROM source
     WHERE row_num = 1
 

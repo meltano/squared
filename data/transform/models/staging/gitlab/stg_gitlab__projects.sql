@@ -38,14 +38,14 @@ renamed AS (
         web_url,
         wiki_enabled,
         id AS project_id,
-        REPLACE(name_with_namespace, ' ', '') AS repo_full_name,
         created_at AS created_at_ts,
         forks_count,
         issues_enabled AS is_issues_enabled,
         last_activity_at AS last_activity_at_ts,
         open_issues_count,
         snippets_enabled AS is_snippets_enabled,
-        star_count
+        star_count,
+        REPLACE(name_with_namespace, ' ', '') AS repo_full_name
     FROM source
     WHERE row_num = 1
 

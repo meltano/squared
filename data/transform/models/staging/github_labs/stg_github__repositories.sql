@@ -27,7 +27,6 @@ renamed AS (
         visibility,
         language AS programming_language,
         id AS repo_id,
-        license:name AS license,
         updated_at AS last_updated_ts,
         created_at AS created_at_ts,
         pushed_at AS pushed_at_ts,
@@ -41,7 +40,8 @@ renamed AS (
         watchers_count,
         network_count,
         subscribers_count,
-        open_issues_count
+        open_issues_count,
+        license:name AS license
     FROM source
     WHERE row_num = 1
 

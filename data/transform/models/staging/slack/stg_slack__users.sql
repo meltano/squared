@@ -20,9 +20,6 @@ renamed AS (
         tz,
         tz_label,
         who_can_share_contact_card,
-        profile:email::STRING AS email,
-        SUBSTR(profile:email::STRING, CHARINDEX('@', profile:email::STRING) + 1) AS email_domain,
-        profile:title::STRING AS title,
         deleted AS is_deleted,
         is_admin,
         is_owner,
@@ -30,9 +27,14 @@ renamed AS (
         is_restricted,
         is_ultra_restricted,
         is_bot,
-        TO_TIMESTAMP_NTZ(updated::INT) AS updated_at,
         is_app_user,
-        is_email_confirmed
+        is_email_confirmed,
+        profile:email::STRING AS email,
+        SUBSTR(
+            profile:email::STRING, CHARINDEX('@', profile:email::STRING) + 1
+        ) AS email_domain,
+        profile:title::STRING AS title,
+        TO_TIMESTAMP_NTZ(updated::INT) AS updated_at
     FROM source
     WHERE row_num = 1
 

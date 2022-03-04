@@ -32,11 +32,11 @@ renamed AS (
         created_at AS created_at_ts,
         closed_at AS closed_at_ts,
         comments AS comment_count,
+        locked AS is_locked,
         user:id::INT AS author_id,
         user:login::STRING AS author_username,
         assignee:id::INT AS assignee_id,
-        assignee:login::STRING AS assignee_username,
-        locked AS is_locked
+        assignee:login::STRING AS assignee_username
     FROM source
     WHERE row_num = 1
         AND type != 'pull_request'
