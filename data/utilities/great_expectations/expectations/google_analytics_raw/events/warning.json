@@ -59,6 +59,7 @@
           "meltano add extractors",
           "meltano add files",
           "meltano add loaders",
+          "meltano add mappers",
           "meltano add models",
           "meltano add orchestrators",
           "meltano add transformers",
