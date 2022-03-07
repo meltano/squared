@@ -19,10 +19,10 @@ locals {
       repository_url = module.infrastructure.airflow_registry.repository_url
     }
     kubernetes_cluster = {
-      namespace              = module.infrastructure.kubernetes_cluster.namespace
-      cluster_id             = module.infrastructure.kubernetes_cluster.cluster_id
-      cluster_endpoint       = module.infrastructure.kubernetes_cluster.cluster_endpoint
-      storage                = module.infrastructure.kubernetes_cluster.storage
+      namespace        = module.infrastructure.kubernetes_cluster.namespace
+      cluster_id       = module.infrastructure.kubernetes_cluster.cluster_id
+      cluster_endpoint = module.infrastructure.kubernetes_cluster.cluster_endpoint
+      storage          = module.infrastructure.kubernetes_cluster.storage
     }
     meltano_database = module.infrastructure.meltano_database
     meltano_registry = {
