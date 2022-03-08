@@ -8,7 +8,7 @@ WITH repos AS (
             ORDER BY created_at_ts DESC
         ) AS row_num
     FROM {{ ref('stg_github_search__repositories') }}
-    WHERE connector_type = 'tap'
+
 )
 
 SELECT *
