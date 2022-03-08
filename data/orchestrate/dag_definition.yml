@@ -101,7 +101,7 @@ dags:
       - name: tap_github_search_target_snowflake
         cmd: 'meltano elt tap-github-search target-snowflake-github-search --job_id=tap_github_search_target_snowflake'
         retries: 2
-        delay: 60
+        retry_delay_min: 60
       - name: dbt_github_search_run_models
         cmd: 'meltano invoke dbt:run --models staging.github_search.*'
         retries: 2
