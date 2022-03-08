@@ -18,6 +18,7 @@ if operator == "k8":
 
 logger = logging.getLogger(__name__)
 
+meltano_log_level = Variable.get("MELTANO_LOG_LEVEL", "info")
 
 DEFAULT_ARGS = {
     "owner": "airflow",
@@ -53,6 +54,8 @@ for dag_name, dag_def in dags.items():
     args = DEFAULT_ARGS.copy()
     dag_id = f"meltano_{dag_name}"
 
+    if "retry_delay_min" in dag_def:
+        args["retry_delay"] = timedelta(minutes=int(dag_def["retry_delay_min"]))
     # from https://airflow.apache.org/docs/stable/scheduler.html#backfill-and-catchup
     #
     # It is crucial to set `catchup` to False so that Airflow only create a single job
@@ -84,14 +87,14 @@ for dag_name, dag_def in dags.items():
                 task_id=task_id,
                 name=task_name,
                 environment="prod",
-                debug=True,
+                log_level=meltano_log_level,
                 arguments=[cmd],
                 dag=dag
             )
         else:
             task = BashOperator(
                 task_id=task_id,
-                bash_command=f"export MELTANO_ENVIRONMENT={environment} ; cd {project_root}; {cmd}",
+                bash_command=f"export MELTANO_ENVIRONMENT={environment} export MELTANO_CLI_LOG_LEVEL={meltano_log_level}; cd {project_root}; {cmd}",
                 retries=step.get("retries", 0),
                 dag=dag,
             )

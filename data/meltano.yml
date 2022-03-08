@@ -99,8 +99,8 @@ plugins:
             and name != 'singer-target-template'
     select:
     - repositories.*
-    - issues.*
-    - issue_comments.*
+    # - issues.*
+    # - issue_comments.*
     - '!*.comments'
     - '!*.body'
     - '!*.reactions'  # Broken JSON Schema validator for issues

@@ -30,7 +30,7 @@ volume_mount = k8s.V1VolumeMount(
 
 class MeltanoKubernetesPodOperator(KubernetesPodOperator):
 
-    def __init__(self, task_id, name, environment=None, debug=False, **kwargs):
+    def __init__(self, task_id, name, environment=None, log_level='info', **kwargs):
         """ Meltano KubernetesPodOperator
         """
         default_env_vars = [
@@ -41,10 +41,9 @@ class MeltanoKubernetesPodOperator(KubernetesPodOperator):
             default_env_vars.append(
                 k8s.V1EnvVar(name='MELTANO_ENVIRONMENT', value=environment)
             )
-        if debug:
-            default_env_vars.append(
-                k8s.V1EnvVar(name='MELTANO_CLI_LOG_LEVEL', value='debug')
-            )
+        default_env_vars.append(
+            k8s.V1EnvVar(name='MELTANO_CLI_LOG_LEVEL', value=log_level)
+        )
         env_vars = default_env_vars + kwargs.get('env_vars', [])
         meltano_values = dict(
             task_id=task_id,
