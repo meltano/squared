@@ -82,7 +82,7 @@ for dag_name, dag_def in dags.items():
         task_id = f"{dag_id}_{task_name}"
         retry_delay = timedelta(seconds=300)
         if "retry_delay_min" in step:
-            retry_delay = timedelta(minutes=int(dag_def["retry_delay_min"]))
+            retry_delay = timedelta(minutes=int(step["retry_delay_min"]))
         if operator == "k8":
             task = MeltanoKubernetesPodOperator(
                 task_id=task_id,
