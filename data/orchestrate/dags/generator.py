@@ -54,8 +54,6 @@ for dag_name, dag_def in dags.items():
     args = DEFAULT_ARGS.copy()
     dag_id = f"meltano_{dag_name}"
 
-    if "retry_delay_min" in dag_def:
-        args["retry_delay"] = timedelta(minutes=int(dag_def["retry_delay_min"]))
     # from https://airflow.apache.org/docs/stable/scheduler.html#backfill-and-catchup
     #
     # It is crucial to set `catchup` to False so that Airflow only create a single job
@@ -82,6 +80,9 @@ for dag_name, dag_def in dags.items():
         task_name = step.get("name")
         cmd = step.get("cmd")
         task_id = f"{dag_id}_{task_name}"
+        retry_delay = timedelta(seconds=300)
+        if "retry_delay_min" in step:
+            retry_delay = timedelta(minutes=int(dag_def["retry_delay_min"]))
         if operator == "k8":
             task = MeltanoKubernetesPodOperator(
                 task_id=task_id,
@@ -89,7 +90,8 @@ for dag_name, dag_def in dags.items():
                 environment="prod",
                 log_level=meltano_log_level,
                 arguments=[cmd],
-                dag=dag
+                dag=dag,
+                retry_delay=retry_delay,
             )
         else:
             task = BashOperator(
@@ -97,6 +99,7 @@ for dag_name, dag_def in dags.items():
                 bash_command=f"export MELTANO_ENVIRONMENT={environment} export MELTANO_CLI_LOG_LEVEL={meltano_log_level}; cd {project_root}; {cmd}",
                 retries=step.get("retries", 0),
                 dag=dag,
+                retry_delay=retry_delay,
             )
         name_map[task_name] = task
 
