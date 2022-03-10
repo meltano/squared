@@ -2,26 +2,6 @@
     config(materialized='table')
 }}
 
-WITH exec_projects AS (
-    SELECT
-        project_id,
-        SUM(
-            CASE
-                WHEN
-                    command_category IN (
-                        'meltano elt',
-                        'meltano invoke',
-                        'meltano run',
-                        'meltano test',
-                        'meltano ui'
-                    ) THEN event_count
-                ELSE 0
-            END
-        ) AS exec_count
-    FROM {{ ref('fact_cli_events') }}
-    GROUP BY 1
-)
-
 SELECT
     event_date,
     (
@@ -47,9 +27,9 @@ SELECT
                 stg_ga__cli_events.project_id
             FROM {{ ref('stg_ga__cli_events') }}
             LEFT JOIN
-                exec_projects ON
-                    stg_ga__cli_events.project_id = exec_projects.project_id
-            WHERE exec_projects.exec_count > 1
+                {{ ref('fact_cli_projects') }} ON
+                    stg_ga__cli_events.project_id = fact_cli_projects.project_id
+            WHERE fact_cli_projects.exec_event_total > 1
         ) AS d2
         WHERE
             d2.event_date BETWEEN DATEADD(
@@ -65,9 +45,9 @@ SELECT
                 stg_ga__cli_events.project_id
             FROM {{ ref('stg_ga__cli_events') }}
             LEFT JOIN
-                exec_projects ON
-                    stg_ga__cli_events.project_id = exec_projects.project_id
-            WHERE exec_projects.exec_count > 0
+                {{ ref('fact_cli_projects') }} ON
+                    stg_ga__cli_events.project_id = fact_cli_projects.project_id
+            WHERE fact_cli_projects.exec_event_total > 0
         ) AS d2
         WHERE
             d2.event_date BETWEEN DATEADD(
