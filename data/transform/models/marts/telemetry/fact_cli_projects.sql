@@ -41,7 +41,20 @@ SELECT
     COALESCE(MAX(
         event_date
     ) < DATEADD(MONTH, -1, CURRENT_DATE),
-    FALSE) AS is_churned
+    FALSE) AS is_churned,
+    SUM(
+        CASE
+            WHEN
+                command_category IN (
+                    'meltano elt',
+                    'meltano invoke',
+                    'meltano run',
+                    'meltano test',
+                    'meltano ui'
+                ) THEN event_count
+            ELSE 0
+        END
+    ) AS exec_event_total
 FROM {{ ref('fact_cli_events') }}
 GROUP BY project_id
 ORDER BY last_event_date DESC
