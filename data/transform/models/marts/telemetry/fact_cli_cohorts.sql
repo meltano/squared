@@ -14,7 +14,7 @@ WITH cohort_snapshots AS (
         SUM(
             CASE
                 WHEN
-                    fact_cli_projects.exec_event_count > 1
+                    fact_cli_projects.exec_event_total > 1
                     THEN stg_ga__cli_events.event_count
                 ELSE 0
             END
