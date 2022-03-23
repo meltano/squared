@@ -41,7 +41,7 @@ models:
         description: The first day of a month, which is the natural key for the cohort.
         tests:
           - not_null
-      - name: snapshot_month
+      - name: cohort_month_date
         description: The month that a snapshot is taken on a cohort.
         tests:
           - not_null
@@ -53,12 +53,28 @@ models:
         description: The count of distinct project_ids in the cohort's first snapshot month.
         tests:
           - not_null
+      - name: project_id_active_cnt
+        description: The count of distinct project_ids in the snapshot month, which are active (>1 exec event).
+        tests:
+          - not_null
+      - name: orig_project_id_active_cnt
+        description: The count of distinct project_ids in the cohort's first snapshot month, which are active (>1 exec event).
+        tests:
+          - not_null
       - name: event_cnt
         description: The count of events in the snapshot month.
         tests:
           - not_null
       - name: orig_event_cnt
         description: The count of events in the cohort's first snapshot month.
+        tests:
+          - not_null
+      - name: active_event_cnt
+        description: The count of events in the snapshot month, considering only projects that are active (>1 exec event).
+        tests:
+          - not_null
+      - name: orig_active_event_cnt
+        description: The count of events in the cohort's first snapshot month, considering only projects that are active (>1 exec event).
         tests:
           - not_null
 
@@ -227,5 +243,9 @@ models:
           - not_null
       - name: is_churned
         description: The project has not sent any events in the last 1 month.
+        tests:
+          - not_null
+      - name: exec_event_total
+        description: The sum total of events received using the execution events - elt/invoke/run/test/ui.
         tests:
           - not_null
