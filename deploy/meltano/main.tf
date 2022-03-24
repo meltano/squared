@@ -35,7 +35,7 @@ resource "aws_ssm_parameter" "superset_admin" {
 }
 
 module "meltano" {
-  source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano"
+  source = "git::https://gitlab.com/meltano/infra/terraform.git//kubernetes/modules/meltano?ref=v0.1.0"
   # source = "../../../infrastructure/terraform/kubernetes/modules/meltano"
   # aws
   aws_region = local.inventory.aws.region
