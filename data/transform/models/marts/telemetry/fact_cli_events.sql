@@ -19,6 +19,7 @@ SELECT
     retention.tracking_disabled AS is_tracking_disabled,
     stg_ga__cli_events.event_count,
     ga_commands_parsed.is_exec_event,
+    ga_commands_parsed.is_pipeline_exec_event,
     ga_commands_parsed.is_legacy_event,
     -- Plugins
     ga_commands_parsed.is_plugin_dbt,

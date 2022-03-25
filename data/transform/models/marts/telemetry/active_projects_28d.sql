@@ -9,9 +9,9 @@ SELECT
         FROM (
 
             SELECT DISTINCT
-                stg_ga__cli_events.event_date,
-                stg_ga__cli_events.project_id
-            FROM {{ ref('stg_ga__cli_events') }}
+                fact_cli_events.event_date,
+                fact_cli_events.project_id
+            FROM {{ ref('fact_cli_events') }}
         ) AS d2
         WHERE
             d2.event_date BETWEEN DATEADD(
@@ -23,12 +23,12 @@ SELECT
         FROM (
             SELECT DISTINCT
 
-                stg_ga__cli_events.event_date,
-                stg_ga__cli_events.project_id
-            FROM {{ ref('stg_ga__cli_events') }}
+                fact_cli_events.event_date,
+                fact_cli_events.project_id
+            FROM {{ ref('fact_cli_events') }}
             LEFT JOIN
                 {{ ref('fact_cli_projects') }} ON
-                    stg_ga__cli_events.project_id = fact_cli_projects.project_id
+                    fact_cli_events.project_id = fact_cli_projects.project_id
             WHERE fact_cli_projects.exec_event_total > 1
         ) AS d2
         WHERE
@@ -41,12 +41,12 @@ SELECT
         FROM (
             SELECT DISTINCT
 
-                stg_ga__cli_events.event_date,
-                stg_ga__cli_events.project_id
-            FROM {{ ref('stg_ga__cli_events') }}
+                fact_cli_events.event_date,
+                fact_cli_events.project_id
+            FROM {{ ref('fact_cli_events') }}
             LEFT JOIN
                 {{ ref('fact_cli_projects') }} ON
-                    stg_ga__cli_events.project_id = fact_cli_projects.project_id
+                    fact_cli_events.project_id = fact_cli_projects.project_id
             WHERE fact_cli_projects.exec_event_total > 0
         ) AS d2
         WHERE
@@ -59,22 +59,17 @@ SELECT
         FROM
             (
                 SELECT
-                    stg_ga__cli_events.event_date,
-                    stg_ga__cli_events.project_id,
+                    fact_cli_events.event_date,
+                    fact_cli_events.project_id,
                     SUM(
                         CASE
                             WHEN
-                                stg_ga__cli_events.command_category IN (
-                                    'meltano elt',
-                                    'meltano invoke',
-                                    'meltano run',
-                                    'meltano test',
-                                    'meltano ui'
-                                ) THEN stg_ga__cli_events.event_count
+                                fact_cli_events.is_exec_event
+                                THEN fact_cli_events.event_count
                             ELSE 0
                         END
                     ) AS exec_count
-                FROM {{ ref('stg_ga__cli_events') }}
+                FROM {{ ref('fact_cli_events') }}
                 GROUP BY 1, 2
             ) AS d2
         WHERE
@@ -88,22 +83,17 @@ SELECT
         FROM
             (
                 SELECT
-                    stg_ga__cli_events.event_date,
-                    stg_ga__cli_events.project_id,
+                    fact_cli_events.event_date,
+                    fact_cli_events.project_id,
                     SUM(
                         CASE
                             WHEN
-                                stg_ga__cli_events.command_category IN (
-                                    'meltano elt',
-                                    'meltano invoke',
-                                    'meltano run',
-                                    'meltano test',
-                                    'meltano ui'
-                                ) THEN stg_ga__cli_events.event_count
+                                fact_cli_events.is_exec_event
+                                THEN fact_cli_events.event_count
                             ELSE 0
                         END
                     ) AS exec_count
-                FROM {{ ref('stg_ga__cli_events') }}
+                FROM {{ ref('fact_cli_events') }}
                 GROUP BY 1, 2
             ) AS d2
         WHERE
@@ -117,19 +107,16 @@ SELECT
         FROM
             (
                 SELECT
-                    stg_ga__cli_events.event_date,
-                    stg_ga__cli_events.project_id,
+                    fact_cli_events.event_date,
+                    fact_cli_events.project_id,
                     COUNT(DISTINCT
                         CASE
                             WHEN
-                                stg_ga__cli_events.command_category IN (
-                                    'meltano elt',
-                                    'meltano invoke',
-                                    'meltano run'
-                                ) THEN stg_ga__cli_events.command
+                                fact_cli_events.is_pipeline_exec_event
+                                THEN fact_cli_events.command
                         END
                     ) AS pipeline_count
-                FROM {{ ref('stg_ga__cli_events') }}
+                FROM {{ ref('fact_cli_events') }}
                 GROUP BY 1, 2
             ) AS d2
         WHERE
@@ -139,5 +126,5 @@ SELECT
             AND d2.pipeline_count > 1
     ) AS unique_pipe_greater_1_monthly
 FROM (
-    SELECT DISTINCT event_date FROM {{ ref('stg_ga__cli_events') }}
+    SELECT DISTINCT event_date FROM {{ ref('fact_cli_events') }}
 ) AS d
