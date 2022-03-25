@@ -270,6 +270,45 @@ cli_run AS (
     FROM unique_commands
     WHERE command_category = 'meltano run'
 
+),
+
+_stream_map_prep AS (
+    SELECT
+        command,
+        MAX(
+            CASE
+                WHEN
+                    value::STRING LIKE 'tap-%'
+                    OR value::STRING LIKE 'pipelinewise-tap-%' THEN index
+            END
+        ) AS tap_index,
+        MAX(
+            CASE
+                WHEN
+                    value::STRING LIKE 'target-%'
+                    OR value::STRING LIKE 'pipelinewise-target-%' THEN index
+            END
+        ) AS target_index
+    FROM unique_commands,
+        LATERAL FLATTEN(input => STRTOK_TO_ARRAY(command, ' '))
+    WHERE command_category = 'meltano run'
+        -- Commands need at least 3 plugins to be considered.
+        AND NOT (
+            SPLIT_PART(
+                command, ' ', 5
+            ) = '' OR STARTSWITH(SPLIT_PART(command, ' ', 5), '--environment')
+        )
+    GROUP BY 1
+    -- A tap and target combination separated by at least 1 other plugin
+    -- is considered a stream map.
+    HAVING target_index - tap_index > 1
+),
+
+cli_stream_map AS (
+
+    SELECT command
+    FROM _stream_map_prep
+
 )
 
 SELECT
@@ -294,7 +333,10 @@ SELECT
         environments.command IS NULL, FALSE
     ) AS is_os_feature_environments,
     NOT COALESCE(cli_test.command IS NULL, FALSE) AS is_os_feature_test,
-    NOT COALESCE(cli_run.command IS NULL, FALSE) AS is_os_feature_run
+    NOT COALESCE(cli_run.command IS NULL, FALSE) AS is_os_feature_run,
+    NOT COALESCE(
+        cli_stream_map.command IS NULL, FALSE
+    ) AS is_os_feature_stream_map
 FROM unique_commands
 LEFT JOIN exec_event ON unique_commands.command = exec_event.command
 LEFT JOIN
@@ -312,3 +354,4 @@ LEFT JOIN
 LEFT JOIN environments ON unique_commands.command = environments.command
 LEFT JOIN cli_test ON unique_commands.command = cli_test.command
 LEFT JOIN cli_run ON unique_commands.command = cli_run.command
+LEFT JOIN cli_stream_map ON unique_commands.command = cli_stream_map.command
