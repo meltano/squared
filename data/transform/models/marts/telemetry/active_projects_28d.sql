@@ -64,7 +64,8 @@ SELECT
                     SUM(
                         CASE
                             WHEN
-                                fact_cli_events.is_exec_event THEN fact_cli_events.event_count
+                                fact_cli_events.is_exec_event
+                                THEN fact_cli_events.event_count
                             ELSE 0
                         END
                     ) AS exec_count
@@ -87,7 +88,8 @@ SELECT
                     SUM(
                         CASE
                             WHEN
-                                fact_cli_events.is_exec_event THEN fact_cli_events.event_count
+                                fact_cli_events.is_exec_event
+                                THEN fact_cli_events.event_count
                             ELSE 0
                         END
                     ) AS exec_count
@@ -110,7 +112,8 @@ SELECT
                     COUNT(DISTINCT
                         CASE
                             WHEN
-                                fact_cli_events.is_pipeline_exec_event THEN fact_cli_events.command
+                                fact_cli_events.is_pipeline_exec_event
+                                THEN fact_cli_events.command
                         END
                     ) AS pipeline_count
                 FROM {{ ref('fact_cli_events') }}
