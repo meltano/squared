@@ -19,7 +19,28 @@ exec_event AS (
             'meltano elt',
             'meltano ui',
             'meltano test',
-            'meltano run'
+            'meltano run',
+            'meltano ui'
+        )
+
+    UNION ALL
+
+    SELECT command
+    FROM unique_commands
+    WHERE command_category = 'meltano schedule'
+        AND split_part_3 LIKE 'run%'
+
+),
+
+pipeline_exec_event AS (
+
+    SELECT command
+    FROM unique_commands
+    WHERE
+        command_category IN (
+            'meltano invoke',
+            'meltano elt',
+            'meltano run',
         )
 
     UNION ALL
@@ -255,6 +276,7 @@ SELECT
     unique_commands.command,
     unique_commands.command_category,
     NOT COALESCE(exec_event.command IS NULL, FALSE) AS is_exec_event,
+    NOT COALESCE(pipeline_exec_event.command IS NULL, FALSE) AS is_pipeline_exec_event,
     NOT COALESCE(legacy.command IS NULL, FALSE) AS is_legacy_event,
     NOT COALESCE(singer.command IS NULL, FALSE) AS is_plugin_singer,
     NOT COALESCE(dbt.command IS NULL, FALSE) AS is_plugin_dbt,
@@ -273,6 +295,7 @@ SELECT
     NOT COALESCE(cli_run.command IS NULL, FALSE) AS is_os_feature_run
 FROM unique_commands
 LEFT JOIN exec_event ON unique_commands.command = exec_event.command
+LEFT JOIN pipeline_exec_event ON unique_commands.command = pipeline_exec_event.command
 LEFT JOIN legacy ON unique_commands.command = legacy.command
 LEFT JOIN singer ON unique_commands.command = singer.command
 LEFT JOIN dbt ON unique_commands.command = dbt.command

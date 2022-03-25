@@ -45,13 +45,7 @@ SELECT
     SUM(
         CASE
             WHEN
-                command_category IN (
-                    'meltano elt',
-                    'meltano invoke',
-                    'meltano run',
-                    'meltano test',
-                    'meltano ui'
-                ) THEN event_count
+                is_exec_event THEN event_count
             ELSE 0
         END
     ) AS exec_event_total
