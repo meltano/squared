@@ -29,6 +29,9 @@ SELECT
         CASE WHEN is_os_feature_environments THEN event_count ELSE 0 END
     ) AS environments_event_total,
     SUM(
+        CASE WHEN is_os_feature_stream_map THEN event_count ELSE 0 END
+    ) AS stream_maps_event_total,
+    SUM(
         CASE WHEN is_os_feature_test THEN event_count ELSE 0 END
     ) AS test_event_total,
     SUM(

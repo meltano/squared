@@ -30,8 +30,9 @@ SELECT
     ga_commands_parsed.is_plugin_superset,
     ga_commands_parsed.is_plugin_sqlfluff,
     ga_commands_parsed.is_plugin_great_ex,
-    ga_commands_parsed.is_os_feature_environments,
     -- OS Features
+    ga_commands_parsed.is_os_feature_environments,
+    ga_commands_parsed.is_os_feature_stream_map,
     ga_commands_parsed.is_os_feature_test,
     ga_commands_parsed.is_os_feature_run,
     COALESCE(NOT(ga_commands_parsed.is_plugin_dbt
