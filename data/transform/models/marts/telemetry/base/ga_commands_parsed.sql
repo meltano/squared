@@ -272,7 +272,7 @@ cli_run AS (
 
 ),
 
-_stream_map_prep AS (
+_mappers_prep AS (
     SELECT
         command,
         MAX(
@@ -300,14 +300,14 @@ _stream_map_prep AS (
         )
     GROUP BY 1
     -- A tap and target combination separated by at least 1 other plugin
-    -- is considered a stream map.
+    -- is considered a mappers.
     HAVING target_index - tap_index > 1
 ),
 
-cli_stream_map AS (
+cli_mappers AS (
 
     SELECT command
-    FROM _stream_map_prep
+    FROM _mappers_prep
 
 )
 
@@ -335,8 +335,8 @@ SELECT
     NOT COALESCE(cli_test.command IS NULL, FALSE) AS is_os_feature_test,
     NOT COALESCE(cli_run.command IS NULL, FALSE) AS is_os_feature_run,
     NOT COALESCE(
-        cli_stream_map.command IS NULL, FALSE
-    ) AS is_os_feature_stream_map
+        cli_mappers.command IS NULL, FALSE
+    ) AS is_os_feature_mappers
 FROM unique_commands
 LEFT JOIN exec_event ON unique_commands.command = exec_event.command
 LEFT JOIN
@@ -354,4 +354,4 @@ LEFT JOIN
 LEFT JOIN environments ON unique_commands.command = environments.command
 LEFT JOIN cli_test ON unique_commands.command = cli_test.command
 LEFT JOIN cli_run ON unique_commands.command = cli_run.command
-LEFT JOIN cli_stream_map ON unique_commands.command = cli_stream_map.command
+LEFT JOIN cli_mappers ON unique_commands.command = cli_mappers.command
