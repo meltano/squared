@@ -145,8 +145,8 @@ models:
         description: The command uses the "environments" OS feature.
         tests:
           - not_null
-      - name: is_os_feature_stream_map
-        description: The command uses the "stream maps" OS feature.
+      - name: is_os_feature_mappers
+        description: The command uses the "mappers" OS feature.
         tests:
           - not_null
       - name: is_os_feature_test
@@ -233,8 +233,8 @@ models:
         description: The sum total of events received using the environments feature.
         tests:
           - not_null
-      - name: stream_maps_event_total
-        description: The sum total of events received using the stream maps feature.
+      - name: mappers_event_total
+        description: The sum total of events received using the mappers feature.
         tests:
           - not_null
       - name: test_event_total
