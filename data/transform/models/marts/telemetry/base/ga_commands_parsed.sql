@@ -19,8 +19,7 @@ exec_event AS (
             'meltano elt',
             'meltano ui',
             'meltano test',
-            'meltano run',
-            'meltano ui'
+            'meltano run'
         )
 
     UNION ALL
@@ -88,7 +87,7 @@ singer AS (
     FROM unique_commands
     WHERE
         command_category IN (
-            'meltano add extractors', 'meltano add loaders', 'meltano select'
+            'meltano add extractors', 'meltano add loaders', 'meltano select', 'meltano add mappers'
         )
 ),
 
@@ -308,6 +307,12 @@ cli_mappers AS (
 
     SELECT command
     FROM _mappers_prep
+
+    UNION ALL
+
+    SELECT command
+    FROM unique_commands
+    WHERE command_category = 'meltano add mappers'
 
 )
 
