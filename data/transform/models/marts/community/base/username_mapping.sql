@@ -62,7 +62,5 @@ blend_all AS (
 
 SELECT
     *,
-    COALESCE(
-        CAST(github_author_id AS VARCHAR), ''
-    ) || COALESCE(CAST(gitlab_author_id AS VARCHAR), '') AS user_surrogate_key
+    {{ dbt_utils.surrogate_key(['github_author_id', 'gitlab_author_id']) }} AS user_surrogate_key
 FROM blend_all
