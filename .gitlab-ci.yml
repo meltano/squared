@@ -143,6 +143,7 @@ dbt_seed:
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install transformer dbt
+  - meltano invoke dbt:deps
   - meltano --environment=prod invoke dbt:seed
   rules:
   - if: $CI_COMMIT_BRANCH == "master"
