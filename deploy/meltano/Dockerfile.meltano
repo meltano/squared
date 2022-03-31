@@ -12,7 +12,6 @@ RUN meltano install extractors
 RUN meltano install loaders
 RUN meltano install transformer dbt
 RUN meltano install utilities great_expectations awscli
-RUN meltano invoke dbt:deps
 
 # Pin `discovery.yml` manifest by copying cached version to project root
 RUN cp -n .meltano/cache/discovery.yml . 2>/dev/null || :
