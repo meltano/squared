@@ -1,7 +1,9 @@
 WITH source AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ga_date', 'ga_eventcategory', 'ga_eventaction', 'ga_eventlabel']) }} AS event_surrogate_key,
+        {{ dbt_utils.surrogate_key(
+            ['ga_date', 'ga_eventcategory', 'ga_eventaction', 'ga_eventlabel']
+        ) }} AS event_surrogate_key,
         *
     FROM {{ source('tap_google_analytics', 'events') }}
 
@@ -10,7 +12,7 @@ WITH source AS (
 clean_source AS (
 
     SELECT
-        *,    
+        *,
         ROW_NUMBER() OVER (
             PARTITION BY
                 event_surrogate_key

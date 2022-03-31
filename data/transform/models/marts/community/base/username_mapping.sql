@@ -62,5 +62,7 @@ blend_all AS (
 
 SELECT
     *,
-    {{ dbt_utils.surrogate_key(['github_author_id', 'gitlab_author_id']) }} AS user_surrogate_key
+    {{ dbt_utils.surrogate_key(
+        ['github_author_id', 'gitlab_author_id']
+    ) }} AS user_surrogate_key
 FROM blend_all

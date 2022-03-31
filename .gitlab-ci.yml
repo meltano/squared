@@ -58,6 +58,7 @@ sqlfluff:
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install utilities sqlfluff
+  - meltano invoke dbt:deps
   - meltano --environment=prod invoke sqlfluff lint -v
 
 # Build & Publish Docker Images

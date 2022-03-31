@@ -1,7 +1,9 @@
 WITH source AS (
 
     SELECT
-        {{ dbt_utils.surrogate_key(['ts', 'client_msg_id', 'user', 'bot_id']) }} AS message_surrogate_key,
+        {{ dbt_utils.surrogate_key(
+            ['ts', 'client_msg_id', 'user', 'bot_id']
+        ) }} AS message_surrogate_key,
         *
     FROM {{ source('tap_slack', 'messages') }}
 
@@ -10,7 +12,7 @@ WITH source AS (
 clean_source AS (
 
     SELECT
-        *,    
+        *,
         ROW_NUMBER() OVER (
             PARTITION BY
                 message_surrogate_key
