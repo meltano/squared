@@ -1,13 +1,24 @@
 WITH source AS (
 
     SELECT
+        {{ dbt_utils.surrogate_key(
+            ['ts', 'client_msg_id', 'user', 'bot_id']
+        ) }} AS message_surrogate_key,
+        *
+    FROM {{ source('tap_slack', 'messages') }}
+
+),
+
+clean_source AS (
+
+    SELECT
         *,
         ROW_NUMBER() OVER (
             PARTITION BY
-                ts, COALESCE(client_msg_id, (COALESCE(user, bot_id) || ts))
+                message_surrogate_key
             ORDER BY _sdc_batched_at DESC
         ) AS row_num
-    FROM {{ source('tap_slack', 'messages') }}
+    FROM source
 
 ),
 
@@ -52,12 +63,10 @@ renamed AS (
         subscribed AS subscribed,
         unread_count AS unread_count,
         upload AS upload,
-        COALESCE(
-            client_msg_id, (COALESCE(user, bot_id) || ts)
-        ) AS message_surrogate_key,
+        message_surrogate_key,
         TO_TIMESTAMP_NTZ(ts::INT) AS message_created_at,
         TO_TIMESTAMP_NTZ(thread_ts::INT) AS thread_ts
-    FROM source
+    FROM clean_source
     WHERE row_num = 1
 
 )
