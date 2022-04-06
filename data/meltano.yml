@@ -1,6 +1,7 @@
 version: 1
 send_anonymous_usage_stats: true
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
+default_environment: userdev
 include_paths:
   - ./*.meltano.yml
 plugins:
@@ -198,26 +199,6 @@ plugins:
       file_format: CSV
       add_metadata_columns: true
       password: ${SNOWFLAKE_PASSWORD}
-  - name: target-snowflake-github-search
-    inherit_from: target-snowflake
-    config:
-      default_target_schema: GITHUB_SEARCH
-  - name: target-snowflake-google-analytics
-    inherit_from: target-snowflake
-    config:
-      default_target_schema: GOOGLE_ANALYTICS
-  - name: target-snowflake-gitlab
-    inherit_from: target-snowflake
-    config:
-      default_target_schema: GITLAB
-  - name: target-snowflake-github-labs
-    inherit_from: target-snowflake
-    config:
-      default_target_schema: GITHUB_LABS
-  - name: target-snowflake-slack
-    inherit_from: target-snowflake
-    config:
-      default_target_schema: SLACK
   transformers:
   - name: dbt
     pip_url: 'dbt-core~=1.0.0 dbt-snowflake~=1.0.0'
