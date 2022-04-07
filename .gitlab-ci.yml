@@ -149,3 +149,24 @@ dbt_seed:
   - if: $CI_COMMIT_BRANCH == "master"
     when: on_success
   needs: ["terraform-apply"]
+
+pages:
+  extends:
+  - .meltano
+  stage: deploy
+  variables:
+    AWS_PROFILE: legacy
+    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
+    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+  script:
+  - meltano install transformer dbt
+  - meltano invoke dbt:deps
+  - meltano --environment=prod invoke dbt generate
+  - mv .meltano/transformers/dbt/target public
+  artifacts:
+    paths:
+      - public
+  rules:
+  - if: $CI_COMMIT_BRANCH == "test_dbt_docs"
+    when: on_success
+  # needs: ["terraform-apply"]
