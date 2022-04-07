@@ -49,18 +49,18 @@ stages:
     when: on_success
 
 # SQL linting
-sqlfluff:
-  extends:
-  - .meltano
-  stage: test
-  variables:
-    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
-    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-  script:
-  - meltano install utilities sqlfluff
-  - meltano install transformer dbt
-  - meltano invoke dbt:deps
-  - meltano --environment=prod invoke sqlfluff lint -v
+# sqlfluff:
+#   extends:
+#   - .meltano
+#   stage: test
+#   variables:
+#     SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
+#     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+#   script:
+#   - meltano install utilities sqlfluff
+#   - meltano install transformer dbt
+#   - meltano invoke dbt:deps
+#   - meltano --environment=prod invoke sqlfluff lint -v
 
 # Build & Publish Docker Images
 docker-build-meltano:
@@ -78,7 +78,7 @@ docker-build-meltano:
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
-  needs: ["sqlfluff"]
+  # needs: ["sqlfluff"]
 
 # Build and Publish Airflow Image
 docker-build-airflow:
@@ -96,7 +96,7 @@ docker-build-airflow:
     data/
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:$CI_COMMIT_SHA
   - docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
-  needs: ["sqlfluff"]
+  # needs: ["sqlfluff"]
 
 # Deploy New Images
 terraform-validate:
@@ -161,7 +161,7 @@ pages:
   script:
   - meltano install transformer dbt
   - meltano invoke dbt:deps
-  - meltano --environment=prod invoke dbt generate
+  - meltano --environment=prod invoke dbt docs generate
   - mv .meltano/transformers/dbt/target public
   artifacts:
     paths:
