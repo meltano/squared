@@ -155,7 +155,6 @@ pages:
   - .meltano
   stage: deploy
   variables:
-    AWS_PROFILE: legacy
     SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
