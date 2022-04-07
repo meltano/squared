@@ -162,7 +162,7 @@ pages:
   - meltano install transformer dbt
   - meltano invoke dbt:deps
   - meltano --environment=prod invoke dbt docs generate
-  - mv .meltano/transformers/dbt/target public
+  - mv .meltano/transformers/dbt/target ${CI_PROJECT_DIR}/public
   artifacts:
     paths:
       - public
