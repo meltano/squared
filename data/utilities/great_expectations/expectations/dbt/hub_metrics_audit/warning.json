@@ -3,9 +3,9 @@
   "expectation_suite_name": "dbt.hub_metrics_audit.warning",
   "expectations": [
     {
-      "expectation_type": "expect_table_columns_to_match_ordered_list",
+      "expectation_type": "expect_table_columns_to_match_set",
       "kwargs": {
-        "column_list": [
+        "column_set": [
           "updated_date",
           "metric_type"
         ]
