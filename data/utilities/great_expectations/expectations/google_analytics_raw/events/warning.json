@@ -3,9 +3,9 @@
   "expectation_suite_name": "google_analytics_raw.events.warning",
   "expectations": [
     {
-      "expectation_type": "expect_table_columns_to_match_ordered_list",
+      "expectation_type": "expect_table_columns_to_match_set",
       "kwargs": {
-        "column_list": [
+        "column_set": [
           "_sdc_batched_at",
           "_sdc_deleted_at",
           "_sdc_extracted_at",
