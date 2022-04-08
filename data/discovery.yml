@@ -1,4 +1,4 @@
-version: 19
+version: 20  # Hack: updated to prevent auto-failover
 extractors:
 - name: tap-adwords
   namespace: tap_adwords
