@@ -7,6 +7,11 @@ stages:
 
 .meltano:
   image: python:3.8
+  variables:
+    MELTANO_ENVIRONMENT: cicd
+    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
+    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+    SCHEMA_NAME_PREFIX: b${CI_PIPELINE_IID}_
   before_script:
   - cd data/
   - pip3 install meltano
@@ -53,14 +58,55 @@ sqlfluff:
   extends:
   - .meltano
   stage: test
-  variables:
-    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
-    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install utilities sqlfluff
   - meltano install transformer dbt
   - meltano invoke dbt:deps
   - meltano --environment=prod invoke sqlfluff lint -v
+
+meltano_test_extracts:
+  extends:
+  - .meltano
+  parallel:
+    matrix:
+      - EXTRACT_SOURCE:
+        - slack
+        - google-analytics
+        - gitlab
+        - github
+        - gitlab-labs
+        - gitlab-search
+  variables:
+    # Override load schemas to include build prefix:
+    TARGET_SNOWFLAKE_LOAD_SCHEMA: ${SCHEMA_NAME_PREFIX}_${EXTRACT_SOURCE}
+  script:
+  - meltano install extractor tap-${EXTRACT_SOURCE}
+  - meltano install loader target-snowflake
+  - meltano run tap-$EXTRACT_SOURCE target-snowflake
+
+meltano_test_transform:
+  extends:
+  - .meltano
+  stage: test
+  needs: [meltano_test_el]
+  script:
+  - meltano install transformer dbt
+  - meltano invoke dbt:compile
+  - meltano invoke dbt:run
+  - meltano invoke dbt:test
+
+meltano_test_publish:
+  extends:
+  - .meltano
+  stage: test
+  needs: [meltano_test_transform]
+  script:
+  - meltano install extractor tap-snowflake-metrics
+  - meltano install extractor tap-snowflake-audit
+  - meltano install loader target-yaml-metrics
+  - meltano install loader target-yaml-audit
+  - meltano run tap-snowflake-metrics target-yaml-metrics
+  - meltano run tap-snowflake-audit target-yaml-audit
 
 # Build & Publish Docker Images
 docker-build-meltano:
