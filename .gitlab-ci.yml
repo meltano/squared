@@ -95,6 +95,7 @@ meltano_test_transform:
     DBT_TARGET_SCHEMA_PREFIX: b${CI_PIPELINE_IID}_
   script:
   - meltano install transformer dbt
+  - meltano invoke dbt:deps
   - meltano invoke dbt:compile
   - meltano invoke dbt:run
   - meltano invoke dbt:test
