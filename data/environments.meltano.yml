@@ -195,4 +195,4 @@ environments:
     SF_ROLE: melty
     SF_PASSWORD: ${SNOWFLAKE_PASSWORD}
     # Restrict date for faster CI/CD runs:
-    DEFAULT_START_DATE: 2022-04-01
+    DEFAULT_START_DATE: "2022-04-01"
