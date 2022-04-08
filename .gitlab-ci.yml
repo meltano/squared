@@ -11,7 +11,6 @@ stages:
     MELTANO_ENVIRONMENT: cicd
     SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-    SCHEMA_NAME_PREFIX: b${CI_PIPELINE_IID}_
   before_script:
   - cd data/
   - pip3 install meltano
@@ -67,6 +66,8 @@ sqlfluff:
 meltano_test_extracts:
   extends:
   - .meltano
+  rules:
+  - when: never  # Disabled (lack of creds)
   parallel:
     matrix:
       - EXTRACT_SOURCE:
@@ -78,7 +79,7 @@ meltano_test_extracts:
         - gitlab-search
   variables:
     # Override load schemas to include build prefix:
-    TARGET_SNOWFLAKE_LOAD_SCHEMA: ${SCHEMA_NAME_PREFIX}_${EXTRACT_SOURCE}
+    TARGET_SNOWFLAKE_LOAD_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
   script:
   - meltano install extractor tap-${EXTRACT_SOURCE}
   - meltano install loader target-snowflake
@@ -88,7 +89,9 @@ meltano_test_transform:
   extends:
   - .meltano
   stage: test
-  needs: [meltano_test_extracts]
+  # needs: [meltano_test_extracts]
+  variables:
+    DBT_SCHEMA_NAME_PREFIX: b${CI_PIPELINE_IID}_
   script:
   - meltano install transformer dbt
   - meltano invoke dbt:compile
