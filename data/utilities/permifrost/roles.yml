@@ -36,6 +36,13 @@ databases:
     - tmurphy_prod:
         shared: no
 
+    - cicd_raw:
+        shared: no
+    - cicd_prep:
+        shared: no
+    - cicd_prod:
+        shared: no
+
 # ==========================================
 # Roles
 # ==========================================
@@ -380,6 +387,43 @@ roles:
                     - asteers_prep.*.*
                     - asteers_prod.*.*
 
+    # Special account for CI tests
+    - cicd:
+        member_of:
+            - developer
+        owns:
+            databases:
+                - cicd_prep
+                - cicd_prod
+            schemas:
+                - cicd_prep.*
+                - cicd_prod.*
+            tables:
+                - cicd_prep.*.*
+                - cicd_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - cicd_prep
+                    - cicd_prod
+                write:
+                    - cicd_prep
+                    - cicd_prod
+            schemas:
+                read:
+                    - cicd_prep.*
+                    - cicd_prod.*
+                write:
+                    - cicd_prep.*
+                    - cicd_prod.*
+            tables:
+                read:
+                    - cicd_prep.*.*
+                    - cicd_prod.*.*
+                write:
+                    - cicd_prep.*.*
+                    - cicd_prod.*.*
+
 # ==========================================
 # Users (Data Team and Service Accounts)
 # ==========================================
@@ -427,6 +471,12 @@ users:
         can_login: yes
         member_of:
             - asteers
+            - developer
+
+    - cicd:
+        can_login: yes
+        member_of:
+            - cicd
             - developer
 
 # ==========================================
