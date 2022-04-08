@@ -88,7 +88,7 @@ meltano_test_transform:
   extends:
   - .meltano
   stage: test
-  needs: [meltano_test_el]
+  needs: [meltano_test_extracts]
   script:
   - meltano install transformer dbt
   - meltano invoke dbt:compile
