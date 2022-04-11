@@ -2,7 +2,7 @@ name: squared
 version: '1.0'
 profile: meltano
 config-version: 2
-
+require-dbt-version: [">=1.0.0", "<2.0.0"]
 model-paths:
 - models
 analysis-paths:
@@ -25,7 +25,6 @@ clean-targets:
 
 seeds:
   quote_columns: false
-  +database: "{{ env_var('DBT_SF_DATABASE_PROD', 'sqlfluff_placeholder') }}"
   +schema: SEED
 
 models:
@@ -35,7 +34,7 @@ models:
     # Staging
     # ------------------
     staging:
-      +database: "{{ env_var('DBT_SF_DATABASE_PREP', 'sqlfluff_placeholder') }}"
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
       github_search:
         +materialized: table
         +schema: github_search
@@ -56,7 +55,6 @@ models:
     # ------------------
     publish:
       +materialized: table
-      +database: "{{ env_var('DBT_SF_DATABASE_PROD', 'sqlfluff_placeholder') }}"
       meltano_hub:
         +schema: meltano_hub
     # ------------------
@@ -64,7 +62,6 @@ models:
     # ------------------
     marts:
       +materialized: table
-      +database: "{{ env_var('DBT_SF_DATABASE_PROD', 'sqlfluff_placeholder') }}"
       telemetry:
         +schema: telemetry
       community:
