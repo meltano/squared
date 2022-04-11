@@ -200,33 +200,38 @@ plugins:
       add_metadata_columns: true
       password: ${SNOWFLAKE_PASSWORD}
   transformers:
-  - name: dbt
-    pip_url: 'dbt-core~=1.0.0 dbt-snowflake~=1.0.0'
+  - name: dbt-snowflake
+    pip_url: dbt-core~=1.0.0 dbt-snowflake~=1.0.0
     config:
-      target: snowflake
-      models: squared
-      sf_password: ${SNOWFLAKE_PASSWORD}
-      sf_account: epa06486
-      sf_user: foo
-      sf_role: foo
-      sf_database_raw: foo
-      sf_database_prep: foo
-      sf_database_prod: foo
-      sf_warehouse: foo
-  files:
-  - name: dbt
-    pip_url: git+https://gitlab.com/meltano/files-dbt.git@config-version-2
+      account: epa06486
   utilities:
   - name: sqlfluff
     namespace: sqlfluff
     pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; dbt-core~=1.0.0; dbt-snowflake~=1.0.0
     executable: sqlfluff
     settings:
-    - name: sf_user
-      env: SQLFLUFF_SF_USER
+    - name: user
+      env_aliases:
+        - DBT_SNOWFLAKE_USER
+    - name: role
+      env_aliases:
+        - DBT_SNOWFLAKE_ROLE
+    - name: database
+      env_aliases:
+        - DBT_SNOWFLAKE_DATABASE
+        - DBT_SNOWFLAKE_DATABASE_PREP
+        - DBT_SNOWFLAKE_DATABASE_RAW
+      value: foo
+    - name: account
+      env_aliases:
+        - DBT_SNOWFLAKE_ACCOUNT
+    - name: warehouse
+      env_aliases:
+        - DBT_SNOWFLAKE_WAREHOUSE
+      value: foo
     config:
-      sf_database: foo
-      sf_account: epa06486
+      account: epa06486
+      role: TRANSFORMER
   - name: awscli
     namespace: awscli
     pip_url: awscli==1.21.7

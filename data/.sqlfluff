@@ -8,9 +8,8 @@ runaway_limit = 100
 
 [sqlfluff:templater:dbt]
 project_dir = transform
-profiles_dir = transform/profile
+profiles_dir = transform/profiles/snowflake/
 profile = meltano
-target = snowflake
 
 [sqlfluff:rules]
 tab_space_size = 4

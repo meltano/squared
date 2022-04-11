@@ -2,7 +2,7 @@ config-version: 2
 version: 2
 sources:
   - name: tap_slack
-    database: '{{ env_var("DBT_SF_DATABASE_RAW", env_var("SQLFLUFF_SF_DATABASE", "")) }}'
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
     schema: SLACK
     tables:
       - name: users

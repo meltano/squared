@@ -58,8 +58,8 @@ sqlfluff:
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install utilities sqlfluff
-  - meltano install transformer dbt
-  - meltano invoke dbt:deps
+  - meltano install transformer dbt-snowflake
+  - meltano invoke dbt-snowflake:deps
   - meltano --environment=prod invoke sqlfluff lint -v
 
 # Build & Publish Docker Images
@@ -142,9 +142,9 @@ dbt_seed:
     SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
-  - meltano install transformer dbt
-  - meltano invoke dbt:deps
-  - meltano --environment=prod invoke dbt:seed
+  - meltano install transformer dbt-snowflake
+  - meltano invoke dbt-snowflake:deps
+  - meltano --environment=prod invoke dbt-snowflake:seed
   rules:
   - if: $CI_COMMIT_BRANCH == "master"
     when: on_success
