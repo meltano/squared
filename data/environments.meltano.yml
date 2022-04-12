@@ -121,3 +121,78 @@ environments:
     AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: '30'
     AIRFLOW_VAR_MELTANO_ENVIRONMENT: userdev
     AIRFLOW_VAR_OPERATOR_TYPE: bash
+- name: cicd
+  config:
+    plugins:
+      extractors:
+      - name: tap-slack
+        config:
+          start_date: "${DEFAULT_START_DATE}"
+      - name: tap-google-analytics
+        config:
+          start_date: "${DEFAULT_START_DATE}"
+      - name: tap-gitlab
+        config:
+          groups: meltano
+          start_date: "${DEFAULT_START_DATE}"
+      - name: tap-github
+        config:
+          start_date: "${DEFAULT_START_DATE}"
+      - name: tap-github-labs
+        config:
+          start_date: "${DEFAULT_START_DATE}"
+      - name: tap-github-search
+        config:
+          start_date: "${DEFAULT_START_DATE}"
+      # Reverse ETL connections:
+      - name: tap-snowflake
+        config:
+          dbname: CICD_PROD
+          user: ${USER_PREFIX}
+          password: ${SF_PASSWORD}
+          role: ${USER_PREFIX}
+          warehouse: CORE
+      - name: tap-snowflake-metrics
+        config:
+          tables: CICD_PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-audit
+        config:
+          tables: CICD_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
+      loaders:
+      - name: target-snowflake
+        config:
+          target: snowflake_cicd
+          dbname: CICD_RAW
+          user: ${SF_USER}
+          password: ${SF_PASSWORD}
+          role: ${SF_ROLE}
+          warehouse: CORE
+      transformers:
+      - name: dbt
+        config:
+          sf_user: ${SF_USER}
+          sf_role: ${SF_ROLE}
+          sf_password: ${SF_PASSWORD}
+          sf_database_raw: CICD_RAW
+          sf_database_prep: CICD_PREP
+          sf_database_prod: CICD_PROD
+          sf_warehouse: CORE
+      utilities:
+      - name: sqlfluff
+        config:
+          sf_user: ${SF_USER}
+          sf_password: ${SF_PASSWORD}
+      - name: great_expectations
+        config:
+          prod_database: CICD_PROD
+          raw_database: CICD_RAW
+          username: ${SF_USER}
+          password: ${SF_PASSWORD}
+          role: ${SF_ROLE}
+          warehouse: CORE
+  env:
+    SF_USER: melty
+    SF_ROLE: melty
+    SF_PASSWORD: ${SNOWFLAKE_PASSWORD}
+    # Restrict date for faster CI/CD runs:
+    DEFAULT_START_DATE: "2022-04-01"
