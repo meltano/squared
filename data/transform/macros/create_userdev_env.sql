@@ -24,13 +24,12 @@
         {% for schema in schemas_to_clone['SCHEMA_NAME'] -%}
 
             {%- set clone_sql -%}
-                CREATE OR REPLACE SCHEMA {{ target_db_name }}.{{ schema }} 
-                CLONE {{ source_db_name }}.{{ schema }} ;
+                CREATE OR REPLACE SCHEMA {{ target_db_name }}.{{ schema }} CLONE {{ source_db_name }}.{{ schema }};
             {% endset %}
 
             {% if dry_run %}
                 -- Dry run queries are logged later
-                {{ dry_run_script.append( clone_sql ) }}
+                {{ dry_run_script.append( clone_sql.replace('\n', '') ) }}
             {% else %}
                 {{ (log("Cloning " ~ schema ~ " from " ~ source_db_name ~ " to " ~ target_db_name, info=True)) }}
                 {% set results = run_query(clone_sql) %}
@@ -42,8 +41,11 @@
 
     -- Log dry run script
     {% if dry_run %}
-        {{ (log("DRYRUN SCRIPT: ", info=True)) }}
-        {{ (log('\n'.join(dry_run_script), info=True)) }}
+        {{ (log(
+            'Either execute this clone script manually or rerun this macro using the `dry_run=False` argument.\n\n'
+            ~ '\n'.join(dry_run_script) ~ '\n',
+            info=True
+        )) }}
     {% endif %}
 
 {% endmacro %}
