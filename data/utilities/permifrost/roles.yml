@@ -36,6 +36,9 @@ databases:
     - tmurphy_prod:
         shared: no
 
+    - jigsaw_labs:
+        shared: no
+
 # ==========================================
 # Roles
 # ==========================================
@@ -233,6 +236,26 @@ roles:
             - loader
             - transformer
 
+    - jigsaw_labs_developer:
+        warehouses:
+            - core
+        privileges:
+            databases:
+                read:
+                    - jigsaw_labs
+                write:
+                    - jigsaw_labs
+            schemas:
+                read:
+                    - jigsaw_labs.*
+                write:
+                    - jigsaw_labs.*
+            tables:
+                read:
+                    - jigsaw_labs.*.*
+                write:
+                    - jigsaw_labs.*.*
+
 # ==========================================
 # User Roles ("Special" or elevated users)
 # ==========================================
@@ -428,6 +451,16 @@ users:
         member_of:
             - asteers
             - developer
+
+    - rsanabani:
+        can_login: yes
+        member_of:
+            - jigsaw_labs_developer
+
+    - wbanks:
+        can_login: yes
+        member_of:
+            - jigsaw_labs_developer
 
 # ==========================================
 # Warehouses
