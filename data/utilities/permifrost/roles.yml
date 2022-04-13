@@ -412,7 +412,6 @@ users:
         can_login: yes
         member_of:
             - meltano
-            - jigsaw_labs_developer
 
     - permission_bot:
         can_login: yes
