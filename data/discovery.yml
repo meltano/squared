@@ -1,4 +1,4 @@
-version: 19
+version: 20
 extractors:
 - name: tap-adwords
   namespace: tap_adwords
@@ -23,19 +23,22 @@ extractors:
       - start_date
     settings:
     - name: developer_token
-      env: OAUTH_GOOGLE_ADWORDS_DEVELOPER_TOKEN
+      env_aliases:
+      - OAUTH_GOOGLE_ADWORDS_DEVELOPER_TOKEN
       kind: password
       label: Developer Token
       description: Your Developer Token for Google AdWord Application
       placeholder: Ex. *****************
     - name: oauth_client_id
-      env: OAUTH_GOOGLE_ADWORDS_CLIENT_ID
+      env_aliases:
+      - OAUTH_GOOGLE_ADWORDS_CLIENT_ID
       kind: password
       label: OAuth Client ID
       description: Your Google OAuth Client ID
       placeholder: Ex. 123456789012345.apps.googleusercontent.com
     - name: oauth_client_secret
-      env: OAUTH_GOOGLE_ADWORDS_CLIENT_SECRET
+      env_aliases:
+      - OAUTH_GOOGLE_ADWORDS_CLIENT_SECRET
       kind: password
       label: OAuth Client Secret
       description: Your Google OAuth Client Secret
@@ -290,19 +293,22 @@ extractors:
       - start_date
     settings:
     - name: developer_token
-      env: OAUTH_GOOGLE_ADWORDS_DEVELOPER_TOKEN
+      env_aliases:
+      - OAUTH_GOOGLE_ADWORDS_DEVELOPER_TOKEN
       kind: password
       label: Developer Token
       description: Your Developer Token for Google AdWord Application
       placeholder: Ex. *****************
     - name: oauth_client_id
-      env: OAUTH_GOOGLE_ADWORDS_CLIENT_ID
+      env_aliases:
+      - OAUTH_GOOGLE_ADWORDS_CLIENT_ID
       kind: password
       label: OAuth Client ID
       description: Your Google OAuth Client ID
       placeholder: Ex. 123456789012345.apps.googleusercontent.com
     - name: oauth_client_secret
-      env: OAUTH_GOOGLE_ADWORDS_CLIENT_SECRET
+      env_aliases:
+      - OAUTH_GOOGLE_ADWORDS_CLIENT_SECRET
       kind: password
       label: OAuth Client Secret
       description: Your Google OAuth Client Secret
@@ -634,14 +640,17 @@ extractors:
     - start_date
   settings:
   - name: developer_token
-    env: OAUTH_BING_ADS_DEVELOPER_TOKEN
+    env_aliases:
+    - OAUTH_BING_ADS_DEVELOPER_TOKEN
     kind: password
   - name: oauth_client_id
-    env: OAUTH_BING_ADS_CLIENT_ID
+    env_aliases:
+    - OAUTH_BING_ADS_CLIENT_ID
     kind: password
     label: OAuth Client ID
   - name: oauth_client_secret
-    env: OAUTH_BING_ADS_CLIENT_SECRET
+    env_aliases:
+    - OAUTH_BING_ADS_CLIENT_SECRET
     kind: password
     label: OAuth Client Secret
   - name: refresh_token
@@ -841,7 +850,8 @@ extractors:
       kind: array
       description: Array of objects with `entity`, `path`, and `keys` keys
     - name: csv_files_definition
-      env: TAP_CSV_FILES_DEFINITION
+      env_aliases:
+      - TAP_CSV_FILES_DEFINITION
       label: CSV Files Definition
       documentation: https://github.com/MeltanoLabs/tap-csv#settings
       description: Project-relative path to JSON file holding array of objects with
@@ -862,7 +872,8 @@ extractors:
       kind: array
       description: Array of objects with `entity`, `file`, and `keys` keys
     - name: csv_files_definition
-      env: TAP_CSV_FILES_DEFINITION
+      env_aliases:
+      - TAP_CSV_FILES_DEFINITION
       label: CSV Files Definition
       documentation: https://gitlab.com/meltano/tap-csv#run
       description: Project-relative path to JSON file holding array of objects with
@@ -1668,7 +1679,8 @@ extractors:
     - start_date
   settings:
   - name: x_pendo_integration_key
-    env: TAP_PENDO_INTEGRATION_KEY
+    env_aliases:
+    - TAP_PENDO_INTEGRATION_KEY
     kind: password
     label: Integration Key
     description: 'This is the integration key generated via the Pendo website: Settings
@@ -2394,6 +2406,7 @@ loaders:
     description: Maximum cache size in MB
   - name: merge_state_messages
     kind: boolean
+    value: false
     label: Merge State Messages
     description: Whether to merge multiple state messages from the tap into the state
       file or uses the last state message as the state file.
@@ -2665,52 +2678,57 @@ loaders:
       - postgres_schema
     settings:
     - name: postgres_host
-      env: TARGET_POSTGRES_HOST
       env_aliases:
       - PG_ADDRESS
+      - TARGET_POSTGRES_HOST
       value: localhost
     - name: postgres_port
-      env: TARGET_POSTGRES_PORT
       env_aliases:
       - PG_PORT
+      - TARGET_POSTGRES_PORT
       kind: integer
       value: 5432
     - name: postgres_database
-      env: TARGET_POSTGRES_DATABASE
       env_aliases:
       - PG_DATABASE
+      - TARGET_POSTGRES_DATABASE
     - name: postgres_username
-      env: TARGET_POSTGRES_USERNAME
       env_aliases:
       - PG_USERNAME
+      - TARGET_POSTGRES_USERNAME
     - name: postgres_password
-      env: TARGET_POSTGRES_PASSWORD
       env_aliases:
       - PG_PASSWORD
+      - TARGET_POSTGRES_PASSWORD
       kind: password
     - name: postgres_schema
-      env: TARGET_POSTGRES_SCHEMA
       env_aliases:
       - PG_SCHEMA
+      - TARGET_POSTGRES_SCHEMA
       value: $MELTANO_EXTRACT__LOAD_SCHEMA
     - name: postgres_sslmode
-      env: TARGET_POSTGRES_SSLMODE
+      env_aliases:
+      - TARGET_POSTGRES_SSLMODE
       value: prefer
       description: 'Refer to the libpq docs for more information about SSL: https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-PARAMKEYWORDS'
     - name: postgres_sslcert
-      env: TARGET_POSTGRES_SSLCERT
+      env_aliases:
+      - TARGET_POSTGRES_SSLCERT
       value: ~/.postgresql/postgresql.crt
       description: Only used if a SSL request w/ a client certificate is being made
     - name: postgres_sslkey
-      env: TARGET_POSTGRES_SSLKEY
+      env_aliases:
+      - TARGET_POSTGRES_SSLKEY
       value: ~/.postgresql/postgresql.key
       description: Only used if a SSL request w/ a client certificate is being made
     - name: postgres_sslrootcert
-      env: TARGET_POSTGRES_SSLROOTCERT
+      env_aliases:
+      - TARGET_POSTGRES_SSLROOTCERT
       value: ~/.postgresql/root.crt
       description: Used for authentication of a server SSL certificate
     - name: postgres_sslcrl
-      env: TARGET_POSTGRES_SSLCRL
+      env_aliases:
+      - TARGET_POSTGRES_SSLCRL
       value: ~/.postgresql/root.crl
       description: Used for authentication of a server SSL certificate
     - name: invalid_records_detect
@@ -3125,9 +3143,9 @@ loaders:
       - snowflake_warehouse
     settings:
     - name: snowflake_account
-      env: TARGET_SNOWFLAKE_ACCOUNT
       env_aliases:
       - SF_ACCOUNT
+      - TARGET_SNOWFLAKE_ACCOUNT
       label: Snowflake Account
       description: '`ACCOUNT` might require the `region` and `cloud` platform where
         your account is located, in the form of: `<your_account_name>.<region_id>.<cloud>`
@@ -3137,26 +3155,26 @@ loaders:
 
         '
     - name: snowflake_username
-      env: TARGET_SNOWFLAKE_USERNAME
       env_aliases:
       - SF_USER
+      - TARGET_SNOWFLAKE_USERNAME
       label: Snowflake Username
     - name: snowflake_password
-      env: TARGET_SNOWFLAKE_PASSWORD
       env_aliases:
       - SF_PASSWORD
+      - TARGET_SNOWFLAKE_PASSWORD
       kind: password
       label: Snowflake Password
     - name: snowflake_role
-      env: TARGET_SNOWFLAKE_ROLE
       env_aliases:
       - SF_ROLE
+      - TARGET_SNOWFLAKE_ROLE
       label: Snowflake Role
       description: If not specified, Snowflake will use the user's default role.
     - name: snowflake_database
-      env: TARGET_SNOWFLAKE_DATABASE
       env_aliases:
       - SF_DATABASE
+      - TARGET_SNOWFLAKE_DATABASE
       label: Snowflake Database
     - name: snowflake_authenticator
       value: snowflake
@@ -3166,9 +3184,9 @@ loaders:
         or Okta ("https://<your_okta_account_name>.okta.com"). See the snowflake docs
         for more details.
     - name: snowflake_warehouse
-      env: TARGET_SNOWFLAKE_WAREHOUSE
       env_aliases:
       - SF_WAREHOUSE
+      - TARGET_SNOWFLAKE_WAREHOUSE
       label: Snowflake Warehouse
     - name: invalid_records_detect
       kind: boolean
@@ -3211,9 +3229,9 @@ loaders:
       description: Whether the Target should create tables which have no records present
         in Remote.
     - name: snowflake_schema
-      env: TARGET_SNOWFLAKE_SCHEMA
       env_aliases:
       - SF_SCHEMA
+      - TARGET_SNOWFLAKE_SCHEMA
       value: $MELTANO_EXTRACT__LOAD_SCHEMA
       label: Snowflake Schema
       value_processor: upcase_string
@@ -3745,7 +3763,7 @@ dashboards:
 orchestrators:
 - name: airflow
   namespace: airflow
-  docs: https://meltano.com/docs/orchestration.html
+  docs: https://docs.meltano.com/guide/orchestration
   repo: https://github.com/apache/airflow
   pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
   settings:
@@ -3767,9 +3785,12 @@ orchestrators:
 transformers:
 - name: dbt
   namespace: dbt
-  docs: https://meltano.com/docs/transforms.html
-  repo: https://github.com/fishtown-analytics/dbt
-  pip_url: dbt==0.21.1
+  docs: https://docs.meltano.com/guide/transformation
+  repo: https://github.com/dbt-labs/dbt-core
+  pip_url: 'dbt-core~=1.0.0 dbt-postgres~=1.0.0 dbt-redshift~=1.0.0 dbt-snowflake~=1.0.0
+    dbt-bigquery~=1.0.0
+
+    '
   settings:
   - name: project_dir
     value: $MELTANO_PROJECT_ROOT/transform
@@ -3808,6 +3829,64 @@ transformers:
     test:
       args: test
       description: Runs tests on data in deployed models.
+- name: dbt-snowflake
+  executable: dbt
+  namespace: dbt_snowflake
+  docs: https://docs.meltano.com/guide/transformation
+  repo: https://github.com/dbt-labs/dbt-core
+  pip_url: dbt-core~=1.0.0 dbt-snowflake~=1.0.0
+  settings:
+  - name: project_dir
+    value: $MELTANO_PROJECT_ROOT/transform
+  - name: profiles_dir
+    value: $MELTANO_PROJECT_ROOT/transform/profiles/snowflake
+    env_aliases:
+    - DBT_PROFILES_DIR
+    # Snowflake connection settings are set via `config:` blocks and mapped to `profiles.yml`
+  - name: account
+    kind: string
+    description: The account to connect to. e.g your-company.eu-west-2.aws.snowflakecomputing.com
+  - name: user
+    kind: string
+    description: The user to connect as.
+  - name: password
+    kind: password
+    description: The user password to authenticate with.
+  - name: role
+    kind: string
+    description: The user role to assume.
+  - name: warehouse
+    kind: string
+    description: The compute warehouse to use when building models.
+  - name: database
+    kind: string
+    description: The database to create models in.
+  - name: schema
+    kind: string
+    description: The schema to build models into by default.
+  commands:
+    clean:
+      args: clean
+      description: Delete all folders in the clean-targets list (usually the dbt_modules and target directories.)
+    compile:
+      args: compile
+      description: Generates executable SQL from source model, test, and analysis files. Compiled SQL files are written to the target/ directory.
+    deps:
+      args: deps
+      description: Pull the most recent version of the dependencies listed in packages.yml
+    run:
+      args: run
+      description: Compile SQL and execute against the current target database.
+    seed:
+      args: seed
+      description: Load data from csv files into your data warehouse.
+    snapshot:
+      args: snapshot
+      description: Execute snapshots defined in your project.
+    test:
+      args: test
+      description: Runs tests on data in deployed models.
+
 files:
 - name: airflow
   namespace: airflow
@@ -3833,6 +3912,14 @@ files:
   namespace: gitlab_ci
   repo: https://gitlab.com/meltano/files-gitlab-ci
   pip_url: git+https://gitlab.com/meltano/files-gitlab-ci.git
+- name: great_expectations
+  namespace: great_expectations
+  repo: https://gitlab.com/meltano/files-great-expectations
+  pip_url: git+https://gitlab.com/meltano/files-great-expectations
+- name: dbt-snowflake
+  namespace: dbt_snowflake
+  repo: https://gitlab.com/meltano/files-dbt-snowflake
+  pip_url: git+https://gitlab.com/meltano/files-dbt-snowflake
 utilities:
 - name: sqlfluff
   namespace: sqlfluff
@@ -3841,3 +3928,24 @@ utilities:
     lint:
       args: lint
       description: Lint SQL in transform models
+- name: great_expectations
+  namespace: great_expectations
+  pip_url: great_expectations
+  executable: great_expectations
+  settings:
+  - name: ge_home
+    env: GE_HOME
+    value: $MELTANO_PROJECT_ROOT/utilities/great_expectations
+mappers:
+- name: transform-field
+  namespace: transform_field
+  variant: transferwise
+  repo: https://github.com/transferwise/pipelinewise-transform-field
+  pip_url: pipelinewise-transform-field
+  executable: transform-field
+- name: meltano-map-transformer
+  namespace: meltano_map_transformer
+  variant: meltano
+  repo: https://github.com/MeltanoLabs/meltano-map-transform
+  pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git
+  executable: meltano-map-transform
