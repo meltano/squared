@@ -36,3 +36,14 @@ Utilities:
 - [Great Expectations](https://github.com/great-expectations/great_expectations) - Refer to the Squared [Great Expectations README](./data/utilities/great_expectations/README.md) for more detail on how its used in this repo.
 - [Permifrost](https://gitlab.com/gitlab-data/permifrost) - Refer to the Squared [Permifrost README](./data/utilities/permifrost/README.md) for more detail on how its used in this repo.
 
+
+## Architectural Decision Records (ADR)
+
+This Squared project makes use of ADR's to record architectural decisions roughly as [described by Michael Nygard](http://thinkrelevance.com/blog/2011/11/15/documenting-architecture-decisions). 
+In a nutshell, these are used to document architectural decisions and to provide a record of the decisions made by the team and contributors in regard to the Squared project's architecture. These are held in [docs/adr](https://gitlab.com/meltano/squared/-/tree/master/docs/adr). 
+To propose or add a new ADR, its simplest to create a new entry using [adr-tools](https://github.com/npryce/adr-tools), and then send a long a merge request for review.
+
+```bash
+brew install adr-tools
+adr new <My ADR Name>
+```
