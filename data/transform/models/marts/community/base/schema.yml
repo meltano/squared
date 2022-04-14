@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: contributions
+    columns:
+      - name: contribution_id
+        tests:
+          - not_null
+          - unique
+  - name: username_mapping
+    columns:
+      - name: user_surrogate_key
+        tests:
+          - not_null
+          - unique
+      - name: github_author_id
+        tests:
+          - unique
+      - name: gitlab_author_id
+        tests:
+          - unique
+      - name: gitlab_author_username
+        tests:
+          - unique
+      - name: github_author_username
+        tests:
+          - unique
