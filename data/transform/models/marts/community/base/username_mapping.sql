@@ -37,27 +37,34 @@ name_matches AS (
 ),
 
 blend_all AS (
-    SELECT
+    SELECT DISTINCT
         COALESCE(
             name_matches.github_author_id,
-            contributor_id_mapping.github_id
+            hub.github_id,
+            lab.github_id
         ) AS github_author_id,
         COALESCE(
             name_matches.github_author_username,
-            contributor_id_mapping.github_username
+            hub.github_username,
+            lab.github_username
         ) AS github_author_username,
         COALESCE(
             name_matches.gitlab_author_id,
-            contributor_id_mapping.gitlab_id
+            hub.gitlab_id,
+            lab.gitlab_id
         ) AS gitlab_author_id,
         COALESCE(
             name_matches.gitlab_author_username,
-            contributor_id_mapping.gitlab_username
+            hub.gitlab_username,
+            lab.gitlab_username
         ) AS gitlab_author_username
     FROM name_matches
     LEFT JOIN
-        {{ ref('contributor_id_mapping') }} ON
-            name_matches.github_author_id = contributor_id_mapping.github_id
+        {{ ref('contributor_id_mapping') }} AS hub ON
+            name_matches.github_author_id = hub.github_id
+    LEFT JOIN
+        {{ ref('contributor_id_mapping') }} AS lab ON
+            name_matches.gitlab_author_id = lab.gitlab_id
 )
 
 SELECT
