@@ -107,8 +107,8 @@ roles:
 # Functional Roles
 # ==========================================
 
-    - core:
-        # "Core" permission level.
+    - read_core:
+        # "Read Core" permission level.
         # Excludes write access to `raw`
         # Excludes write access to `prep` and `prod`
         privileges:
@@ -207,7 +207,7 @@ roles:
         # - Allows read/write on `userdev` shared DB.
         # - Allows creating new schemas in `userdev`.
         member_of:
-            - core
+            - read_core
         warehouses:
             - core
         privileges:
@@ -270,13 +270,55 @@ roles:
             - reporter
             - transformer
 
+# ==========================================
+# User Roles (standard, non-elevated)
+# ==========================================
+
+    # Adding new users:
+    # 1. Copy-paste below `asteers` entry as a template for the new user. Exclude user environment unless needed.
+    # 2. Alpha sort the new user amongst other user names.
+    # 3. Users are named by first-initial-last-name ("jsmith" for "John Smith").
+    # 4. Be sure to also add the new DB names at the top of the file.
+
+    - asteers:
+        member_of:
+            - developer
+        owns:
+            databases:
+                - asteers_prep
+                - asteers_prod
+            schemas:
+                - asteers_prep.*
+                - asteers_prod.*
+            tables:
+                - asteers_prep.*.*
+                - asteers_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - asteers_prep
+                    - asteers_prod
+                write:
+                    - asteers_prep
+                    - asteers_prod
+            schemas:
+                read:
+                    - asteers_prep.*
+                    - asteers_prod.*
+                write:
+                    - asteers_prep.*
+                    - asteers_prod.*
+            tables:
+                read:
+                    - asteers_prep.*.*
+                    - asteers_prod.*.*
+                write:
+                    - asteers_prep.*.*
+                    - asteers_prod.*.*
+
     - pnadolny:
         member_of:
-            - core
-            - loader
-            - maintainer
-        warehouses:
-            - core
+            - developer
         owns:
             databases:
                 - pnadolny_prep
@@ -321,9 +363,7 @@ roles:
 
     - tmurphy:
         member_of:
-            - core
             - developer
-            - maintainer
         owns:
             databases:
                 - tmurphy_prep
@@ -358,52 +398,6 @@ roles:
                     - tmurphy_prod.*.*
 
 # ==========================================
-# User Roles (standard, non-elevated)
-# ==========================================
-
-    # Adding new users:
-    # 1. Copy-paste below `asteers` entry as a template for the new user.
-    # 2. Alpha sort the new user amongst other user names.
-    # 3. Users are named by first-initial-last-name ("jsmith" for "John Smith").
-    # 4. Be sure to also add the new DB names at the top of the file.
-
-    - asteers:
-        member_of:
-            - developer
-        owns:
-            databases:
-                - asteers_prep
-                - asteers_prod
-            schemas:
-                - asteers_prep.*
-                - asteers_prod.*
-            tables:
-                - asteers_prep.*.*
-                - asteers_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - asteers_prep
-                    - asteers_prod
-                write:
-                    - asteers_prep
-                    - asteers_prod
-            schemas:
-                read:
-                    - asteers_prep.*
-                    - asteers_prod.*
-                write:
-                    - asteers_prep.*
-                    - asteers_prod.*
-            tables:
-                read:
-                    - asteers_prep.*.*
-                    - asteers_prod.*.*
-                write:
-                    - asteers_prep.*.*
-                    - asteers_prod.*.*
-
-# ==========================================
 # Users (Data Team and Service Accounts)
 # ==========================================
 users:
@@ -423,12 +417,11 @@ users:
     - pnadolny:
         can_login: yes
         member_of:
-            - pnadolny  # TODO - migrate to generic 'developer' role?
+            - pnadolny
             - accountadmin
             - securityadmin
             - useradmin
             - sysadmin
-            - developer
             - maintainer
 
     - tmurphy:
@@ -439,7 +432,6 @@ users:
             - securityadmin
             - useradmin
             - sysadmin
-            - developer
             - maintainer
 
 # ==========================================
@@ -450,7 +442,6 @@ users:
         can_login: yes
         member_of:
             - asteers
-            - developer
 
     - rsanabani:
         can_login: yes
