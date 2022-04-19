@@ -35,6 +35,7 @@ Seed tables should be static unless a change is made to the code base so by upda
 All DAGs can assume that seed tables are always up to date with the master branch.
 
 ### Code Gen
+
 The dbt `codegen` [package](https://github.com/dbt-labs/dbt-codegen) is a useful accelerator to help create source, model, and base files.
 To use it you need to add the following to the [packages.yml](packages.yml) file.
 
@@ -49,6 +50,10 @@ Then run the following and paste the output into the appropriate file and finish
 meltano invoke dbt:deps
 meltano invoke dbt run-operation generate_model_yaml --args '{"model_name": "fact_cli_events"}'
 ```
+
+### dbt Docs
+
+The [dbt docs](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) for this project are generated in CI after a new deployment to production and are served using GitLab Pages at https://meltano.gitlab.io/squared/. 
 
 ### Style Guide
 
