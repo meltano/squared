@@ -48,6 +48,15 @@ stages:
   - if: $CI_COMMIT_BRANCH == "master"
     when: on_success
 
+# Airflow testing
+airflow:
+  extends:
+  - .meltano
+  stage: test
+  script:
+    - meltano install orchestrator airflow
+    - meltano test airflow
+
 # SQL linting
 sqlfluff:
   extends:
