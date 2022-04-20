@@ -1,4 +1,4 @@
-{% macro create_userdev_env(db_list=["PREP"], dry_run=True) %}
+{% macro create_userdev_env(db_list=["RAW"], dry_run=True, schema_list=[]) %}
 
     -- Use Meltano defined USER_PREFIX to be consistent
     {% if not env_var("USER_PREFIX", "") %}
@@ -23,19 +23,20 @@
 
         {% for schema in schemas_to_clone['SCHEMA_NAME'] -%}
 
-            {%- set clone_sql -%}
-                CREATE OR REPLACE SCHEMA {{ target_db_name }}.{{ schema }} CLONE {{ source_db_name }}.{{ schema }};
-            {% endset %}
+            {% if schema_list|length == 0 or source_db_name + "." + schema in schema_list %}
+                {%- set clone_sql -%}
+                    CREATE OR REPLACE SCHEMA {{ target_db_name }}.{{ schema }} CLONE {{ source_db_name }}.{{ schema }};
+                {% endset %}
 
-            {% if dry_run %}
-                -- Dry run queries are logged later
-                {{ dry_run_script.append( clone_sql.replace('\n', '') ) }}
-            {% else %}
-                {{ (log("Cloning " ~ schema ~ " from " ~ source_db_name ~ " to " ~ target_db_name, info=True)) }}
-                {% set results = run_query(clone_sql) %}
-                {{ log(results[0][0], info=True)}}
+                {% if dry_run %}
+                    -- Dry run queries are logged later
+                    {{ dry_run_script.append( clone_sql.replace('\n', '') ) }}
+                {% else %}
+                    {{ (log("Cloning " ~ schema ~ " from " ~ source_db_name ~ " to " ~ target_db_name, info=True)) }}
+                    {% set results = run_query(clone_sql) %}
+                    {{ log(results[0][0], info=True)}}
+                {% endif %}
             {% endif %}
-            
         {% endfor %}
     {% endfor %}
 
