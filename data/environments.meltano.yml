@@ -39,8 +39,6 @@ environments:
           role: TRANSFORMER
           warehouse: TRANSFORMER
           database: PROD
-          database_prep: PREP
-          database_raw: RAW
       utilities:
       - name: sqlfluff
         config:
@@ -98,16 +96,18 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
-          database: ${USER_PREFIX}_PROD
-          database_prep: ${USER_PREFIX}_PREP
-          database_raw: ${USER_PREFIX}_RAW
+          database: USERDEV
+          # Private Development Environments: Uncomment and customize as needed
+          # database: ${USER_PREFIX}_PROD
+          # database_prep: ${USER_PREFIX}_PREP
+          # database_raw: ${USER_PREFIX}_RAW
       utilities:
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}
       - name: great_expectations
         config:
-          prod_database: ${USER_PREFIX}_PROD
+          prod_database: ${USER_PREFIX}
           raw_database: ${USER_PREFIX}_RAW
           username: ${USER_PREFIX}
           role: ${USER_PREFIX}
