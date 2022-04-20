@@ -204,6 +204,8 @@ plugins:
     pip_url: dbt-core~=1.0.0 dbt-snowflake~=1.0.0
     config:
       account: epa06486
+      database_raw: RAW
+      database_prep: PREP
   utilities:
   - name: sqlfluff
     namespace: sqlfluff
