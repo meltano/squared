@@ -138,13 +138,36 @@ dbt_seed:
   - .meltano
   stage: deploy
   variables:
-    AWS_PROFILE: legacy
     SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano --environment=prod invoke dbt-snowflake:seed
+  rules:
+  - if: $CI_COMMIT_BRANCH == "master"
+    when: on_success
+  needs: ["terraform-apply"]
+
+pages:
+  extends:
+  - .meltano
+  stage: deploy
+  variables:
+    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
+    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+  script:
+  - meltano install transformer dbt-snowflake
+  - meltano invoke dbt-snowflake:deps
+  - meltano --environment=prod invoke dbt-snowflake docs generate
+  - cd .meltano/transformers/dbt/target
+  - | # remove row counts
+    sed -i 's/"Row Count", "value": [0-9]*.0/"Row Count", "value": -1.0/g' catalog.json
+  - mkdir -p ${CI_PROJECT_DIR}/public/
+  - mv * ${CI_PROJECT_DIR}/public
+  artifacts:
+    paths:
+      - public
   rules:
   - if: $CI_COMMIT_BRANCH == "master"
     when: on_success

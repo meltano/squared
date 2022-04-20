@@ -9,13 +9,13 @@ RUN pip install -r requirements.txt
 # Install all plugins into the `.meltano` directory
 COPY ./meltano.yml .
 COPY ./environments.meltano.yml .
+# Pin `discovery.yml` manifest by copying pinned version to project root
+COPY ./discovery.yml .
+
 RUN meltano install extractors
 RUN meltano install loaders
-RUN meltano install transformer dbt
+RUN meltano install transformer dbt-snowflake
 RUN meltano install utilities great_expectations awscli
-
-# Pin `discovery.yml` manifest by copying cached version to project root
-RUN cp -n .meltano/cache/discovery.yml . 2>/dev/null || :
 
 # Configure Meltano
 ENV MELTANO_PROJECT_ROOT /project
@@ -24,7 +24,7 @@ ENV MELTANO_PROJECT_READONLY 1
 # Copy over remaining project files
 COPY . .
 
-RUN meltano invoke dbt:deps
+RUN meltano invoke dbt-snowflake:deps
 
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["meltano"]

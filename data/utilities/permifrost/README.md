@@ -5,7 +5,7 @@
 Run the following command to get the permifrost package installed in your Meltano project.
 
 ```bash
-meltano install utility --custom permifrost
+meltano add utility --custom permifrost
 # (namespace) [permifrost]:
 # (pip_url) [permifrost]:
 # (executable) [permifrost]:
@@ -53,13 +53,13 @@ These are some sample command examples. You can also include optional flags as s
 
 ```bash
 # Run a spec-test
-meltano invoke permifrost:spec-test
+meltano --environment=prod invoke permifrost:spec-test
 
 # Run a dryrun
-meltano invoke permifrost:run --dry
+meltano --environment=prod invoke permifrost:run --dry
 
 # Run and execute changes
-meltano invoke permifrost:run
+meltano --environment=prod invoke permifrost:run
 ```
 
 ## Squared Implementation Notes
