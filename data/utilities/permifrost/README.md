@@ -5,7 +5,7 @@
 Run the following command to get the permifrost package installed in your Meltano project.
 
 ```bash
-meltano install utility --custom permifrost
+meltano add utility --custom permifrost
 # (namespace) [permifrost]:
 # (pip_url) [permifrost]:
 # (executable) [permifrost]:
