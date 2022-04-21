@@ -66,6 +66,23 @@ As part of a CI deployment to production `dbt:seed` is run in order to persist a
 Seed tables should be static unless a change is made to the code base so by updating them in CI it avoids redundant seed calls in the DAGs.
 All DAGs can assume that seed tables are always up to date with the master branch.
 
+### Clone to Private Userdev Environments
+
+Developers who have a private development environment provisioned for them usually want to seed some amount of production data in their databases.
+The easiest way to set this up is to run the following command which executes a dbt macro that finds all the `RAW` schemas from production that the developer has access to and clones them into the private development environment using the `USER_PREFIX` set in the userdev Meltano environment (i.e. clone `RAW.X` to `PNADOLNY_RAW.X`).
+
+```bash
+meltano --environment=userdev invoke dbt-snowflake:create_userdev_env
+```
+
+This command and its arguments are defined in meltano.yml.
+The macro defaults to `dry_run` mode where the SQL script is only generated and logged to the console to be manually executed vs actually executing against Snowflake.
+If you'd like to have it execute just edit the command in meltano.yml to `'dry_run': False`.
+Additionally it defaults to only clone the `RAW` database because developers are presumed to be updating EL or staging dbt models and the rest can be built by running dbt but you can also edit the command to include `PROD` or `PREP` in the `db_list` if you have access and would like those cloned as well.
+In addition, the command in meltano.yml includes a schema_list argument that allows you to define more precisely what schemas to clone.
+An empty list will clone all accessible schemas (i.e. `RAW.*`).
+To use this filter, edit the command in meltano.yml and set the full names of the schemas you'd like to clone (i.e. `RAW.GOOGLE_ANALYTICS`).
+
 ### Code Gen
 
 The dbt `codegen` [package](https://github.com/dbt-labs/dbt-codegen) is a useful accelerator to help create source, model, and base files.
