@@ -1,0 +1,8 @@
+config-version: 2
+version: 2
+sources:
+  - name: snowplow
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    schema: SNOWPLOW
+    tables:
+      - name: events

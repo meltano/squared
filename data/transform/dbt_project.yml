@@ -45,6 +45,8 @@ models:
         +schema: github_labs
       slack:
         +schema: slack
+      snowplow:
+        +schema: snowplow
     # ------------------
     # Publish
     # ------------------
