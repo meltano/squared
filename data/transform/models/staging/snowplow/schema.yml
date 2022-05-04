@@ -3,7 +3,7 @@ version: 2
 models:
   - name: stg_snowplow__events
     columns:
-      - name: message_surrogate_key
+      - name: event_id
         tests:
           - unique
           - not_null

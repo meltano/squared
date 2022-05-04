@@ -3,11 +3,11 @@ WITH test AS (
     SELECT
         (
             SELECT COUNT(DISTINCT command)
-            FROM {{ ref('stg_ga__cli_events') }}
+            FROM {{ ref('events_blended') }}
         )
         - (
             SELECT COUNT(DISTINCT command)
-            FROM {{ ref('ga_commands_parsed') }}
+            FROM {{ ref('event_commands_parsed') }}
         ) AS diff
 
 )

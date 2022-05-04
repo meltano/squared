@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: events_blended
+    description: This table includes the blended set of Google Analytics (GA) and Snowplow data.
+      Projects are compared using event counts at the week level, once they have parity for a week we switch to using Snowplow over GA.
+      There are data tests that assert that the project and event counts in this table are >= that of just GA.
+    columns:
+      - name: event_source
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['ga', 'snowplow']
+      - name: event_count
+        tests:
+          - not_null
+      - name: command_category
+        tests:
+          - not_null
+      - name: command
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
+      - name: event_id
+        tests:
+          - unique
+          - not_null
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: event_created_date
+        tests:
+          - not_null

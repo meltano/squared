@@ -12,7 +12,8 @@ WITH retention AS (
 )
 
 SELECT
-    events_blended.event_created_at as event_date,
+    events_blended.event_created_date AS event_date,
+    events_blended.event_created_at,
     events_blended.command_category,
     events_blended.command,
     events_blended.project_id,
