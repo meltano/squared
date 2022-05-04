@@ -36,19 +36,14 @@ models:
     staging:
       +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
       github_search:
-        +materialized: table
         +schema: github_search
       google_analytics:
-        +materialized: table
         +schema: google_analytics
       gitlab:
-        +materialized: table
         +schema: gitlab
       github_labs:
-        +materialized: table
         +schema: github_labs
       slack:
-        +materialized: table
         +schema: slack
     # ------------------
     # Publish
@@ -63,6 +58,12 @@ models:
     marts:
       +materialized: table
       telemetry:
+        base:
+          +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+          +schema: workspace
         +schema: telemetry
       community:
+        base:
+          +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+          +schema: workspace
         +schema: community
