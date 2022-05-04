@@ -41,7 +41,7 @@ blended AS (
         stg_snowplow__events.se_label AS project_id,
         stg_snowplow__events.event_id,
         stg_snowplow__events.event_created_at,
-		stg_snowplow__events.event_created_date
+        stg_snowplow__events.event_created_date
     FROM {{ ref('stg_snowplow__events') }}
     INNER JOIN
         to_blend ON
@@ -59,7 +59,7 @@ blended AS (
         stg_ga__cli_events.project_id,
         stg_ga__cli_events.event_surrogate_key,
         stg_ga__cli_events.event_date,
-		stg_ga__cli_events.event_date
+        stg_ga__cli_events.event_date
     FROM {{ ref('stg_ga__cli_events') }}
     LEFT JOIN
         to_blend ON
