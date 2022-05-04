@@ -3,9 +3,9 @@
   "expectation_suite_name": "dbt.fact_hub_metrics.warning",
   "expectations": [
     {
-      "expectation_type": "expect_table_columns_to_match_ordered_list",
+      "expectation_type": "expect_table_columns_to_match_set",
       "kwargs": {
-        "column_list": [
+        "column_set": [
           "repo_full_name",
           "created_at_timestamp",
           "last_push_timestamp",

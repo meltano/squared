@@ -1,2 +1,3 @@
 .meltano/
 utilities/
+transform/dbt_packages/

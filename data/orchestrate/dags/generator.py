@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 import yaml
 from airflow import DAG
 from airflow.models import Variable
-from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
 
 operator = Variable.get("OPERATOR_TYPE", "k8")
 if operator == "k8":
@@ -72,7 +72,7 @@ for dag_name, dag_def in dags.items():
         start_date=datetime(2022, 1, 1),
         max_active_runs=1,
     )
-    
+
     # dict of name to dag object reference
     name_map = {}
     # register all tasks to DAG

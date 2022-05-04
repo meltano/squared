@@ -1,0 +1,40 @@
+# Snowflake config reference: https://docs.getdbt.com/reference/warehouse-profiles/snowflake-profile
+#
+# Warning: Do not store credentials in this file unless you've take the necessary steps to remove
+# this file from your git commit.
+config:
+  send_anonymous_usage_stats: True
+  use_colors: True
+meltano:
+  target: "{{ env_var('MELTANO_ENVIRONMENT', 'userdev') }}"  # The default profile name if no other profile is selected.
+  outputs:
+    userdev:
+      type: snowflake
+      threads: 2
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('DBT_SNOWFLAKE_ROLE') }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
+      database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+      schema: "DEFAULT"
+    staging:
+      type: snowflake
+      threads: 4
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('DBT_SNOWFLAKE_ROLE') }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
+      database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+      schema: "DEFAULT"
+    prod:
+      type: snowflake
+      threads: 6
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('DBT_SNOWFLAKE_ROLE') }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
+      database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+      schema: "DEFAULT"

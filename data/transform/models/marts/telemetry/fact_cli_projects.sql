@@ -29,6 +29,9 @@ SELECT
         CASE WHEN is_os_feature_environments THEN event_count ELSE 0 END
     ) AS environments_event_total,
     SUM(
+        CASE WHEN is_os_feature_mappers THEN event_count ELSE 0 END
+    ) AS mappers_event_total,
+    SUM(
         CASE WHEN is_os_feature_test THEN event_count ELSE 0 END
     ) AS test_event_total,
     SUM(
@@ -45,13 +48,7 @@ SELECT
     SUM(
         CASE
             WHEN
-                command_category IN (
-                    'meltano elt',
-                    'meltano invoke',
-                    'meltano run',
-                    'meltano test',
-                    'meltano ui'
-                ) THEN event_count
+                is_exec_event THEN event_count
             ELSE 0
         END
     ) AS exec_event_total

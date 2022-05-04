@@ -33,18 +33,16 @@ environments:
           role: LOADER
           warehouse: LOADER
       transformers:
-      - name: dbt
+      - name: dbt-snowflake
         config:
-          sf_user: MELTANO
-          sf_role: TRANSFORMER
-          sf_database_raw: RAW
-          sf_database_prep: PREP
-          sf_database_prod: PROD
-          sf_warehouse: TRANSFORMER
+          user: MELTANO
+          role: TRANSFORMER
+          warehouse: TRANSFORMER
+          database: PROD
       utilities:
       - name: sqlfluff
         config:
-          sf_user: MELTANO
+          user: MELTANO
       - name: great_expectations
         config:
           prod_database: PROD
@@ -58,6 +56,7 @@ environments:
     PERMISSION_BOT_WAREHOUSE: ADMIN
     PERMISSION_BOT_DATABASE: SNOWFLAKE_SAMPLE_DATA
     PERMISSION_BOT_ROLE: SECURITYADMIN
+- name: staging
 - name: userdev
   config:
     plugins:
@@ -92,21 +91,23 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
       transformers:
-      - name: dbt
+      - name: dbt-snowflake
         config:
-          sf_user: ${USER_PREFIX}
-          sf_role: ${USER_PREFIX}
-          sf_database_raw: ${USER_PREFIX}_RAW
-          sf_database_prep: ${USER_PREFIX}_PREP
-          sf_database_prod: ${USER_PREFIX}_PROD
-          sf_warehouse: CORE
+          user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
+          warehouse: CORE
+          database: USERDEV
+          # Private Development Environments: Uncomment and customize as needed
+          # database: ${USER_PREFIX}_PROD
+          # database_prep: ${USER_PREFIX}_PREP
+          # database_raw: ${USER_PREFIX}_RAW
       utilities:
       - name: sqlfluff
         config:
-          sf_user: ${USER_PREFIX}
+          user: ${USER_PREFIX}
       - name: great_expectations
         config:
-          prod_database: ${USER_PREFIX}_PROD
+          prod_database: ${USER_PREFIX}
           raw_database: ${USER_PREFIX}_RAW
           username: ${USER_PREFIX}
           role: ${USER_PREFIX}

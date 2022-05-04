@@ -19,6 +19,7 @@ SELECT
     retention.tracking_disabled AS is_tracking_disabled,
     stg_ga__cli_events.event_count,
     ga_commands_parsed.is_exec_event,
+    ga_commands_parsed.is_pipeline_exec_event,
     ga_commands_parsed.is_legacy_event,
     -- Plugins
     ga_commands_parsed.is_plugin_dbt,
@@ -29,8 +30,9 @@ SELECT
     ga_commands_parsed.is_plugin_superset,
     ga_commands_parsed.is_plugin_sqlfluff,
     ga_commands_parsed.is_plugin_great_ex,
-    ga_commands_parsed.is_os_feature_environments,
     -- OS Features
+    ga_commands_parsed.is_os_feature_environments,
+    ga_commands_parsed.is_os_feature_mappers,
     ga_commands_parsed.is_os_feature_test,
     ga_commands_parsed.is_os_feature_run,
     COALESCE(NOT(ga_commands_parsed.is_plugin_dbt

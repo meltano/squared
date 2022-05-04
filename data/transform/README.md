@@ -28,13 +28,63 @@ These are not exposed as consumption models in reporting tool.
 
 - seed: Static csv datasets.
 
+The output destination for each set of models is defined in the [dbt_profile.yml](https://gitlab.com/meltano/squared/-/blob/master/data/transform/dbt_project.yml).
+Each of these sets of models write to the PROD database except for staging which writes to the PREP database.
+The output schema names are explicitly set in the dbt_profile.yml with a backup schema name of DEFAULT in case one is not set, although using the DEFAULT schema should be avoided.
+
+### Development Environments
+
+In this project there are two types of Snowflake development environments: shared and private.
+For either case an admin will need to help you get onboarded as a Snowflake user and create any associated Snowflake objects you need before you can use your environment.
+
+#### Shared (Default)
+
+Shared is the default development environment in this project and is for developers who only need to do dbt model development.
+The meltano.yml is set up to use the shared development environment automatically.
+The shared environment means that dbt is configured to read from the production `RAW` and `PREP` databases and write to namespaced schemas in the `USERDEV` database (e.g. `PROD.TELEMETRY.FACT_CLI_EVENTS` -> `USERDEV.PNADOLNY_TELEMETRY.FACT_CLI_EVENTS`).
+The namespace prefix logic is managed in the `generate_schema_name.sql` dbt macro.
+This allows for easily sharing between developers since everyone has access to the same `USERDEV` database, while also giving developers loose isolation to avoid stepping on each others toes.
+In this shared environment the assumption is that you arent editing any source data so staging models will fail due to insufficient privileges, if you need to edit EL or staging models contact an admin to get a private development environment provisioned. 
+
+To configure, simply add your username to the `environments.meltano.yml` as your `USER_PREFIX` environment variable within the `userdev` Meltano config environment, in place of `melty`.
+You also need to have `SNOWFLAKE_PASSWORD` set in your .env in order to authenticate with Snowflake in dbt.
+
+#### Private
+
+Private development environments are for developers that need to work on EL pipelines, dbt staging logic, or are accessing sensitive data that shouldnt be in the shared database.
+For this its better to use a set of private databases instead of the shared `USERDEV` database.
+Developers will get 3 empty databases provisioned for them which they have full permissions on: `<USER_PREFIX>_RAW`, `<USER_PREFIX>_PREP`, `<USER_PREFIX>_PROD`.
+The developer is able to customize their environment as needed which could mean using the available dbt macros to clone production data or by continuing to read from `RAW` and `PREP` but write output to the private `<USER_PREFIX>_PROD` database.
+EL development will also be private since the `target-snowflake` loader is configured to write to the `<USER_PREFIX>_RAW` database when the `userdev` Meltano config environment is active.
+
+To configure Meltano to use a private environment, uncomment the `dbt-snowflake` config section labeled `Private Development Environments` in the `userdev` Meltano config environment to override the `database`, `database_prep`, and `database_raw`. You can chose to only override the `database` setting if you just want dbt to write to a private database and continue to read from the production RAW/PREP databases.
+You also need to have `SNOWFLAKE_PASSWORD` set in your .env to authenticate with Snowflake in dbt and with target-snowflake.
+
 ### Seed
 
 As part of a CI deployment to production `dbt:seed` is run in order to persist any updates that have been made to the seed files.
 Seed tables should be static unless a change is made to the code base so by updating them in CI it avoids redundant seed calls in the DAGs.
 All DAGs can assume that seed tables are always up to date with the master branch.
 
+### Clone to Private Userdev Environments
+
+Developers who have a private development environment provisioned for them usually want to seed some amount of production data in their databases.
+The easiest way to set this up is to run the following command which executes a dbt macro that finds all the `RAW` schemas from production that the developer has access to and clones them into the private development environment using the `USER_PREFIX` set in the userdev Meltano environment (i.e. clone `RAW.X` to `PNADOLNY_RAW.X`).
+
+```bash
+meltano --environment=userdev invoke dbt-snowflake:create_userdev_env
+```
+
+This command and its arguments are defined in meltano.yml.
+The macro defaults to `dry_run` mode where the SQL script is only generated and logged to the console to be manually executed vs actually executing against Snowflake.
+If you'd like to have it execute just edit the command in meltano.yml to `'dry_run': False`.
+Additionally it defaults to only clone the `RAW` database because developers are presumed to be updating EL or staging dbt models and the rest can be built by running dbt but you can also edit the command to include `PROD` or `PREP` in the `db_list` if you have access and would like those cloned as well.
+In addition, the command in meltano.yml includes a schema_list argument that allows you to define more precisely what schemas to clone.
+An empty list will clone all accessible schemas (i.e. `RAW.*`).
+To use this filter, edit the command in meltano.yml and set the full names of the schemas you'd like to clone (i.e. `RAW.GOOGLE_ANALYTICS`).
+
 ### Code Gen
+
 The dbt `codegen` [package](https://github.com/dbt-labs/dbt-codegen) is a useful accelerator to help create source, model, and base files.
 To use it you need to add the following to the [packages.yml](packages.yml) file.
 
@@ -49,6 +99,10 @@ Then run the following and paste the output into the appropriate file and finish
 meltano invoke dbt:deps
 meltano invoke dbt run-operation generate_model_yaml --args '{"model_name": "fact_cli_events"}'
 ```
+
+### dbt Docs
+
+The [dbt docs](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) for this project are generated in CI after a new deployment to production and are served using GitLab Pages at https://meltano.gitlab.io/squared/. 
 
 ### Style Guide
 
