@@ -7,7 +7,7 @@ locals {
 }
 
 data "template_file" "snowflake_trust_policy_template" {
-  template = "${file("${path.module}/templates/snowflake_trust_policy.json")}"
+  template = file("${path.module}/templates/snowflake_trust_policy.json")
   vars = {
     snowflake_account_arn = "${local.snowpipe.snowflake_account_arn}"
     snowflake_external_id = "${local.snowpipe.snowflake_external_id}"
@@ -15,14 +15,14 @@ data "template_file" "snowflake_trust_policy_template" {
 }
 
 resource "aws_iam_role" "snowflake_read_role" {
-  name = "snowflake-read-role"
-  description = "AWS role for Snowflake"
-  assume_role_policy = "${data.template_file.snowflake_trust_policy_template.rendered}"
+  name               = "snowflake-read-role"
+  description        = "AWS role for Snowflake"
+  assume_role_policy = data.template_file.snowflake_trust_policy_template.rendered
 }
 
 resource "aws_iam_policy" "allow_s3_read_assess_to_snowflake" {
-  name        = "snowflake_storage_integration"
-  policy = file("templates/snowflake_s3_policy.json")
+  name   = "snowflake_storage_integration"
+  policy = file("${path.module}/templates/snowflake_s3_policy.json")
 }
 
 resource "aws_iam_role_policy_attachment" "snowflake_read_role_policy_attachment" {

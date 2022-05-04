@@ -1,0 +1,43 @@
+repos:
+- repo: https://github.com/gruntwork-io/pre-commit
+  rev: v0.1.17 # Get the latest from: https://github.com/gruntwork-io/pre-commit/releases
+  hooks:
+    # deploy/infrastructure
+    - id: tflint
+      name: tflint deploy/infrastructure
+      files: ^deploy/infrastructure/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    - id: terraform-fmt
+      name: terraform fmt deploy/infrastructure
+      files: ^deploy/infrastructure/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    - id: terraform-validate
+      name: terraform validate deploy/infrastructure
+      files: ^deploy/infrastructure/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    # deploy/meltano
+    - id: tflint
+      name: tflint deploy/meltano
+      files: ^deploy/meltano/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    - id: terraform-fmt
+      name: terraform fmt deploy/meltano
+      files: ^deploy/meltano/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    - id: terraform-validate
+      name: terraform validate deploy/meltano
+      files: ^deploy/meltano/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    # deploy/modules/client_vpn
+    - id: tflint
+      name: tflint deploy/modules/client_vpn
+      files: ^deploy/modules/client_vpn/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    - id: terraform-fmt
+      name: terraform fmt deploy/modules/client_vpn
+      files: ^deploy/modules/client_vpn/(.*).tf$
+      exclude: \.+.terraform\/.*$
+    - id: terraform-validate
+      name: terraform validate deploy/modules/client_vpn
+      files: ^deploy/modules/client_vpn/(.*).tf$
+      exclude: \.+.terraform\/.*$

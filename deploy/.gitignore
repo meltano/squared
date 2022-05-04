@@ -2,7 +2,7 @@
 kubeconfig_*
 
 # Local .terraform directories
-**/.terraform/*
+.terraform
 
 # .tfstate files
 *.tfstate
