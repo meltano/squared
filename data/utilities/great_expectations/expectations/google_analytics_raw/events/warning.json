@@ -73,6 +73,7 @@
           "meltano run",
           "meltano schedule",
           "meltano select",
+          "meltano state",
           "meltano test",
           "meltano ui"
         ]
