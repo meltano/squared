@@ -14,6 +14,6 @@ resource "aws_s3_bucket" "snowcat" {
 
 resource "aws_s3_bucket_policy" "allow_access_from_snowcat_account" {
   bucket   = aws_s3_bucket.snowcat.id
-  policy   = file("templates/snowcat_s3_policy.json")
+  policy   = file("${path.module}/templates/snowcat_s3_policy.json")
   provider = aws.us_west_2
 }

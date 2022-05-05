@@ -1,3 +1,14 @@
+/**
+* # Meltano Squared - Meltano
+*
+* Terraform module to deploy our Meltano Project.
+*
+* ## Usage
+*
+* This module is deployed automatically during [CI/CD](.gitlab-ci.yml).
+*
+*/
+
 locals {
   aws_region = "us-east-1"
 }
