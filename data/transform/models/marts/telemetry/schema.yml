@@ -8,10 +8,6 @@ models:
         description: The date that the 28d rolling window is relative to.
         tests:
           - not_null
-      - name: all_greater_0_life
-        description: The count of distinct projects, any event received.
-        tests:
-          - not_null
       - name: unique_pipe_greater_1_monthly
         description: The count of distinct pipelines (projects + command) combination that had at least 1 exec (invoke, elt, run) in the month.
         tests:
@@ -20,19 +16,6 @@ models:
         description: The count of distinct projects that had more than 1 exec (invoke, elt, run, test, ui) in the month.
         tests:
           - not_null
-      - name: exec_greater_1_life
-        description: (Experimental) The count of distinct projects, any event received, where its had more than 1 exec (invoke, elt, run, test, ui) in its lifetime.
-        tests:
-          - not_null
-      - name: exec_greater_0_life
-        description: (Experimental) The count of distinct projects, any event received, where its had more than 0 exec (invoke, elt, run, test, ui) in its lifetime.
-        tests:
-          - not_null
-      - name: exec_greater_0_monthly
-        description: (Experimental) The count of distinct projects that had more than 0 exec (invoke, elt, run, test, ui) in the month.
-        tests:
-          - not_null
-
 
   - name: fact_cli_cohorts
     description: This table includes cohort snapshots for projects based on their acquired date when the first event was received.
@@ -83,6 +66,10 @@ models:
     columns:
       - name: event_date
         description: The date the event was executed.
+        tests:
+          - not_null
+      - name: event_created_at
+        description: The timestamp the event was executed.
         tests:
           - not_null
       - name: command_category

@@ -112,3 +112,14 @@ dags:
         retries: 2
         depends_on:
           - dbt_github_search_run_models
+  snowplow:
+    interval: '0 6 * * 1-5'
+    steps:
+      - name: dbt_snowplow_run_stage
+        cmd: 'meltano invoke dbt-snowflake:run --models staging.snowplow.*'
+        retries: 2
+      - name: dbt_snowplow_test_stage
+        cmd: 'meltano invoke dbt-snowflake:test --models staging.snowplow.*'
+        retries: 2
+        depends_on:
+          - dbt_snowplow_run_stage
