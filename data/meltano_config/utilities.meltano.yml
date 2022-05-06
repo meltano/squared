@@ -1,0 +1,79 @@
+plugins:
+  utilities:
+  - name: sqlfluff
+    namespace: sqlfluff
+    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; dbt-core~=1.0.0; dbt-snowflake~=1.0.0
+    executable: sqlfluff
+    settings:
+    - name: user
+      env_aliases:
+        - DBT_SNOWFLAKE_USER
+    - name: role
+      env_aliases:
+        - DBT_SNOWFLAKE_ROLE
+    - name: database
+      env_aliases:
+        - DBT_SNOWFLAKE_DATABASE
+        - DBT_SNOWFLAKE_DATABASE_PREP
+        - DBT_SNOWFLAKE_DATABASE_RAW
+      value: foo
+    - name: account
+      env_aliases:
+        - DBT_SNOWFLAKE_ACCOUNT
+    - name: warehouse
+      env_aliases:
+        - DBT_SNOWFLAKE_WAREHOUSE
+      value: foo
+    config:
+      account: epa06486
+      role: TRANSFORMER
+  - name: awscli
+    namespace: awscli
+    pip_url: awscli==1.21.7
+    executable: aws
+  - name: superset
+    namespace: superset
+    commands:
+      up:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml up -d
+      down:
+        executable: /usr/local/bin/docker
+        args: compose -f analyze/superset/docker-compose.yml down -v
+      export:
+        executable: python
+        args: analyze/superset/export.py
+      import:
+        executable: python
+        args: analyze/superset/import.py
+  - name: great_expectations
+    namespace: great_expectations
+    pip_url: great_expectations; sqlalchemy; snowflake-sqlalchemy
+    executable: great_expectations
+    settings:
+      - name: ge_home
+        value: $MELTANO_PROJECT_ROOT/utilities/great_expectations
+        env: GE_HOME
+      - name: raw_database
+        env: GE_RAW_DATABASE
+      - name: prod_database
+        env: GE_PROD_DATABASE
+      - name: username
+        env: GE_USERNAME
+      - name: role
+        env: GE_ROLE
+      - name: warehouse
+        env: GE_WAREHOUSE
+    config:
+      host: epa06486
+      password: ${SNOWFLAKE_PASSWORD}
+    commands:
+       test_ga_raw: checkpoint run google_analytics_raw
+       test_dbt_hub_metrics: checkpoint run dbt_hub_metrics
+  - name: permifrost
+    namespace: permifrost
+    pip_url: permifrost
+    executable: permifrost
+    commands:
+      run: run utilities/permifrost/roles.yml
+      spec-test: spec-test utilities/permifrost/roles.yml
