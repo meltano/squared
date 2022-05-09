@@ -1,6 +1,6 @@
 dags:
   daily_dashboard:
-    interval: '0 10 * * *'
+    interval: '0 9 * * * 1-5'
     steps:
       - name: mart_dbt_snowflake
         cmd: 'meltano invoke dbt-snowflake:run --models marts.*'
@@ -11,7 +11,7 @@ dags:
         depends_on:
           - mart_dbt_snowflake
   hub_metrics:
-    interval: '0 10 * * *'
+    interval: '0 9 * * *'
     steps:
       - name: dbt_hub_metrics
         cmd: 'meltano invoke dbt-snowflake:run --models publish.meltano_hub.*'
