@@ -63,9 +63,11 @@ models:
         base:
           +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
           +schema: workspace
+          +materialized: view
         +schema: telemetry
       community:
         base:
           +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
           +schema: workspace
+          +materialized: view
         +schema: community
