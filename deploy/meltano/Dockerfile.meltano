@@ -1,4 +1,4 @@
-FROM meltano/meltano:v1.99.0-python3.8
+FROM meltano/meltano:v1.103.1-python3.8
 
 WORKDIR /project
 
@@ -7,8 +7,8 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # Install all plugins into the `.meltano` directory
-COPY ./meltano.yml .
-COPY ./environments.meltano.yml .
+COPY . .
+
 # Pin `discovery.yml` manifest by copying pinned version to project root
 COPY ./discovery.yml .
 
@@ -20,9 +20,6 @@ RUN meltano install utilities great_expectations awscli
 # Configure Meltano
 ENV MELTANO_PROJECT_ROOT /project
 ENV MELTANO_PROJECT_READONLY 1
-
-# Copy over remaining project files
-COPY . .
 
 RUN meltano invoke dbt-snowflake:deps
 
