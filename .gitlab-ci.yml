@@ -7,9 +7,13 @@ stages:
 
 .meltano:
   image: python:3.8
+  variables:
+    MELTANO_ENVIRONMENT: cicd
+    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   before_script:
   - cd data/
   - pip3 install meltano
+  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
 
 .docker:
   variables:
@@ -62,14 +66,62 @@ sqlfluff:
   extends:
   - .meltano
   stage: test
-  variables:
-    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
-    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install utilities sqlfluff
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano --environment=prod invoke sqlfluff lint -v
+
+# EL Testing
+meltano_test_extracts:
+  extends:
+  - .meltano
+  # rules:
+  # - when: on_success  # Disabled (lack of creds)
+  parallel:
+    matrix:
+      - EXTRACT_SOURCE:
+        - slack
+        - google-analytics
+        - gitlab
+        - github
+        - gitlab-labs
+        - gitlab-search
+  variables:
+    # Override load schemas to include build prefix:
+    TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
+  script:
+  - meltano install extractor tap-${EXTRACT_SOURCE}
+  - meltano run tap-$EXTRACT_SOURCE target-snowflake
+
+# Transform testing
+meltano_test_transform:
+  extends:
+  - .meltano
+  stage: test
+  needs: [meltano_test_extracts, sqlfluff]
+  variables:
+    CI_BRANCH: b${CI_PIPELINE_IID}
+  script:
+  - meltano install transformer dbt-snowflake
+  - meltano invoke dbt-snowflake:deps
+  - meltano invoke dbt-snowflake:compile
+  - meltano invoke dbt-snowflake:run
+  - meltano invoke dbt-snowflake:test
+
+# Publish testing
+meltano_test_publish:
+  extends:
+  - .meltano
+  stage: test
+  needs: [meltano_test_transform]
+  script:
+  - meltano install extractor tap-snowflake-metrics
+  - meltano install extractor tap-snowflake-audit
+  - meltano install loader target-yaml-metrics
+  - meltano install loader target-yaml-audit
+  - meltano run tap-snowflake-metrics target-yaml-metrics
+  - meltano run tap-snowflake-audit target-yaml-audit
 
 # Build & Publish Docker Images
 docker-build-meltano:
@@ -146,9 +198,6 @@ dbt_seed:
   extends:
   - .meltano
   stage: deploy
-  variables:
-    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
-    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
@@ -162,9 +211,6 @@ pages:
   extends:
   - .meltano
   stage: deploy
-  variables:
-    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD
-    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
   script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps

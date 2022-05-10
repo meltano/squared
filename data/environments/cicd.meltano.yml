@@ -31,10 +31,10 @@ environments:
           warehouse: CICD
       - name: tap-snowflake-metrics
         config:
-          tables: CICD_PROD.${CI_PIPELINE_IID}_MELTANO_HUB.FACT_HUB_METRICS
+          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          tables: CICD_PROD.${CI_PIPELINE_IID}_MELTANO_HUB.HUB_METRICS_AUDIT
+          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-snowflake
         config:
@@ -51,8 +51,8 @@ environments:
           database: CICD_PROD
           database_prep: CICD_PREP
           database_raw: CICD_RAW
-          source_schema_prefix: ${CI_PIPELINE_IID}_
-          target_schema_prefix: ${CI_PIPELINE_IID}_
+          source_schema_prefix: ${CI_BRANCH}_
+          target_schema_prefix: ${CI_BRANCH}_
       utilities:
       - name: sqlfluff
         config:
