@@ -71,14 +71,12 @@ sqlfluff:
   - meltano install utilities sqlfluff
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
-  - meltano --environment=prod invoke sqlfluff lint -v
+  - meltano invoke sqlfluff lint -v
 
 # EL Testing
 meltano_test_extracts:
   extends:
   - .meltano
-  # rules:
-  # - when: on_success  # Disabled (lack of creds)
   parallel:
     matrix:
       - EXTRACT_SOURCE:
@@ -89,7 +87,7 @@ meltano_test_extracts:
         - github-search
   variables:
     # Override load schemas to include build prefix:
-    TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_COMMIT_SHA}_${EXTRACT_SOURCE}"
+    TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
   script:
   - meltano install extractor tap-${EXTRACT_SOURCE}
   - meltano install loader target-snowflake
@@ -102,7 +100,7 @@ meltano_test_transform:
   stage: test
   needs: [meltano_test_extracts, sqlfluff]
   variables:
-    CI_BRANCH: b${CI_COMMIT_SHA}
+    CI_BRANCH: b${CI_PIPELINE_IID}
   script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
@@ -117,7 +115,7 @@ meltano_test_publish:
   stage: test
   needs: [meltano_test_transform]
   variables:
-    CI_BRANCH: b${CI_COMMIT_SHA}
+    CI_BRANCH: b${CI_PIPELINE_IID}
   script:
   - meltano install extractor tap-snowflake-metrics
   - meltano install extractor tap-snowflake-audit
