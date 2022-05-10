@@ -218,8 +218,9 @@ roles:
         # or workloads:
         # - Allows read on all non-protected / non-special data.
         # - Disallows write on `raw`, `prep`, or `prod`.
-        # - Allows read/write on `userdev` shared DB.
-        # - Allows creating new schemas in `userdev`.
+        # - Allows read/write on `userdev_x` shared DBs.
+        # - Allows creating new schemas in `userdev_x`.
+        # - Allows read on `cicd_x` DBs.
         member_of:
             - read_core
         warehouses:
@@ -227,19 +228,41 @@ roles:
         privileges:
             databases:
                 read:
-                    - userdev
+                    - userdev_raw
+                    - userdev_prep
+                    - userdev_prod
+                    - cicd_raw
+                    - cicd_prep
+                    - cicd_prod
                 write:
-                    - userdev
+                    - userdev_raw
+                    - userdev_prep
+                    - userdev_prod
             schemas:
                 read:
-                    - userdev.*
+                    - userdev_raw.*
+                    - userdev_prep.*
+                    - userdev_prod.*
+                    - cicd_raw.*
+                    - cicd_prep.*
+                    - cicd_prod.*
                 write:
-                    - userdev.*
+                    - userdev_raw.*
+                    - userdev_prep.*
+                    - userdev_prod.*
             tables:
                 read:
-                    - userdev.*.*
+                    - userdev_raw.*.*
+                    - userdev_prep.*.*
+                    - userdev_prod.*.*
+                    - cicd_raw.*.*
+                    - cicd_prep.*.*
+                    - cicd_prod.*.*
                 write:
-                    - userdev.*.*
+                    - userdev_raw.*.*
+                    - userdev_prep.*.*
+                    - userdev_prod.*.*
+
 
     - maintainer:
         # Adds maintenance-related access to `developer` permissions:
@@ -330,10 +353,10 @@ roles:
                     - asteers_prep.*.*
                     - asteers_prod.*.*
 
-    # Special account for CI tests
+    # System user role for CI tests
     - cicd:
-        member_of:
-            - developer
+        warehouses:
+            - cicd
         owns:
             databases:
                 - cicd_raw
@@ -522,6 +545,9 @@ users:
 # ==========================================
 warehouses:
     - admin:
+        size: x-small
+
+    - cicd:
         size: x-small
 
     - core:
