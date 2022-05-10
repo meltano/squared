@@ -14,11 +14,23 @@ databases:
     - snowflake:
         shared: yes
 
-    - userdev:
-        # Common working space, schemas created by users
+  # User / Testing
+
+    - asteers_prep:
+        shared: no
+    - asteers_prod:
         shared: no
 
-  # User / Testing
+    - cicd_raw:
+        shared: no
+    - cicd_prep:
+        shared: no
+    - cicd_prod:
+        shared: no
+
+    - jigsaw_labs:
+        shared: no
+
     - pnadolny_raw:
         shared: no
     - pnadolny_prep:
@@ -26,17 +38,19 @@ databases:
     - pnadolny_prod:
         shared: no
 
-    - asteers_prep:
-        shared: no
-    - asteers_prod:
-        shared: no
-
     - tmurphy_prep:
         shared: no
     - tmurphy_prod:
         shared: no
 
-    - jigsaw_labs:
+    - userdev_raw:
+        # Common working space, schemas created by users
+        shared: no
+    - userdev_prep:
+        # Common working space, schemas created by users
+        shared: no
+    - userdev_prod:
+        # Common working space, schemas created by users
         shared: no
 
 # ==========================================
@@ -316,6 +330,52 @@ roles:
                     - asteers_prep.*.*
                     - asteers_prod.*.*
 
+    # Special account for CI tests
+    - cicd:
+        member_of:
+            - developer
+        owns:
+            databases:
+                - cicd_raw
+                - cicd_prep
+                - cicd_prod
+            schemas:
+                - cicd_raw.*
+                - cicd_prep.*
+                - cicd_prod.*
+            tables:
+                - cicd_raw.*.*
+                - cicd_prep.*.*
+                - cicd_prod.*.*
+        privileges:
+            databases:
+                read:
+                    - cicd_raw
+                    - cicd_prep
+                    - cicd_prod
+                write:
+                    - cicd_raw
+                    - cicd_prep
+                    - cicd_prod
+            schemas:
+                read:
+                    - cicd_raw.*
+                    - cicd_prep.*
+                    - cicd_prod.*
+                write:
+                    - cicd_raw.*
+                    - cicd_prep.*
+                    - cicd_prod.*
+            tables:
+                read:
+                    - cicd_raw.*.*
+                    - cicd_prep.*.*
+                    - cicd_prod.*.*
+                write:
+                    - cicd_raw.*.*
+                    - cicd_prep.*.*
+                    - cicd_prod.*.*
+
     - pnadolny:
         member_of:
             - developer
@@ -401,6 +461,10 @@ roles:
 # Users (Data Team and Service Accounts)
 # ==========================================
 users:
+    - cicd:
+        can_login: yes
+        member_of:
+            - cicd
 
     - meltano:
         can_login: yes
