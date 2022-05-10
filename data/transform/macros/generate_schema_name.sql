@@ -8,7 +8,7 @@
 
 
 
-    {%- if node.database == "USERDEV" -%}
+    {%- if node.database.startswith("USERDEV") -%}
 
         {{ env_var("USER_PREFIX") + "_" + new_schema_name | trim }}
 

@@ -15,20 +15,20 @@ environments:
           start_date: '2021-05-01'
       - name: tap-snowflake
         config:
-          dbname: ${USER_PREFIX}_PROD
+          dbname: USERDEV_PROD
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
       - name: tap-snowflake-metrics
         config:
-          tables: ${USER_PREFIX}_PROD.MELTANO_HUB.FACT_HUB_METRICS
+          tables: USERDEV_PROD.MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          tables: ${USER_PREFIX}_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
+          tables: USERDEV_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-snowflake
         config:
-          dbname: ${USER_PREFIX}_RAW
+          dbname: USERDEV_RAW
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
@@ -38,24 +38,23 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
-          database: USERDEV
-          # Private Development Environments: Uncomment and customize as needed
-          # database: ${USER_PREFIX}_PROD
-          # database_prep: ${USER_PREFIX}_PREP
-          # database_raw: ${USER_PREFIX}_RAW
+          database: USERDEV_PROD
+          database_prep: USERDEV_PREP
+          database_raw: RAW
       utilities:
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}
       - name: great_expectations
         config:
-          prod_database: ${USER_PREFIX}
-          raw_database: ${USER_PREFIX}_RAW
+          prod_database: USERDEV_PROD
+          raw_database: USERDEV_RAW
           username: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
   env:
     USER_PREFIX: melty
+    WORKSPACE_PREFIX: USERDEV
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin
