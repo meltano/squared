@@ -10,6 +10,7 @@ stages:
   variables:
     MELTANO_ENVIRONMENT: cicd
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+    MELTANO_LOG_LEVEL: ${MELTANO_LOG_LEVEL}
   before_script:
   - cd data/
   - pip3 install meltano
@@ -88,7 +89,7 @@ meltano_test_extracts:
         - github-search
   variables:
     # Override load schemas to include build prefix:
-    TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
+    TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_COMMIT_SHA}_${EXTRACT_SOURCE}"
   script:
   - meltano install extractor tap-${EXTRACT_SOURCE}
   - meltano install loader target-snowflake
@@ -101,7 +102,7 @@ meltano_test_transform:
   stage: test
   needs: [meltano_test_extracts, sqlfluff]
   variables:
-    CI_BRANCH: b${CI_PIPELINE_IID}
+    CI_BRANCH: b${CI_COMMIT_SHA}
   script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
@@ -116,7 +117,7 @@ meltano_test_publish:
   stage: test
   needs: [meltano_test_transform]
   variables:
-    CI_BRANCH: b${CI_PIPELINE_IID}
+    CI_BRANCH: b${CI_COMMIT_SHA}
   script:
   - meltano install extractor tap-snowflake-metrics
   - meltano install extractor tap-snowflake-audit
