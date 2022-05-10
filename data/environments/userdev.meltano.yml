@@ -41,6 +41,10 @@ environments:
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
           database_raw: RAW
+          # Uncomment for reading custom a RAW schema
+          # database_raw: USERDEV_RAW
+          # source_schema_prefix: ${USER_PREFIX}_
+          target_schema_prefix: ${USER_PREFIX}_
       utilities:
       - name: sqlfluff
         config:
@@ -54,7 +58,6 @@ environments:
           warehouse: CORE
   env:
     USER_PREFIX: melty
-    WORKSPACE_PREFIX: USERDEV
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin

@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: tap_github_search
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: GITHUB_SEARCH
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}GITHUB_SEARCH'
     tables:
       - name: issues
       - name: issue_comments

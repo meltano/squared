@@ -8,9 +8,9 @@
 
 
 
-    {%- if node.database.startswith("USERDEV") -%}
+    {%- if env_var("MELTANO_ENVIRONMENT") in ["userdev", "cicd"] -%}
 
-        {{ env_var("USER_PREFIX") + "_" + new_schema_name | trim }}
+        {{ env_var("DBT_SNOWFLAKE_TARGET_SCHEMA_PREFIX") + new_schema_name | trim }}
 
     {% else %}
 
