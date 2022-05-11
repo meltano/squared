@@ -40,7 +40,7 @@ meltano:
       schema: "DEFAULT"
     cicd:
       type: snowflake
-      threads: 2
+      threads: 4
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
