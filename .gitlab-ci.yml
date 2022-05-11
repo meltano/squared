@@ -68,6 +68,8 @@ sqlfluff:
   extends:
   - .meltano
   stage: test
+  variables:
+    CI_BRANCH: b${CI_PIPELINE_IID}
   script:
   - meltano install utilities sqlfluff
   - meltano install transformer dbt-snowflake
