@@ -10,7 +10,7 @@ stages:
   variables:
     MELTANO_ENVIRONMENT: cicd
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-    MELTANO_LOG_LEVEL: ${MELTANO_LOG_LEVEL}
+    MELTANO_LOG_LEVEL: $MELTANO_LOG_LEVEL
   before_script:
   - cd data/
   - pip3 install meltano
@@ -106,7 +106,7 @@ meltano_test_transform:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano invoke dbt-snowflake:compile
-  - meltano --log-level=debug invoke dbt-snowflake:run
+  - meltano debug invoke dbt-snowflake:run
   - meltano invoke dbt-snowflake:test
 
 # Publish testing

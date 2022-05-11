@@ -47,4 +47,4 @@ meltano:
       role: "{{ env_var('DBT_SNOWFLAKE_ROLE') }}"
       warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
       database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
-      schema: "DEFAULT"
+      schema: "{{ env_var('CI_BRANCH') }}"
