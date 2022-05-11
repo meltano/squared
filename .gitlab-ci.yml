@@ -15,7 +15,6 @@ stages:
   - pip3 install meltano
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
   - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
-  - export START_DATE_10D=$(date +%Y-%m-%d -d "10 day ago")
 
 .docker:
   variables:
@@ -92,7 +91,6 @@ meltano_test_extracts:
     # Override load schemas to include build prefix:
     TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
     DEFAULT_START_DATE: $DEFAULT_START_DATE
-    START_DATE_10D: $START_DATE_10D
   script:
   - make install_extractor EXTRACT_SOURCE=${EXTRACT_SOURCE}
   - meltano install loader target-snowflake

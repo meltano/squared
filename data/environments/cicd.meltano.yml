@@ -15,7 +15,7 @@ environments:
           start_date: "${DEFAULT_START_DATE}"
       - name: tap-github
         config:
-          start_date: "${START_DATE_10D}"
+          start_date: "${DEFAULT_START_DATE}"
       - name: tap-github-labs
         config:
           start_date: "${DEFAULT_START_DATE}"
