@@ -13,7 +13,14 @@ WITH source AS (
                 event_id
             ORDER BY derived_tstamp::TIMESTAMP DESC
         ) AS row_num
-    FROM {{ source('snowplow', 'events') }}
+
+    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+        FROM RAW.SNOWPLOW.EVENTS
+        LIMIT 1000
+    {% else %}
+        FROM {{ source('snowplow', 'events') }}
+    {% endif %}
+
 
     {% if is_incremental() %}
 

@@ -355,6 +355,8 @@ roles:
 
     # System user role for CI tests
     - cicd:
+        member_of:
+            - read_core
         warehouses:
             - cicd
         owns:

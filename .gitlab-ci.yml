@@ -10,12 +10,12 @@ stages:
   variables:
     MELTANO_ENVIRONMENT: cicd
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-    MELTANO_LOG_LEVEL: $MELTANO_LOG_LEVEL
   before_script:
   - cd data/
   - pip3 install meltano
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
   - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
+  - export START_DATE_10D=$(date +%Y-%m-%d -d "10 day ago")
 
 .docker:
   variables:
@@ -92,6 +92,7 @@ meltano_test_extracts:
     # Override load schemas to include build prefix:
     TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
     DEFAULT_START_DATE: $DEFAULT_START_DATE
+    START_DATE_10D: $START_DATE_10D
   script:
   - make install_extractor EXTRACT_SOURCE=${EXTRACT_SOURCE}
   - meltano install loader target-snowflake
@@ -109,7 +110,8 @@ meltano_test_transform:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano invoke dbt-snowflake:compile
-  - meltano invoke dbt-snowflake:run
+  - meltano invoke dbt-snowflake:seed
+  - meltano invoke dbt-snowflake run
   - meltano invoke dbt-snowflake:test
 
 # Publish testing
