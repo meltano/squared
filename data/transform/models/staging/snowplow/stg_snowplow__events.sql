@@ -14,15 +14,15 @@ WITH source AS (
             ORDER BY derived_tstamp::TIMESTAMP DESC
         ) AS row_num
 
-    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
-        FROM RAW.SNOWPLOW.EVENTS
+        {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+        FROM raw.snowplow.events
         LIMIT 1000
-    {% else %}
+        {% else %}
         FROM {{ source('snowplow', 'events') }}
     {% endif %}
 
 
-    {% if is_incremental() %}
+        {% if is_incremental() %}
 
     WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }})
 
