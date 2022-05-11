@@ -79,6 +79,7 @@ sqlfluff:
 meltano_test_extracts:
   extends:
   - .meltano
+  needs: [sqlfluff]
   parallel:
     matrix:
       - EXTRACT_SOURCE:

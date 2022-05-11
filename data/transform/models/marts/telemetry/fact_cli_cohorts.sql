@@ -1,7 +1,9 @@
 WITH cohort_snapshots AS (
     SELECT
         DATE_TRUNC('month', fact_cli_projects.first_event_date) AS cohort_id,
-        DATE_TRUNC('month', events_blended.event_created_date) AS snapshot_month,
+        DATE_TRUNC(
+            'month', events_blended.event_created_date
+        ) AS snapshot_month,
         COUNT(DISTINCT events_blended.project_id) AS project_id_cnt,
         COUNT(
             DISTINCT CASE
