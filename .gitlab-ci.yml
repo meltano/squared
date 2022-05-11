@@ -106,7 +106,7 @@ meltano_test_transform:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano invoke dbt-snowflake:compile
-  - meltano debug invoke dbt-snowflake:run
+  - meltano invoke dbt-snowflake:run
   - meltano invoke dbt-snowflake:test
 
 # Publish testing
