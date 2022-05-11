@@ -8,7 +8,7 @@
 
 
 
-    {%- if env_var("MELTANO_ENVIRONMENT") in ["userdev", "cicd"] and env_var("MELTANO_UTILITY_NAME") != "sqlfluff" -%}
+    {%- if env_var("MELTANO_ENVIRONMENT") in ["userdev", "cicd"] and env_var("MELTANO_UTILITY_NAME", "") != "sqlfluff" -%}
 
         {{ env_var("DBT_SNOWFLAKE_TARGET_SCHEMA_PREFIX") + new_schema_name | trim }}
 
