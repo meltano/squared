@@ -89,6 +89,7 @@ meltano_test_extracts:
   variables:
     # Override load schemas to include build prefix:
     TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
+    DEFAULT_START_DATE: $DEFAULT_START_DATE
   script:
   - make install_extractor EXTRACT_SOURCE=${EXTRACT_SOURCE}
   - meltano install loader target-snowflake
