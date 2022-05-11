@@ -15,7 +15,7 @@ stages:
   - cd data/
   - pip3 install meltano
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
-  - export DEFAULT_START_DATE=$(date -v-1d "+%Y-%m-%d")
+  - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
 
 .docker:
   variables:
@@ -100,7 +100,7 @@ meltano_test_transform:
   extends:
   - .meltano
   stage: test
-  # needs: [meltano_test_extracts, sqlfluff]
+  needs: [meltano_test_extracts, sqlfluff]
   variables:
     CI_BRANCH: b${CI_PIPELINE_IID}
   script:
