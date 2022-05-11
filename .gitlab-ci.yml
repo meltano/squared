@@ -81,17 +81,17 @@ meltano_test_extracts:
     matrix:
       - EXTRACT_SOURCE:
         - slack
-        - google-analytics
+        - google_analytics
         - gitlab
-        - github-labs
-        - github-search
+        - github_labs
+        - github_search
   variables:
     # Override load schemas to include build prefix:
     TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA: "b${CI_PIPELINE_IID}_${EXTRACT_SOURCE}"
   script:
-  - meltano install extractor tap-${EXTRACT_SOURCE}
+  - make install_extractor EXTRACT_SOURCE=${EXTRACT_SOURCE}
   - meltano install loader target-snowflake
-  - meltano run tap-$EXTRACT_SOURCE target-snowflake
+  - make run_meltano EXTRACT_SOURCE=${EXTRACT_SOURCE}
 
 # Transform testing
 meltano_test_transform:
