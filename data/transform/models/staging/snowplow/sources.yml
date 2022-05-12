@@ -3,6 +3,6 @@ version: 2
 sources:
   - name: snowplow
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: SNOWPLOW
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}SNOWPLOW'
     tables:
       - name: events

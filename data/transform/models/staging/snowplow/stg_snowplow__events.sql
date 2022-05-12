@@ -13,13 +13,25 @@ WITH source AS (
                 event_id
             ORDER BY derived_tstamp::TIMESTAMP DESC
         ) AS row_num
-    FROM {{ source('snowplow', 'events') }}
 
-    {% if is_incremental() %}
+        {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
-    WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }})
+        FROM raw.snowplow.events
+        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
 
-    {% endif %}
+        {% else %}
+
+        FROM {{ source('snowplow', 'events') }}
+
+            {% if is_incremental() %}
+
+            WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }})
+
+            {% endif %}
+
+        {% endif %}
+
+
 
 ),
 

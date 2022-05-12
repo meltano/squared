@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: tap_gitlab
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: GITLAB
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}GITLAB'
     tables:
       - name: issues
       - name: merge_requests
