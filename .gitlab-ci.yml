@@ -11,6 +11,7 @@ stages:
   variables:
     MELTANO_ENVIRONMENT: cicd
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+    CI_BRANCH: b${CI_PIPELINE_IID}
   before_script:
   - cd data/
   - pip3 install meltano
@@ -19,6 +20,7 @@ stages:
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
       when: never
+  when: on_success
 
 .docker:
   variables:
@@ -71,8 +73,6 @@ sqlfluff:
   extends:
   - .meltano
   stage: test
-  variables:
-    CI_BRANCH: b${CI_PIPELINE_IID}
   script:
   - meltano install utilities sqlfluff
   - meltano install transformer dbt-snowflake
