@@ -235,3 +235,14 @@ pages:
   - if: $CI_COMMIT_BRANCH == "master"
     when: on_success
   needs: ["terraform-apply"]
+
+clean_snowflake_ci_schemas:
+  extends:
+  - .meltano
+  script:
+  - meltano install transformer dbt-snowflake
+  - meltano invoke dbt-snowflake:deps
+  - meltano invoke dbt-snowflake run-operation clear_ci_schemas
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: always
