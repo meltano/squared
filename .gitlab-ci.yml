@@ -222,6 +222,8 @@ pages:
   extends:
   - .meltano
   stage: deploy
+  variables:
+    SNOWFLAKE_PASSWORD: $SNOWFLAKE_PASSWORD_PROD
   script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
