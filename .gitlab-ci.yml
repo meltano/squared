@@ -18,7 +18,7 @@ stages:
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
   - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
   rules:
-    - if: $CI_PIPELINE_SOURCE != "schedule" && $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_PIPELINE_SOURCE != "schedule" && ($CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master")
       when: on_success
 
 .docker:
