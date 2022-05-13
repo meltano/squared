@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: tap_github_labs
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: GITHUB_LABS
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}GITHUB_LABS'
     tables:
       - name: issues
       - name: pull_requests
