@@ -1,10 +1,20 @@
 # VPN Admin Instructions
 
-Create the OpenVPN config file by running the `enroll_client.sh` script. Replace "example@meltano.com" with the user's actual email address.
+Create the OpenVPN config file by running the `enroll_client.sh` script (see requirements below). Replace "example@meltano.com" with the user's actual email address.
 
     ./enroll_client.sh example@meltano.com
 
 A 1Password link will be printed. It can only be accessed by the provided email address. Share this link with the user via Slack, email, etc. With that link they will be able to access the password for the zip file produced by the script. Also send them the zip file via Slack, email, etc.
+
+## Requirements
+
+In order to run `enroll_client.sh`, the following requirements must be satisfied:
+
+- [The 1Password CLI must be installed](https://developer.1password.com/docs/cli/install-server/)
+- [The 1Password CLI must be signed-in](https://developer.1password.com/docs/cli/sign-in-manually)
+- `git` must be installed
+- [The AWS CLI must be installed](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+- The AWS CLI profile `tf_data` must be configured
 
 # VPN New User Instructions
 
