@@ -21,13 +21,17 @@ In order to run `enroll_client.sh`, the following requirements must be satisfied
 1. Request access as described in the handbook: https://handbook.meltano.com/data-team/#data-vpn-enrollment
 2. Access the provided 1Password link, and obtain the password for the zipped OpenVPN config.
 3. Download the provided zip file. Unzip it using the password obtained in step 1. This file contains your private key. Be mindful of its permissions.
-4. Download the VPN client https://aws.amazon.com/vpn/client-vpn-download/
-5. Open the VPN client GUI. Navigate to: File -> Manage Profiles -> Add Profile
-6. Display name = "Data Prod", navigate to path of unzipped `.ovpn` file
-7. Save bookmarks for services (Airflow, Superset, Meltano UI)
-8. Airflow and Meltano UI have no auth (please dont break anything until we add auth), Superset has read only credentials in 1Pass "Superset - Public"
-9. Request a developer user for Superset if needed. The public user is read only.
-10. Request USERDEV access in the Squared to be able to run dbt/superset against Snowflake in a isolated dev environment.
+4. Use the Open VPN config file with your preferred OpenVPN client. If you do not have a preferred OpenVPN client, consider using the AWS client, which we provide instructions for below.
+
+## AWS VPN Client Instructions
+
+1. Download the VPN client https://aws.amazon.com/vpn/client-vpn-download/
+2. Open the VPN client GUI. Navigate to: File -> Manage Profiles -> Add Profile
+3. Display name = "Data Prod", navigate to path of unzipped `.ovpn` file
+4. Save bookmarks for services (Airflow, Superset, Meltano UI)
+5. Airflow and Meltano UI have no auth (please dont break anything until we add auth), Superset has read only credentials in 1Pass "Superset - Public"
+6. Request a developer user for Superset if needed. The public user is read only.
+7. Request USERDEV access in the Squared to be able to run dbt/superset against Snowflake in a isolated dev environment.
 
 Check out:
 - Airflow - http://internal-095a2699-meltano-airflowai-4cc5-148256298.us-east-1.elb.amazonaws.com/
