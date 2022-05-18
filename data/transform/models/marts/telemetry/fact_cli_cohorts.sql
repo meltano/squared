@@ -2,29 +2,29 @@ WITH cohort_snapshots AS (
     SELECT
         DATE_TRUNC('month', fact_cli_projects.first_event_date) AS cohort_id,
         DATE_TRUNC(
-            'month', events_blended.event_created_date
+            'month', fact_cli_events.event_date
         ) AS snapshot_month,
-        COUNT(DISTINCT events_blended.project_id) AS project_id_cnt,
+        COUNT(DISTINCT fact_cli_events.project_id) AS project_id_cnt,
         COUNT(
             DISTINCT CASE
                 WHEN
                     fact_cli_projects.exec_event_total > 1
-                    THEN events_blended.project_id
+                    THEN fact_cli_events.project_id
             END
         ) AS project_id_active_cnt,
-        SUM(events_blended.event_count) AS event_cnt,
+        SUM(fact_cli_events.event_count) AS event_cnt,
         SUM(
             CASE
                 WHEN
                     fact_cli_projects.exec_event_total > 1
-                    THEN events_blended.event_count
+                    THEN fact_cli_events.event_count
                 ELSE 0
             END
         ) AS active_event_cnt
-    FROM {{ ref('events_blended') }}
+    FROM {{ ref('fact_cli_events') }}
     LEFT JOIN
         {{ ref('fact_cli_projects') }} ON
-            events_blended.project_id = fact_cli_projects.project_id
+            fact_cli_events.project_id = fact_cli_projects.project_id
     GROUP BY 1, 2
 ),
 
