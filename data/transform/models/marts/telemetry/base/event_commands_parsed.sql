@@ -342,8 +342,8 @@ great_expectations AS (
     SELECT command
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
-        AND (split_part_3 LIKE 'great-expectations%' OR
-            split_part_3 LIKE 'great_expectations%')
+        AND (split_part_3 LIKE 'great-expectations%'
+            OR split_part_3 LIKE 'great_expectations%')
 
     UNION ALL
 
@@ -395,7 +395,7 @@ cli_run AS (
 cli_mappers AS (
 
     SELECT command
- FROM _run_parse
+    FROM _run_parse
     -- Commands need at least 3 plugins to be considered.
     WHERE NOT(
             SPLIT_PART(
