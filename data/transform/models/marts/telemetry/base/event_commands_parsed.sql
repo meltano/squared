@@ -97,7 +97,7 @@ _run_parse AS (
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'dagster%' 
+                    value::STRING LIKE 'dagster%'
                     OR value::STRING LIKE 'dagit%' THEN index
             END
         ) AS dagster_index,
@@ -343,7 +343,7 @@ great_expectations AS (
     FROM unique_commands
     WHERE command_category = 'meltano invoke'
         AND (split_part_3 LIKE 'great-expectations%' OR
-        split_part_3 LIKE 'great_expectations%')
+            split_part_3 LIKE 'great_expectations%')
 
     UNION ALL
 
@@ -394,18 +394,17 @@ cli_run AS (
 
 cli_mappers AS (
 
-    SELECT
-        command
-    FROM _run_parse
+    SELECT command
+ FROM _run_parse
     -- Commands need at least 3 plugins to be considered.
-    WHERE NOT (
+    WHERE NOT(
             SPLIT_PART(
                 command, ' ', 5
             ) = '' OR STARTSWITH(SPLIT_PART(command, ' ', 5), '--environment')
         )
-    -- A tap and target combination separated by at least 1 other plugin
-    -- is considered a mappers.
-    AND target_index - tap_index > 1
+        -- A tap and target combination separated by at least 1 other plugin
+        -- is considered a mappers.
+        AND target_index - tap_index > 1
 
 )
 
