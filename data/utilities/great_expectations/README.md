@@ -6,10 +6,7 @@ Run the following command to get great_expecations installed in your Meltano pro
 Depending on your datasource you might need to install additional python dependencies (i.e. sqlalchemy, PyAthena, and PyAthena for this case).
 
 ```bash
-meltano add --custom utility great_expectations
-# (namespace) [great_expectations]:
-# (pip_url) [great_expectations]: great_expectations; sqlalchemy; snowflake-sqlalchemy
-# (executable) [great_expectations]:
+meltano add utility great_expectations
 ```
 
 
