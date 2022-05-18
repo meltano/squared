@@ -52,3 +52,19 @@ If this plugin is run in an ephemeral environment or is run on a machine with a 
 meltano install utility awscli
 ```
 
+## CI Testing
+
+Refer to [.gitlab-ci.yml](../.gitlab-ci.yml) for full details on how the CI pipelines work.
+
+To summarize - the pipeline will run on a merge request to the default branch to do the following:
+
+- Sqlfluff Linting
+- Airflow tests
+- EL pipelines run using the [cicd.meltano.yml](./environments/cicd.meltano.yml) configurations.
+These take a relative start date or 1 day and writes to an isolated Snowflake environment prefixed with the pipeline ID in the `CICD_RAW` database.
+- dbt transformations and tests are run on the isolated EL data that was created
+
+Once tests pass and the code is merged, Docker images are built and terraform is executed to deploy the new code.
+Additionally `dbt seed` is run against production to update any CSV files that were added via the merge request and dbt docs are built and deployed using GitLab pages.
+
+Periodically a schdule is run in CI to drop any old CI data so the Snowflake database stays clean.
