@@ -242,10 +242,17 @@ pages:
   needs: ["terraform-apply"]
 
 clean_snowflake_ci_schemas:
-  extends:
-  - .meltano
+  image: python:3.8
+  variables:
+    MELTANO_ENVIRONMENT: cicd
+    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+    CI_BRANCH: b${CI_PIPELINE_IID}
   stage: schedule
   script:
+  - cd data/
+  - pip3 install meltano
+  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
+  - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano invoke dbt-snowflake run-operation clear_ci_schemas
