@@ -241,25 +241,9 @@ pages:
     when: on_success
   needs: ["terraform-apply"]
 
-
-.meltano_2:
-  image: python:3.8
-  variables:
-    MELTANO_ENVIRONMENT: cicd
-    MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-    CI_BRANCH: b${CI_PIPELINE_IID}
-  before_script:
-  - cd data/
-  - pip3 install meltano
-  - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
-  - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
-  rules:
-    - if: $CI_PIPELINE_SOURCE != "schedule" && ($CI_PIPELINE_SOURCE == "merge_request_event" || $CI_COMMIT_BRANCH == "master")
-      when: on_success
-
 clean_snowflake_ci_schemas:
   extends:
-  - .meltano_2
+  - .meltano
   stage: schedule
   script:
   - meltano install transformer dbt-snowflake
