@@ -248,11 +248,12 @@ clean_snowflake_ci_schemas:
     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
     CI_BRANCH: b${CI_PIPELINE_IID}
   stage: schedule
-  script:
+  before_script:
   - cd data/
   - pip3 install meltano
   - echo "Installing creds file from CI..." && cp $MELTANO_ENV_FILE .env
   - export DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")
+  script:
   - meltano install transformer dbt-snowflake
   - meltano invoke dbt-snowflake:deps
   - meltano invoke dbt-snowflake run-operation clear_ci_schemas
