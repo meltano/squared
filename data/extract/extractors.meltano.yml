@@ -101,7 +101,7 @@ plugins:
     - '!*.reactions'  # Broken JSON Schema validator for issues
   - name: tap-snowflake
     namespace: tap_snowflake
-    pip_url: git+https://github.com/pnadolny13/pipelinewise-tap-snowflake.git@add_role_support
+    pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@15699411cc0ff87f11a3f7e637f01a2eb8cbf9da
     executable: tap-snowflake
     capabilities:
     - properties
