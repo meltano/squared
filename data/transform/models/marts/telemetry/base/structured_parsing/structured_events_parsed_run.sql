@@ -18,17 +18,7 @@
 -- other?
 
 
-WITH unique_commands AS (
-
-    SELECT DISTINCT
-        command,
-        command_category,
-        SPLIT_PART(command, ' ', 3) AS split_part_3,
-        SPLIT_PART(command, ' ', 4) AS split_part_4
-    FROM USERDEV_PREP.PNADOLNY_WORKSPACE.STRUCTURED_EVENTS
-
-),
-_cmd_prep AS (
+WITH _cmd_prep AS (
     select
         unique_commands.command,
         unique_commands.command_category,
@@ -48,7 +38,7 @@ _cmd_prep AS (
                     OR value::STRING LIKE 'pipelinewise-target-%' THEN index
             END
         AS target_index
-    FROM unique_commands,
+    FROM {{ ref('unique_commands') }},
         LATERAL FLATTEN(input => STRTOK_TO_ARRAY(command, ' '))
 ),
 target_pairs as (
@@ -89,18 +79,16 @@ meltano_run AS (
             AND _mappers.plugin_index IS NULL
             AND plugin_element NOT LIKE '--environment%'
             THEN plugin_element END
-        ) within group (order by _cmd_prep.plugin_index asc) AS other_plugins,          
-        MAX(
-            CASE
-                WHEN
-                    plugin_element LIKE '--environment%' THEN SPLIT_PART(plugin_element, '=',2)
-            END
-        ) AS environment
+        ) within group (order by _cmd_prep.plugin_index asc) AS other_plugins
     FROM _cmd_prep
     LEFT JOIN _mappers ON _cmd_prep.command = _mappers.command and _cmd_prep.plugin_index = _mappers.plugin_index
     WHERE _cmd_prep.command_category = 'meltano run'
         AND plugin_element not in ('meltano', 'run')
     group by 1,2
 )
-select * from
-meltano_run
+select
+    meltano_run.*,
+    args_parsed.args as args,
+    args_parsed.environment
+from meltano_run
+LEFT JOIN {{ ref('args_parsed') }} on meltano_run.command = args_parsed.command

@@ -18,10 +18,10 @@ with prep as (
         THEN [get(split_parts, 2)::string] end AS singer_plugins,
         args_parsed.args,
         args_parsed.environment,
-        get(split_parts, 2) as plugin
+        CASE WHEN get(split_parts, 2) not like '--%' THEN get(split_parts, 2) END as plugin
     from {{ ref('unique_commands') }}
     LEFT JOIN {{ ref('args_parsed') }} on unique_commands.command = args_parsed.command
-    where unique_commands.command_category = 'meltano invoke'
+    where unique_commands.command_category = 'meltano test'
 )
 SELECT
     command,

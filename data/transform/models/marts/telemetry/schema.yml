@@ -244,3 +244,30 @@ models:
         description: The sum total of events received using the execution events - elt/invoke/run/test/ui.
         tests:
           - not_null
+
+  - name: fact_plugin_usage
+    description: This table contains plugin usage data at the plugin_name, project_id, event_ts, environment level.
+    columns:
+      - name: plugin_usage_pk
+        description: The unique identifier for a record in this table.
+        tests:
+          - not_null
+          - unique
+      - name: project_id
+        description: The unique identifier for a Meltano project, found in the meltano.yml file.
+        tests:
+          - not_null
+      - name: env_id
+        description: The Meltano config environment hash value.
+        tests:
+          - not_null
+      - name: event_ts
+        description: The event timestamp.
+        tests:
+          - not_null
+      - name: event_type
+        description: The structure type of the event being collected.
+        tests:
+          - accepted_values:
+              values: ['structured', 'unstructured']
+          - not_null
