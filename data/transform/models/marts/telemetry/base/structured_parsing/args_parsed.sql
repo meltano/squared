@@ -1,10 +1,17 @@
-select
-    command,
-    SPLIT_PART(SPLIT_PART(unique_commands.command, '--environment=',2), ' ', 1) AS environment,
+SELECT
+    unique_commands.command,
+    SPLIT_PART(
+        SPLIT_PART(unique_commands.command, '--environment=', 2), ' ', 1
+    ) AS environment,
     ARRAY_AGG(
-        case when value::STRING like '--%' and value::STRING not like '--environment=%' then value::STRING end
-    ) as args
-from
+        CASE
+            WHEN
+                flat.value::STRING LIKE '--%'
+                AND flat.value::STRING NOT LIKE '--environment=%'
+                THEN flat.value::STRING
+        END
+    ) AS args
+FROM
     {{ ref('unique_commands') }},
-    lateral flatten(input=>unique_commands.split_parts) c
-group by 1,2
+    LATERAL FLATTEN(input=>unique_commands.split_parts) AS flat
+GROUP BY 1, 2

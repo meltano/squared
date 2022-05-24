@@ -12,22 +12,24 @@ WITH manually_parsed AS (
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_run') }}
+    FROM {{ ref('cmd_parsed_run') }}
 
-    union all
+    UNION ALL
 
     SELECT
         command,
         command_category,
         singer_plugins,
         []::ARRAY AS singer_mapper_plugins,
-        case when dbt_run then ['dbt']::ARRAY else []::ARRAY end AS other_plugins,
+        CASE
+            WHEN dbt_run THEN ['dbt']::ARRAY ELSE []::ARRAY
+        END AS other_plugins,
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_elt') }}
+    FROM {{ ref('cmd_parsed_elt') }}
 
-    union all
+    UNION ALL
 
     SELECT
         command,
@@ -38,9 +40,9 @@ WITH manually_parsed AS (
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_invoke') }}
+    FROM {{ ref('cmd_parsed_invoke') }}
 
-    union all
+    UNION ALL
 
     SELECT
         command,
@@ -51,37 +53,45 @@ WITH manually_parsed AS (
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_add_remove') }}
+    FROM {{ ref('cmd_parsed_add_remove') }}
 
-    union all
+    UNION ALL
 
     SELECT
         command,
         command_category,
         singer_plugins,
         NULL AS singer_mapper_plugins,
-        case when transform_option in ('run', 'only') then ['dbt']::ARRAY else []::ARRAY end AS other_plugins,
+        CASE
+            WHEN
+                transform_option IN ('run', 'only') THEN ['dbt']::ARRAY
+            ELSE []::ARRAY
+        END AS other_plugins,
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_schedule') }}
+    FROM {{ ref('cmd_parsed_schedule') }}
     WHERE command_category != 'meltano schedule list'
 
-    union all
+    UNION ALL
 
     SELECT
         command,
         command_category,
         singer_plugins,
         NULL AS singer_mapper_plugins,
-        case when transform_option in ('run', 'only') then ['dbt']::ARRAY else []::ARRAY end AS other_plugins,
+        CASE
+            WHEN
+                transform_option IN ('run', 'only') THEN ['dbt']::ARRAY
+            ELSE []::ARRAY
+        END AS other_plugins,
         args,
         environment,
         'native' AS command_type
-    FROM {{ ref('structured_events_parsed_schedule') }}
+    FROM {{ ref('cmd_parsed_schedule') }}
     WHERE command_category = 'meltano schedule list'
 
-    union all
+    UNION ALL
 
     SELECT
         command,
@@ -92,9 +102,9 @@ WITH manually_parsed AS (
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_test') }}
+    FROM {{ ref('cmd_parsed_test') }}
 
-    union all
+    UNION ALL
 
     SELECT
         command,
@@ -105,7 +115,7 @@ WITH manually_parsed AS (
         args,
         environment,
         'plugin' AS command_type
-    FROM {{ ref('structured_events_parsed_select') }}
+    FROM {{ ref('cmd_parsed_select') }}
 )
 
 SELECT *
@@ -124,5 +134,6 @@ SELECT
     'native' AS command_type
 FROM {{ ref('unique_commands') }}
 LEFT JOIN manually_parsed ON unique_commands.command = manually_parsed.command
-LEFT JOIN {{ ref('args_parsed') }} on unique_commands.command = args_parsed.command
-where manually_parsed.command IS NULL
+LEFT JOIN
+    {{ ref('args_parsed') }} ON unique_commands.command = args_parsed.command
+WHERE manually_parsed.command IS NULL

@@ -18,7 +18,8 @@ INNER JOIN
     {{ ref('event_src_activation') }} ON
         stg_snowplow__events.se_label = event_src_activation.project_id
 WHERE
-    stg_snowplow__events.event_created_date >= event_src_activation.sp_activate_date
+    stg_snowplow__events.event_created_date
+    >= event_src_activation.sp_activate_date
 
 UNION
 
