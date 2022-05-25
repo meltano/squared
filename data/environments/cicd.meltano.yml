@@ -12,7 +12,7 @@ environments:
       - name: tap-gitlab
         config:
           groups: meltano
-          start_date: "${DEFAULT_START_DATE}"
+          # start_date: "${DEFAULT_START_DATE}"
       - name: tap-github
         config:
           start_date: "${DEFAULT_START_DATE}"

@@ -2,7 +2,7 @@
 
 WITH source AS (
 
-    select
+    SELECT
         *,
         ROW_NUMBER() OVER (
             PARTITION BY
