@@ -249,25 +249,80 @@ models:
     description: This table contains plugin usage data at the plugin_name, project_id, event_ts, environment level.
     columns:
       - name: plugin_usage_pk
-        description: The unique identifier for a record in this table.
+        description: The unique surrogate key identifier for a record in this table.
         tests:
           - not_null
           - unique
-      - name: project_id
-        description: The unique identifier for a Meltano project, found in the meltano.yml file.
+
+      - name: event_id
+        description: The unique identifier for an event.
         tests:
           - not_null
-      - name: env_id
-        description: The Meltano config environment hash value.
-        tests:
-          - not_null
+
+      - name: trace_id
+        description: The unique identifier for an series of events that happened in a single execution session.
+          This is not relevant for structured events.
+
       - name: event_ts
         description: The event timestamp.
         tests:
           - not_null
+
+      - name: event_count
+        description: The count of the amount of times the command was executed on that date. Google Analytics summarizes to the day grain.
+
+      - name: event_source
+        description: The source of where the data came from, either google analytics or snowplow.
+
       - name: event_type
         description: The structure type of the event being collected.
         tests:
           - accepted_values:
               values: ['structured', 'unstructured']
           - not_null
+
+      - name: command
+        description: The full command that was run. Some commands are altered to be more verbose and to scrub sensitive information.
+
+      - name: command_category
+        description: The category of the command (i.e. meltano elt, meltano init, etc.)
+
+      - name: args
+        description: An array of arguments that were passed to the command that executed the plugin.
+
+      - name: plugin_name
+        description: The name of the plugin (e.g. tap-postgres, sqlfluff, etc.)
+
+      - name: plugin_variant
+        description: The plugin variant name.
+
+      - name: plugin_version
+        description: The version of the plugin.
+
+      - name: plugin_category
+        description: The category of the plugin (i.e. singer, dbt, sqlfluff, etc.). This is primarily to collapse Singer plugins under a single umbrella category.
+
+      - name: project_id
+        description: The unique identifier for a Meltano project, found in the meltano.yml file.
+        tests:
+          - not_null
+
+      - name: project_created_at
+        description: The date the project sent its first event.
+
+      - name: project_is_active
+        description: ""
+
+      - name: env_id
+        description: The Meltano config environment hash value.
+        tests:
+          - not_null
+
+      - name: env_name
+        description: The Meltano config environment name if its one of the defaults.
+
+      - name: exit_code
+        description: The exit code returned from the plugin.
+
+      - name: execution_time_s
+        description: The execution time of the plugin.
