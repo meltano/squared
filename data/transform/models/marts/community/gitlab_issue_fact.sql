@@ -1,4 +1,4 @@
-select
+SELECT
     issue_id,
     project_id,
     author_id,
