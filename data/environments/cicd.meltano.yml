@@ -13,6 +13,10 @@ environments:
         config:
           groups: meltano
           start_date: "${DEFAULT_START_DATE}"
+        select:
+        - projects.*
+        - merge_requests.*
+        - '!issues.*'
       - name: tap-github
         config:
           start_date: "${DEFAULT_START_DATE}"

@@ -24,6 +24,11 @@ models:
         description: Timestamp when the issue was created.
         tests:
           - not_null
+      - name: graphql_node_id
+        description: Graphql ID
+        tests:
+          - unique
+          - not_null
 
   - name: stg_github__pull_requests
     columns:
