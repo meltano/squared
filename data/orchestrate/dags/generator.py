@@ -100,6 +100,7 @@ for dag_name, dag_def in dags.items():
                 retries=step.get("retries", 0),
                 dag=dag,
                 retry_delay=retry_delay,
+                foo_bar="cause failure"
             )
         name_map[task_name] = task
 
