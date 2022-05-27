@@ -22,7 +22,9 @@ SELECT
     -- projects
     structured_events.project_id,
     projects.first_event_at AS project_created_at,
-    projects.is_active AS project_is_active,
+    COALESCE(projects.last_activate_at >= DATEADD(
+        'month', -1, CURRENT_DATE()
+    ), FALSE) AS project_is_active,
     -- environments
     cmd_parsed_all.environment AS env_id,
     environments.env_name,
