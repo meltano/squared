@@ -1,0 +1,40 @@
+select
+    event_id,
+    event_name,
+    DVCE_CREATED_TSTAMP::TIMESTAMP AS DVCE_CREATED_TSTAMP,
+    USER_IPADDRESS,
+    parse_json(contexts::variant):data orig_context,
+    max(parse_json(unstruct_event::variant):data:data:event::string) as event_state,
+    max(parse_json(unstruct_event::variant):data:data:type::string) as event_block_type,
+    max(case when context.value:schema::string like 'iglu:com.meltano/project_context/jsonschema/%' then context.value:data:context_uuid::string end) as execution_uuid,
+    array_agg(DISTINCT context.value:schema) as schemas,
+    max(context.value:data:freedesktop_version_id::string) as freedesktop_version_id,
+    max(context.value:data:meltano_version::string) as meltano_version,
+    max(context.value:data:num_cpu_cores_available::string) as num_cpu_cores_available,
+    max(context.value:data:windows_edition::string) as windows_edition,
+    max(context.value:data:project_uuid::string) as project_uuid,
+    max(context.value:data:command::string) as cli_command,
+    max(context.value:data:sub_command::string) as cli_sub_command,
+    max(context.value:data:machine::string) as machine,
+    max(context.value:data:system_release::string) as system_release,
+    array_agg(DISTINCT context.value:data:plugins) as plugins,
+    max(context.value:data:project_uuid_source::string) as project_uuid_source,
+    max(context.value:data:option_keys::string) as option_keys,
+    max(context.value:data:freedesktop_id::string) as freedesktop_id,
+    max(context.value:data:freedesktop_id_like::string) as freedesktop_id_like,
+    max(context.value:data:is_dev_build::string) as is_dev_build,
+    max(context.value:data:process_hierarchy::string) as process_hierarchy,
+    max(context.value:data:python_version::string) as python_version,
+    max(context.value:data:environment_name_hash::string) as environment_name_hash,
+    max(context.value:data:client_uuid::string) as client_uuid,
+    max(context.value:data:is_ci_environment::string) as is_ci_environment,
+    max(context.value:data:num_cpu_cores::string) as num_cpu_cores,
+    max(context.value:data:python_implementation::string) as python_implementation,
+    max(context.value:data:system_name::string) as system_name,
+    max(context.value:data:system_version::string) as system_version
+from RAW.SNOWPLOW.EVENTS,
+LATERAL FLATTEN(input => parse_json(contexts::variant):data) as context
+where event = 'unstruct'
+-- CLI and Block events only (ignore )
+and contexts is not null
+group by 1,2,3,4,5
