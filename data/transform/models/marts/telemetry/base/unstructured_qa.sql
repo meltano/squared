@@ -4,6 +4,7 @@ select
     DVCE_CREATED_TSTAMP::TIMESTAMP AS DVCE_CREATED_TSTAMP,
     USER_IPADDRESS,
     parse_json(contexts::variant):data orig_context,
+    -- CLI and Block Events
     max(parse_json(unstruct_event::variant):data:data:event::string) as event_state,
     max(parse_json(unstruct_event::variant):data:data:type::string) as event_block_type,
     max(case when context.value:schema::string like 'iglu:com.meltano/project_context/jsonschema/%' then context.value:data:context_uuid::string end) as execution_uuid,
@@ -31,10 +32,16 @@ select
     max(context.value:data:num_cpu_cores::string) as num_cpu_cores,
     max(context.value:data:python_implementation::string) as python_implementation,
     max(context.value:data:system_name::string) as system_name,
-    max(context.value:data:system_version::string) as system_version
+    max(context.value:data:system_version::string) as system_version,
+    -- State change
+    max(parse_json(unstruct_event::variant):data:data:setting_name::string) as setting_name,
+    max(parse_json(unstruct_event::variant):data:data:changed_from::string) as changed_from,
+    max(parse_json(unstruct_event::variant):data:data:changed_to::string) as changed_to,
+    -- Exit Event
+    max(parse_json(unstruct_event::variant):data:data:exit_code::string) as exit_code,
+    max(parse_json(unstruct_event::variant):data:data:exit_timestamp::string) as exit_ts,
+    max(parse_json(unstruct_event::variant):data:data:process_duration_microseconds::string) as process_duration_ms
 from RAW.SNOWPLOW.EVENTS,
-LATERAL FLATTEN(input => parse_json(contexts::variant):data) as context
+LATERAL FLATTEN(input => COALESCE(parse_json(contexts::variant):data, [''])) as context
 where event = 'unstruct'
--- CLI and Block events only (ignore )
-and contexts is not null
 group by 1,2,3,4,5
