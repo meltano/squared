@@ -46,20 +46,13 @@ jobs:
     environment: test
     strategy:
       matrix:
-        extract-source: ['slack']
-        # , 'google_analytics', 'gitlab', 'github_labs', 'github_search']
+        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_labs', 'github_search']
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
       CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
-      # TAP_GOOGLE_ANALYTICS_CLIENT_SECRETS: ${{ secrets.TAP_GOOGLE_ANALYTICS_CLIENT_SECRETS }}
-      # TAP_GITLAB_PRIVATE_TOKEN: ${{ secrets.TAP_GITLAB_PRIVATE_TOKEN }}
-      # TAP_SLACK_API_KEY: ${{ secrets.TAP_SLACK_API_KEY }}
-      # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      # TAP_GITHUB_AUTH_TOKEN: ${{ secrets.TAP_GITHUB_AUTH_TOKEN }}
-      # SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -69,12 +62,6 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
-    # - run: echo $MELTANO_ENV_FILE >> .env
-    # - run: tail -c40 .env
-    # - run: tail -c60 .env
-    # - run: head -c20 .env
-    # - run: head -c50 .env
-    # - run: head -c100 .env
     - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
     - run: make install_extractor EXTRACT_SOURCE=${{ matrix.extract-source }}
     - run: meltano --log-level=debug install loader target-snowflake
