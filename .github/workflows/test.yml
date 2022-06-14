@@ -27,10 +27,8 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
-    - run: echo "NOW::$(date +'%Y-%m-%dT%H:%M:%S')" >> $GITHUB_ENV
     - run: echo 'DEFAULT_START_DATE2=$(date +%Y-%m-%d)' >> $GITHUB_ENV
-    - run: echo "DEFAULT_START_DATE3=$(date +'%Y-%m-%d' -d "1 day ago")" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE3=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo $DEFAULT_START_DATE2
     - run: echo $DEFAULT_START_DATE3
-    - run: echo $NOW
     - run: echo $MELTANO_ENV_FILE > .env
