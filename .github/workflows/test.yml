@@ -1,0 +1,24 @@
+name: Test Meltano Pipelines
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ GITHUB_RUN_ID }}_${{ GITHUB_RUN_ATTEMPT }}'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+    - run: pipx install meltano==2.0.1
+    - run: echo "Installing creds file from CI..." && $MELTANO_ENV_FILE > .env
+    - run: cat .env
+    - run: $CI_BRANCH
