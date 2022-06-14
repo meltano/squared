@@ -9,12 +9,44 @@ on:
   workflow_dispatch:
 
 jobs:
-  test_meltano:
+  # airflow_sqlfluff_tests:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: data/
+  #   environment: test
+  #   env:
+  #     MELTANO_ENVIRONMENT: cicd
+  #     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+  #     MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
+  #     CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-python@v4
+  #     with:
+  #       python-version: '3.8'
+  #       cache: 'pip'
+  #   - run: pip install -r requirements.txt
+  #   - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+  #   - run: echo $MELTANO_ENV_FILE > .env
+  #   # Airflow
+  #   - run: meltano install orchestrator airflow
+  #   - run: meltano test airflow
+  #   # SqlFluff
+  #   - run: meltano install utilities sqlfluff
+  #   - run: meltano install transformer dbt-snowflake
+  #   - run: meltano invoke dbt-snowflake:deps
+  #   - run: meltano invoke sqlfluff lint -v
+
+  el_tests:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: data/
     environment: test
+    strategy:
+      matrix:
+        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_labs', 'github_search']
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
@@ -26,9 +58,11 @@ jobs:
       with:
         python-version: '3.8'
         cache: 'pip'
-    - run: pip install -r requirements.txt
-    - run: echo 'DEFAULT_START_DATE2=$(date +%Y-%m-%d)' >> $GITHUB_ENV
-    - run: echo "DEFAULT_START_DATE3=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo $DEFAULT_START_DATE2
-    - run: echo $DEFAULT_START_DATE3
-    - run: echo $MELTANO_ENV_FILE > .env
+    # - run: pip install -r requirements.txt
+    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=$CI_BRANCH_${{ matrix.extract-source }}" >> $GITHUB_ENV
+    - run: echo $TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA
+    # - run: echo $MELTANO_ENV_FILE > .env
+    # - run: make install_extractor EXTRACT_SOURCE=${{ matrix.extract-source }}
+    # - run: meltano install loader target-snowflake
+    # - run: make run_meltano EXTRACT_SOURCE=${{ matrix.extract-source }}
