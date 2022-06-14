@@ -68,8 +68,7 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo $MELTANO_ENV_FILE >> .env
-    - run: tail -c8 .env
-    - run: tail -5 .env
+    - run: tail -c1000 .env
     - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
     - run: make install_extractor EXTRACT_SOURCE=${{ matrix.extract-source }}
     - run: meltano install loader target-snowflake
