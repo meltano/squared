@@ -63,6 +63,8 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo $MELTANO_ENV_FILE > .env
     - run: ls -la
+    - run: source .env
+    - run: python .env
     - run: export $(cat .env | xargs)
     - run: cat .env
     - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
