@@ -9,37 +9,57 @@ on:
   workflow_dispatch:
 
 jobs:
-  # airflow_sqlfluff_tests:
-  #   runs-on: ubuntu-latest
-  #   defaults:
-  #     run:
-  #       working-directory: data/
-  #   environment: test
-  #   env:
-  #     MELTANO_ENVIRONMENT: cicd
-  #     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-  #     MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
-  #     CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - uses: actions/setup-python@v4
-  #     with:
-  #       python-version: '3.8'
-  #       cache: 'pip'
-  #   - run: pip install -r requirements.txt
-  #   - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-  #   - run: echo $MELTANO_ENV_FILE > .env
-  #   # Airflow
-  #   - run: meltano install orchestrator airflow
-  #   - run: meltano test airflow
-  #   # SqlFluff
-  #   - run: meltano install utilities sqlfluff
-  #   - run: meltano install transformer dbt-snowflake
-  #   - run: meltano invoke dbt-snowflake:deps
-  #   - run: meltano invoke sqlfluff lint -v
+  airflow_tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data/
+    environment: test
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    # Airflow
+    - run: meltano install orchestrator airflow
+    - run: meltano test airflow
+
+  sqlfluff_tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data/
+    environment: test
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    # SqlFluff
+    - run: meltano install utilities sqlfluff
+    - run: meltano install transformer dbt-snowflake
+    - run: meltano invoke dbt-snowflake:deps
+    - run: meltano invoke sqlfluff lint -v
 
   el_tests:
     runs-on: ubuntu-latest
+    needs: [airflow_tests, sqlfluff_tests]
     defaults:
       run:
         working-directory: data/
@@ -50,9 +70,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
       CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
-
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
