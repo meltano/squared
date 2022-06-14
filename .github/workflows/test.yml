@@ -27,7 +27,7 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
-    - run: echo "Installing creds file from CI..." && $MELTANO_ENV_FILE > .env
+    - run: echo $MELTANO_ENV_FILE > .env
     - run: cat .env
     - run: ls -l
     # - run: $CI_BRANCH
