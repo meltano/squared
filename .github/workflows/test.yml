@@ -15,17 +15,16 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      MELTANO_ENV_FILE2: ${{ secrets.MELTANO_ENV_FILE }}
+      MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
       # CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
       with:
         python-version: '3.8'
-    - run: pipx install meltano==2.0.1
+        cache: 'pip'
     - run: cd data/
-    - run: echo $MELTANO_ENV_FILE2
-    - run: echo $MELTANO_ENV_FILE
+    - run: pip install -r requirements.txt
     - run: echo "Installing creds file from CI..." && $MELTANO_ENV_FILE > .env
     - run: cat .env
     - run: ls -l
