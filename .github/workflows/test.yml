@@ -78,4 +78,4 @@ jobs:
     - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
     - run: make install_extractor EXTRACT_SOURCE=${{ matrix.extract-source }}
     - run: meltano --log-level=debug install loader target-snowflake
-    # - run: make run_meltano EXTRACT_SOURCE=${{ matrix.extract-source }}
+    - run: make run_meltano EXTRACT_SOURCE=${{ matrix.extract-source }}
