@@ -20,7 +20,6 @@ jobs:
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
       CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
-      DEFAULT_START_DATE: $(date +%Y-%m-%d -d "1 day ago")
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -28,5 +27,6 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
+    - run: echo 'DEFAULT_START_DATE=$(date +%Y-%m-%d -d "1 day ago")' >> $GITHUB_ENV
     - run: echo $DEFAULT_START_DATE
     - run: echo $MELTANO_ENV_FILE > .env
