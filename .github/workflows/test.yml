@@ -19,7 +19,7 @@ jobs:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       MELTANO_ENV_FILE: ${{ secrets.MELTANO_ENV_FILE }}
-      # CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -27,7 +27,5 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
+    - run: echo $CI_BRANCH
     - run: echo $MELTANO_ENV_FILE > .env
-    - run: cat .env
-    - run: ls -l
-    # - run: $CI_BRANCH
