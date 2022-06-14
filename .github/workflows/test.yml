@@ -14,11 +14,11 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ env.GITHUB_RUN_ID }}_${{ env.GITHUB_RUN_ATTEMPT }}'
+      # CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
     - run: pipx install meltano==2.0.1
     - run: echo "Installing creds file from CI..." && $MELTANO_ENV_FILE > .env
     - run: cat .env
-    - run: $CI_BRANCH
+    # - run: $CI_BRANCH
