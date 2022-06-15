@@ -72,6 +72,8 @@ jobs:
       CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
       DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
       AWS_DEFAULT_REGION: us-east-1
+      AWS_SECRET_ACCESS_KEY: ${{ secret.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secret.AWS_ACCESS_KEY_ID }}
     steps:
 
     - name: Check out code
