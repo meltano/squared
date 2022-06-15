@@ -12,9 +12,6 @@ on:
 jobs:
   docker_build_push:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: data/
     environment: production
     env:
       MELTANO_ENVIRONMENT: cicd
