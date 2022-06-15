@@ -1,0 +1,116 @@
+name: Prod Deploy
+
+on:
+  push:
+    branches: [ "main" ]
+
+  workflow_dispatch:
+
+jobs:
+  docker_build_push:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    # Docker Build Push - Meltano
+    - run: docker pull $DOCKER_REGISTRY/m5o-prod-meltano:latest || true
+    - run: >
+        docker build
+        --cache-from $DOCKER_REGISTRY/m5o-prod-meltano:latest
+        -t $DOCKER_REGISTRY/m5o-prod-meltano:latest
+        -t $DOCKER_REGISTRY/m5o-prod-meltano:${{ github.SHA }}
+        -f deploy/meltano/Dockerfile.meltano
+        data/
+    - run: docker push $DOCKER_REGISTRY/m5o-prod-meltano:${{ github.SHA }}
+    - run: docker push $DOCKER_REGISTRY/m5o-prod-meltano:latest
+
+    # Docker Build Push - Airflow
+    - run: docker pull $DOCKER_REGISTRY/m5o-prod-airflow:latest || true
+    - run: >
+        docker build
+        --cache-from $DOCKER_REGISTRY/m5o-prod-airflow:latest
+        -t $DOCKER_REGISTRY/m5o-prod-airflow:latest
+        -t $DOCKER_REGISTRY/m5o-prod-airflow:${{ github.SHA }}
+        -f deploy/meltano/Dockerfile.airflow
+        data/
+    - run: docker push $DOCKER_REGISTRY/m5o-prod-airflow:${{ github.SHA }}
+    - run: docker push $DOCKER_REGISTRY/m5o-prod-airflow:latest
+
+  terraform:
+    runs-on: ubuntu-latest
+    needs: [docker_build_push]
+    environment: production
+    defaults:
+      run:
+        working-directory: deploy/meltano
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
+      AWS_DEFAULT_REGION: us-east-1
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    steps:
+
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: 1.2.1
+
+    - run: echo "TF_VAR_airflow_image_tag=${{ github.SHA }}" >> $GITHUB_ENV
+    - run: echo "TF_VAR_meltano_image_tag=${{ github.SHA }}" >> $GITHUB_ENV
+    
+    - run: rm -rf .terraform
+    - run: terraform init
+    - run: terraform validate
+    - run: terraform plan -out "planfile"
+    - run: terraform apply -input=false "planfile"
+
+  dbt_seed:
+    runs-on: ubuntu-latest
+    needs: [terraform]
+    defaults:
+      run:
+        working-directory: data/
+    environment: production
+    env:
+      MELTANO_ENVIRONMENT: prod
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    # Seed Production
+    - run: meltano install transformer dbt-snowflake
+    - run: meltano invoke dbt-snowflake:deps
+    - run: meltano invoke dbt-snowflake:compile
+    - run: meltano invoke dbt-snowflake:seed
