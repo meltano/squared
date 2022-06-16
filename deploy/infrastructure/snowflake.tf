@@ -42,3 +42,16 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     filter_suffix = ".gz"
   }
 }
+
+resource "aws_s3_bucket_notification" "bucket_notification_bad" {
+  bucket = aws_s3_bucket.snowcat.id
+
+  provider = aws.us_west_2
+
+  queue {
+    queue_arn     = local.snowpipe.snowflake_sqs_arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "customer-data/meltano/enriched/bad/"
+    filter_suffix = ".gz"
+  }
+}
