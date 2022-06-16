@@ -1,8 +1,6 @@
 name: Test Meltano Pipelines
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
