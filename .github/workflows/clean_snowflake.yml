@@ -1,0 +1,28 @@
+name: Clean CI Schemas
+
+on:
+  workflow_dispatch:
+
+jobs:
+  clean_snowflake_ci_schemas:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data/
+    environment: test
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    - run: meltano install transformer dbt-snowflake
+    - run: meltano invoke dbt-snowflake:deps
+    - run: meltano invoke dbt-snowflake run-operation clear_ci_schemas
