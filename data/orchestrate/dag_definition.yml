@@ -35,7 +35,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_google_analytics_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GOOGLE_ANALYTICS meltano elt tap-google-analytics target-snowflake --job_id=ga_snowflake'
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GOOGLE_ANALYTICS meltano elt tap-google-analytics target-snowflake --state-id=ga_snowflake'
         retries: 2
       - name: ge_raw_validate
         cmd: 'meltano invoke great_expectations:test_ga_raw'
@@ -51,7 +51,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_slack_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=SLACK meltano elt tap-slack target-snowflake --job_id=tap_slack_target_snowflake'
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=SLACK meltano elt tap-slack target-snowflake --state-id=tap_slack_target_snowflake'
         retries: 2
       - name: dbt_slack_run_stage
         cmd: 'meltano invoke dbt-snowflake:run --models staging.slack.*'
@@ -67,7 +67,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_gitlab_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITLAB meltano elt tap-gitlab target-snowflake --job_id=tap_gitlab_target_snowflake'
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITLAB meltano elt tap-gitlab target-snowflake --state-id=tap_gitlab_target_snowflake'
         retries: 2
       - name: dbt_gitlab_run_models
         cmd: 'meltano invoke dbt-snowflake:run --models staging.gitlab.*'
@@ -83,7 +83,7 @@ dags:
     interval: '0 6 * * *'
     steps:
       - name: tap_github_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITHUB_LABS meltano elt tap-github-labs target-snowflake --job_id=tap_github_labs_target_snowflake'
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITHUB_LABS meltano elt tap-github-labs target-snowflake --state-id=tap_github_labs_target_snowflake'
         retries: 2
       - name: dbt_github_labs_run_models
         cmd: 'meltano invoke dbt-snowflake:run --models staging.github_labs.*'
@@ -99,7 +99,7 @@ dags:
     interval: '0 5 * * *'
     steps:
       - name: tap_github_search_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITHUB_SEARCH meltano elt tap-github-search target-snowflake --job_id=tap_github_search_target_snowflake'
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITHUB_SEARCH meltano elt tap-github-search target-snowflake --state-id=tap_github_search_target_snowflake'
         retries: 2
         retry_delay_min: 60
       - name: dbt_github_search_run_models
