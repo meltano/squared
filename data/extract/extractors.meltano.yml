@@ -60,7 +60,7 @@ plugins:
     settings:
     - name: auth_token
       kind: password
-  - name: tap-github-labs
+  - name: tap-github-meltano
     inherit_from: tap-github
     config:
       organizations:

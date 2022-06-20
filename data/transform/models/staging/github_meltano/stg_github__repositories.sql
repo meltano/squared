@@ -8,7 +8,7 @@ WITH source AS (
             PARTITION BY id
             ORDER BY _sdc_batched_at DESC
         ) AS row_num
-    FROM {{ source('tap_github_labs', 'repositories') }}
+    FROM {{ source('tap_github_meltano', 'repositories') }}
 
 ),
 

@@ -79,22 +79,22 @@ dags:
         retries: 2
         depends_on:
           - dbt_gitlab_run_models
-  github_labs:
+  github_meltano:
     interval: '0 6 * * *'
     steps:
       - name: tap_github_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITHUB_LABS meltano elt tap-github-labs target-snowflake --state-id=tap_github_labs_target_snowflake'
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=GITHUB_MELTANO meltano elt tap-github-meltano target-snowflake --state-id=tap_github_meltano_target_snowflake'
         retries: 2
-      - name: dbt_github_labs_run_models
-        cmd: 'meltano invoke dbt-snowflake:run --models staging.github_labs.*'
+      - name: dbt_github_meltano_run_models
+        cmd: 'meltano invoke dbt-snowflake:run --models staging.github_meltano.*'
         retries: 2
         depends_on:
           - tap_github_target_snowflake
-      - name: dbt_github_labs_test_models
-        cmd: 'meltano invoke dbt-snowflake:test --models staging.github_labs.*'
+      - name: dbt_github_meltano_test_models
+        cmd: 'meltano invoke dbt-snowflake:test --models staging.github_meltano.*'
         retries: 2
         depends_on:
-          - dbt_github_labs_run_models
+          - dbt_github_meltano_run_models
   github_search:
     interval: '0 5 * * *'
     steps:
