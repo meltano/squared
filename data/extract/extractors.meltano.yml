@@ -65,6 +65,7 @@ plugins:
     config:
       organizations:
       - MeltanoLabs
+      - meltano
       stream_maps:
         issues:
           __filter__: record['type'] = 'issue'
