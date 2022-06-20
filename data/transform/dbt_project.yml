@@ -41,8 +41,8 @@ models:
         +schema: google_analytics
       gitlab:
         +schema: gitlab
-      github_labs:
-        +schema: github_labs
+      github_meltano:
+        +schema: github_meltano
       slack:
         +schema: slack
       snowplow:

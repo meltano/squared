@@ -16,7 +16,7 @@ environments:
       - name: tap-github
         config:
           start_date: "${DEFAULT_START_DATE}"
-      - name: tap-github-labs
+      - name: tap-github-meltano
         config:
           start_date: "${DEFAULT_START_DATE}"
       - name: tap-github-search
