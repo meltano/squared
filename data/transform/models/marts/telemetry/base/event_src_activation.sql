@@ -6,6 +6,7 @@ WITH prep_snow AS (
         COUNT(event_id) AS events
     FROM
         {{ ref('stg_snowplow__events') }}
+        -- TODO: need to aggregate unstruct events to single CLI or only consider struct
     GROUP BY 1, 2
 ),
 
