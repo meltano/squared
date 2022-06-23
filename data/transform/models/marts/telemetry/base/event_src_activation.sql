@@ -8,17 +8,12 @@
 WITH snow_v2 AS (
 
     SELECT
-        execution_mapping.project_id,
-        DATE_TRUNC('WEEK', event_created_date) AS event_week_start_date,
-        COUNT(distinct execution_mapping.execution_id) AS events
-    FROM {{ ref('stg_snowplow__events') }}
-    LEFT JOIN {{ ref('execution_mapping') }}
-        ON stg_snowplow__events.event_id = execution_mapping.event_id
-    where 
-    event_name != 'telemetry_state_change_event'
-    -- allow only struct events through that have execution ID that we can tie out with unstruct
-    and execution_mapping.execution_id is not null
-    -- TODO: add filters to exclude exit codes so failed events arent over populating
+        project_id,
+        DATE_TRUNC('WEEK', started_ts) AS event_week_start_date,
+        COUNT(distinct execution_id) AS events
+    FROM {{ ref('unstruct_exec_flattened') }}
+    -- TODO: find a better way to do this without needing struct events
+    WHERE struct_project_id IS NOT NULL
     group by 1,2
 
 ),
@@ -38,6 +33,7 @@ snow_pre_v2 AS (
 
 prep_snow AS (
 
+    -- Even if we had unstruct events, if we cant tie them to struct then for now they dont get considered
     SELECT
         COALESCE(snow_v2.project_id, snow_pre_v2.project_id) AS project_id,
         DATE_TRUNC('WEEK', COALESCE(snow_v2.event_week_start_date, snow_pre_v2.event_week_start_date)) AS event_week_start_date,

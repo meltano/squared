@@ -18,8 +18,8 @@ SELECT
     1 AS event_count,
     base.event_source,
     base.event_type,
-    COALESCE(base.cli_command, base.struct_command) as command,
-    base.struct_comand_category,
+    COALESCE(base.cli_command, split_part(base.struct_command_category, ' ', 2)) as command,
+    base.struct_command_category,
     -- plugins
     unstruct_plugins.plugin_name AS plugin_name,
     unstruct_plugins.parent_name AS parent_name,
@@ -77,7 +77,7 @@ UNION ALL
 SELECT
     {{ dbt_utils.surrogate_key(
         [
-            'plugins.plugin_name',
+            'plugins_cmd_map.plugin_name',
             'structured_events.event_id'
         ]
     ) }} AS plugin_usage_pk,
@@ -86,10 +86,10 @@ SELECT
     structured_events.event_count AS event_count,
     structured_events.event_source,
     structured_events.event_type,
-    structured_events.command,
+    split_part(cmd_parsed_all.command_category, ' ', 2) as command,
     cmd_parsed_all.command_category,
     -- plugins
-    plugins.plugin_name AS plugin_name,
+    plugins_cmd_map.plugin_name AS plugin_name,
     NULL AS parent_name,
     NULL AS executable,
     NULL AS namespace,
@@ -97,7 +97,7 @@ SELECT
     NULL AS plugin_variant,
     NULL AS plugin_command,
     NULL AS plugin_type, -- extractor/loader/etc.
-    plugins.plugin_category,
+    plugins_cmd_map.plugin_category,
     -- projects
     structured_events.project_id,
     projects.first_event_at AS project_created_at,
@@ -138,6 +138,6 @@ LEFT JOIN {{ ref('hash_lookup') }} as h1
     on cmd_parsed_all.environment = h1.hash_value
 LEFT JOIN
     {{ ref('projects') }} ON structured_events.project_id = projects.project_id
-LEFT JOIN {{ ref('plugins') }} ON structured_events.command = plugins.command
+LEFT JOIN {{ ref('plugins_cmd_map') }} ON structured_events.command = plugins_cmd_map.command
 WHERE cmd_parsed_all.command_type = 'plugin'
-    AND plugins.plugin_name IS NOT NULL
+    AND plugins_cmd_map.plugin_name IS NOT NULL
