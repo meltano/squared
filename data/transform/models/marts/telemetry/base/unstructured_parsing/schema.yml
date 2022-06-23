@@ -1,0 +1,28 @@
+version: 2
+
+models:
+  - name: execution_mapping
+    description: foo
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: execution_id
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
+
+  - name: hash_lookup
+    description: foo
+    columns:
+      - name: hash_value
+        tests:
+          - not_null
+          - unique
+      - name: unhashed_value
+        tests:
+          - not_null
+          - unique

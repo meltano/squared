@@ -21,7 +21,6 @@ SELECT
     COALESCE(base.cli_command, base.struct_command) as command,
     base.struct_comand_category,
     -- plugins
-    base.plugin_details::variant AS plugin, -- REMOVE
     unstruct_plugins.plugin_name AS plugin_name,
     unstruct_plugins.parent_name AS parent_name,
     unstruct_plugins.executable AS executable,
@@ -72,3 +71,73 @@ LEFT JOIN {{ ref('hash_lookup') }} as h1
     on base.environment_name_hash = h1.hash_value
 LEFT JOIN
     {{ ref('projects') }} ON base.project_id = projects.project_id
+
+UNION ALL
+
+SELECT
+    {{ dbt_utils.surrogate_key(
+        [
+            'plugins.plugin_name',
+            'structured_events.event_id'
+        ]
+    ) }} AS plugin_usage_pk,
+    structured_events.event_id AS execution_id,
+    structured_events.event_created_at AS event_ts,
+    structured_events.event_count AS event_count,
+    structured_events.event_source,
+    structured_events.event_type,
+    structured_events.command,
+    cmd_parsed_all.command_category,
+    -- plugins
+    plugins.plugin_name AS plugin_name,
+    NULL AS parent_name,
+    NULL AS executable,
+    NULL AS namespace,
+    NULL AS pip_url,
+    NULL AS plugin_variant,
+    NULL AS plugin_command,
+    NULL AS plugin_type, -- extractor/loader/etc.
+    plugins.plugin_category,
+    -- projects
+    structured_events.project_id,
+    projects.first_event_at AS project_created_at,
+    projects.is_active AS project_is_active,
+    -- environments
+    cmd_parsed_all.environment AS env_id,
+    h1.unhashed_value AS env_name,
+    -- executions
+    0 AS exit_code,
+    NULL AS execution_time_ms, -- s to ms
+    -- random
+    NULL AS user_ipaddress,
+    NULL AS meltano_version,
+    NULL AS num_cpu_cores_available,
+    NULL AS windows_edition,
+    NULL AS machine,
+    NULL AS system_release,
+    NULL AS freedesktop_id,
+    NULL AS freedesktop_id_like,
+    NULL AS is_dev_build,
+    NULL AS process_hierarchy,
+    NULL AS python_version,
+    NULL AS client_uuid,
+    NULL AS is_ci_environment,
+    NULL AS num_cpu_cores,
+    NULL AS python_implementation,
+    NULL AS system_name,
+    NULL AS system_version,
+    NULL AS exception_type,
+    NULL AS exception_cause,
+    NULL AS event_states,
+    NULL AS event_block_types
+FROM {{ ref('structured_events') }}
+LEFT JOIN
+    {{ ref('cmd_parsed_all') }} ON
+        structured_events.command = cmd_parsed_all.command
+LEFT JOIN {{ ref('hash_lookup') }} as h1
+    on cmd_parsed_all.environment = h1.hash_value
+LEFT JOIN
+    {{ ref('projects') }} ON structured_events.project_id = projects.project_id
+LEFT JOIN {{ ref('plugins') }} ON structured_events.command = plugins.command
+WHERE cmd_parsed_all.command_type = 'plugin'
+    AND plugins.plugin_name IS NOT NULL

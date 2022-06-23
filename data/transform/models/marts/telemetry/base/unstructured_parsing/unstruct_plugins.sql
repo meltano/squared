@@ -26,8 +26,8 @@ with base as (
 select
     *,
     case
-        when category in ('extractors', 'loaders', 'mappers') then 'singer'
+        when plugin_type in ('extractors', 'loaders', 'mappers') then 'singer'
         -- TODO: think about this more, should it be "LIKE 'dbt-%' THEN 'dbt'" to be more future proof or could we miss some dbt plugins
-        when category = 'transformers' THEN 'dbt'
+        when plugin_type = 'transformers' THEN 'dbt'
         else parent_name end as plugin_category
 from base

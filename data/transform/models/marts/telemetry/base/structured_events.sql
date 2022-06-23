@@ -21,6 +21,8 @@ INNER JOIN
 WHERE
     stg_snowplow__events.event_created_date
     >= event_src_activation.sp_activate_date
+    -- ONLY count legacy structured, structured with context will be rolled up into unstructured
+    AND stg_snowplow__events.contexts IS NULL
 
 UNION
 

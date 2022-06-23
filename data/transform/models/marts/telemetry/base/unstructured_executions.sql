@@ -1,7 +1,9 @@
+-- TODO: move this back upstream to unstruct_exec_flattened, then consume it here
 with base as (
     SELECT
         stg_snowplow__events.*,
-        execution_mapping.execution_id
+        execution_mapping.execution_id,
+        execution_mapping.project_id
     FROM {{ ref('stg_snowplow__events') }}
     LEFT JOIN {{ ref('execution_mapping') }}
         ON stg_snowplow__events.event_id = execution_mapping.event_id
@@ -17,7 +19,7 @@ executions as (
         max(base.event_created_at) as finish_ts,
         max(USER_IPADDRESS) as user_ipaddress,
         -- total events, last event (completed), exit event
-        max(context.value:data:project_uuid::string) as project_id,
+        max(base.project_id) as project_id,
         max(context.value:data:freedesktop_version_id::string) as freedesktop_version_id,
         max(context.value:data:meltano_version::string) as meltano_version,
         max(context.value:data:num_cpu_cores_available::string) as num_cpu_cores_available,
