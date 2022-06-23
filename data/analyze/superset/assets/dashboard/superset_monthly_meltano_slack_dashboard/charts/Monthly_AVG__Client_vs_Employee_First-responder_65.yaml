@@ -1,0 +1,89 @@
+slice_name: Monthly AVG % Client vs Employee First-responder
+viz_type: echarts_timeseries_line
+params:
+  adhoc_filters: []
+  annotation_layers: []
+  color_scheme: supersetColors
+  comparison_type: values
+  datasource: 37__table
+  extra_form_data: {}
+  forecastInterval: 0.8
+  forecastPeriods: 10
+  granularity_sqla: monthly_time_index
+  groupby: []
+  legendOrientation: right
+  legendType: scroll
+  markerEnabled: true
+  markerSize: 6
+  metrics:
+  - aggregate: AVG
+    column:
+      certification_details: null
+      certified_by: null
+      column_name: monthly_client_response_avg
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 164
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: DECIMAL(27, 6)
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    expressionType: SIMPLE
+    hasCustomLabel: true
+    isNew: false
+    label: monthly avg % client first-responder
+    optionName: metric_e3ccentw8ap_lgc9ceharw
+    sqlExpression: null
+  - aggregate: AVG
+    column:
+      certification_details: null
+      certified_by: null
+      column_name: monthly_employee_response_avg
+      description: null
+      expression: null
+      filterable: true
+      groupby: true
+      id: 165
+      is_certified: false
+      is_dttm: false
+      python_date_format: null
+      type: DECIMAL(27, 6)
+      type_generic: 0
+      verbose_name: null
+      warning_markdown: null
+    expressionType: SIMPLE
+    hasCustomLabel: true
+    isNew: false
+    label: monthly avg % employee first-responder
+    optionName: metric_0xbriysdrtgk_j2uem0krtq
+    sqlExpression: null
+  only_total: true
+  order_desc: true
+  rich_tooltip: true
+  row_limit: 10000
+  show_legend: true
+  show_value: true
+  time_grain_sqla: P1M
+  time_range: No filter
+  tooltipTimeFormat: smart_date
+  viz_type: echarts_timeseries_line
+  x_axis_time_format: smart_date
+  x_axis_title: Time (month)
+  x_axis_title_margin: 50
+  y_axis_bounds:
+  - null
+  - null
+  y_axis_format: SMART_NUMBER
+  y_axis_title: average percentage (%)
+  y_axis_title_margin: 50
+  y_axis_title_position: Left
+  zoomable: true
+cache_timeout: null
+uuid: 569f183b-dc49-42bc-b360-e21b14499d5a
+version: 1.0.0
+dataset_uuid: 00b04f4e-8e6e-4942-ba68-0994af11dacb

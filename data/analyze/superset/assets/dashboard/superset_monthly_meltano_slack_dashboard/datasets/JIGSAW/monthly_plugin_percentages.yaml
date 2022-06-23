@@ -1,0 +1,136 @@
+table_name: monthly_plugin_percentages
+main_dttm_col: time_index
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: tap_slack
+sql: null
+params: null
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: a07b38bd-67ac-4c6d-86c9-25e7bcddb618
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  extra: null
+  warning_text: null
+columns:
+- column_name: target_percent_of_target_parent_messages
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: target_percent_of_all_parent_messages
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: tap_percent_of_all_parent_messages
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: tap_percent_of_tap_parent_messages
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: cli_percent_of_all_parent_messages
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: cli_percent_of_cli_parent_messages
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: cli_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR(13)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: target_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR(16)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: tap_id
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: VARCHAR(16)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: time_index
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP_NTZ
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: de321d3e-2427-4866-aebc-1f7607c34599

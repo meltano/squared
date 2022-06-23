@@ -1,0 +1,199 @@
+dashboard_title: Monthly Trends - Meltano Slack Analysis
+description: null
+css: ''
+slug: null
+uuid: 2658d8b6-86af-465e-9915-5b76663e9b67
+position:
+  CHART-2EMx5a81DL:
+    children: []
+    id: CHART-2EMx5a81DL
+    meta:
+      chartId: 47
+      height: 50
+      sliceName: Monthly Tap Percentage of Tap-Categorized Parent Messages
+      uuid: a993af57-67c8-434b-b11d-c6826f1ea640
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Tchz9nIhP1
+    type: CHART
+  CHART-6LKhuT_KlT:
+    children: []
+    id: CHART-6LKhuT_KlT
+    meta:
+      chartId: 26
+      height: 50
+      sliceName: Monthly AVG Response Times
+      uuid: 4a8844b8-7050-4cef-9ae5-8edb67951b56
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-VgOQ5JwwCy
+    type: CHART
+  CHART-BzthhITw1M:
+    children: []
+    id: CHART-BzthhITw1M
+    meta:
+      chartId: 48
+      height: 50
+      sliceName: Monthly Tap Percentage of All Parent Messages
+      uuid: 243d300a-d79a-4641-88f0-7f27b7ded839
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Tchz9nIhP1
+    type: CHART
+  CHART-G1EQAvhYam:
+    children: []
+    id: CHART-G1EQAvhYam
+    meta:
+      chartId: 52
+      height: 50
+      sliceName: Monthly CLI Percentage of All Parent Messages
+      uuid: 320e7ca2-f31a-4b6e-b4e8-ddef7c0d24a8
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-QLPMnzmBrm
+    type: CHART
+  CHART-OK7ajVvRgo:
+    children: []
+    id: CHART-OK7ajVvRgo
+    meta:
+      chartId: 65
+      height: 50
+      sliceName: Monthly AVG % Client vs Employee First-responder
+      uuid: 569f183b-dc49-42bc-b360-e21b14499d5a
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-VgOQ5JwwCy
+    type: CHART
+  CHART-QcjdeBPKqe:
+    children: []
+    id: CHART-QcjdeBPKqe
+    meta:
+      chartId: 16
+      height: 50
+      sliceName: Monthly Tap-Target-CLI Percentage Comparison of All Parent Messages
+      uuid: e7f66358-b7c6-48b7-b7b0-30d0c4cd048e
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-VgOQ5JwwCy
+    type: CHART
+  CHART-ZnVR9SFjAa:
+    children: []
+    id: CHART-ZnVR9SFjAa
+    meta:
+      chartId: 51
+      height: 50
+      sliceName: Monthly CLI Percentage of CLI-categorized Parent Messages
+      uuid: b3a5302c-9007-4cfd-9415-5e2515e0ce91
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-QLPMnzmBrm
+    type: CHART
+  CHART-c8-5EqFeQs:
+    children: []
+    id: CHART-c8-5EqFeQs
+    meta:
+      chartId: 49
+      height: 50
+      sliceName: Monthly Target Percentage of Target-Categorized Parent Messages
+      uuid: 6a0f8edd-7fc2-4f1a-aba4-f7f214d68e53
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-Tchz9nIhP1
+    type: CHART
+  CHART-l0V4eQIWCd:
+    children: []
+    id: CHART-l0V4eQIWCd
+    meta:
+      chartId: 50
+      height: 50
+      sliceName: Monthly Target Percentage of All Parent Messages
+      uuid: 96074d85-f7f1-4251-a8d1-b779f1bd6bac
+      width: 4
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    - ROW-QLPMnzmBrm
+    type: CHART
+  DASHBOARD_VERSION_KEY: v2
+  GRID_ID:
+    children:
+    - ROW-Tchz9nIhP1
+    - ROW-QLPMnzmBrm
+    - ROW-VgOQ5JwwCy
+    id: GRID_ID
+    parents:
+    - ROOT_ID
+    type: GRID
+  HEADER_ID:
+    id: HEADER_ID
+    meta:
+      text: Monthly Trends - Meltano Slack Analysis
+    type: HEADER
+  ROOT_ID:
+    children:
+    - GRID_ID
+    id: ROOT_ID
+    type: ROOT
+  ROW-QLPMnzmBrm:
+    children:
+    - CHART-l0V4eQIWCd
+    - CHART-ZnVR9SFjAa
+    - CHART-G1EQAvhYam
+    id: ROW-QLPMnzmBrm
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-Tchz9nIhP1:
+    children:
+    - CHART-2EMx5a81DL
+    - CHART-BzthhITw1M
+    - CHART-c8-5EqFeQs
+    id: ROW-Tchz9nIhP1
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+  ROW-VgOQ5JwwCy:
+    children:
+    - CHART-QcjdeBPKqe
+    - CHART-6LKhuT_KlT
+    - CHART-OK7ajVvRgo
+    id: ROW-VgOQ5JwwCy
+    meta:
+      background: BACKGROUND_TRANSPARENT
+    parents:
+    - ROOT_ID
+    - GRID_ID
+    type: ROW
+metadata:
+  show_native_filters: true
+  shared_label_colors: {}
+  color_scheme: ''
+  refresh_frequency: 0
+  expanded_slices: {}
+  label_colors: {}
+  timed_refresh_immune_slices: []
+  default_filters: '{}'
+  chart_configuration: {}
+version: 1.0.0
