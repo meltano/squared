@@ -16,7 +16,6 @@ SELECT
     min(base.event_created_at) as started_ts,
     max(base.event_created_at) as finish_ts,
     max(USER_IPADDRESS) as user_ipaddress,
-    -- total events, last event (completed), exit event
     max(base.project_id) as project_id,
     max(context.value:data:freedesktop_version_id::string) as freedesktop_version_id,
     max(context.value:data:meltano_version::string) as meltano_version,
@@ -26,7 +25,7 @@ SELECT
     max(context.value:data:sub_command::string) as cli_sub_command,
     max(context.value:data:machine::string) as machine,
     max(context.value:data:system_release::string) as system_release,
-    -- TODO: missing same plugin called multiple times, undercounting total executions
+    -- TODO: missing same plugin called multiple times in same execution, undercounting total executions
     array_agg(DISTINCT context.value:data:plugins) as plugins,
     max(context.value:data:project_uuid_source::string) as project_uuid_source,
     max(context.value:data:option_keys::string) as option_keys,
@@ -54,7 +53,7 @@ SELECT
     max(base.se_action) as struct_command,
     max(base.se_label) as struct_project_id,
     -- Tracing
-    -- TODO: agg but keep counts somehow
+    -- TODO: missing same event happening multiple times, agg to a map instead somehow
     array_agg(distinct parse_json(unstruct_event::variant):data:data:event::string) as event_states,
     array_agg(distinct parse_json(unstruct_event::variant):data:data:type::string) as event_block_types,
     array_agg(distinct event_name) as event_names      

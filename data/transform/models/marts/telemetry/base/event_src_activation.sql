@@ -1,10 +1,3 @@
--- count all structured events
--- count all unstructured events rolled up to execution id/project, where they arent already counted in structured events
--- sum the 2
-
--- pre 2.0 - structured + no context
--- post 2.0 - structured + context, unstructured + context
-
 WITH snow_v2 AS (
 
     SELECT
@@ -33,7 +26,6 @@ snow_pre_v2 AS (
 
 prep_snow AS (
 
-    -- Even if we had unstruct events, if we cant tie them to struct then for now they dont get considered
     SELECT
         COALESCE(snow_v2.project_id, snow_pre_v2.project_id) AS project_id,
         DATE_TRUNC('WEEK', COALESCE(snow_v2.event_week_start_date, snow_pre_v2.event_week_start_date)) AS event_week_start_date,

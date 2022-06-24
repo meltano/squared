@@ -11,8 +11,8 @@ with base as (
         plugin.value:variant_name_hash::string as variant_name_hash,
         plugin.value:parent_name_hash::string as parent_name_hash
     FROM {{ ref('unstructured_executions') }},
-    LATERAL FLATTEN(input => COALESCE(plugins, [''])) as plugin_list,
-    LATERAL FLATTEN(input => COALESCE(plugin_list.value::variant, [''])) as plugin
+    LATERAL FLATTEN(input => plugins) as plugin_list,
+    LATERAL FLATTEN(input => plugin_list.value::variant) as plugin
 )
 
 select

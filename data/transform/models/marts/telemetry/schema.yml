@@ -246,7 +246,7 @@ models:
           - not_null
 
   - name: fact_plugin_usage
-    description: This table contains plugin usage data at the plugin_name, project_id, event_ts, environment level.
+    description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
     columns:
       - name: plugin_usage_pk
         description: The unique surrogate key identifier for a record in this table.
@@ -254,14 +254,10 @@ models:
           - not_null
           - unique
 
-      - name: event_id
-        description: The unique identifier for an event.
+      - name: execution_id
+        description: The unique identifier for an execution.
         tests:
           - not_null
-
-      - name: trace_id
-        description: The unique identifier for an series of events that happened in a single execution session.
-          This is not relevant for structured events.
 
       - name: event_ts
         description: The event timestamp.
@@ -282,22 +278,36 @@ models:
           - not_null
 
       - name: command
+        description: The CLI command run (i.e. run, invoke, elt, config, etc.)
+
+      - name: full_command
         description: The full command that was run. Some commands are altered to be more verbose and to scrub sensitive information.
 
       - name: command_category
         description: The category of the command (i.e. meltano elt, meltano init, etc.)
 
-      - name: args
-        description: An array of arguments that were passed to the command that executed the plugin.
-
       - name: plugin_name
         description: The name of the plugin (e.g. tap-postgres, sqlfluff, etc.)
+
+      - name: parent_name
+        description: The name of the parent plugin (e.g. tap-postgres-client1 has the parent tap-postgres)
+
+      - name: executable
+        description: The plugin executable name.
+
+      - name: namespace
+        description: The plugin namespace.
+
+      - name: pip_url
 
       - name: plugin_variant
         description: The plugin variant name.
 
-      - name: plugin_version
-        description: The version of the plugin.
+      - name: plugin_command
+        description: The plugin command (i.e. run for dbt-snowflake:run)
+
+      - name: plugin_type
+        description: The type of plugin (e.g. loaders, extractors, etc.)
 
       - name: plugin_category
         description: The category of the plugin (i.e. singer, dbt, sqlfluff, etc.). This is primarily to collapse Singer plugins under a single umbrella category.
@@ -311,12 +321,10 @@ models:
         description: The date the project sent its first event.
 
       - name: project_is_active
-        description: ""
+        description: Whether the project is active or not.
 
       - name: env_id
         description: The Meltano config environment hash value.
-        tests:
-          - not_null
 
       - name: env_name
         description: The Meltano config environment name if its one of the defaults.
@@ -324,5 +332,54 @@ models:
       - name: exit_code
         description: The exit code returned from the plugin.
 
-      - name: execution_time_s
-        description: The execution time of the plugin.
+      - name: execution_time_ms
+        description: The execution time of the plugin in milliseconds.
+
+      - name: user_ipaddress
+
+      - name: meltano_version
+        description: The Meltano package version.
+
+      - name: num_cpu_cores_available
+
+      - name: windows_edition
+
+      - name: machine
+
+      - name: system_release
+
+      - name: freedesktop_id
+
+      - name: freedesktop_id_like
+
+      - name: is_dev_build
+        description: Whether the Meltano package is dev build or not. False means it came from a distribution.
+
+      - name: process_hierarchy
+        description: The hashed hierarchy of pids.
+
+      - name: python_version
+
+      - name: client_uuid
+        description: The UUID set in the analytics.json file in a users project directory.
+
+      - name: is_ci_environment
+        description: Whether the plugin was run in an environment that has CI environment variables present.
+
+      - name: num_cpu_cores
+
+      - name: python_implementation
+
+      - name: system_name
+
+      - name: system_version
+
+      - name: exception_type
+
+      - name: exception_cause
+
+      - name: event_states
+        description: A list of events states that occured during the CLI execution (e.g. started, completed, failed, etc.)
+
+      - name: event_block_types
+        description: A list of the type of block events that were received. 

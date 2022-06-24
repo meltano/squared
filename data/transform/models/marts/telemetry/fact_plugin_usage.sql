@@ -7,18 +7,21 @@ WITH base AS (
     LATERAL FLATTEN(input => COALESCE(plugin_list.value::variant, [''])) as plugin
 )
 SELECT
+    DISTINCT
     {{ dbt_utils.surrogate_key(
         [
-            'unstruct_plugins.plugin_name',
+            'unstruct_plugins.plugin_surrogate_key',
             'base.execution_id'
         ]
     ) }} AS plugin_usage_pk,
+--             'unstruct_plugins.plugin_type',
     base.execution_id,
     base.started_ts AS event_ts,
     1 AS event_count,
     base.event_source,
     base.event_type,
     COALESCE(base.cli_command, split_part(base.struct_command_category, ' ', 2)) as command,
+    base.struct_command as full_command,
     base.struct_command_category,
     -- plugins
     unstruct_plugins.plugin_name AS plugin_name,
@@ -39,7 +42,7 @@ SELECT
     h1.unhashed_value AS env_name,
     -- executions
     base.exit_code AS exit_code,
-    base.process_duration_ms AS execution_time_ms, -- s to ms
+    base.process_duration_ms AS execution_time_ms,
     -- random
     base.user_ipaddress,
     base.meltano_version,
@@ -87,6 +90,7 @@ SELECT
     structured_events.event_source,
     structured_events.event_type,
     split_part(cmd_parsed_all.command_category, ' ', 2) as command,
+    cmd_parsed_all.command as full_command,
     cmd_parsed_all.command_category,
     -- plugins
     plugins_cmd_map.plugin_name AS plugin_name,

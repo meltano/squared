@@ -2,7 +2,9 @@ version: 2
 
 models:
   - name: execution_mapping
-    description: foo
+    description: This table maps every event_id to an execution_id and project_id. These attributes
+      are nested a particular context in the contexts field so they need to be parsed out to allow us
+      to join all events in the same execution together.
     columns:
       - name: event_id
         tests:
@@ -16,7 +18,8 @@ models:
           - not_null
 
   - name: hash_lookup
-    description: foo
+    description: This table unhashes known values like (i.e. plugin names, variants, common environment names, etc.)
+      to build a lookup table to convert hashed values into unhashed values.
     columns:
       - name: hash_value
         tests:
@@ -26,3 +29,39 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: unstruct_plugins_base
+    description: This table contains unique plugins details sourced from the unstructured event data.
+      This data is still in its hashed form. The set attributes for the plugin (i.e. name_hash, variant_name_hash, etc.)
+      are hashed to define a unique plugin_surrogate_key for each plugin.
+    columns:
+      - name: plugin_surrogate_key
+        tests:
+          - not_null
+          - unique
+
+  - name: unstruct_plugins
+    description: This table contains unique plugins details sourced from the unstructured event data. The plugin
+      hashed metadata has been attempted to be unhashed and some grouping is done to group things like Singer and dbt.
+    columns:
+      - name: plugin_surrogate_key
+        tests:
+          - not_null
+          - unique
+
+  - name: unstruct_exec_flattened
+    description: This table includes the unstructured Snowplow data rolled up to the execution level. Additionally, structured Snowplow data
+      is also included when it has unstructured contexts attached to it. This is because many events can fire for a single execution so the
+      unstructured contexts have been unnested to retrieve keys by name depending on the context, then renested to roll up to the CLI execution level.
+      The rows in this table represent a flattened CLI execution, not each individual event.
+    columns:
+      - name: execution_id
+        tests:
+          - not_null
+          - unique
+      - name: started_ts
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
