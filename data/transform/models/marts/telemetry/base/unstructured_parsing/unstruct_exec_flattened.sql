@@ -1,4 +1,4 @@
-with base as (
+WITH base AS (
     SELECT
         stg_snowplow__events.*,
         execution_mapping.execution_id,
@@ -6,57 +6,89 @@ with base as (
     FROM {{ ref('stg_snowplow__events') }}
     LEFT JOIN {{ ref('execution_mapping') }}
         ON stg_snowplow__events.event_id = execution_mapping.event_id
-    where 
-    event_name != 'telemetry_state_change_event'
-    -- allow only struct events through that have execution ID that we can tie out with unstruct
-    and execution_mapping.execution_id is not null
+    WHERE
+        stg_snowplow__events.event_name != 'telemetry_state_change_event'
+        -- Allow only events with an execution ID, this includes struct
+        -- events that have the new contexts attached.
+        AND execution_mapping.execution_id IS NOT NULL
 )
+
 SELECT
-    execution_id,
-    min(base.event_created_at) as started_ts,
-    max(base.event_created_at) as finish_ts,
-    max(USER_IPADDRESS) as user_ipaddress,
-    max(base.project_id) as project_id,
-    max(context.value:data:freedesktop_version_id::string) as freedesktop_version_id,
-    max(context.value:data:meltano_version::string) as meltano_version,
-    max(context.value:data:num_cpu_cores_available::string) as num_cpu_cores_available,
-    max(context.value:data:windows_edition::string) as windows_edition,
-    max(context.value:data:command::string) as cli_command,
-    max(context.value:data:sub_command::string) as cli_sub_command,
-    max(context.value:data:machine::string) as machine,
-    max(context.value:data:system_release::string) as system_release,
-    -- TODO: missing same plugin called multiple times in same execution, undercounting total executions
-    array_agg(DISTINCT context.value:data:plugins) as plugins,
-    max(context.value:data:project_uuid_source::string) as project_uuid_source,
-    max(context.value:data:option_keys::string) as option_keys,
-    max(context.value:data:freedesktop_id::string) as freedesktop_id,
-    max(context.value:data:freedesktop_id_like::string) as freedesktop_id_like,
-    max(context.value:data:is_dev_build::string) as is_dev_build,
-    max(context.value:data:process_hierarchy::string) as process_hierarchy,
-    max(context.value:data:python_version::string) as python_version,
-    max(context.value:data:environment_name_hash::string) as environment_name_hash,
-    max(context.value:data:client_uuid::string) as client_uuid,
-    max(context.value:data:is_ci_environment::string) as is_ci_environment,
-    max(context.value:data:num_cpu_cores::string) as num_cpu_cores,
-    max(context.value:data:python_implementation::string) as python_implementation,
-    max(context.value:data:system_name::string) as system_name,
-    max(context.value:data:system_version::string) as system_version,
+    base.execution_id,
+    MIN(base.event_created_at) AS started_ts,
+    MAX(base.event_created_at) AS finish_ts,
+    MAX(base.user_ipaddress) AS user_ipaddress,
+    MAX(base.project_id) AS project_id,
+    MAX(
+        context.value:data:freedesktop_version_id::STRING
+    ) AS freedesktop_version_id,
+    MAX(context.value:data:meltano_version::STRING) AS meltano_version,
+    MAX(
+        context.value:data:num_cpu_cores_available::STRING
+    ) AS num_cpu_cores_available,
+    MAX(context.value:data:windows_edition::STRING) AS windows_edition,
+    MAX(context.value:data:command::STRING) AS cli_command,
+    MAX(context.value:data:sub_command::STRING) AS cli_sub_command,
+    MAX(context.value:data:machine::STRING) AS machine,
+    MAX(context.value:data:system_release::STRING) AS system_release,
+    -- TODO: plugins list is deduped so this will undercount executions
+    ARRAY_AGG(DISTINCT context.value:data:plugins) AS plugins,
+    MAX(context.value:data:project_uuid_source::STRING) AS project_uuid_source,
+    MAX(context.value:data:option_keys::STRING) AS option_keys,
+    MAX(context.value:data:freedesktop_id::STRING) AS freedesktop_id,
+    MAX(context.value:data:freedesktop_id_like::STRING) AS freedesktop_id_like,
+    MAX(context.value:data:is_dev_build::STRING) AS is_dev_build,
+    MAX(context.value:data:process_hierarchy::STRING) AS process_hierarchy,
+    MAX(context.value:data:python_version::STRING) AS python_version,
+    MAX(
+        context.value:data:environment_name_hash::STRING
+    ) AS environment_name_hash,
+    MAX(context.value:data:client_uuid::STRING) AS client_uuid,
+    MAX(context.value:data:is_ci_environment::STRING) AS is_ci_environment,
+    MAX(context.value:data:num_cpu_cores::STRING) AS num_cpu_cores,
+    MAX(
+        context.value:data:python_implementation::STRING
+    ) AS python_implementation,
+    MAX(context.value:data:system_name::STRING) AS system_name,
+    MAX(context.value:data:system_version::STRING) AS system_version,
     -- Exit Event
-    max(parse_json(unstruct_event::variant):data:data:exit_code::string) as exit_code,
-    max(parse_json(unstruct_event::variant):data:data:exit_timestamp::string) as exit_ts,
-    max(parse_json(unstruct_event::variant):data:data:process_duration_microseconds::string)*1.0/1000 as process_duration_ms,
+    MAX(
+        PARSE_JSON(
+            base.unstruct_event::VARIANT
+        ):data:data:exit_code::STRING
+    ) AS exit_code,
+    MAX(
+        PARSE_JSON(
+            base.unstruct_event::VARIANT
+        ):data:data:exit_timestamp::STRING
+    ) AS exit_ts,
+    MAX(
+        PARSE_JSON(
+            base.unstruct_event::VARIANT
+        ):data:data:process_duration_microseconds::STRING
+    ) * 1.0 / 1000 AS process_duration_ms,
     -- Exception
-    max(context.value:data:exception:type::string) as exception_type,
-    max(nullif(context.value:data:exception:cause::string, 'null')) as exception_cause,
+    MAX(context.value:data:exception:type::STRING) AS exception_type,
+    MAX(
+        NULLIF(context.value:data:exception:cause::STRING, 'null')
+    ) AS exception_cause,
     -- Structured
-    max(base.se_category) as struct_command_category,
-    max(base.se_action) as struct_command,
-    max(base.se_label) as struct_project_id,
+    MAX(base.se_category) AS struct_command_category,
+    MAX(base.se_action) AS struct_command,
+    MAX(base.se_label) AS struct_project_id,
     -- Tracing
-    -- TODO: missing same event happening multiple times, agg to a map instead somehow
-    array_agg(distinct parse_json(unstruct_event::variant):data:data:event::string) as event_states,
-    array_agg(distinct parse_json(unstruct_event::variant):data:data:type::string) as event_block_types,
-    array_agg(distinct event_name) as event_names      
-from base,
-LATERAL FLATTEN(input => COALESCE(parse_json(contexts::variant):data, [''])) as context
-group by 1
+    -- TODO: event states are deduped here, maybe agg differently
+    ARRAY_AGG(
+        DISTINCT PARSE_JSON(
+            base.unstruct_event::VARIANT
+        ):data:data:event::STRING
+    ) AS event_states,
+    ARRAY_AGG(
+        DISTINCT PARSE_JSON(base.unstruct_event::VARIANT):data:data:type::STRING
+    ) AS event_block_types,
+    ARRAY_AGG(DISTINCT base.event_name) AS event_names
+FROM base,
+    LATERAL FLATTEN(
+        input => COALESCE(PARSE_JSON(contexts::VARIANT):data, [''])
+    ) AS context
+GROUP BY 1

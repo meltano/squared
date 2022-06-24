@@ -1,7 +1,7 @@
 SELECT
+    unstruct_exec_flattened.*,
     'snowplow' AS event_source,
-    'unstructured' AS event_type,
-    unstruct_exec_flattened.*
+    'unstructured' AS event_type
 FROM {{ ref('unstruct_exec_flattened') }}
 INNER JOIN
     {{ ref('event_src_activation') }} ON

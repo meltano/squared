@@ -6,7 +6,7 @@ SELECT
     'snowplow' AS event_source,
     'structured' AS event_type,
     stg_snowplow__events.derived_contexts,
-    contexts,
+    stg_snowplow__events.contexts,
     1 AS event_count,
     stg_snowplow__events.se_category AS command_category,
     stg_snowplow__events.se_action AS command,
@@ -21,7 +21,8 @@ INNER JOIN
 WHERE
     stg_snowplow__events.event_created_date
     >= event_src_activation.sp_activate_date
-    -- ONLY count legacy structured, structured with context will be rolled up into unstructured
+    -- Only count legacy structured events without context.
+    -- Structured with context will be rolled up into unstructured
     AND stg_snowplow__events.contexts IS NULL
 
 UNION

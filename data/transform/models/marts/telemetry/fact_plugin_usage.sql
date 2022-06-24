@@ -3,25 +3,28 @@ WITH base AS (
         unstructured_executions.*,
         plugin.value AS plugin_details
     FROM {{ ref('unstructured_executions') }},
-    LATERAL FLATTEN(input => COALESCE(plugins, [''])) as plugin_list,
-    LATERAL FLATTEN(input => COALESCE(plugin_list.value::variant, [''])) as plugin
+        LATERAL FLATTEN(input => plugins) AS plugin_list, -- noqa: L025, L031
+        LATERAL FLATTEN(
+            input => plugin_list.value::VARIANT
+        ) AS plugin -- noqa: L031
 )
-SELECT
-    DISTINCT
+
+SELECT DISTINCT
     {{ dbt_utils.surrogate_key(
         [
             'unstruct_plugins.plugin_surrogate_key',
             'base.execution_id'
         ]
     ) }} AS plugin_usage_pk,
---             'unstruct_plugins.plugin_type',
     base.execution_id,
     base.started_ts AS event_ts,
     1 AS event_count,
     base.event_source,
     base.event_type,
-    COALESCE(base.cli_command, split_part(base.struct_command_category, ' ', 2)) as command,
-    base.struct_command as full_command,
+    COALESCE(
+        base.cli_command, SPLIT_PART(base.struct_command_category, ' ', 2)
+    ) AS command,
+    base.struct_command AS full_command,
     base.struct_command_category,
     -- plugins
     unstruct_plugins.plugin_name AS plugin_name,
@@ -39,7 +42,7 @@ SELECT
     projects.is_active AS project_is_active,
     -- environments
     base.environment_name_hash AS env_id,
-    h1.unhashed_value AS env_name,
+    hash_lookup.unhashed_value AS env_name,
     -- executions
     base.exit_code AS exit_code,
     base.process_duration_ms AS execution_time_ms,
@@ -70,8 +73,8 @@ LEFT JOIN {{ ref('unstruct_plugins') }}
     ON unstruct_plugins.plugin_surrogate_key = {{ dbt_utils.surrogate_key(
         ['base.plugin_details']
     ) }}
-LEFT JOIN {{ ref('hash_lookup') }} as h1
-    on base.environment_name_hash = h1.hash_value
+LEFT JOIN {{ ref('hash_lookup') }}
+    ON base.environment_name_hash = hash_lookup.hash_value
 LEFT JOIN
     {{ ref('projects') }} ON base.project_id = projects.project_id
 
@@ -89,8 +92,8 @@ SELECT
     structured_events.event_count AS event_count,
     structured_events.event_source,
     structured_events.event_type,
-    split_part(cmd_parsed_all.command_category, ' ', 2) as command,
-    cmd_parsed_all.command as full_command,
+    SPLIT_PART(cmd_parsed_all.command_category, ' ', 2) AS command,
+    cmd_parsed_all.command AS full_command,
     cmd_parsed_all.command_category,
     -- plugins
     plugins_cmd_map.plugin_name AS plugin_name,
@@ -108,7 +111,7 @@ SELECT
     projects.is_active AS project_is_active,
     -- environments
     cmd_parsed_all.environment AS env_id,
-    h1.unhashed_value AS env_name,
+    hash_lookup.unhashed_value AS env_name,
     -- executions
     0 AS exit_code,
     NULL AS execution_time_ms, -- s to ms
@@ -138,10 +141,12 @@ FROM {{ ref('structured_events') }}
 LEFT JOIN
     {{ ref('cmd_parsed_all') }} ON
         structured_events.command = cmd_parsed_all.command
-LEFT JOIN {{ ref('hash_lookup') }} as h1
-    on cmd_parsed_all.environment = h1.hash_value
+LEFT JOIN {{ ref('hash_lookup') }}
+    ON cmd_parsed_all.environment = hash_lookup.hash_value
 LEFT JOIN
     {{ ref('projects') }} ON structured_events.project_id = projects.project_id
-LEFT JOIN {{ ref('plugins_cmd_map') }} ON structured_events.command = plugins_cmd_map.command
+LEFT JOIN
+    {{ ref('plugins_cmd_map') }} ON
+        structured_events.command = plugins_cmd_map.command
 WHERE cmd_parsed_all.command_type = 'plugin'
     AND plugins_cmd_map.plugin_name IS NOT NULL
