@@ -1,12 +1,48 @@
-WITH prep_snow AS (
+WITH snow_v2 AS (
+
+    SELECT
+        project_id,
+        DATE_TRUNC('WEEK', started_ts) AS event_week_start_date,
+        COUNT(DISTINCT execution_id) AS events
+    FROM {{ ref('unstruct_exec_flattened') }}
+    -- TODO: find a better way to do this without needing struct events
+    WHERE struct_project_id IS NOT NULL
+    GROUP BY 1, 2
+
+),
+
+snow_pre_v2 AS (
 
     SELECT
         se_label AS project_id,
         DATE_TRUNC('WEEK', event_created_date) AS event_week_start_date,
-        COUNT(event_id) AS events
+        COUNT(DISTINCT event_id) AS events
     FROM
         {{ ref('stg_snowplow__events') }}
+    WHERE contexts IS NULL
+        AND event = 'struct'
     GROUP BY 1, 2
+
+),
+
+prep_snow AS (
+
+    SELECT
+        COALESCE(snow_v2.project_id, snow_pre_v2.project_id) AS project_id,
+        DATE_TRUNC(
+            'WEEK',
+            COALESCE(
+                snow_v2.event_week_start_date, snow_pre_v2.event_week_start_date
+            )
+        ) AS event_week_start_date,
+        COALESCE(snow_v2.events, 0) + COALESCE(snow_pre_v2.events, 0) AS events
+    FROM
+        snow_v2
+    FULL JOIN snow_pre_v2
+        ON snow_v2.project_id = snow_pre_v2.project_id
+            AND snow_v2.event_week_start_date
+            = snow_pre_v2.event_week_start_date
+
 ),
 
 prep_ga AS (

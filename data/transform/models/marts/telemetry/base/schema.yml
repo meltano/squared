@@ -35,7 +35,7 @@ models:
           - not_null
 
   - name: structured_events
-    description: This table includes the blended set of Google Analytics (GA) and Snowplow data.
+    description: This table includes the blended set of structured legacy Google Analytics (GA) and Snowplow data.
       Projects are compared using event counts at the week level, once they have parity for a week we switch to using Snowplow over GA.
       There are data tests that assert that the project and event counts in this table are >= that of just GA.
     columns:
@@ -71,3 +71,12 @@ models:
       - name: event_created_date
         tests:
           - not_null
+
+  - name: unstructured_executions
+    description: This table is similar to "unstruct_exec_flattened" only that it filters out project IDs that aren't
+      considered active in terms of Snowplow as its primary source of events.
+    columns:
+      - name: execution_id
+        tests:
+          - not_null
+          - unique
