@@ -18,8 +18,8 @@ WITH source AS (
 
         FROM raw.snowplow.events
         WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
-        -- filter test events
-        AND app_id != 'test'
+            -- filter test events
+            AND app_id != 'test'
         {% else %}
 
         FROM {{ source('snowplow', 'events') }}
