@@ -10,7 +10,7 @@ select
     distinct
     f.value::string as unhashed_value,
     SHA2_HEX(f.value) AS hash_value
-from table(flatten(input => parse_json('["prod", "staging", "dev", "cicd"]'))) f
+from table(flatten(input => parse_json('["prod", "staging", "dev", "cicd", "development", "production", "ci", "stage"]'))) f
 
 union
 
