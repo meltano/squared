@@ -3,7 +3,7 @@ WITH test AS (
     SELECT
         (
             SELECT COUNT(DISTINCT command)
-            FROM {{ ref('events_blended') }}
+            FROM {{ ref('structured_executions') }}
         )
         - (
             SELECT COUNT(DISTINCT command)

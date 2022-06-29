@@ -7,18 +7,18 @@ WITH retention AS (
             event_count
         ) = 1 AND MAX(command_category) = 'meltano init',
         FALSE) AS tracking_disabled
-    FROM {{ ref('events_blended') }}
+    FROM {{ ref('structured_executions') }}
     GROUP BY project_id
 )
 
 SELECT
-    events_blended.event_created_date AS event_date,
-    events_blended.event_created_at,
-    events_blended.command_category,
-    events_blended.command,
-    events_blended.project_id,
+    structured_executions.event_created_date AS event_date,
+    structured_executions.event_created_at,
+    structured_executions.command_category,
+    structured_executions.command,
+    structured_executions.project_id,
     retention.tracking_disabled AS is_tracking_disabled,
-    events_blended.event_count,
+    structured_executions.event_count,
     event_commands_parsed.is_exec_event,
     event_commands_parsed.is_pipeline_exec_event,
     event_commands_parsed.is_legacy_event,
@@ -45,17 +45,22 @@ SELECT
         OR event_commands_parsed.is_plugin_sqlfluff
         OR event_commands_parsed.is_plugin_great_ex
     ), FALSE) AS is_plugin_other,
-    COALESCE(retention.first_event_date = events_blended.event_created_at,
+    COALESCE(
+        retention.first_event_date = structured_executions.event_created_at,
         FALSE) AS is_acquired_date,
-    COALESCE(retention.last_event_date = events_blended.event_created_at,
+    COALESCE(retention.last_event_date = structured_executions.event_created_at,
         FALSE) AS is_churned_date,
-    COALESCE(events_blended.event_created_at >= DATEADD(MONTH, 1, DATE_TRUNC(
-        'MONTH', retention.first_event_date
-            )) AND events_blended.event_created_at < DATE_TRUNC(
+    COALESCE(
+        structured_executions.event_created_at >= DATEADD(
+            MONTH, 1, DATE_TRUNC(
+                'MONTH', retention.first_event_date
+            )
+        )
+        AND structured_executions.event_created_at < DATE_TRUNC(
             'MONTH', retention.last_event_date
-    ),
-    FALSE) AS is_retained_date
-FROM {{ ref('events_blended') }}
+        ), FALSE
+    ) AS is_retained_date
+FROM {{ ref('structured_executions') }}
 LEFT JOIN {{ ref('event_commands_parsed') }}
-    ON events_blended.command = event_commands_parsed.command
-LEFT JOIN retention ON events_blended.project_id = retention.project_id
+    ON structured_executions.command = event_commands_parsed.command
+LEFT JOIN retention ON structured_executions.project_id = retention.project_id
