@@ -24,7 +24,7 @@ SELECT DISTINCT
     COALESCE(
         base.cli_command, SPLIT_PART(base.struct_command_category, ' ', 2)
     ) AS command,
-    base.struct_command AS full_command,
+    base.struct_command AS full_struct_command,
     base.struct_command_category,
     -- plugins
     unstruct_plugins.plugin_name AS plugin_name,
@@ -44,8 +44,8 @@ SELECT DISTINCT
     base.environment_name_hash AS env_id,
     hash_lookup.unhashed_value AS env_name,
     -- executions
-    base.exit_code AS exit_code,
-    base.process_duration_ms AS execution_time_ms,
+    base.exit_code AS cli_execution_exit_code,
+    base.process_duration_ms AS cli_execution_time_ms,
     -- random
     base.user_ipaddress,
     base.meltano_version,
@@ -64,8 +64,8 @@ SELECT DISTINCT
     base.python_implementation,
     base.system_name,
     base.system_version,
-    base.exception_type,
-    base.exception_cause,
+    base.exception_type AS cli_exception_type,
+    base.exception_cause AS cli_exception_cause,
     base.event_states,
     base.event_block_types
 FROM base
@@ -93,7 +93,7 @@ SELECT
     structured_executions.event_source,
     'structured' AS event_type,
     SPLIT_PART(cmd_parsed_all.command_category, ' ', 2) AS command,
-    cmd_parsed_all.command AS full_command,
+    cmd_parsed_all.command AS full_struct_command,
     cmd_parsed_all.command_category,
     -- plugins
     plugins_cmd_map.plugin_name AS plugin_name,
