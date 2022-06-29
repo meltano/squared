@@ -1,11 +1,11 @@
 WITH active_projects AS (
 
-    SELECT structured_events.project_id
-    FROM {{ ref('structured_events') }}
-    LEFT JOIN
-        {{ ref('cmd_parsed_all') }} ON
-            structured_events.command = cmd_parsed_all.command
-    WHERE cmd_parsed_all.command_category IN (
+    SELECT DISTINCT cli_executions.project_id
+    FROM {{ ref('structured_executions') }}
+    INNER JOIN
+    {{ ref('cli_executions') }} ON
+        structured_executions.execution_id = cli_executions.execution_id
+    WHERE structured_executions.command_category IN (
         'meltano invoke',
         'meltano elt',
         'meltano run',
@@ -13,25 +13,40 @@ WITH active_projects AS (
         'meltano test',
         'meltano schedule run'
     )
-    AND structured_events.event_created_at >= DATEADD(
+    AND cli_executions.event_created_at >= DATEADD(
         'month', -1, CURRENT_DATE()
     )
-    GROUP BY 1
-    HAVING SUM(structured_events.event_count) > 1
+    -- GROUP BY 1
+    -- HAVING SUM(structured_executions.event_count) > 1
 
+    UNION ALL
+
+    SELECT DISTINCT cli_executions.project_id
+    FROM {{ ref('unstructured_executions') }}
+    INNER JOIN
+    {{ ref('cli_executions') }} ON
+        unstructured_executions.execution_id = cli_executions.execution_id
+    WHERE unstructured_executions.cli_command IN (
+        'invoke',
+        'elt',
+        'run',
+        'ui',
+        'test'
+    -- TODO: job run, schedule run?
+    )
+    AND cli_executions.event_created_at >= DATEADD(
+        'month', -1, CURRENT_DATE()
+    )
 )
 
 SELECT
-    structured_events.project_id,
+    cli_executions.project_id,
     MAX(
         CASE WHEN active_projects.project_id IS NOT NULL THEN TRUE END
     ) AS is_active,
-    MIN(structured_events.event_created_at) AS first_event_at,
-    MAX(structured_events.event_created_at) AS last_event_at
-FROM {{ ref('structured_events') }}
+    MIN(cli_executions.event_created_at) AS first_event_at,
+    MAX(cli_executions.event_created_at) AS last_event_at
+FROM {{ ref('cli_executions') }}
 LEFT JOIN
-    {{ ref('cmd_parsed_all') }} ON
-        structured_events.command = cmd_parsed_all.command
-LEFT JOIN
-    active_projects ON structured_events.project_id = active_projects.project_id
+    active_projects ON cli_executions.project_id = active_projects.project_id
 GROUP BY 1

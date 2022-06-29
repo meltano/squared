@@ -84,14 +84,14 @@ SELECT
     {{ dbt_utils.surrogate_key(
         [
             'plugins_cmd_map.plugin_name',
-            'structured_events.event_id'
+            'structured_executions.event_id'
         ]
     ) }} AS plugin_usage_pk,
-    structured_events.event_id AS execution_id,
-    structured_events.event_created_at AS event_ts,
-    structured_events.event_count AS event_count,
-    structured_events.event_source,
-    structured_events.event_type,
+    structured_executions.event_id AS execution_id,
+    structured_executions.event_created_at AS event_ts,
+    structured_executions.event_count AS event_count,
+    structured_executions.event_source,
+    structured_executions.event_type,
     SPLIT_PART(cmd_parsed_all.command_category, ' ', 2) AS command,
     cmd_parsed_all.command AS full_command,
     cmd_parsed_all.command_category,
@@ -106,7 +106,7 @@ SELECT
     NULL AS plugin_type, -- extractor/loader/etc.
     plugins_cmd_map.plugin_category,
     -- projects
-    structured_events.project_id,
+    structured_executions.project_id,
     projects.first_event_at AS project_created_at,
     projects.is_active AS project_is_active,
     -- environments
@@ -137,16 +137,16 @@ SELECT
     NULL AS exception_cause,
     NULL AS event_states,
     NULL AS event_block_types
-FROM {{ ref('structured_events') }}
+FROM {{ ref('structured_executions') }}
 LEFT JOIN
     {{ ref('cmd_parsed_all') }} ON
-        structured_events.command = cmd_parsed_all.command
+        structured_executions.command = cmd_parsed_all.command
 LEFT JOIN {{ ref('hash_lookup') }}
     ON cmd_parsed_all.environment = hash_lookup.hash_value
 LEFT JOIN
-    {{ ref('projects') }} ON structured_events.project_id = projects.project_id
+    {{ ref('projects') }} ON structured_executions.project_id = projects.project_id
 LEFT JOIN
     {{ ref('plugins_cmd_map') }} ON
-        structured_events.command = plugins_cmd_map.command
+        structured_executions.command = plugins_cmd_map.command
 WHERE cmd_parsed_all.command_type = 'plugin'
     AND plugins_cmd_map.plugin_name IS NOT NULL

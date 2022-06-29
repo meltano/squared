@@ -6,7 +6,7 @@ SELECT
     SPLIT_PART(command, ' ', 3) AS plugin_name,
     'tap' AS plugin_type,
     command_category
-FROM {{ ref('events_blended') }}
+FROM {{ ref('structured_executions') }}
 WHERE command_category = 'meltano elt'
 
 UNION ALL
@@ -19,7 +19,7 @@ SELECT
     SPLIT_PART(command, ' ', 4) AS plugin_name,
     'target' AS plugin_type,
     command_category
-FROM {{ ref('events_blended') }}
+FROM {{ ref('structured_executions') }}
 WHERE command_category = 'meltano elt'
 
 UNION ALL
@@ -32,7 +32,7 @@ SELECT
     SPLIT_PART(command, ' ', 3) AS plugin_name,
     'tap' AS plugin_type,
     command_category
-FROM {{ ref('events_blended') }}
+FROM {{ ref('structured_executions') }}
 WHERE command_category = 'meltano invoke'
     AND SPLIT_PART(command, ' ', 3) LIKE 'tap%'
 
@@ -46,6 +46,6 @@ SELECT
     SPLIT_PART(command, ' ', 3) AS plugin_name,
     'target' AS plugin_type,
     command_category
-FROM {{ ref('events_blended') }}
+FROM {{ ref('structured_executions') }}
 WHERE command_category = 'meltano invoke'
     AND SPLIT_PART(command, ' ', 3) LIKE 'target%'
