@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 SELECT
     cli_executions.event_source,
     stg_snowplow__events.derived_contexts,
@@ -29,4 +33,4 @@ SELECT
     cli_executions.event_created_date
 FROM {{ ref('stg_ga__cli_events') }}
 INNER JOIN {{ ref('cli_executions') }}
-    ON stg_ga__cli_events.event_id = cli_executions.execution_id
+    ON stg_ga__cli_events.event_surrogate_key = cli_executions.execution_id

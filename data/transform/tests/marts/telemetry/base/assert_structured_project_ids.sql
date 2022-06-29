@@ -1,7 +1,7 @@
 SELECT project_id
-FROM {{ ref('stg_ga__cli_events') }}
+FROM {{ ref('cli_executions') }}
 WHERE project_id NOT IN (
-    SELECT DISTINCT project_id FROM {{ ref('structured_events') }}
+    SELECT DISTINCT project_id FROM {{ ref('structured_executions') }}
     UNION
     SELECT DISTINCT project_id FROM {{ ref('unstructured_executions') }}
 )

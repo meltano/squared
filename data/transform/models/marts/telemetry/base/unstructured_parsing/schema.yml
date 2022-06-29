@@ -17,19 +17,6 @@ models:
         tests:
           - not_null
 
-  - name: hash_lookup
-    description: This table unhashes known values like (i.e. plugin names, variants, common environment names, etc.)
-      to build a lookup table to convert hashed values into unhashed values.
-    columns:
-      - name: hash_value
-        tests:
-          - not_null
-          - unique
-      - name: unhashed_value
-        tests:
-          - not_null
-          - unique
-
   - name: unstruct_plugins_base
     description: This table contains unique plugins details sourced from the unstructured event data.
       This data is still in its hashed form. The set attributes for the plugin (i.e. name_hash, variant_name_hash, etc.)

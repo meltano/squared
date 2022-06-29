@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 SELECT
     unstruct_exec_flattened.*,
     cli_executions.event_source,

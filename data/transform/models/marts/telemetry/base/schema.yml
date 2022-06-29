@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: structured_events
+  - name: structured_executions
     description: This table includes the blended set of structured legacy Google Analytics (GA) and Snowplow data.
       Projects are compared using event counts at the week level, once they have parity for a week we switch to using Snowplow over GA.
       There are data tests that assert that the project and event counts in this table are >= that of just GA.
@@ -11,11 +11,6 @@ models:
           - not_null
           - accepted_values:
               values: ['ga', 'snowplow']
-      - name: event_type
-        tests:
-          - not_null
-          - accepted_values:
-              values: ['structured']
       - name: event_count
         tests:
           - not_null
@@ -28,7 +23,7 @@ models:
       - name: project_id
         tests:
           - not_null
-      - name: event_id
+      - name: execution_id
         tests:
           - unique
           - not_null
@@ -44,6 +39,33 @@ models:
       considered active in terms of Snowplow as its primary source of events.
     columns:
       - name: execution_id
+        tests:
+          - not_null
+          - unique
+
+  - name: projects
+    description: This table summarizes attributes of projects.
+    columns:
+      - name: project_id
+        tests:
+          - not_null
+          - unique
+      - name: first_event_at
+        tests:
+          - not_null
+      - name: last_event_at
+        tests:
+          - not_null
+
+  - name: hash_lookup
+    description: This table unhashes known values like (i.e. plugin names, variants, common environment names, etc.)
+      to build a lookup table to convert hashed values into unhashed values.
+    columns:
+      - name: hash_value
+        tests:
+          - not_null
+          - unique
+      - name: unhashed_value
         tests:
           - not_null
           - unique

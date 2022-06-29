@@ -1,6 +1,7 @@
--- Assert event categories counts in the blended events table are >= the raw
--- GA counts. Some events come through more in Snowplow so its better to assert
--- at the category level to not allow one category to overwhelm the comparison.
+-- Assert event categories counts in the structured executions table are >= the
+-- raw GA counts. Some events come through more in Snowplow so its better to
+-- assert at the category level to not allow one category to overwhelm the
+-- comparison.
 WITH ga_counts AS (
     SELECT
         command_category,
@@ -13,7 +14,7 @@ struct_counts AS (
     SELECT
         command_category,
         SUM(event_count) AS struct_event_count
-    FROM {{ ref('structured_events') }}
+    FROM {{ ref('structured_executions') }}
     GROUP BY 1
 ),
 
@@ -32,3 +33,6 @@ test AS (
 SELECT *
 FROM test
 WHERE ga_event_count > struct_event_count
+    -- These are slightly off but are vs exec events
+    AND command_category NOT LIKE 'meltano add %'
+    AND command_category != 'meltano select'

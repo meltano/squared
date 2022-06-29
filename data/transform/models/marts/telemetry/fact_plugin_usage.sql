@@ -20,7 +20,7 @@ SELECT DISTINCT
     base.started_ts AS event_ts,
     1 AS event_count,
     base.event_source,
-    base.event_type,
+    'unstructured' AS event_type,
     COALESCE(
         base.cli_command, SPLIT_PART(base.struct_command_category, ' ', 2)
     ) AS command,
@@ -84,14 +84,14 @@ SELECT
     {{ dbt_utils.surrogate_key(
         [
             'plugins_cmd_map.plugin_name',
-            'structured_executions.event_id'
+            'structured_executions.execution_id'
         ]
     ) }} AS plugin_usage_pk,
-    structured_executions.event_id AS execution_id,
+    structured_executions.execution_id,
     structured_executions.event_created_at AS event_ts,
     structured_executions.event_count AS event_count,
     structured_executions.event_source,
-    structured_executions.event_type,
+    'structured' AS event_type,
     SPLIT_PART(cmd_parsed_all.command_category, ' ', 2) AS command,
     cmd_parsed_all.command AS full_command,
     cmd_parsed_all.command_category,
@@ -144,7 +144,8 @@ LEFT JOIN
 LEFT JOIN {{ ref('hash_lookup') }}
     ON cmd_parsed_all.environment = hash_lookup.hash_value
 LEFT JOIN
-    {{ ref('projects') }} ON structured_executions.project_id = projects.project_id
+    {{ ref('projects') }} ON
+        structured_executions.project_id = projects.project_id
 LEFT JOIN
     {{ ref('plugins_cmd_map') }} ON
         structured_executions.command = plugins_cmd_map.command

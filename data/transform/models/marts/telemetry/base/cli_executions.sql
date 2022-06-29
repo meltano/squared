@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 SELECT
     'snowplow' AS event_source,
     'unstructured' AS event_type,

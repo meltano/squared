@@ -1,4 +1,4 @@
--- Asserts that the counts of pipeline events in the blended
+-- Asserts that the counts of pipeline events in the structured events
 -- Snowplow + GA table is within 1% of a crude estimate of the 2
 -- staging tables blended for the previous months.
 WITH snow AS (
@@ -11,6 +11,8 @@ WITH snow AS (
         AND DATE_TRUNC(
             'month', event_created_at
         )::DATE = DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE))
+        AND event = 'struct'
+        AND contexts IS NULL
     GROUP BY 1
 ),
 
@@ -73,7 +75,7 @@ estimate AS (
 prod AS (
     -- prod counts to compare against
     SELECT SUM(event_count) AS event_count
-    FROM {{ ref('events_blended') }}
+    FROM {{ ref('structured_executions') }}
     WHERE command_category IN ('meltano elt', 'meltano invoke', 'meltano run')
         AND DATE_TRUNC(
             'month', event_created_date

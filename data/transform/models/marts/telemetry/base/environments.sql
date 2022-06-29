@@ -1,5 +1,5 @@
 SELECT
-    structured_executions.event_id,
+    structured_executions.execution_id,
     cmd_parsed_all.environment AS env_hash,
     hash_lookup.unhashed_value AS env_name,
     NULL AS is_ephemeral,

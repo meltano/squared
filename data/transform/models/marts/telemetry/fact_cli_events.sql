@@ -45,16 +45,21 @@ SELECT
         OR event_commands_parsed.is_plugin_sqlfluff
         OR event_commands_parsed.is_plugin_great_ex
     ), FALSE) AS is_plugin_other,
-    COALESCE(retention.first_event_date = structured_executions.event_created_at,
+    COALESCE(
+        retention.first_event_date = structured_executions.event_created_at,
         FALSE) AS is_acquired_date,
     COALESCE(retention.last_event_date = structured_executions.event_created_at,
         FALSE) AS is_churned_date,
-    COALESCE(structured_executions.event_created_at >= DATEADD(MONTH, 1, DATE_TRUNC(
-        'MONTH', retention.first_event_date
-            )) AND structured_executions.event_created_at < DATE_TRUNC(
+    COALESCE(
+        structured_executions.event_created_at >= DATEADD(
+            MONTH, 1, DATE_TRUNC(
+                'MONTH', retention.first_event_date
+            )
+        )
+        AND structured_executions.event_created_at < DATE_TRUNC(
             'MONTH', retention.last_event_date
-    ),
-    FALSE) AS is_retained_date
+        ), FALSE
+    ) AS is_retained_date
 FROM {{ ref('structured_executions') }}
 LEFT JOIN {{ ref('event_commands_parsed') }}
     ON structured_executions.command = event_commands_parsed.command

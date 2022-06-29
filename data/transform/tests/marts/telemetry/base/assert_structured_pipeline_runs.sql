@@ -73,7 +73,7 @@ estimate AS (
 prod AS (
     -- prod counts to compare against
     SELECT SUM(event_count) AS event_count
-    FROM {{ ref('structured_events') }}
+    FROM {{ ref('structured_executions') }}
     WHERE command_category IN ('meltano elt', 'meltano invoke', 'meltano run')
         AND DATE_TRUNC(
             'month', event_created_date

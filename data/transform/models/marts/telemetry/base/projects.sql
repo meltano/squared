@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 WITH active_projects AS (
 
     SELECT DISTINCT cli_executions.project_id
