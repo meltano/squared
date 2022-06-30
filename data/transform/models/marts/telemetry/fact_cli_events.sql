@@ -171,7 +171,10 @@ SELECT
     FALSE AS is_tracking_disabled,
     1 AS event_count,
     COALESCE(unstruct_prep.is_exec_event, FALSE) AS is_exec_event,
-    COALESCE(unstruct_prep.is_pipeline_exec_event, FALSE) AS is_pipeline_exec_event,
+    COALESCE(
+        unstruct_prep.is_pipeline_exec_event,
+        FALSE
+    ) AS is_pipeline_exec_event,
     COALESCE(unstruct_prep.is_legacy_event, FALSE) AS is_legacy_event,
     -- Plugins
     COALESCE(unstruct_prep.is_plugin_dbt, FALSE) AS is_plugin_dbt,
@@ -183,8 +186,14 @@ SELECT
     COALESCE(unstruct_prep.is_plugin_sqlfluff, FALSE) AS is_plugin_sqlfluff,
     COALESCE(unstruct_prep.is_plugin_great_ex, FALSE) AS is_plugin_great_ex,
     -- OS Features
-    COALESCE(unstruct_prep.is_os_feature_environments, FALSE) AS is_os_feature_environments,
-    COALESCE(unstruct_prep.is_os_feature_mappers, FALSE) AS is_os_feature_mappers,
+    COALESCE(
+        unstruct_prep.is_os_feature_environments,
+        FALSE
+    ) AS is_os_feature_environments,
+    COALESCE(
+        unstruct_prep.is_os_feature_mappers,
+        FALSE
+    ) AS is_os_feature_mappers,
     COALESCE(unstruct_prep.is_os_feature_test, FALSE) AS is_os_feature_test,
     COALESCE(unstruct_prep.is_os_feature_run, FALSE) AS is_os_feature_run,
     COALESCE(unstruct_prep.is_plugin_other, FALSE) AS is_plugin_other,
