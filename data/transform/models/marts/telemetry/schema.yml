@@ -64,6 +64,11 @@ models:
   - name: fact_cli_events
     description: This table contains event level data at the day grain, including the plugins and features that were used.
     columns:
+      - name: execution_id
+        description: The unique identifier for a CLI execution.
+        tests:
+          - not_null
+          - unique
       - name: event_date
         description: The date the event was executed.
         tests:
@@ -74,12 +79,11 @@ models:
           - not_null
       - name: command_category
         description: The category of the command (i.e. meltano elt, meltano init, etc.)
-        tests:
-          - not_null
+
       - name: command
         description: The full command that was run. Some commands are altered to be more verbose and to scrub sensitive information.
-        tests:
-          - not_null
+
+
       - name: project_id
         description: The unique identifier for a Meltano project, found in the meltano.yml file.
         tests:
@@ -88,6 +92,7 @@ models:
         description: The project has exhibited behavior that implies that they turned anonymous tracking off after initializing their project.
         tests:
           - not_null
+
       - name: event_count
         description: The count of the amount of times the command was executed on that date. Google Analytics summarizes to the day grain.
         tests:
@@ -146,16 +151,13 @@ models:
           - not_null
       - name: is_acquired_date
         description: The project was acquired this day. The event was received on the projects acquired date, meaning this was the first date we received events from it.
-        tests:
-          - not_null
+
       - name: is_churned_date
         description: The project was churned this day. The event was received on the projects churned date, meaning this was the last date we received events from it.
-        tests:
-          - not_null
+
       - name: is_retained_date
         description: The project was retained this day. The event was received at least 1 month after the projects acquired date and is not equal to its churned date.
-        tests:
-          - not_null
+
 
   - name: fact_cli_projects
     description: This table contains data at the project level.
@@ -234,12 +236,10 @@ models:
           - not_null
       - name: is_tracking_disabled
         description: The project has exhibited behavior that implies that they turned anonymous tracking off after initializing their project.
-        tests:
-          - not_null
+     
       - name: is_churned
         description: The project has not sent any events in the last 1 month.
-        tests:
-          - not_null
+      
       - name: exec_event_total
         description: The sum total of events received using the execution events - elt/invoke/run/test/ui.
         tests:
