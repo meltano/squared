@@ -27,7 +27,16 @@ SELECT
         context.value:data:num_cpu_cores_available::STRING
     ) AS num_cpu_cores_available,
     MAX(context.value:data:windows_edition::STRING) AS windows_edition,
-    MAX(context.value:data:command::STRING) AS cli_command,
+    COALESCE(
+        MAX(
+            context.value:data:command::STRING
+        ),
+        SPLIT_PART(
+            MAX(base.se_category),
+            ' ',
+            2
+        )
+    ) AS cli_command,
     MAX(context.value:data:sub_command::STRING) AS cli_sub_command,
     MAX(context.value:data:machine::STRING) AS machine,
     MAX(context.value:data:system_release::STRING) AS system_release,

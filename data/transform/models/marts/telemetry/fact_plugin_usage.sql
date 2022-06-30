@@ -21,9 +21,7 @@ SELECT DISTINCT
     1 AS event_count,
     base.event_source,
     'unstructured' AS event_type,
-    COALESCE(
-        base.cli_command, SPLIT_PART(base.struct_command_category, ' ', 2)
-    ) AS command,
+    base.cli_command,
     base.struct_command AS full_struct_command,
     base.struct_command_category,
     -- plugins
