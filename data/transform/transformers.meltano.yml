@@ -1,6 +1,7 @@
 plugins:
   transformers:
   - name: dbt-snowflake
+    variant: dbt-labs
     pip_url: dbt-core~=1.0.0 dbt-snowflake~=1.0.0
     config:
       account: epa06486

@@ -1,9 +1,8 @@
 plugins:
   loaders:
   - name: target-yaml
-    namespace: target_yaml
+    variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/target-yaml.git
-    executable: target-yaml
     settings:
     - name: file_naming_scheme
       kind: string

@@ -1,18 +1,8 @@
 plugins:
   extractors:
   - name: tap-slack
-    namespace: tap_slack
     pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
-    executable: tap-slack
-    capabilities:
-    - catalog
-    - state
-    - discover
-    - about
-    - stream-maps
-    settings:
-    - name: api_key
-      kind: password
+    variant: meltanolabs
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
@@ -25,18 +15,8 @@ plugins:
     - channels.*
     - messages.*
   - name: tap-google-analytics
-    namespace: tap_google_analytics
+    variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
-    executable: tap-google-analytics
-    capabilities:
-    - catalog
-    - discover
-    - state
-    settings:
-    - name: start_date
-      kind: date_iso8601
-    - name: client_secrets
-      kind: object
     config:
       view_id: '188392047' # CLI
       # view_id: '188274549' # Meltano Website
@@ -51,15 +31,12 @@ plugins:
     - merge_requests.*
     - issues.*
   - name: tap-github
-    namespace: tap_github
+    variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
     capabilities:
     - catalog
     - discover
     - state
-    settings:
-    - name: auth_token
-      kind: password
   - name: tap-github-meltano
     inherit_from: tap-github
     config:
@@ -101,9 +78,8 @@ plugins:
     - '!*.body'
     - '!*.reactions'  # Broken JSON Schema validator for issues
   - name: tap-snowflake
-    namespace: tap_snowflake
+    variant: transferwise
     pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@15699411cc0ff87f11a3f7e637f01a2eb8cbf9da
-    executable: tap-snowflake
     capabilities:
     - properties
     - discover
