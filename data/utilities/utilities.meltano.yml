@@ -1,21 +1,27 @@
 plugins:
   utilities:
   - name: sqlfluff
-    namespace: dbt_snowflake
+    variant: sqlfluff
     pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; dbt-core~=1.0.0; dbt-snowflake~=1.0.0
-    executable: sqlfluff
     settings:
     - name: user
+      env: DBT_SNOWFLAKE_USER
     - name: role
+      env: DBT_SNOWFLAKE_ROLE
     - name: database
       value: foo
+      env: DBT_SNOWFLAKE_DATABASE
     - name: database_prep
       value: foo
+      env: DBT_SNOWFLAKE_DATABASE_PREP
     - name: database_raw
       value: foo
+      env: DBT_SNOWFLAKE_DATABASE_RAW
     - name: account
+      env: DBT_SNOWFLAKE_ACCOUNT
     - name: warehouse
       value: foo
+      env: DBT_SNOWFLAKE_WAREHOUSE
     config:
       account: epa06486
       role: TRANSFORMER
@@ -24,24 +30,11 @@ plugins:
     pip_url: awscli==1.21.7
     executable: aws
   - name: superset
-    namespace: superset
-    commands:
-      up:
-        executable: /usr/local/bin/docker
-        args: compose -f analyze/superset/docker-compose.yml up -d
-      down:
-        executable: /usr/local/bin/docker
-        args: compose -f analyze/superset/docker-compose.yml down -v
-      export:
-        executable: python
-        args: analyze/superset/export.py
-      import:
-        executable: python
-        args: analyze/superset/import.py
+    variant: apache
+    pip_url: apache-superset==1.5.0 markupsafe==2.0.1 snowflake-sqlalchemy
   - name: great_expectations
-    namespace: great_expectations
+    variant: great-expectations
     pip_url: great_expectations; sqlalchemy; snowflake-sqlalchemy
-    executable: great_expectations
     settings:
       - name: ge_home
         value: $MELTANO_PROJECT_ROOT/utilities/great_expectations
