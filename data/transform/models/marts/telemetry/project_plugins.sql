@@ -14,6 +14,8 @@ WITH plugins AS (
         ON plugin_executions.execution_id = execution_dim.execution_id
     LEFT JOIN {{ ref('project_dim') }}
         ON plugin_executions.project_id = project_dim.project_id
+    LEFT JOIN {{ ref('unstructured_executions') }}
+        ON plugin_executions.execution_id = unstructured_executions.execution_id
     WHERE
         execution_dim.is_exec_event
         AND DATEDIFF(
@@ -21,6 +23,11 @@ WITH plugins AS (
             project_dim.first_event_at::TIMESTAMP,
             plugin_executions.event_ts::DATE
         ) >= 7
+        -- TODO: move project_uuid_source upstream to execution_dim
+        AND COALESCE(
+            unstructured_executions.project_uuid_source,
+            ''
+        ) != 'random'
 
 ),
 
