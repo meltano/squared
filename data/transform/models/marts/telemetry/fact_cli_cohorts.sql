@@ -1,30 +1,30 @@
 WITH cohort_snapshots AS (
     SELECT
-        DATE_TRUNC('month', fact_cli_projects.first_event_date) AS cohort_id,
+        DATE_TRUNC('month', project_dim.first_event_at) AS cohort_id,
         DATE_TRUNC(
-            'month', fact_cli_events.event_date
+            'month', execution_dim.event_date
         ) AS snapshot_month,
-        COUNT(DISTINCT fact_cli_events.project_id) AS project_id_cnt,
+        COUNT(DISTINCT execution_dim.project_id) AS project_id_cnt,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    fact_cli_projects.exec_event_total > 1
-                    THEN fact_cli_events.project_id
+                    project_dim.exec_event_total > 1
+                    THEN execution_dim.project_id
             END
         ) AS project_id_active_cnt,
-        SUM(fact_cli_events.event_count) AS event_cnt,
+        SUM(execution_dim.event_count) AS event_cnt,
         SUM(
             CASE
                 WHEN
-                    fact_cli_projects.exec_event_total > 1
-                    THEN fact_cli_events.event_count
+                    project_dim.exec_event_total > 1
+                    THEN execution_dim.event_count
                 ELSE 0
             END
         ) AS active_event_cnt
-    FROM {{ ref('fact_cli_events') }}
+    FROM {{ ref('execution_dim') }}
     LEFT JOIN
-        {{ ref('fact_cli_projects') }} ON
-            fact_cli_events.project_id = fact_cli_projects.project_id
+        {{ ref('project_dim') }} ON
+            execution_dim.project_id = project_dim.project_id
     GROUP BY 1, 2
 ),
 

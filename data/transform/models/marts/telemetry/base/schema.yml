@@ -43,20 +43,6 @@ models:
           - not_null
           - unique
 
-  - name: projects
-    description: This table summarizes attributes of projects.
-    columns:
-      - name: project_id
-        tests:
-          - not_null
-          - unique
-      - name: first_event_at
-        tests:
-          - not_null
-      - name: last_event_at
-        tests:
-          - not_null
-
   - name: hash_lookup
     description: This table unhashes known values like (i.e. plugin names, variants, common environment names, etc.)
       to build a lookup table to convert hashed values into unhashed values.
