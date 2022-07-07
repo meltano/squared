@@ -28,14 +28,20 @@ plugins_per_project AS (
     SELECT
         date_dim.date_day,
         (
-            SELECT COUNT(DISTINCT project_id)
+            SELECT COUNT(
+                DISTINCT plugins.project_id
+            )
             FROM plugins
             WHERE plugins.date_day BETWEEN DATEADD(
                     DAY, -14, date_dim.date_day
                 ) AND date_dim.date_day
         ) AS projects,
         (
-            SELECT COUNT(DISTINCT project_id, plugin_category)
+            SELECT COUNT(
+                DISTINCT
+                plugins.project_id,
+                plugins.plugin_category
+            )
             FROM plugins
             WHERE plugins.date_day BETWEEN DATEADD(
                     DAY, -14, date_dim.date_day
