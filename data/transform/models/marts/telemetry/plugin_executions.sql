@@ -80,7 +80,7 @@ SELECT
             'plugins_cmd_map.plugin_name',
             'structured_executions.execution_id'
         ]
-    ) }} AS plugin_usage_pk,
+    ) }} AS plugin_exec_pk,
     structured_executions.execution_id,
     structured_executions.event_created_at AS event_ts,
     structured_executions.event_count AS event_count,

@@ -248,8 +248,8 @@ models:
   - name: fact_plugin_usage
     description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
     columns:
-      - name: plugin_usage_pk
-        description: The unique surrogate key identifier for a record in this table.
+      - name: plugin_exec_pk
+        description: The unique plugin execution ID.
         tests:
           - not_null
           - unique
