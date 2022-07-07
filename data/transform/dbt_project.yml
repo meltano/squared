@@ -55,6 +55,13 @@ models:
       meltano_hub:
         +schema: meltano_hub
     # ------------------
+    # Common
+    # ------------------
+    common:
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +schema: workspace
+      +materialized: view
+    # ------------------
     # Marts
     # ------------------
     marts:
