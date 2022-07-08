@@ -9,9 +9,6 @@ RUN pip install -r requirements.txt
 # Install all plugins into the `.meltano` directory
 COPY . .
 
-# Pin `discovery.yml` manifest by copying pinned version to project root
-COPY ./discovery.yml .
-
 RUN meltano install extractors
 RUN meltano install loaders
 RUN meltano install transformer dbt-snowflake

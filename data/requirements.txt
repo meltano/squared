@@ -1,1 +1,1 @@
-meltano==2.0.2
+meltano==2.2.0
