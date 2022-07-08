@@ -40,9 +40,29 @@ plugins_per_project AS (
             )
             FROM plugins
             WHERE plugins.date_day BETWEEN DATEADD(
+                    DAY, -28, date_dim.date_day
+                ) AND date_dim.date_day
+        ) AS projects_28d,
+        (
+            SELECT COUNT(
+                DISTINCT
+                plugins.project_id,
+                plugins.plugin_category
+            )
+            FROM plugins
+            WHERE plugins.date_day BETWEEN DATEADD(
+                    DAY, -28, date_dim.date_day
+                ) AND date_dim.date_day
+        ) AS plugin_categories_28d,
+        (
+            SELECT COUNT(
+                DISTINCT plugins.project_id
+            )
+            FROM plugins
+            WHERE plugins.date_day BETWEEN DATEADD(
                     DAY, -14, date_dim.date_day
                 ) AND date_dim.date_day
-        ) AS projects,
+        ) AS projects_14d,
         (
             SELECT COUNT(
                 DISTINCT
@@ -53,15 +73,41 @@ plugins_per_project AS (
             WHERE plugins.date_day BETWEEN DATEADD(
                     DAY, -14, date_dim.date_day
                 ) AND date_dim.date_day
-        ) AS categories
+        ) AS plugin_categories_14d,
+        (
+            SELECT COUNT(
+                DISTINCT plugins.project_id
+            )
+            FROM plugins
+            WHERE plugins.date_day BETWEEN DATEADD(
+                    DAY, -7, date_dim.date_day
+                ) AND date_dim.date_day
+        ) AS projects_7d,
+        (
+            SELECT COUNT(
+                DISTINCT
+                plugins.project_id,
+                plugins.plugin_category
+            )
+            FROM plugins
+            WHERE plugins.date_day BETWEEN DATEADD(
+                    DAY, -7, date_dim.date_day
+                ) AND date_dim.date_day
+        ) AS plugin_categories_7d
     FROM {{ ref('date_dim') }}
     WHERE date_dim.date_day <= CURRENT_TIMESTAMP()
-    HAVING projects > 0
+    HAVING projects_28d > 0
 )
 
 SELECT
     date_day,
-    projects,
-    categories,
-    categories / projects AS avg_plugin_per_project
+    projects_28d,
+    plugin_categories_28d,
+    projects_14d,
+    plugin_categories_14d,
+    projects_7d,
+    plugin_categories_7d,
+    plugin_categories_28d / projects_28d AS app_28d,
+    plugin_categories_14d / projects_14d AS app_14d,
+    plugin_categories_7d / projects_7d AS app_7d
 FROM plugins_per_project
