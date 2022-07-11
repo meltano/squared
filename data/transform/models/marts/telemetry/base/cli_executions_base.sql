@@ -110,6 +110,12 @@ SELECT
     structured_executions.event_created_at,
     structured_executions.command_category,
     structured_executions.command,
+    SPLIT_PART(
+        structured_executions.command_category,
+        ' ',
+        2
+    ) AS cli_command,
+    NULL AS cli_sub_command,
     structured_executions.project_id,
     retention.tracking_disabled AS is_tracking_disabled,
     structured_executions.event_count,
@@ -166,7 +172,9 @@ SELECT
     unstructured_executions.event_created_date AS event_date,
     unstructured_executions.event_created_at,
     unstructured_executions.struct_command_category,
-    unstructured_executions.cli_command AS command,
+    unstructured_executions.struct_command AS command,
+    unstructured_executions.cli_command AS cli_command,
+    unstructured_executions.cli_sub_command AS cli_sub_command,
     unstructured_executions.project_id,
     FALSE AS is_tracking_disabled,
     1 AS event_count,

@@ -409,3 +409,33 @@ models:
       - name: exec_event_total
         tests:
           - not_null
+
+  - name: fact_cli_executions
+    description: This table contains CLI execution level data at the day grain.
+    columns:
+      - name: date_day
+        description: The day identifier.
+        tests:
+          - not_null
+
+      - name: execution_id
+        description: The unique identifier for a CLI execution.
+        tests:
+          - not_null
+          - unique
+
+      - name: project_id
+        description: The unique identifier for a Meltano project, found in the meltano.yml file.
+        tests:
+          - not_null
+
+      - name: pipeline_fk
+        description: The unique identifier for the pipeline.
+
+      - name: event_count
+        description: The count of the amount of times the command was executed on that date. Historic Google Analytics data is summarized at the day grain.
+        tests:
+          - not_null
+
+      - name: cli_command
+        description: The CLI command used for the execution (i.e. run, elt, etc.)
