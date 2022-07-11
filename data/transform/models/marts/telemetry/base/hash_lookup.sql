@@ -2,7 +2,7 @@ WITH base AS (
     SELECT DISTINCT
         plugin_name AS unhashed_value,
         SHA2_HEX(plugin_name) AS hash_value
-    FROM {{ ref('plugins_cmd_map') }}
+    FROM {{ ref('struct_plugins') }}
 
     UNION
 

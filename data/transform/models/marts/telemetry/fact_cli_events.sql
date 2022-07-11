@@ -1,3 +1,3 @@
 SELECT
     *
-FROM {{ ref('execution_dim') }}
+FROM {{ ref('cli_executions_base') }}

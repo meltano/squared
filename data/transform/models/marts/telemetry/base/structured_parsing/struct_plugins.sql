@@ -1,6 +1,6 @@
 SELECT DISTINCT
-    cmd_parsed_all.command,
     flat.value::STRING AS plugin_name,
+    cmd_parsed_all.command,
     'singer' AS plugin_category
 FROM {{ ref('cmd_parsed_all') }},
     LATERAL FLATTEN(input=>singer_plugins) AS flat
@@ -9,8 +9,8 @@ WHERE cmd_parsed_all.command_type = 'plugin'
 UNION ALL
 
 SELECT DISTINCT
-    cmd_parsed_all.command,
     flat.value::STRING AS plugin_name,
+    cmd_parsed_all.command,
     CASE
         WHEN flat.value::STRING LIKE 'dbt-%' THEN 'dbt'
         ELSE
