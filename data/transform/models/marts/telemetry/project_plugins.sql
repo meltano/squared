@@ -10,20 +10,20 @@ WITH plugins AS (
             ELSE plugin_executions.plugin_category
         END AS plugin_category
     FROM {{ ref('plugin_executions') }}
-    LEFT JOIN {{ ref('execution_dim') }}
-        ON plugin_executions.execution_id = execution_dim.execution_id
+    LEFT JOIN {{ ref('cli_executions_base') }}
+        ON plugin_executions.execution_id = cli_executions_base.execution_id
     LEFT JOIN {{ ref('project_dim') }}
         ON plugin_executions.project_id = project_dim.project_id
     LEFT JOIN {{ ref('unstructured_executions') }}
         ON plugin_executions.execution_id = unstructured_executions.execution_id
     WHERE
-        execution_dim.is_exec_event
+        cli_executions_base.is_exec_event
         AND DATEDIFF(
             'day',
             project_dim.first_event_at::TIMESTAMP,
             plugin_executions.event_ts::DATE
         ) >= 7
-        -- TODO: move project_uuid_source upstream to execution_dim
+        -- TODO: move project_uuid_source upstream to cli_executions_base
         AND COALESCE(
             unstructured_executions.project_uuid_source,
             ''

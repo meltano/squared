@@ -2,29 +2,29 @@ WITH cohort_snapshots AS (
     SELECT
         DATE_TRUNC('month', project_dim.first_event_at) AS cohort_id,
         DATE_TRUNC(
-            'month', execution_dim.event_date
+            'month', cli_executions_base.event_date
         ) AS snapshot_month,
-        COUNT(DISTINCT execution_dim.project_id) AS project_id_cnt,
+        COUNT(DISTINCT cli_executions_base.project_id) AS project_id_cnt,
         COUNT(
             DISTINCT CASE
                 WHEN
                     project_dim.exec_event_total > 1
-                    THEN execution_dim.project_id
+                    THEN cli_executions_base.project_id
             END
         ) AS project_id_active_cnt,
-        SUM(execution_dim.event_count) AS event_cnt,
+        SUM(cli_executions_base.event_count) AS event_cnt,
         SUM(
             CASE
                 WHEN
                     project_dim.exec_event_total > 1
-                    THEN execution_dim.event_count
+                    THEN cli_executions_base.event_count
                 ELSE 0
             END
         ) AS active_event_cnt
-    FROM {{ ref('execution_dim') }}
+    FROM {{ ref('cli_executions_base') }}
     LEFT JOIN
         {{ ref('project_dim') }} ON
-            execution_dim.project_id = project_dim.project_id
+            cli_executions_base.project_id = project_dim.project_id
     GROUP BY 1, 2
 ),
 
