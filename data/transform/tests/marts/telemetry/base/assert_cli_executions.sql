@@ -3,7 +3,7 @@ WITH test AS (
     SELECT
         (
             SELECT COUNT(*)
-            FROM {{ ref('cli_executions_blended') }}
+            FROM {{ ref('cli_execs_blended') }}
         )
         - (
             SELECT

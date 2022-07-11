@@ -1,5 +1,5 @@
 SELECT project_id
-FROM {{ ref('cli_executions_blended') }}
+FROM {{ ref('cli_execs_blended') }}
 WHERE project_id NOT IN (
     SELECT DISTINCT project_id FROM {{ ref('structured_executions') }}
     UNION
