@@ -4,10 +4,10 @@
 
 SELECT
     unstruct_exec_flattened.*,
-    cli_executions_blended.event_source,
-    cli_executions_blended.event_created_at,
-    cli_executions_blended.event_created_date
+    cli_execs_blended.event_source,
+    cli_execs_blended.event_created_at,
+    cli_execs_blended.event_created_date
 FROM {{ ref('unstruct_exec_flattened') }}
 INNER JOIN
-    {{ ref('cli_executions_blended') }} ON
-        unstruct_exec_flattened.execution_id = cli_executions_blended.execution_id
+    {{ ref('cli_execs_blended') }} ON
+        unstruct_exec_flattened.execution_id = cli_execs_blended.execution_id
