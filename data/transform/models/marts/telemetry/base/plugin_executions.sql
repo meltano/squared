@@ -51,7 +51,7 @@ SELECT
     unstruct_plugin_executions.event_block_types
 FROM {{ ref('unstruct_plugin_executions') }}
 LEFT JOIN {{ ref('hash_lookup') }}
-    ON unstruct_plugin_executions.environment_name_hash = hash_lookup.hash_value
+    ON unstruct_plugin_executions.env_id = hash_lookup.hash_value
 
 UNION ALL
 
