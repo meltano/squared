@@ -53,11 +53,13 @@ SELECT
     SUM(
         CASE
             WHEN
-                cli_executions_base.is_exec_event THEN cli_executions_base.event_count
+                cli_executions_base.is_exec_event
+                THEN cli_executions_base.event_count
             ELSE 0
         END
     ) AS exec_event_total
 FROM {{ ref('cli_executions_base') }}
 LEFT JOIN
-    active_projects ON cli_executions_base.project_id = active_projects.project_id
+    active_projects ON
+        cli_executions_base.project_id = active_projects.project_id
 GROUP BY 1
