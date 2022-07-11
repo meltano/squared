@@ -52,6 +52,6 @@ SELECT
             ELSE 0
         END
     ) AS exec_event_total
-FROM {{ ref('execution_dim') }}
+FROM {{ ref('cli_executions_base') }}
 GROUP BY project_id
 ORDER BY last_event_date DESC
