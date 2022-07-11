@@ -1,12 +1,12 @@
 SELECT
     unstruct_plugin_executions.unstruct_plugin_exec_pk AS plugin_exec_pk,
     unstruct_plugin_executions.execution_id,
-    unstruct_plugin_executions.started_ts AS event_ts,
+    unstruct_plugin_executions.event_ts,
     1 AS event_count,
     unstruct_plugin_executions.event_source,
     'unstructured' AS event_type,
     unstruct_plugin_executions.cli_command,
-    unstruct_plugin_executions.struct_command AS full_struct_command,
+    unstruct_plugin_executions.full_struct_command,
     unstruct_plugin_executions.struct_command_category,
     -- plugins
     unstruct_plugin_executions.plugin_name AS plugin_name,
@@ -22,11 +22,11 @@ SELECT
     -- projects
     unstruct_plugin_executions.project_id,
     -- environments
-    unstruct_plugin_executions.environment_name_hash AS env_id,
+    unstruct_plugin_executions.env_id,
     hash_lookup.unhashed_value AS env_name,
     -- executions
-    unstruct_plugin_executions.exit_code AS cli_execution_exit_code,
-    unstruct_plugin_executions.process_duration_ms AS cli_execution_time_ms,
+    unstruct_plugin_executions.cli_execution_exit_code,
+    unstruct_plugin_executions.cli_execution_time_ms,
     -- random
     unstruct_plugin_executions.user_ipaddress,
     unstruct_plugin_executions.meltano_version,
@@ -45,8 +45,8 @@ SELECT
     unstruct_plugin_executions.python_implementation,
     unstruct_plugin_executions.system_name,
     unstruct_plugin_executions.system_version,
-    unstruct_plugin_executions.exception_type AS cli_exception_type,
-    unstruct_plugin_executions.exception_cause AS cli_exception_cause,
+    unstruct_plugin_executions.cli_exception_type,
+    unstruct_plugin_executions.cli_exception_cause,
     unstruct_plugin_executions.event_states,
     unstruct_plugin_executions.event_block_types
 FROM {{ ref('unstruct_plugin_executions') }}

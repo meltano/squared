@@ -20,7 +20,6 @@ SELECT DISTINCT
     base.started_ts AS event_ts,
     1 AS event_count,
     base.event_source,
-    'unstructured' AS event_type,
     base.cli_command,
     base.struct_command AS full_struct_command,
     base.struct_command_category,
