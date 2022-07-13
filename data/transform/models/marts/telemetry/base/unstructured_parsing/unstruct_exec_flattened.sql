@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 WITH base AS (
     SELECT
         stg_snowplow__events.*,
@@ -29,7 +33,13 @@ SELECT
     MAX(context.value:data:windows_edition::STRING) AS windows_edition,
     COALESCE(
         MAX(
-            context.value:data:command::STRING
+            CASE WHEN
+                context.value:data:command::STRING != 'cli'
+                AND COALESCE(
+                    context.value:data:parent_command_hint,
+                    'cli'
+                ) = 'cli'
+                THEN context.value:data:command::STRING END
         ),
         SPLIT_PART(
             MAX(base.se_category),
@@ -37,7 +47,18 @@ SELECT
             2
         )
     ) AS cli_command,
-    MAX(context.value:data:sub_command::STRING) AS cli_sub_command,
+    MAX(
+        COALESCE(
+            context.value:data:sub_command::STRING,
+            CASE WHEN
+                context.value:data:command::STRING != 'cli'
+                AND COALESCE(
+                    context.value:data:parent_command_hint,
+                    'cli'
+                ) != 'cli'
+                THEN context.value:data:command::STRING END
+        )
+    ) AS cli_sub_command,
     MAX(context.value:data:machine::STRING) AS machine,
     MAX(context.value:data:system_release::STRING) AS system_release,
     -- TODO: plugins list is deduped so this will undercount executions
