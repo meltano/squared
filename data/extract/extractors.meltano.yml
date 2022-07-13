@@ -1,5 +1,24 @@
 plugins:
   extractors:
+  - name: tap-spreadsheets-anywhere
+    variant: ets
+    pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git
+    config:
+      tables:
+        - path: https://ip-ranges.amazonaws.com
+          format: json
+          start_date: "2020-01-01T00:00:00Z"
+          key_properties: []
+          name: aws_ips
+          pattern: "ip-ranges.json"
+          json_path: "prefixes"
+        - path: https://www.gstatic.com/ipranges
+          format: json
+          start_date: "2020-01-01T00:00:00Z"
+          key_properties: []
+          name: gcp_ips
+          pattern: "cloud.json"
+          json_path: "prefixes"
   - name: tap-slack
     pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
     variant: meltanolabs
