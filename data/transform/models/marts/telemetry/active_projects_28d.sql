@@ -54,4 +54,6 @@ SELECT
             AND pipe_exec.pipeline_count > 1
     ) AS unique_pipe_greater_1_monthly
 FROM {{ ref('date_dim') }}
-WHERE date_day BETWEEN DATEADD(YEAR, -2, CURRENT_TIMESTAMP()) AND CURRENT_TIMESTAMP()
+WHERE date_day
+    BETWEEN DATEADD(YEAR, -2, CURRENT_TIMESTAMP())
+    AND CURRENT_TIMESTAMP()
