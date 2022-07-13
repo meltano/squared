@@ -15,11 +15,6 @@ SELECT
                         CASE
                             WHEN
                                 fact_cli_executions.cli_command IN (
-                                    'meltano invoke',
-                                    'meltano elt',
-                                    'meltano run',
-                                    'meltano test',
-                                    'meltano ui',
                                     'invoke',
                                     'elt',
                                     'run',
