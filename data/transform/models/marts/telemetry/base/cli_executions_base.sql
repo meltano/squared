@@ -27,10 +27,6 @@ unstruct_prep AS (
                 'run',
                 'test',
                 'ui'
-            )
-            OR (
-                struct_command_category = 'meltano schedule'
-                AND cli_command LIKE '% run %'
             ),
             FALSE)
         ) AS is_exec_event,
@@ -42,10 +38,6 @@ unstruct_prep AS (
                 'invoke',
                 'elt',
                 'run'
-            )
-            OR (
-                struct_command_category = 'meltano schedule'
-                AND cli_command LIKE '% run %'
             ),
             FALSE
             )
