@@ -8,17 +8,24 @@ plugins:
         - path: https://ip-ranges.amazonaws.com
           format: json
           start_date: "2020-01-01T00:00:00Z"
-          key_properties: []
-          name: aws_ips
+          key_properties: ['ip_prefix']
+          name: aws_ip_addresses
           pattern: "ip-ranges.json"
           json_path: "prefixes"
         - path: https://www.gstatic.com/ipranges
           format: json
           start_date: "2020-01-01T00:00:00Z"
-          key_properties: []
-          name: gcp_ips
+          key_properties: ['ipv4prefix']
+          name: gcp_ip_addresses
           pattern: "cloud.json"
           json_path: "prefixes"
+        - path: https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63
+          format: json
+          start_date: "2020-01-01T00:00:00Z"
+          key_properties: ['id']
+          name: azure_ip_addresses
+          pattern: "ServiceTags_Public_20220711.json"
+          json_path: "values"
   - name: tap-slack
     pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
     variant: meltanolabs
