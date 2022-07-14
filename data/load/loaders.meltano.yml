@@ -3,22 +3,9 @@ plugins:
   - name: target-yaml
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/target-yaml.git
-    settings:
-    - name: file_naming_scheme
-      kind: string
-    - name: timestamp_tz_offset
-      kind: string
-    - name: overwrite_behavior
-      kind: string
-    - name: record_insert_jsonpath
-      kind: string
-    - name: stream_maps
-      kind: object
     config:
       file_naming_scheme: '{stream_name}.yml'
-      timestamp_tz_offset: 0
       overwrite_behavior: replace_records
-
   - name: target-yaml-metrics
     inherit_from: target-yaml
     config:

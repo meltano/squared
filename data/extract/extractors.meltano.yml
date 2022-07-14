@@ -33,10 +33,6 @@ plugins:
   - name: tap-github
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
-    capabilities:
-    - catalog
-    - discover
-    - state
   - name: tap-github-meltano
     inherit_from: tap-github
     config:
@@ -80,19 +76,6 @@ plugins:
   - name: tap-snowflake
     variant: transferwise
     pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@15699411cc0ff87f11a3f7e637f01a2eb8cbf9da
-    capabilities:
-    - properties
-    - discover
-    - state
-    settings:
-    - name: account
-    - name: dbname
-    - name: user
-    - name: password
-      kind: password
-    - name: warehouse
-    - name: tables
-    - name: role
     config:
       account: epa06486
       password: ${SNOWFLAKE_PASSWORD}
