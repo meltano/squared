@@ -5,6 +5,7 @@ SELECT DISTINCT
 FROM {{ ref('cmd_parsed_all') }},
     LATERAL FLATTEN(input=>singer_plugins) AS flat
 WHERE cmd_parsed_all.command_type = 'plugin'
+-- Mappers are included in the singer_plugins list
 
 UNION ALL
 
