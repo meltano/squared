@@ -1,4 +1,4 @@
-SELECT COUNT(*)
+SELECT project_dim.project_id
 FROM {{ ref('cli_executions_base') }}
 LEFT JOIN
     {{ ref('project_dim') }} ON
