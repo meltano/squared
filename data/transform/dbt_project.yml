@@ -47,6 +47,8 @@ models:
         +schema: slack
       snowplow:
         +schema: snowplow
+      spreadsheets_anywhere:
+        +schema: spreadsheets_anywhere
     # ------------------
     # Publish
     # ------------------

@@ -123,3 +123,19 @@ dags:
         retries: 2
         depends_on:
           - dbt_snowplow_run_stage
+  spreadsheets_anywhere:
+    interval: '0 6 * * *'
+    steps:
+      - name: tap_spreadsheets_anywhere_target_snowflake
+        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=SPREADSHEETS_ANYWHERE meltano run tap-spreadsheets-anywhere coalesce-gcp-ips target-snowflake'
+        retries: 2
+      - name: dbt_spreadsheets_anywhere_run_models
+        cmd: 'meltano invoke dbt-snowflake:run --models staging.spreadsheets_anywhere.*'
+        retries: 2
+        depends_on:
+          - tap_spreadsheets_anywhere_target_snowflake
+      - name: dbt_spreadsheets_anywhere_test_models
+        cmd: 'meltano invoke dbt-snowflake:test --models staging.spreadsheets_anywhere.*'
+        retries: 2
+        depends_on:
+          - dbt_spreadsheets_anywhere_run_models

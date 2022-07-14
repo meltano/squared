@@ -8,22 +8,22 @@ plugins:
         - path: https://ip-ranges.amazonaws.com
           format: json
           start_date: "2020-01-01T00:00:00Z"
-          key_properties: ['ip_prefix']
-          name: aws_ip_addresses
+          key_properties: [ip_prefix]
+          name: aws_ips
           pattern: "ip-ranges.json"
           json_path: "prefixes"
         - path: https://www.gstatic.com/ipranges
           format: json
-          start_date: "2020-01-01T00:00:00Z"
-          key_properties: ['ipv4prefix']
-          name: gcp_ip_addresses
-          pattern: "cloud.json"
-          json_path: "prefixes"
+          start_date: '2020-01-01T00:00:00Z'
+          key_properties: [id]
+          name: gcp_ips
+          pattern: cloud.json
+          json_path: prefixes
         - path: https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63
           format: json
           start_date: "2020-01-01T00:00:00Z"
-          key_properties: ['id']
-          name: azure_ip_addresses
+          key_properties: [id]
+          name: azure_ips
           pattern: "ServiceTags_Public_20220711.json"
           json_path: "values"
   - name: tap-slack
