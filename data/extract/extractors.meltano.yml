@@ -1,8 +1,8 @@
 plugins:
   extractors:
   - name: tap-slack
-    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
     variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
@@ -85,16 +85,16 @@ plugins:
       '*':
         replication-method: FULL_TABLE
     select:
-      - '*FACT_HUB_METRICS.REPO_FULL_NAME'
-      - '*FACT_HUB_METRICS.CREATED_AT_TIMESTAMP'
-      - '*FACT_HUB_METRICS.LAST_PUSH_TIMESTAMP'
-      - '*FACT_HUB_METRICS.LAST_UPDATED_TIMESTAMP'
-      - '*FACT_HUB_METRICS.NUM_FORKS'
-      - '*FACT_HUB_METRICS.NUM_OPEN_ISSUES'
-      - '*FACT_HUB_METRICS.NUM_STARGAZERS'
-      - '*FACT_HUB_METRICS.NUM_WATCHERS'
-      - '*FACT_HUB_METRICS.MELTANO_EXEC_COUNT_3M'
-      - '*FACT_HUB_METRICS.MELTANO_PROJECT_ID_COUNT_3M'
+    - '*FACT_HUB_METRICS.REPO_FULL_NAME'
+    - '*FACT_HUB_METRICS.CREATED_AT_TIMESTAMP'
+    - '*FACT_HUB_METRICS.LAST_PUSH_TIMESTAMP'
+    - '*FACT_HUB_METRICS.LAST_UPDATED_TIMESTAMP'
+    - '*FACT_HUB_METRICS.NUM_FORKS'
+    - '*FACT_HUB_METRICS.NUM_OPEN_ISSUES'
+    - '*FACT_HUB_METRICS.NUM_STARGAZERS'
+    - '*FACT_HUB_METRICS.NUM_WATCHERS'
+    - '*FACT_HUB_METRICS.MELTANO_EXEC_COUNT_3M'
+    - '*FACT_HUB_METRICS.MELTANO_PROJECT_ID_COUNT_3M'
   - name: tap-snowflake-audit
     inherit_from: tap-snowflake
     metadata:
