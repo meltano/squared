@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 WITH retention AS (
     SELECT
         project_id,
