@@ -20,11 +20,11 @@ plugins:
     - name: account
       env: DBT_SNOWFLAKE_ACCOUNT
     - name: warehouse
-      value: foo
       env: DBT_SNOWFLAKE_WAREHOUSE
     config:
       account: epa06486
       role: TRANSFORMER
+      warehouse: CORE
   - name: awscli
     namespace: awscli
     pip_url: awscli==1.21.7

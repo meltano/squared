@@ -58,6 +58,7 @@ environments:
         config:
           user: CICD
           role: CICD
+          warehouse: CICD
       - name: great_expectations
         config:
           prod_database: CICD_PROD
