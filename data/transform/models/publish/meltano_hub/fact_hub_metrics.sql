@@ -27,7 +27,11 @@ rename_join AS (
         COALESCE(plugin_use_3m.project_count, 0) AS meltano_project_id_count_3m
     FROM {{ ref('fact_repo_metrics') }}
     LEFT JOIN plugin_use_3m
-        ON fact_repo_metrics.repo_name = plugin_use_3m.plugin_name
+        ON REPLACE(
+            fact_repo_metrics.repo_name,
+            'pipelinewise-',
+            ''
+        ) = plugin_use_3m.plugin_name
 
 )
 
