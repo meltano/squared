@@ -65,6 +65,8 @@ jobs:
     strategy:
       matrix:
         extract-source: ['slack', 'google_analytics', 'gitlab', 'github_meltano', 'github_search']
+        # Excluding until mappers are supported using jobs https://github.com/meltano/squared/issues/289
+        # , 'spreadsheets_anywhere']
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
@@ -109,8 +111,11 @@ jobs:
     - run: meltano invoke dbt-snowflake:deps
     - run: meltano invoke dbt-snowflake:compile
     - run: meltano invoke dbt-snowflake:seed
-    - run: meltano invoke dbt-snowflake run
-    - run: meltano invoke dbt-snowflake:test
+    # Excluding until mappers are supported using jobs https://github.com/meltano/squared/issues/289
+    # - run: meltano invoke dbt-snowflake run
+    # - run: meltano invoke dbt-snowflake:test
+    - run: meltano invoke dbt-snowflake run --exclude staging.spreadsheets_anywhere.*
+    - run: meltano invoke dbt-snowflake:test --exclude staging.spreadsheets_anywhere.*
 
   reverse_el_tests:
     runs-on: ubuntu-latest
