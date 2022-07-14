@@ -1,12 +1,12 @@
 WITH plugin_use_3m AS (
 
     SELECT
-        plugin_name,
+        COALESCE(parent_name, plugin_name) AS plugin_name,
         SUM(event_count) AS execution_count,
         COUNT(DISTINCT project_id) AS project_count
-    FROM {{ ref('cli_plugin_usage') }}
-    WHERE plugin_type IN ('tap', 'target')
-        AND event_date >= DATEADD(MONTH, -3, CURRENT_DATE) -- noqa: PRS, L048
+    FROM {{ ref('fact_plugin_usage') }}
+    WHERE plugin_category = 'singer'
+        AND event_ts >= DATEADD(MONTH, -3, CURRENT_DATE) -- noqa: PRS, L048
     GROUP BY 1
 
 ),
@@ -27,7 +27,11 @@ rename_join AS (
         COALESCE(plugin_use_3m.project_count, 0) AS meltano_project_id_count_3m
     FROM {{ ref('fact_repo_metrics') }}
     LEFT JOIN plugin_use_3m
-        ON fact_repo_metrics.repo_name = plugin_use_3m.plugin_name
+        ON REPLACE(
+            fact_repo_metrics.repo_name,
+            'pipelinewise-',
+            ''
+        ) = plugin_use_3m.plugin_name
 
 )
 

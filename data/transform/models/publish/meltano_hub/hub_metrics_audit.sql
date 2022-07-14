@@ -1,7 +1,7 @@
 SELECT
-    MAX(event_date) AS updated_date,
+    MAX(event_ts) AS updated_date,
     'meltano_metrics' AS metric_type
-FROM {{ ref('cli_plugin_usage') }}
+FROM {{ ref('fact_plugin_usage') }}
 
 UNION ALL
 
