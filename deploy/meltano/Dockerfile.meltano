@@ -11,6 +11,7 @@ COPY . .
 
 RUN meltano install extractors
 RUN meltano install loaders
+RUN meltano install mappers
 RUN meltano install transformer dbt-snowflake
 RUN meltano install utilities great_expectations awscli
 
