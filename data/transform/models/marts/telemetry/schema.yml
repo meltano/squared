@@ -393,9 +393,6 @@ models:
       - name: event_block_types
         description: A list of the type of block events that were received. 
 
-      - name: ip_address_hash
-        description: The hash of the IP address.
-
       - name: cloud_provider
         description: The cloud provider where the command was executed.
 
