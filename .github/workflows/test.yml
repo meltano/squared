@@ -111,11 +111,8 @@ jobs:
     - run: meltano invoke dbt-snowflake:deps
     - run: meltano invoke dbt-snowflake:compile
     - run: meltano invoke dbt-snowflake:seed
-    # Excluding until mappers are supported using jobs https://github.com/meltano/squared/issues/289
-    # - run: meltano invoke dbt-snowflake run
-    # - run: meltano invoke dbt-snowflake:test
-    - run: meltano invoke dbt-snowflake run --exclude staging.spreadsheets_anywhere.*
-    - run: meltano invoke dbt-snowflake:test --exclude staging.spreadsheets_anywhere.*
+    - run: meltano invoke dbt-snowflake run
+    - run: meltano invoke dbt-snowflake:test
 
   reverse_el_tests:
     runs-on: ubuntu-latest

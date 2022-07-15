@@ -76,3 +76,11 @@ models:
       - name: project_id
         tests:
           - not_null
+
+  - name: ip_address_dim
+    description: This table contains attributes about an IP address.
+    columns:
+      - name: ip_address_hash
+        tests:
+          - not_null
+          - unique

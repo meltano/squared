@@ -344,7 +344,7 @@ models:
       - name: execution_time_ms
         description: The execution time of the plugin in milliseconds.
 
-      - name: user_ipaddress
+      - name: ip_address_hash
 
       - name: meltano_version
         description: The Meltano package version.
@@ -393,6 +393,13 @@ models:
       - name: event_block_types
         description: A list of the type of block events that were received. 
 
+      - name: cloud_provider
+        description: The cloud provider where the command was executed.
+
+      - name: execution_location
+        description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)
+
+
   - name: project_dim
     description: This table summarizes attributes of projects.
     columns:
@@ -439,3 +446,18 @@ models:
 
       - name: cli_command
         description: The CLI command used for the execution (i.e. run, elt, etc.)
+
+      - name: meltano_version
+        description: The Meltano version used.
+
+      - name: python_version
+        description: The python version used.
+
+      - name: ip_address_hash
+        description: The hash of the IP address.
+
+      - name: cloud_provider
+        description: The cloud provider where the command was executed.
+
+      - name: execution_location
+        description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)

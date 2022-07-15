@@ -42,7 +42,7 @@ SELECT DISTINCT
     base.exit_code AS cli_execution_exit_code,
     base.process_duration_ms AS cli_execution_time_ms,
     -- random
-    base.user_ipaddress,
+    MD5(base.user_ipaddress) AS ip_address_hash,
     base.meltano_version,
     base.num_cpu_cores_available,
     base.windows_edition,
