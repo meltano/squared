@@ -78,5 +78,3 @@ SELECT
     'UNKNOWN' AS release_cloud_name,
     'UNKNOWN' AS cloud_provider,
     'UNKNOWN' AS execution_location
-
--- old data

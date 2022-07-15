@@ -28,7 +28,7 @@ SELECT
     unstruct_plugin_executions.cli_execution_exit_code,
     unstruct_plugin_executions.cli_execution_time_ms,
     -- random
-    unstruct_plugin_executions.user_ip_hash,
+    unstruct_plugin_executions.ip_address_hash,
     unstruct_plugin_executions.meltano_version,
     unstruct_plugin_executions.num_cpu_cores_available,
     unstruct_plugin_executions.windows_edition,
@@ -85,7 +85,7 @@ SELECT
     0 AS exit_code,
     NULL AS execution_time_ms, -- s to ms
     -- random
-    NULL AS user_ip_hash,
+    'UNKNOWN' AS ip_address_hash,
     NULL AS meltano_version,
     NULL AS num_cpu_cores_available,
     NULL AS windows_edition,
