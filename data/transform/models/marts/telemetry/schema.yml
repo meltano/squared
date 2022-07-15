@@ -344,7 +344,7 @@ models:
       - name: execution_time_ms
         description: The execution time of the plugin in milliseconds.
 
-      - name: user_ipaddress
+      - name: ip_address_hash
 
       - name: meltano_version
         description: The Meltano package version.

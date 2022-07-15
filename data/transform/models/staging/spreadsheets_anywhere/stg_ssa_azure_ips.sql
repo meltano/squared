@@ -30,7 +30,12 @@ flatten AS (
         renamed.id,
         renamed.name,
         renamed.file_source,
-        addresses.value::STRING AS ip_address
+        addresses.value::STRING AS ip_address,
+        ROW_NUMBER() OVER (
+            PARTITION BY
+                addresses.value::STRING
+            ORDER BY LEN(renamed.id) DESC
+        ) AS row_num
     FROM renamed,
         LATERAL FLATTEN(
             input=>properties
@@ -39,8 +44,10 @@ flatten AS (
 )
 
 SELECT
-    {{ dbt_utils.surrogate_key(
-        ['id', 'ip_address']
-    ) }} AS ip_surrogate_key,
-    *
+    id,
+    name,
+    file_source,
+    ip_address
 FROM flatten
+-- dedup and keep the longer service name description
+WHERE row_num = 1

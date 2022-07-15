@@ -76,3 +76,11 @@ models:
       - name: project_id
         tests:
           - not_null
+
+  - name: ip_address_dim
+    description: This table has a lookup between telemetry user_ipaddresses and cloud provider ranges.
+    columns:
+      - name: user_ipaddress
+        tests:
+          - not_null
+          - unique
