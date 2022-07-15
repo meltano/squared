@@ -78,9 +78,9 @@ models:
           - not_null
 
   - name: ip_address_dim
-    description: This table has a lookup between telemetry user_ipaddresses and cloud provider ranges.
+    description: This table contains attributes about an IP address.
     columns:
-      - name: user_ipaddress
+      - name: ip_address_hash
         tests:
           - not_null
           - unique
