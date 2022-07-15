@@ -149,7 +149,8 @@ combined AS (
         COALESCE(
             retention.first_event_date = structured_executions.event_created_at,
             FALSE) AS is_acquired_date,
-        COALESCE(retention.last_event_date = structured_executions.event_created_at,
+        COALESCE(
+            retention.last_event_date = structured_executions.event_created_at,
             FALSE) AS is_churned_date,
         COALESCE(
             structured_executions.event_created_at >= DATEADD(
@@ -164,7 +165,8 @@ combined AS (
     FROM {{ ref('structured_executions') }}
     LEFT JOIN {{ ref('event_commands_parsed') }}
         ON structured_executions.command = event_commands_parsed.command
-    LEFT JOIN retention ON structured_executions.project_id = retention.project_id
+    LEFT JOIN retention
+        ON structured_executions.project_id = retention.project_id
 
     UNION
 
@@ -193,7 +195,10 @@ combined AS (
         COALESCE(unstruct_prep.is_plugin_singer, FALSE) AS is_plugin_singer,
         COALESCE(unstruct_prep.is_plugin_airflow, FALSE) AS is_plugin_airflow,
         COALESCE(unstruct_prep.is_plugin_dagster, FALSE) AS is_plugin_dagster,
-        COALESCE(unstruct_prep.is_plugin_lightdash, FALSE) AS is_plugin_lightdash,
+        COALESCE(
+            unstruct_prep.is_plugin_lightdash,
+            FALSE
+        ) AS is_plugin_lightdash,
         COALESCE(unstruct_prep.is_plugin_superset, FALSE) AS is_plugin_superset,
         COALESCE(unstruct_prep.is_plugin_sqlfluff, FALSE) AS is_plugin_sqlfluff,
         COALESCE(unstruct_prep.is_plugin_great_ex, FALSE) AS is_plugin_great_ex,
