@@ -14,14 +14,11 @@ WITH active_projects AS (
         'meltano elt',
         'meltano run',
         'meltano ui',
-        'meltano test',
-        'meltano schedule run'
+        'meltano test'
     )
     AND cli_executions_base.event_created_at >= DATEADD(
         'month', -1, CURRENT_DATE()
     )
-    -- GROUP BY 1
-    -- HAVING SUM(structured_executions.event_count) > 1
 
     UNION ALL
 
@@ -36,7 +33,6 @@ WITH active_projects AS (
         'run',
         'ui',
         'test'
-    -- TODO: job run, schedule run?
     )
     AND cli_executions_base.event_created_at >= DATEADD(
         'month', -1, CURRENT_DATE()
@@ -46,7 +42,7 @@ WITH active_projects AS (
 SELECT
     cli_executions_base.project_id,
     MAX(
-        CASE WHEN active_projects.project_id IS NOT NULL THEN TRUE END
+        COALESCE(active_projects.project_id IS NOT NULL, FALSE)
     ) AS is_active,
     MIN(cli_executions_base.event_created_at) AS first_event_at,
     MAX(cli_executions_base.event_created_at) AS last_event_at,
@@ -57,7 +53,13 @@ SELECT
                 THEN cli_executions_base.event_count
             ELSE 0
         END
-    ) AS exec_event_total
+    ) AS exec_event_total,
+    MAX(
+        COALESCE(
+            cli_executions_base.project_uuid_source,
+            'UNKNOWN'
+        )
+    ) AS project_id_source
 FROM {{ ref('cli_executions_base') }}
 LEFT JOIN
     active_projects ON
