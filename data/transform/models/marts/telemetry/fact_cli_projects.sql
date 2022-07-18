@@ -5,7 +5,9 @@ WITH base AS (
         SUM(event_count) AS events_total,
         COUNT(DISTINCT command) AS unique_commands,
         COUNT(DISTINCT command_category) AS unique_command_categories,
-        SUM(CASE WHEN is_plugin_dbt THEN event_count ELSE 0 END) AS dbt_event_total,
+        SUM(
+            CASE WHEN is_plugin_dbt THEN event_count ELSE 0 END
+        ) AS dbt_event_total,
         SUM(
             CASE WHEN is_plugin_singer THEN event_count ELSE 0 END
         ) AS singer_event_total,
