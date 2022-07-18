@@ -1,0 +1,158 @@
+table_name: monthly_quarterly_yearly_elt_percentages
+main_dttm_col: monthly_time_index
+description: null
+default_endpoint: null
+offset: 0
+cache_timeout: null
+schema: tap_slack
+sql: null
+params: null
+template_params: null
+filter_select_enabled: false
+fetch_values_predicate: null
+extra: null
+uuid: 7d6a0032-b17e-43cc-a71b-08474f623293
+metrics:
+- metric_name: count
+  verbose_name: COUNT(*)
+  metric_type: count
+  expression: COUNT(*)
+  description: null
+  d3format: null
+  extra: null
+  warning_text: null
+columns:
+- column_name: quarterly_target_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: yearly_target_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: quarterly_tap_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: yearly_tap_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: quarterly_cli_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: yearly_cli_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: monthly_target_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: monthly_tap_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: monthly_cli_parent_message_percentage
+  verbose_name: null
+  is_dttm: false
+  is_active: true
+  type: DECIMAL(27, 6)
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: quarterly_time_index
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP_NTZ
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: yearly_time_index
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP_NTZ
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+- column_name: monthly_time_index
+  verbose_name: null
+  is_dttm: true
+  is_active: true
+  type: TIMESTAMP_NTZ
+  groupby: true
+  filterable: true
+  expression: null
+  description: null
+  python_date_format: null
+  extra: null
+version: 1.0.0
+database_uuid: de321d3e-2427-4866-aebc-1f7607c34599

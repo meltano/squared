@@ -1,0 +1,90 @@
+config-version: 2
+version: 2
+
+models:
+  - name: cli_builder 
+    columns:
+      - name: channel_id
+        tests:
+          - not_null
+      - name: channel_name
+        tests:
+          - not_null
+      - name: message
+        tests:
+          - unique
+          - not_null
+      - name: ts_datetime
+        tests:
+          - unique
+          - not_null
+      - name: thread_datetime
+        tests:
+          - not_null
+      - name: is_cli_message
+        tests:
+          - accepted_values:
+              values: ['FALSE', 'TRUE']
+          - not_null
+      - name: cli_id
+        tests:
+          - accepted_values:
+              values: ['add', 'config', 'discover', 'elt', 'environment', 'general_cli', 'init', 'install', 'invoke', 'remove', 'run', 'schedule', 'select', 'test', 'ui', 'uncategorized', 'user', 'upgrade', 'version']
+
+  - name: tap_builder
+    columns:
+      - name: channel_id
+        tests:
+          - not_null
+      - name: channel_name
+        tests:
+          - not_null
+      - name: message
+        tests:
+          - unique
+          - not_null
+      - name: ts_datetime
+        tests:
+          - unique
+          - not_null
+      - name: thread_datetime
+        tests:
+          - not_null
+      - name: is_tap_message
+        tests:
+          - accepted_values:
+              values: ['FALSE', 'TRUE']
+          - not_null
+      - name: tap_id
+        tests:
+          - accepted_values:
+              values: ['3plcentral', 'abcfinancial', 'aconex', 'activecampaign', 'acuite', 'adroll', 'adyen', 'agilecrm', 'urban', 'airtable', 'amazon', 'amazon', 'amazon', 'anaplan', 'kafka', 'apparel', 'appfigures', 'appstore', 'appsflyer', 'asana', 'ask', 'athena', 'auth0', 'autodesk', 'autopilot', 'awin', 'aws', 's3', 'basecone', 'hellobaton', 'bazaarvoice', 'bigcommerce', 'bigquery', 'billwerk', 'bing', 'bling', 'bold', 'braintree', 'brightpearl', 'bronto', 'bls', 'bynder', 'call', 'campaign', 'carbon', 'centra', 'chargebee', 'chargify', 'chatitive', 'circle', 'clarabridge', 'clickup', 'clockify', 'closeio', 'clover', 'clubhouse', 'clubspeed', 'codat', 'confluence', 'contentful', 'coosto', 'criteo', 'crossbeam', 'csv', 'currencyfreaks', 'customerx', 'daisycon', 'dayforce', 'dbt', 'dbt', 'density', 'deputy', 'domo', 'dynamics', 'dynamodb', 'ebay', 'eloqua', 'emarsys', 'estoca', 'eventbrite', 'exactsales', 'exchangeratehost', 'exchangeratesapi', 'fabdb', 'facebook', 'facebook', 'facebook', 'facebook', 'fastly', 'feed', 'five9', 'fixerio', 'forecast', 'freshdesk', 'frontapp', 'fulfil', 'fullstory', 'purecloud', 'general_tap', 'github', 'gitlab', 'gleantap', 'gmail', 'adwords', 'googleads', 'google', 'search', 'google', 'gorgias', 'greenhouse', 'harvest', 'helpscout', 'helpshift', 'holidays', 'hubplanner', 'hubspot', 'db2', 'idealo', 'ilevel', 'immuta', 'impact', 'indeed', 'insided', 'insightly', 'instagram', 'intercom', 'invoiced', 'ireckonu', 'iterable', 'jira', 'kanbanize', 'klaviyo', 'kustomer', 'kwanko', 'lever', 'linkedin', 'listen360', 'listrak', 'livechat', 'liveperson', 'grader', 'logmeinrescue', 'looker', 'lookml', 'loopreturns', 'maestroqa', 'mailchimp', 'mailgun', 'mailshake', 'mambu', 'marketman', 'marketo', 'mavenlink', 'megaphone', 'meltano', 'mercadopago', 'mssql', 'ms', 'mixpanel', 'mode', 'monday', 'mongodb', 'mysql', 'netlify', 'netsuite', 'newrelic', 'nikabot', 'officernd', 'okta', 'onfleet', 'open', 'openweathermap', 'oracle', 'orbit', 'ordway', 'outbrain', 'outreach', 'pagerduty', 'pardot', 'parquet', 'paypal', 'peloton', 'pendo', 'pepperjam', 'persistiq', 'pinterest', 'pipedrive', 'pivotal', 'platformpurple', 'pubg', 'postgres', 'postmark', 'powerbi', 'process', 'procore', 'prometheus', 'quaderno', 'quickbase', 'quickbooks', 'rakuten', 'readthedocs', 'recharge', 'recruitee', 'recurly', 'redash', 'redshift', 'referral', 'responsys', 'rest', 'reviewscouk', 'revinate', 'richpanel', 'rickandmorty', 'ringcentral', 'rockgympro', 'saasoptics', 'intacct', 'sailthru', 'salesforce', 'exacttarget', 'webcrawl', 'selligent', 'sendgrid', 'sendinblue', 'sentry', 'servicem8', 'sevenrooms', 'sftp', 'shiphero', 'shipstation', 'shopify', 'signonsite', 'simplifi', 'sklik', 'skubana', 'slack', 'sleeper', 'sling', 'smartsheet', 'sms', 'snapchat', 'snapengage', 'snowflake', 'solarvista', 'spotify', 'spreadsheets', 'square', 'stackexchange', 'starshipit', 'stella', 'strava', 'stringee', 'stripe', 'sumologic', 'surveymonkey', 'taboola', 'talkable', 'teamwork', 'telemetrics', 'lotr', 'thunderboard', 'tickettailor', 'tiktok', 'timebutler', 'toast', 'toggl', 'treez', 'trello', 'trustpilot', 'twilio', 'twinfield', 'twitter', 'typeform', 'typo', 'udemy', 'ujet', 'uncategorized', 'uservoice', 'vnda', 'walkscore', 'webcrm', 'wonolo', 'woocommerce', 'wootric', 'wordpress', 'workday', 'workramp', 'xero', 'yotpo', 'youtube', 'zendesk', 'zenefits', 'tap', 'zoom', 'zuora']
+
+  - name: target_builder
+    columns:
+      - name: channel_id
+        tests:
+          - not_null
+      - name: channel_name
+        tests:
+          - not_null
+      - name: message
+        tests:
+          - unique
+          - not_null
+      - name: ts_datetime
+        tests:
+          - unique
+          - not_null
+      - name: thread_datetime
+        tests:
+          - not_null
+      - name: is_target_message
+        tests:
+          - accepted_values:
+              values: ['FALSE', 'TRUE']
+          - not_null
+      - name: target_id
+        tests:
+          - accepted_values:
+              values: ['airtable', 'athena', 'azureblobstorage', 'bigquery', 'cassandra', 'csv', 'datadotworld', 'general_target', 'gsheet', 'jsonl', 'kinesis', 'magentobi', 'pardot', 'parquet', 'postgres', 'redshift', 'snowflake', 'sqlite', 'stitch', 'uncategorized', 'yaml']
