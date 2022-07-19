@@ -17,7 +17,7 @@ WITH base AS (
             input => PARSE_JSON(event_unstruct.contexts::VARIANT):data
         ) AS context
     WHERE
-        context.value:schema = 'iglu:com.meltano/project_context/jsonschema/1-0-0'
+        context.value:schema LIKE 'iglu:com.meltano/project_context/%'
         AND event_unstruct.contexts IS NOT NULL
     GROUP BY 1
 
