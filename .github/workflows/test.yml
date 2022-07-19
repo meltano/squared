@@ -64,7 +64,7 @@ jobs:
     environment: test
     strategy:
       matrix:
-        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_meltano', 'github_search']
+        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_meltano', 'github_search', 'meltanohub']
         # Excluding until mappers are supported using jobs https://github.com/meltano/squared/issues/289
         # , 'spreadsheets_anywhere']
     env:

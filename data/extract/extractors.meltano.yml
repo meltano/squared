@@ -1,5 +1,21 @@
 plugins:
   extractors:
+  - name: tap-meltanohub
+    namespace: tap_meltanohub
+    pip_url: git+https://github.com/pnadolny13/tap-meltanohub.git
+    executable: tap-meltanohub
+    capabilities:
+    - catalog
+    - state
+    - discover
+    - about
+    - stream-maps
+    settings:
+      - name: api_url
+        label: API URL
+        description: The url for the MeltanoHub API service.
+    select:
+    - plugins.*
   - name: tap-spreadsheets-anywhere
     variant: ets
     pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git

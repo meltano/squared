@@ -43,6 +43,8 @@ models:
         +schema: gitlab
       github_meltano:
         +schema: github_meltano
+      meltanohub:
+        +schema: meltanohub
       slack:
         +schema: slack
       snowplow:
