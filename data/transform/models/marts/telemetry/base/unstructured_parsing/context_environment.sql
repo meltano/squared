@@ -2,7 +2,7 @@ WITH base AS (
 
     SELECT
         event_unstruct.event_id,
-        MAX(context.value:schema) AS schema_name,
+        event_unstruct.schema_name,
         MAX(context.value:data:context_uuid::STRING) AS context_uuid,
         MAX(
             context.value:data:freedesktop_version_id::STRING
@@ -20,7 +20,7 @@ WITH base AS (
     WHERE
         context.value:schema LIKE 'iglu:com.meltano/environment_context/%'
         AND event_unstruct.contexts IS NOT NULL
-    GROUP BY 1
+    GROUP BY 1, 2
 
 )
 
