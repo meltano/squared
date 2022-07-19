@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: stg_meltanohub__plugins
+    columns:
+      - name: id
+        tests:
+          - unique
+          - not_null
