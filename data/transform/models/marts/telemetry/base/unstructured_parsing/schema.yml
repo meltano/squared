@@ -52,3 +52,84 @@ models:
       - name: project_id
         tests:
           - not_null
+
+  - name: event_unstruct
+    description: Snowplow project contexts parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
+  - name: context_project
+    description: Snowplow project contexts parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
+  - name: context_environment
+    description: Snowplow environment contexts parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
+  - name: context_exception
+    description: Snowplow exception contexts parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
+  - name: event_telemetry_state_change
+    description: Snowplow telemetry_state_change event parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+      - name: setting_name
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['project_id', 'send_anonymous_usage_stats']
+
+  - name: opt_outs
+    description: Projects that sent an opt out event.
+    columns:
+      - name: project_id
+        tests:
+          - not_null
+          - unique
+      - name: opted_out_at
+        tests:
+          - not_null
