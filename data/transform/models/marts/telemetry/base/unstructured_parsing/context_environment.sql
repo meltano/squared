@@ -2,6 +2,7 @@ WITH base AS (
 
     SELECT
         event_unstruct.event_id,
+        MAX(context.value:schema) AS schema_name,
         MAX(context.value:data:context_uuid::STRING) AS context_uuid,
         MAX(
             context.value:data:freedesktop_version_id::STRING
