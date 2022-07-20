@@ -2,7 +2,6 @@ WITH base AS (
 
     SELECT
         event_unstruct.event_id,
-        event_unstruct.schema_name,
         MAX(context.value:data:context_uuid::STRING) AS context_uuid,
         MAX(context.value:data:project_uuid::STRING) AS project_uuid,
         MAX(
@@ -17,9 +16,9 @@ WITH base AS (
             input => PARSE_JSON(event_unstruct.contexts::VARIANT):data
         ) AS context
     WHERE
-        event_unstruct.schema_name LIKE 'iglu:com.meltano/project_context/%'
+        context.value:schema LIKE 'iglu:com.meltano/project_context/%'
         AND event_unstruct.contexts IS NOT NULL
-    GROUP BY 1, 2
+    GROUP BY 1
 
 )
 
