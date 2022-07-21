@@ -15,6 +15,8 @@ for job in data.get('jobs'):
                     script.add(f'meltano install transformer {plugin};')
                 elif plugin.startswith('tap-'):
                   script.add(f'meltano install extractor {plugin};')
+                elif plugin.startswith('target-'):
+                  script.add(f'meltano install loader {plugin};')
                 elif len(plugins) > 2 and index not in (0, len(plugins)-1):
                   script.add(f'meltano install mapper {plugin};')
 print(' '.join(script))
