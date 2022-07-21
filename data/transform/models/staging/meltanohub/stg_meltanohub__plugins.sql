@@ -16,6 +16,7 @@ renamed AS (
     SELECT
         _sdc_batched_at AS updated_at,
         capabilities,
+        commands,
         "DEFAULT" AS is_default, --noqa: L059
         description,
         dialect,
@@ -31,6 +32,7 @@ renamed AS (
         pip_url,
         plugin_type,
         repo,
+        requires,
         "SELECT" AS select_extra,
         settings,
         settings_group_validation,

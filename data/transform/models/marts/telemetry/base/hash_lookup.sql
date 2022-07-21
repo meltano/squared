@@ -47,6 +47,16 @@ WITH base AS (
 
     UNION ALL
 
+    SELECT DISTINCT
+        command.value::STRING AS unhashed_value,
+        SHA2_HEX(command.value::STRING) AS hash_value,
+        'plugin_command' AS category
+    FROM {{ ref('stg_meltanohub__plugins') }},
+        LATERAL FLATTEN(input=>OBJECT_KEYS(commands)) AS command
+    WHERE stg_meltanohub__plugins.commands IS NOT NULL
+
+    UNION ALL
+
     SELECT
         f.value::STRING AS unhashed_value,
         SHA2_HEX(f.value) AS hash_value,
