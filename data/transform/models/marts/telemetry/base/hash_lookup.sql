@@ -21,6 +21,7 @@ WITH base AS (
         SHA2_HEX(executable) AS hash_value,
         'plugin_executable' AS category
     FROM {{ ref('stg_meltanohub__plugins') }}
+    WHERE executable IS NOT NULL
 
     UNION ALL
 
@@ -73,7 +74,10 @@ WITH base AS (
 
 )
 
-SELECT DISTINCT
+SELECT
+    {{ dbt_utils.surrogate_key(
+        ['hash_value', 'category']
+    ) }} AS hash_value_id,
     unhashed_value,
     hash_value,
     category

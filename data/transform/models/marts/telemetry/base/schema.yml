@@ -50,8 +50,10 @@ models:
       - name: hash_value
         tests:
           - not_null
-          - unique
       - name: unhashed_value
+        tests:
+          - not_null
+      - name: hash_value_id
         tests:
           - not_null
           - unique

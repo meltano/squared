@@ -61,17 +61,17 @@ SELECT DISTINCT
         h1.unhashed_value,
         SHA2_HEX(base_other.plugin_name)
     ) AS plugin_name,
-    COALESCE(
-        h2.unhashed_value,
-        SHA2_HEX(base_other.command)
-    ) AS command,
+    base_other.command,
     CASE
         WHEN base_other.plugin_name LIKE 'dbt-%' THEN 'dbt'
         ELSE COALESCE(stg_meltanohub__plugins.name, 'UNKNOWN')
     END
     AS plugin_category,
     COALESCE(stg_meltanohub__plugins.plugin_type, 'UNKNOWN') AS plugin_type,
-    SPLIT_PART(base_other.plugin_name, ':', 2) AS plugin_command
+    COALESCE(
+        h2.unhashed_value,
+        SHA2_HEX(SPLIT_PART(base_other.plugin_name, ':', 2))
+    ) AS plugin_command
 FROM base_other
 LEFT JOIN {{ ref('hash_lookup') }} AS h1
     ON SHA2_HEX(
@@ -79,7 +79,8 @@ LEFT JOIN {{ ref('hash_lookup') }} AS h1
     ) = h1.hash_value
     AND h1.category = 'plugin_name'
 LEFT JOIN {{ ref('hash_lookup') }} AS h2
-    ON SHA2_HEX(base_other.command) = h2.hash_value
+    ON SHA2_HEX(SPLIT_PART(base_other.plugin_name, ':', 2)) = h2.hash_value
         AND h2.category = 'plugin_command'
 LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
     ON SPLIT_PART(base_other.plugin_name, ':', 1) = stg_meltanohub__plugins.name
+WHERE stg_meltanohub__plugins.plugin_type != 'transforms'

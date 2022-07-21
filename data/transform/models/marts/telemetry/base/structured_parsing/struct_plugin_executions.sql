@@ -6,6 +6,8 @@ SELECT
     {{ dbt_utils.surrogate_key(
         [
             'struct_plugins.plugin_name',
+            'struct_plugins.plugin_command',
+            'struct_plugins.plugin_type',
             'structured_executions.execution_id'
         ]
     ) }} AS struct_plugin_exec_pk,
