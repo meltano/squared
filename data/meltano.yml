@@ -13,5 +13,5 @@ include_paths:
 
 # Feature Flags - https://docs.meltano.com/reference/settings#feature-flags
 
-# fail if any referenced env vars are blank
+# fail if any referenced env vars are missing
 ff.env_var_strict_mode: true
