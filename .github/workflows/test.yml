@@ -82,7 +82,7 @@ jobs:
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
     # Run Test
-    - run: meltano run ${{ matrix.extract-source }}
+    - run: meltano --log-level=debug run ${{ matrix.extract-source }}
 
   # el_tests:
   #   runs-on: ubuntu-latest
