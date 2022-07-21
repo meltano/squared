@@ -81,6 +81,7 @@ jobs:
     - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
+    - run: meltano run dbt-snowflake:deps dbt-snowflake:seed
     # Run Test
     - run: meltano --log-level=debug run ${{ matrix.extract-source }}
 
