@@ -55,6 +55,35 @@ jobs:
     - run: meltano invoke dbt-snowflake:deps
     - run: meltano invoke sqlfluff lint -v
 
+  el_tests_v2:
+    runs-on: ubuntu-latest
+    needs: [airflow_tests, sqlfluff_tests]
+    defaults:
+      run:
+        working-directory: data/
+    environment: test
+    strategy:
+      matrix:
+        extract-source: ['meltanohub_el']
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
+    # Install Plugins
+    - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
+    # Run Test
+    - run: meltano run ${{ matrix.extract-source }}
+
   el_tests:
     runs-on: ubuntu-latest
     needs: [airflow_tests, sqlfluff_tests]
@@ -64,7 +93,7 @@ jobs:
     environment: test
     strategy:
       matrix:
-        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_meltano', 'github_search', 'meltanohub']
+        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_meltano', 'github_search']
         # Excluding until mappers are supported using jobs https://github.com/meltano/squared/issues/289
         # , 'spreadsheets_anywhere']
     env:

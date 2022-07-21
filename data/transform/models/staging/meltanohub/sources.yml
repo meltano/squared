@@ -3,6 +3,6 @@ version: 2
 sources:
   - name: tap_meltanohub
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}MELTANOHUB'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_MELTANOHUB'
     tables:
       - name: plugins
