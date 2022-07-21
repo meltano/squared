@@ -6,6 +6,8 @@ SELECT
     {{ dbt_utils.surrogate_key(
         [
             'struct_plugins.plugin_name',
+            'struct_plugins.plugin_command',
+            'struct_plugins.plugin_type',
             'structured_executions.execution_id'
         ]
     ) }} AS struct_plugin_exec_pk,
@@ -18,6 +20,13 @@ SELECT
     cmd_parsed_all.command_category,
     -- plugins
     struct_plugins.plugin_name AS plugin_name,
+    'UNKNOWN' AS parent_name,
+    'UNKNOWN' AS executable,
+    'UNKNOWN' AS namespace,
+    'UNKNOWN' AS pip_url,
+    'UNKNOWN' AS plugin_variant,
+    struct_plugins.plugin_command,
+    struct_plugins.plugin_type,
     struct_plugins.plugin_category,
     structured_executions.project_id,
     cmd_parsed_all.environment AS env_id

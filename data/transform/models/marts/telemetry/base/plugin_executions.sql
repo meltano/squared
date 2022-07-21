@@ -52,6 +52,7 @@ SELECT
 FROM {{ ref('unstruct_plugin_executions') }}
 LEFT JOIN {{ ref('hash_lookup') }}
     ON unstruct_plugin_executions.env_id = hash_lookup.hash_value
+        AND hash_lookup.category = 'environment'
 
 UNION ALL
 
@@ -67,13 +68,13 @@ SELECT
     struct_plugin_executions.command_category,
     -- plugins
     struct_plugin_executions.plugin_name,
-    NULL AS parent_name,
-    NULL AS executable,
-    NULL AS namespace,
-    NULL AS pip_url,
-    NULL AS plugin_variant,
-    NULL AS plugin_command,
-    NULL AS plugin_type, -- extractor/loader/etc.
+    struct_plugin_executions.parent_name,
+    struct_plugin_executions.executable,
+    struct_plugin_executions.namespace,
+    struct_plugin_executions.pip_url,
+    struct_plugin_executions.plugin_variant,
+    struct_plugin_executions.plugin_command,
+    struct_plugin_executions.plugin_type, -- extractor/loader/etc.
     struct_plugin_executions.plugin_category,
     NULL AS plugin_surrogate_key,
     -- projects
@@ -109,3 +110,4 @@ SELECT
 FROM {{ ref('struct_plugin_executions') }}
 LEFT JOIN {{ ref('hash_lookup') }}
     ON struct_plugin_executions.env_id = hash_lookup.hash_value
+        AND hash_lookup.category = 'environment'
