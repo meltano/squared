@@ -42,6 +42,7 @@ environments:
           user: CICD
           role: CICD
           warehouse: CICD
+          default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACTOR_NAMESPACE}
       transformers:
       - name: dbt-snowflake
         config:

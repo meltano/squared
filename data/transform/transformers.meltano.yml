@@ -9,6 +9,8 @@ plugins:
           \ False, 'schema_list': []}\""
         description: Clones all production schemas in the PREP database that the user
           has access to.
+      run_meltanohub_staging: run --models staging.meltanohub.*
+      test_meltanohub_staging: test --models staging.meltanohub.*
     config:
       account: epa06486
       database_raw: RAW

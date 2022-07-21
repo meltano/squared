@@ -1,7 +1,7 @@
 version: 1
+default_environment: userdev
 send_anonymous_usage_stats: true
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
-default_environment: userdev
 include_paths:
 - ./environments/*.meltano.yml
 - ./extract/*.meltano.yml
@@ -9,3 +9,14 @@ include_paths:
 - ./orchestrate/*.meltano.yml
 - ./transform/*.meltano.yml
 - ./utilities/*.meltano.yml
+schedules:
+- name: meltanohub_el
+  interval: 0 6 * * *
+  job: meltanohub_el
+jobs:
+- name: meltanohub_el
+  tasks:
+  - tap-meltanohub target-snowflake
+  - dbt-snowflake:run_meltanohub_staging
+  - dbt-snowflake:test_meltanohub_staging
+

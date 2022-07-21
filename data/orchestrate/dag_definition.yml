@@ -139,19 +139,3 @@ dags:
         retries: 2
         depends_on:
           - dbt_spreadsheets_anywhere_run_models
-  meltanohub:
-    interval: '0 6 * * *'
-    steps:
-      - name: tap_meltanohub_target_snowflake
-        cmd: 'TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=MELTANOHUB meltano run tap-meltanohub target-snowflake'
-        retries: 2
-      - name: dbt_meltanohub_run_models
-        cmd: 'meltano invoke dbt-snowflake:run --models staging.meltanohub.*'
-        retries: 2
-        depends_on:
-          - tap_meltanohub_target_snowflake
-      - name: dbt_meltanohub_test_models
-        cmd: 'meltano invoke dbt-snowflake:test --models staging.meltanohub.*'
-        retries: 2
-        depends_on:
-          - dbt_meltanohub_run_models
