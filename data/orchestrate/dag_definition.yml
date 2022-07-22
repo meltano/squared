@@ -1,0 +1,13 @@
+dags:
+  daily_dashboard:
+    interval: '0 8 * * * 1-5'
+    steps:
+      - name: mart_dbt_snowflake
+        cmd: 'meltano invoke dbt-snowflake:run --models marts.* common.*'
+        retries: 2
+      - name: mart_dbt_test
+        cmd: 'meltano invoke dbt-snowflake:test --models marts.* common.*'
+        retries: 2
+        depends_on:
+          - mart_dbt_snowflake
+
