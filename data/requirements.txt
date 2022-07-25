@@ -1,2 +1,2 @@
 meltano==2.3.0
-"werkzeug>=0.2,<0.3"
+werkzeug>=2.1,<=2.1.3
