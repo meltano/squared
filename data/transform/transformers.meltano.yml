@@ -10,35 +10,35 @@ plugins:
         description: Clones all production schemas in the PREP database that the user
           has access to.
   
-      run_marts: run --models marts.* common.*
-      test_marts: test --models marts.* common.*
+      run_marts: run --select marts.* common.* --exclude staging.*
+      test_marts: test --select marts.* common.* --exclude staging.*
   
-      run_staging_meltanohub: run --models staging.meltanohub.*
-      test_staging_meltanohub: test --models staging.meltanohub.*
+      run_staging_meltanohub: run --select staging.meltanohub.*
+      test_staging_meltanohub: test --select staging.meltanohub.*,test_type:generic
   
-      run_staging_spreadsheets_anywhere: run --models staging.spreadsheets_anywhere.*
-      test_staging_spreadsheets_anywhere: test --models staging.spreadsheets_anywhere.*
+      run_staging_spreadsheets_anywhere: run --select staging.spreadsheets_anywhere.*
+      test_staging_spreadsheets_anywhere: test --select staging.spreadsheets_anywhere.*,test_type:generic
   
-      run_staging_snowplow: run --models staging.snowplow.*
-      test_staging_snowplow: test --models staging.snowplow.*
+      run_staging_snowplow: run --select staging.snowplow.*
+      test_staging_snowplow: test --select staging.snowplow.*,test_type:generic
   
-      run_staging_github_search: run --models staging.github_search.*
-      test_staging_github_search: test --models staging.github_search.*
+      run_staging_github_search: run --select staging.github_search.*
+      test_staging_github_search: test --select staging.github_search.*,test_type:generic
   
-      run_staging_github_meltano: run --models staging.github_meltano.*
-      test_staging_github_meltano: test --models staging.github_meltano.*
+      run_staging_github_meltano: run --select staging.github_meltano.*
+      test_staging_github_meltano: test --select staging.github_meltano.*,test_type:generic
 
-      run_staging_gitlab: run --models staging.gitlab.*
-      test_staging_gitlab: test --models staging.gitlab.*
+      run_staging_gitlab: run --select staging.gitlab.*
+      test_staging_gitlab: test --select staging.gitlab.*,test_type:generic
 
-      run_staging_slack: run --models staging.slack.*
-      test_staging_slack: test --models staging.slack.*
+      run_staging_slack: run --select staging.slack.*
+      test_staging_slack: test --select staging.slack.*,test_type:generic
 
-      run_staging_google_analytics: run --models staging.google_analytics.*
-      test_staging_google_analytics: test --models staging.google_analytics.*
+      run_staging_google_analytics: run --select staging.google_analytics.*
+      test_staging_google_analytics: test --select staging.google_analytics.*,test_type:generic
 
-      run_hub_metrics: run --models publish.meltano_hub.*
-      test_hub_metrics: test --models publish.meltano_hub.*
+      run_hub_metrics: run --select publish.meltano_hub.*
+      test_hub_metrics: test --select publish.meltano_hub.*
     config:
       account: epa06486
       database_raw: RAW

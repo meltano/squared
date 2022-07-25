@@ -87,7 +87,7 @@ jobs:
     environment: test
     strategy:
       matrix:
-        extract-source: ['meltanohub_el', 'spreadsheets_anywhere_el', 'github_search_el', 'github_meltano_el', 'gitlab_el', 'slack_el', 'google_analytics_el']
+        extract-source: ['meltanohub_el', 'spreadsheets_anywhere_el', 'github_search_el', 'github_meltano_el', 'gitlab_el', 'slack_el', 'google_analytics_el', 'snowplow_el']
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
