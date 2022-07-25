@@ -95,7 +95,7 @@ jobs:
 - name: google_analytics_el
   tasks:
   - tap-google-analytics target-snowflake
-  - great_expectations:test_ga_raw
+  # - great_expectations:test_ga_raw
   - dbt-snowflake:run_staging_google_analytics
   - dbt-snowflake:test_staging_google_analytics
 
@@ -104,7 +104,7 @@ jobs:
   tasks:
   - dbt-snowflake:run_hub_metrics
   - dbt-snowflake:test_hub_metrics
-  - great_expectations:test_dbt_hub_metrics
+  # - great_expectations:test_dbt_hub_metrics
   - tap-snowflake-metrics target-yaml-metrics
   - tap-snowflake-audit target-yaml-audit
 
@@ -112,7 +112,7 @@ jobs:
   tasks:
   - dbt-snowflake:run_hub_metrics
   - dbt-snowflake:test_hub_metrics
-  - great_expectations:test_dbt_hub_metrics
+  # - great_expectations:test_dbt_hub_metrics
   - tap-snowflake-metrics target-yaml-metrics
   - tap-snowflake-audit target-yaml-audit
   - awscli:s3_copy_metrics awscli:s3_copy_audit
