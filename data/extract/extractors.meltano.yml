@@ -2,7 +2,7 @@ plugins:
   extractors:
   - name: tap-meltanohub
     namespace: tap_meltanohub
-    pip_url: git+https://github.com/pnadolny13/tap-meltanohub.git
+    pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git
     executable: tap-meltanohub
     capabilities:
     - catalog
