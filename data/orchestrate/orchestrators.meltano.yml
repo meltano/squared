@@ -3,7 +3,7 @@ plugins:
   - name: airflow
     variant: apache
     pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
-      pytest
+      pytest kubernetes==11.0.0 apache-airflow-providers-cncf-kubernetes==2.0.0
     commands:
       test_dag_generator:
         args: ${MELTANO_PROJECT_ROOT}/orchestrate/tests/test_dag_generator.py

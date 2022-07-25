@@ -3,6 +3,6 @@ version: 2
 sources:
   - name: tap_google_analytics
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}GOOGLE_ANALYTICS'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_GOOGLE_ANALYTICS'
     tables:
       - name: events

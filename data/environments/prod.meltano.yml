@@ -32,6 +32,7 @@ environments:
           user: MELTANO
           role: LOADER
           warehouse: LOADER
+          default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
       transformers:
       - name: dbt-snowflake
         config:

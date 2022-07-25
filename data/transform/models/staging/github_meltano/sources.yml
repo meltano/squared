@@ -3,7 +3,7 @@ version: 2
 sources:
   - name: tap_github_meltano
     database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
-    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}GITHUB_MELTANO'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_GITHUB_MELTANO'
     tables:
       - name: issues
       - name: pull_requests

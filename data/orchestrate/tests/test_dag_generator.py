@@ -16,4 +16,4 @@ class TestDagGenerator:
         dag_bag = DagBag()
         for dag in dag_bag.dags:
             error_msg = f"Tags not set for DAG {dag}"
-            assert dag_bag.dags[dag].tags == ["meltano"], error_msg
+            assert "meltano" in dag_bag.dags[dag].tags, error_msg
