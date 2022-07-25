@@ -23,7 +23,7 @@ validations:
   - batch_request:
       datasource_name: snowflake_raw
       data_connector_name: default_inferred_data_connector_name
-      data_asset_name: google_analytics.events
+      data_asset_name: ${GREAT_EXPECTATIONS_SCHEMA_PREFIX}google_analytics.events
       data_connector_query:
         index: -1
     expectation_suite_name: google_analytics_raw.events.warning

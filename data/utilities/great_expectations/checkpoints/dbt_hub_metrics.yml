@@ -23,14 +23,14 @@ validations:
   - batch_request:
       datasource_name: snowflake_dbt
       data_connector_name: default_inferred_data_connector_name
-      data_asset_name: meltano_hub.fact_hub_metrics
+      data_asset_name: ${GREAT_EXPECTATIONS_SCHEMA_PREFIX}meltano_hub.fact_hub_metrics
       data_connector_query:
         index: -1
     expectation_suite_name: dbt.fact_hub_metrics.warning
   - batch_request:
       datasource_name: snowflake_dbt
       data_connector_name: default_inferred_data_connector_name
-      data_asset_name: meltano_hub.hub_metrics_audit
+      data_asset_name: ${GREAT_EXPECTATIONS_SCHEMA_PREFIX}meltano_hub.hub_metrics_audit
       data_connector_query:
         index: -1
     expectation_suite_name: dbt.hub_metrics_audit.warning

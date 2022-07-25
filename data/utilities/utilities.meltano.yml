@@ -57,6 +57,7 @@ plugins:
     config:
       host: epa06486
       password: ${SNOWFLAKE_PASSWORD}
+      schema_prefix: ''
   - name: permifrost
     namespace: permifrost
     pip_url: permifrost

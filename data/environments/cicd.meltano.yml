@@ -67,6 +67,7 @@ environments:
           username: CICD
           role: CICD
           warehouse: CICD
+          schema_prefix: ${CI_BRANCH}_
   env:
     # Required to be set in environment
     # DEFAULT_START_DATE: "2022-04-01"
