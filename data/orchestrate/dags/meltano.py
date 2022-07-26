@@ -11,8 +11,6 @@ import logging
 import os
 import subprocess
 from collections.abc import Iterable
-import pathlib
-import yaml
 
 from airflow import DAG
 
@@ -42,7 +40,8 @@ DEFAULT_ARGS = {
     "concurrency": 1,
 }
 
-ORCHESTRATE_PATH = pathlib.Path(__file__).resolve().parents[1]
+ORCHESTRATE_PATH = Path(__file__).resolve().parents[1]
+SCHEDULE_CACHE = Path(ORCHESTRATE_PATH).joinpath("schedules.cache.json")
 DEFAULT_TAGS = ["meltano"]
 PROJECT_ROOT = os.getenv("MELTANO_PROJECT_ROOT", os.getcwd())
 MELTANO_BIN = ".meltano/run/bin"
@@ -206,9 +205,9 @@ def _meltano_job_generator(schedules):
 def create_dags():
     """Create DAGs for Meltano schedules."""
 
-    if os.path.join(ORCHESTRATE_PATH, "schedules.cache.json").exists():
+    if SCHEDULE_CACHE.exists():
         # Read cached schedules output if exists
-        with open(os.path.join(ORCHESTRATE_PATH, "schedules.cache.json"), "r") as schedules:
+        with open(SCHEDULE_CACHE, "r") as schedules:
             schedule_export = json.load(schedules)
     else:
         list_result = subprocess.run(
