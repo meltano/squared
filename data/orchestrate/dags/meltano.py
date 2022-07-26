@@ -40,6 +40,8 @@ DEFAULT_ARGS = {
     "concurrency": 1,
 }
 
+ORCHESTRATE_PATH = Path(__file__).resolve().parents[1]
+SCHEDULE_CACHE = Path(ORCHESTRATE_PATH).joinpath("schedules.cache.json")
 DEFAULT_TAGS = ["meltano"]
 PROJECT_ROOT = os.getenv("MELTANO_PROJECT_ROOT", os.getcwd())
 MELTANO_BIN = ".meltano/run/bin"
@@ -202,14 +204,20 @@ def _meltano_job_generator(schedules):
 
 def create_dags():
     """Create DAGs for Meltano schedules."""
-    list_result = subprocess.run(
-        [MELTANO_BIN, "schedule", "list", "--format=json"],
-        cwd=PROJECT_ROOT,
-        stdout=subprocess.PIPE,
-        universal_newlines=True,
-        check=True,
-    )
-    schedule_export = json.loads(list_result.stdout)
+
+    if SCHEDULE_CACHE.exists():
+        # Read cached schedules output if exists
+        with open(SCHEDULE_CACHE, "r") as schedules:
+            schedule_export = json.load(schedules)
+    else:
+        list_result = subprocess.run(
+            [MELTANO_BIN, "schedule", "list", "--format=json"],
+            cwd=PROJECT_ROOT,
+            stdout=subprocess.PIPE,
+            universal_newlines=True,
+            check=True,
+        )
+        schedule_export = json.loads(list_result.stdout)
 
     if schedule_export.get("schedules"):
         logger.info(f"Received meltano v2 style schedule export: {schedule_export}")

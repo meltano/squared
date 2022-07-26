@@ -7,18 +7,7 @@ WITH source AS (
                 id
             ORDER BY _sdc_batched_at DESC
         ) AS row_num
-
-    -- TODO: remove this once mappers are
-    -- supported using jobs https://github.com/meltano/squared/issues/289
-    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
-
-        FROM raw.spreadsheets_anywhere.azure_ips
-
-    {% else %}
-
-        FROM {{ source('tap_spreadsheets_anywhere', 'azure_ips') }}
-
-    {% endif %}
+    FROM {{ source('tap_spreadsheets_anywhere', 'azure_ips') }}
 
 ),
 
