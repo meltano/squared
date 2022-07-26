@@ -2,8 +2,8 @@ plugins:
   utilities:
   - name: sqlfluff
     variant: sqlfluff
-    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; dbt-core~=1.0.0;
-      dbt-snowflake~=1.0.0
+    pip_url: sqlfluff[dbt]==0.9.4; sqlfluff-templater-dbt==0.9.4; dbt-core~=1.1.0;
+      dbt-snowflake~=1.1.0
     settings:
     - name: user
       env: DBT_SNOWFLAKE_USER
@@ -30,6 +30,9 @@ plugins:
     namespace: awscli
     pip_url: awscli==1.21.7
     executable: aws
+    commands:
+      s3_copy_metrics: s3 cp metrics.yml s3://prod-meltano-bucket-01/hub_metrics/
+      s3_copy_audit: s3 cp audit.yml s3://prod-meltano-bucket-01/hub_metrics/
   - name: superset
     variant: apache
     pip_url: apache-superset==1.5.0 markupsafe==2.0.1 snowflake-sqlalchemy

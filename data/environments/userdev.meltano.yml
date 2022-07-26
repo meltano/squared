@@ -32,6 +32,7 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+          default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
       transformers:
       - name: dbt-snowflake
         config:

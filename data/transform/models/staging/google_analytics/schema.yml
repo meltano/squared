@@ -1,0 +1,9 @@
+version: 2
+
+models:
+  - name: stg_ga__cli_events
+    columns:
+      - name: event_surrogate_key
+        tests:
+          - unique
+          - not_null
