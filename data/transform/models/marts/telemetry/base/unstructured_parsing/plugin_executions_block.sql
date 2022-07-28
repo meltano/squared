@@ -73,7 +73,6 @@ SELECT
         ['flattened.plugin_definition']
     ) }} AS plugin_surrogate_key,
     flattened.execution_id,
-    flattened.cli_command,
     flattened.plugin_started,
     flattened.plugin_ended,
     DATEDIFF(millisecond, flattened.plugin_ended, flattened.plugin_started) AS plugin_runtime_ms,

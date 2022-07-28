@@ -19,42 +19,6 @@ unstruct_prep AS (
 
     SELECT
         execution_id,
-        MAX(
-            COALESCE(cli_command IN (
-                'meltano invoke',
-                'meltano elt',
-                'meltano run',
-                'meltano test',
-                'meltano ui',
-                'invoke',
-                'elt',
-                'run',
-                'test',
-                'ui'
-            ),
-            FALSE)
-        ) AS is_exec_event,
-        MAX(
-            COALESCE(cli_command IN (
-                'meltano invoke',
-                'meltano elt',
-                'meltano run',
-                'invoke',
-                'elt',
-                'run'
-            ),
-            FALSE
-            )
-        ) AS is_pipeline_exec_event,
-        MAX(
-            COALESCE(cli_command IN (
-                'meltano transforms',
-                'meltano dashboards',
-                'meltano models',
-                'transforms',
-                'dashboards',
-                'models'
-            ), FALSE)) AS is_legacy_event,
         MAX(COALESCE(plugin_category = 'dbt', FALSE)) AS is_plugin_dbt,
         MAX(COALESCE(plugin_category = 'singer', FALSE)) AS is_plugin_singer,
         MAX(COALESCE(plugin_category = 'airflow', FALSE)) AS is_plugin_airflow,
@@ -72,14 +36,7 @@ unstruct_prep AS (
             COALESCE(plugin_category = 'great_expectations', FALSE)
         ) AS is_plugin_great_ex,
         -- OS Features
-        MAX(COALESCE(env_id IS NOT NULL, FALSE)) AS is_os_feature_environments,
         MAX(COALESCE(plugin_type = 'mappers', FALSE)) AS is_os_feature_mappers,
-        MAX(
-            COALESCE(cli_command IN ('meltano test', 'test'), FALSE)
-        ) AS is_os_feature_test,
-        MAX(
-            COALESCE(cli_command IN ('meltano run', 'run'), FALSE)
-        ) AS is_os_feature_run,
         MAX(
             COALESCE(
                 plugin_category NOT IN (
@@ -116,6 +73,18 @@ combined AS (
         NULL AS cli_sub_command,
         structured_executions.project_id,
         NULL AS project_uuid_source,
+        NULL AS started_ts,
+        structured_executions.event_created_at AS finish_ts,
+        NULL AS num_cpu_cores_available,
+        NULL AS windows_edition,
+        NULL AS machine,
+        NULL AS system_release,
+        NULL AS is_dev_build,
+        NULL AS environment_name_hash,
+        NULL AS python_implementation,
+        NULL AS system_name,
+        NULL AS system_version,
+        0 AS exit_code,
         retention.tracking_disabled AS is_tracking_disabled,
         structured_executions.event_count,
         structured_executions.ip_address_hash,
@@ -182,18 +151,59 @@ combined AS (
         unstructured_executions.cli_sub_command AS cli_sub_command,
         unstructured_executions.project_id,
         unstructured_executions.project_uuid_source,
+        unstructured_executions.started_ts,
+        unstructured_executions.finish_ts,
+        unstructured_executions.num_cpu_cores_available,
+        unstructured_executions.windows_edition,
+        unstructured_executions.machine,
+        unstructured_executions.system_release,
+        unstructured_executions.is_dev_build,
+        unstructured_executions.environment_name_hash,
+        unstructured_executions.python_implementation,
+        unstructured_executions.system_name,
+        unstructured_executions.system_version,
+        unstructured_executions.exit_code,
         FALSE AS is_tracking_disabled,
         1 AS event_count,
         MD5(unstructured_executions.user_ipaddress) AS ip_address_hash,
         unstructured_executions.meltano_version,
         unstructured_executions.python_version,
         unstructured_executions.is_ci_environment,
-        COALESCE(unstruct_prep.is_exec_event, FALSE) AS is_exec_event,
         COALESCE(
-            unstruct_prep.is_pipeline_exec_event,
+            unstructured_executions.cli_command IN (
+                'meltano invoke',
+                'meltano elt',
+                'meltano run',
+                'meltano test',
+                'meltano ui',
+                'invoke',
+                'elt',
+                'run',
+                'test',
+                'ui'
+            ),
+            FALSE
+        ) AS is_exec_event,
+        COALESCE(
+            unstructured_executions.cli_command IN (
+                'meltano invoke',
+                'meltano elt',
+                'meltano run',
+                'invoke',
+                'elt',
+                'run'
+            ),
             FALSE
         ) AS is_pipeline_exec_event,
-        COALESCE(unstruct_prep.is_legacy_event, FALSE) AS is_legacy_event,
+        COALESCE(unstructured_executions.cli_command IN (
+                'meltano transforms',
+                'meltano dashboards',
+                'meltano models',
+                'transforms',
+                'dashboards',
+                'models'
+            ), FALSE) AS is_legacy_event,
+
         -- Plugins
         COALESCE(unstruct_prep.is_plugin_dbt, FALSE) AS is_plugin_dbt,
         COALESCE(unstruct_prep.is_plugin_singer, FALSE) AS is_plugin_singer,
@@ -207,16 +217,13 @@ combined AS (
         COALESCE(unstruct_prep.is_plugin_sqlfluff, FALSE) AS is_plugin_sqlfluff,
         COALESCE(unstruct_prep.is_plugin_great_ex, FALSE) AS is_plugin_great_ex,
         -- OS Features
-        COALESCE(
-            unstruct_prep.is_os_feature_environments,
-            FALSE
-        ) AS is_os_feature_environments,
+        COALESCE(unstructured_executions.environment_name_hash IS NOT NULL, FALSE) AS is_os_feature_environments,
         COALESCE(
             unstruct_prep.is_os_feature_mappers,
             FALSE
         ) AS is_os_feature_mappers,
-        COALESCE(unstruct_prep.is_os_feature_test, FALSE) AS is_os_feature_test,
-        COALESCE(unstruct_prep.is_os_feature_run, FALSE) AS is_os_feature_run,
+        COALESCE(unstructured_executions.cli_command IN ('meltano test', 'test'), FALSE) AS is_os_feature_test,
+        COALESCE(unstructured_executions.cli_command IN ('meltano run', 'run'), FALSE) AS is_os_feature_run,
         COALESCE(unstruct_prep.is_plugin_other, FALSE) AS is_plugin_other,
         NULL AS is_acquired_date,
         NULL AS is_churned_date,
@@ -237,11 +244,23 @@ SELECT
     combined.cli_sub_command,
     combined.project_id,
     combined.project_uuid_source,
-    combined.is_tracking_disabled,
     combined.event_count,
     combined.ip_address_hash,
     combined.meltano_version,
     combined.python_version,
+    combined.started_ts,
+    combined.finish_ts,
+    combined.num_cpu_cores_available,
+    combined.windows_edition,
+    combined.machine,
+    combined.system_release,
+    combined.is_dev_build,
+    combined.environment_name_hash,
+    combined.python_implementation,
+    combined.system_name,
+    combined.system_version,
+    combined.exit_code,
+    combined.is_tracking_disabled,
     combined.is_ci_environment,
     combined.is_exec_event,
     combined.is_pipeline_exec_event,
