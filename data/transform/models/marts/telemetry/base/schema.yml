@@ -86,3 +86,14 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: opt_outs
+    description: Projects that sent an opt out event.
+    columns:
+      - name: project_id
+        tests:
+          - not_null
+          - unique
+      - name: opted_out_at
+        tests:
+          - not_null

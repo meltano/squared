@@ -72,6 +72,26 @@ WITH base AS (
             )
         ) AS f
 
+    UNION ALL
+
+    SELECT
+        f.value::STRING AS unhashed_value,
+        SHA2_HEX(f.value) AS hash_value,
+        'runtime_error' AS category
+    FROM
+        TABLE(
+            FLATTEN(
+                input => PARSE_JSON(
+                    '["Extractor and loader failed", "Loader failed", "Extractor failed", "Mappers failed", "`dbt run` failed", \
+                    "`dbt seed` failed", "`dbt deps` failed", "`dbt compile` failed", \
+                    "Could not find catalog. Verify that the tap supports discovery mode and advertises the `discover` capability as well as either `catalog` or `properties`", \
+                    "Unexpected completion sequence in ExtractLoadBlock set. Intermediate block (likely a mapper) failed." \
+                    ]'
+                )
+            )
+        ) AS f
+        
+
 )
 
 SELECT
