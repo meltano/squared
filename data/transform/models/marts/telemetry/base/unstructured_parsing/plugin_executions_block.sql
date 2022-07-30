@@ -1,6 +1,5 @@
 WITH base AS (
 
-
     SELECT
         unstruct_event_flattened.execution_id,
         unstruct_event_flattened.plugins_obj,
@@ -19,6 +18,17 @@ WITH base AS (
 
 flattened AS (
     SELECT
+        {{ dbt_utils.surrogate_key(
+            [
+                'plugin.value',
+                'base.execution_id',
+                'base.plugin_started',
+                'plugin.index'
+            ]
+        ) }} AS plugin_exec_block_pk,
+        {{ dbt_utils.surrogate_key(
+            ['plugin.value']
+        ) }} AS plugin_surrogate_key,
         base.execution_id,
         base.plugins_obj,
         base.cli_command,
@@ -39,8 +49,8 @@ flattened AS (
 incomplete_plugins AS (
 
     SELECT
-        execution_id,
-        plugin_definition,
+        flattened.plugin_exec_block_pk,
+        flattened.execution_id,
         exception_dict,
         h1.unhashed_value AS top_runtime_error,
         h2.unhashed_value AS nested_runtime_error,
@@ -69,9 +79,8 @@ exception_mapping AS (
 )
 
 SELECT
-    {{ dbt_utils.surrogate_key(
-        ['flattened.plugin_definition']
-    ) }} AS plugin_surrogate_key,
+    flattened.plugin_exec_block_pk,
+    flattened.plugin_surrogate_key,
     flattened.execution_id,
     flattened.plugin_started,
     flattened.plugin_ended,
@@ -125,8 +134,7 @@ SELECT
     END AS completion_status
 FROM flattened
 LEFT JOIN incomplete_plugins
-    ON flattened.execution_id = incomplete_plugins.execution_id
-    AND flattened.plugin_definition = incomplete_plugins.plugin_definition
+    ON flattened.plugin_exec_block_pk = incomplete_plugins.plugin_exec_block_pk
 LEFT JOIN exception_mapping as ex_map_top
     ON incomplete_plugins.top_runtime_error = ex_map_top.runtime_error
 LEFT JOIN exception_mapping as ex_map_nested

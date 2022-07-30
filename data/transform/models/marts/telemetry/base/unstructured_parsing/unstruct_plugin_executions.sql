@@ -14,12 +14,7 @@ WITH base AS (
 
 
 SELECT
-    {{ dbt_utils.surrogate_key(
-        [
-            'plugin_executions_block.plugin_surrogate_key',
-            'plugin_executions_block.execution_id'
-        ]
-    ) }} AS unstruct_plugin_exec_pk,
+    plugin_executions_block.plugin_exec_block_pk AS unstruct_plugin_exec_pk,
     plugin_executions_block.plugin_surrogate_key,
     plugin_executions_block.execution_id,
     'snowplow' AS event_source,

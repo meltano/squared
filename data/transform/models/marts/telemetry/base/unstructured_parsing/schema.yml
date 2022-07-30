@@ -184,3 +184,19 @@ models:
           - not_null
           - accepted_values:
               values: ['1-0-0', '1-0-1']
+
+  - name: unstruct_plugin_executions
+    description: Unstructured plugin executions from the CLI level.
+    columns:
+      - name: unstruct_plugin_exec_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: plugin_executions_block
+    description: Plugin executions.
+    columns:
+      - name: plugin_exec_block_pk
+        tests:
+          - not_null
+          - unique
