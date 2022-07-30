@@ -106,3 +106,12 @@ models:
         tests:
           - not_null
           - unique
+      - name: completion_status
+        tests:
+          - accepted_values:
+              values: [
+                'SUCCESS',
+                'FAILED',
+                'ABORTED',
+                'UNKNOWN_FAILED_OR_ABORTED'
+              ]

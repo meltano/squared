@@ -45,8 +45,8 @@ SELECT DISTINCT
     NULL AS block_type,
     -- TODO: if failed and invoke set to fail, if failed and ELT set to UNKNOWN_EL_PAIR_FAILURE_MISSING_CLI, 
     CASE
-        WHEN base.exit_code = '0' THEN 'SUCCESS_CLI_LEVEL'
-        ELSE 'NON_BLOCK_UNSTRUCT'
+        WHEN base.exit_code = '0' THEN 'SUCCESS_BLOCK_CLI_LEVEL'
+        ELSE 'FAILED_BLOCK_CLI_LEVEL'
     END AS completion_status
 FROM base
 LEFT JOIN {{ ref('plugin_executions_block') }}

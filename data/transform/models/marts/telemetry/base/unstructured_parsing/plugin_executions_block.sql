@@ -99,11 +99,11 @@ SELECT
             CASE
                 WHEN incomplete_plugins.execution_id IS NULL THEN 'SUCCESS'
                 WHEN NOT ARRAY_CONTAINS('failed'::VARIANT, flattened.event_statuses) THEN 'ABORTED-SKIPPED'
-                WHEN incomplete_plugins.hashed_nested_runtime_error IS NOT NULL AND ex_map_nested.runtime_error IS NULL THEN 'EXCEPTION_UNHASH_FAILED'
+                WHEN incomplete_plugins.hashed_nested_runtime_error IS NOT NULL AND ex_map_nested.runtime_error IS NULL THEN 'EXCEPTION_PARSING_FAILED'
                 WHEN flattened.plugin_category = ex_map_nested.category THEN 'FAILED'
                 WHEN flattened.plugin_category != ex_map_nested.category THEN 'INCOMPLETE_EL_PAIR'
                 WHEN incomplete_plugins.exception_dict IS NULL THEN 'NULL_EXCEPTION'
-                ELSE 'EXCEPTION_PARSING_FAILED'
+                ELSE 'OTHER_FAILURE'
             END
         WHEN flattened.cli_command = 'run' THEN
             CASE
@@ -112,16 +112,16 @@ SELECT
                 -- It never completed but also didnt have a failure, call it aborted or skipped.
                 WHEN NOT ARRAY_CONTAINS('failed'::VARIANT, flattened.event_statuses) THEN 'ABORTED-SKIPPED'
                 -- We couldnt parse the exception enough to know which plugin in the EL block failed
-                WHEN flattened.block_type = 'ExtractLoadBlocks' AND incomplete_plugins.hashed_runtime_error IS NOT NULL AND ex_map_top.runtime_error IS NULL THEN 'UNKNOWN_EL_PAIR_FAILURE'
+                WHEN flattened.block_type = 'ExtractLoadBlocks' AND incomplete_plugins.hashed_runtime_error IS NOT NULL AND ex_map_top.runtime_error IS NULL THEN 'EXCEPTION_PARSING_FAILED'
                 -- EL Block, no exception to parse
-                WHEN flattened.block_type = 'ExtractLoadBlocks' AND incomplete_plugins.exception_dict IS NULL THEN 'UNKNOWN_EL_PAIR_FAILURE_MISSING'
+                WHEN flattened.block_type = 'ExtractLoadBlocks' AND incomplete_plugins.exception_dict IS NULL THEN 'NULL_EXCEPTION'
                 -- EL block and parsed/unhashed exception matches this plugin category
                 WHEN flattened.block_type = 'ExtractLoadBlocks' AND flattened.plugin_category = ex_map_top.category THEN 'FAILED'
                 -- EL block and parsed/unhashed exception doesnt match this plugin category, its not the reason but it also isnt successful
-                WHEN flattened.block_type = 'ExtractLoadBlocks' AND flattened.plugin_category != ex_map_top.category THEN 'INCOMPLETE_OTHER_EL_PLUGIN_FAILED'
+                WHEN flattened.block_type = 'ExtractLoadBlocks' AND flattened.plugin_category != ex_map_top.category THEN 'INCOMPLETE_EL_PAIR'
                 -- Invoker has only 1 plugin involved, safe to call it failed no matter what the exception was
                 WHEN flattened.block_type = 'InvokerCommand' THEN 'FAILED'
-                ELSE 'STATUS_UNKNOWN'
+                ELSE 'OTHER_FAILURE'
             END
         WHEN flattened.cli_command = 'invoke' THEN
             CASE
