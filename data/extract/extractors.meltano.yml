@@ -50,12 +50,28 @@ plugins:
       auto_join_channels: false
       selected_channels:
       - C01SK13R9NJ
+      - CFFBG6DS4
+      - CFG3C3C66
+      - CFG3C3D1Q
+      - CMN8HELB0
+      - C013EKWA2Q1
+      - C013Z450LCD
+      - C01AU933X8D
+      - C01PKLU5D1R
+      - C01QS0RV78D
+      - C01S996HGFK
+      - C01TCRBBJD7
+      - C01UTUSP34M
+      - C01UW1W4D5Y
+      - C01UW21TM98
+      - C01V8L0NZC1
       channel_types:
       - private_channel
     select:
     - users.*
     - channels.*
     - messages.*
+    - threads.*
   - name: tap-google-analytics
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
