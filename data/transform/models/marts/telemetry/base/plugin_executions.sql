@@ -22,7 +22,9 @@ WITH base AS (
         unstruct_plugins.plugin_surrogate_key
     FROM {{ ref('unstruct_plugin_executions') }}
     LEFT JOIN {{ ref('unstruct_plugins') }}
-        ON unstruct_plugin_executions.plugin_surrogate_key = unstruct_plugins.plugin_surrogate_key
+        ON
+            unstruct_plugin_executions.plugin_surrogate_key
+            = unstruct_plugins.plugin_surrogate_key
 
     UNION ALL
 
@@ -71,10 +73,22 @@ SELECT
     plugin_surrogate_key,
     completion_status AS completion_sub_status,
     CASE
-        WHEN completion_status IN ('SUCCESS', 'SUCCESS_STRUCT', 'SUCCESS_BLOCK_CLI_LEVEL') THEN 'SUCCESS'
+        WHEN completion_status IN (
+            'SUCCESS',
+            'SUCCESS_STRUCT',
+            'SUCCESS_BLOCK_CLI_LEVEL'
+        ) THEN 'SUCCESS'
         WHEN completion_status IN ('FAILED') THEN 'FAILED'
-        WHEN completion_status IN ('ABORTED-SKIPPED', 'INCOMPLETE_EL_PAIR') THEN 'ABORTED'
-        WHEN completion_status IN ('NULL_EXCEPTION', 'EXCEPTION_PARSING_FAILED', 'OTHER_FAILURE', 'FAILED_BLOCK_CLI_LEVEL') THEN 'UNKNOWN_FAILED_OR_ABORTED'
+        WHEN completion_status IN (
+            'ABORTED-SKIPPED',
+            'INCOMPLETE_EL_PAIR'
+        ) THEN 'ABORTED'
+        WHEN completion_status IN (
+            'NULL_EXCEPTION',
+            'EXCEPTION_PARSING_FAILED',
+            'OTHER_FAILURE',
+            'FAILED_BLOCK_CLI_LEVEL'
+        ) THEN 'UNKNOWN_FAILED_OR_ABORTED'
         ELSE 'OTHER'
     END AS completion_status
 FROM base
