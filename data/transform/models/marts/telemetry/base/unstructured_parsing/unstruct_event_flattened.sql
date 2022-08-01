@@ -2,18 +2,18 @@
     config(materialized='table')
 }}
 
-select 	
-	event_cli.event_id,
+SELECT
+    event_cli.event_id,
     event_cli.event,
     execution_mapping.execution_id,
-	NULL AS block_type,
+    NULL AS block_type,
     context_exception.exception,
-	stg_snowplow__events.event_created_at,
-	context_plugins.plugins_obj,
+    stg_snowplow__events.event_created_at,
+    context_plugins.plugins_obj,
     NULL AS exit_code,
     NULL AS exit_timestamp,
     NULL AS process_duration_microseconds
-from {{ ref('event_cli') }}
+FROM {{ ref('event_cli') }}
 LEFT JOIN {{ ref('execution_mapping') }}
     ON event_cli.event_id = execution_mapping.event_id
 LEFT JOIN {{ ref('context_plugins') }}
@@ -25,14 +25,14 @@ LEFT JOIN {{ ref('stg_snowplow__events') }}
 
 UNION ALL
 
-select 
-	event_block.event_id,
+SELECT
+    event_block.event_id,
     event_block.event,
     execution_mapping.execution_id,
-	event_block.type AS block_type,
+    event_block.type AS block_type,
     context_exception.exception,
-	stg_snowplow__events.event_created_at,
-	context_plugins.plugins_obj,
+    stg_snowplow__events.event_created_at,
+    context_plugins.plugins_obj,
     NULL AS exit_code,
     NULL AS exit_timestamp,
     NULL AS process_duration_microseconds
@@ -48,14 +48,14 @@ LEFT JOIN {{ ref('stg_snowplow__events') }}
 
 UNION ALL
 
-select 
-	event_exit.event_id,
+SELECT
+    event_exit.event_id,
     'exit' AS event,
     execution_mapping.execution_id,
-	NULL AS block_type,
+    NULL AS block_type,
     context_exception.exception,
-	stg_snowplow__events.event_created_at,
-	context_plugins.plugins_obj,
+    stg_snowplow__events.event_created_at,
+    context_plugins.plugins_obj,
     event_exit.exit_code,
     event_exit.exit_timestamp,
     event_exit.process_duration_microseconds

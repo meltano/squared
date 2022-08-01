@@ -25,7 +25,8 @@ SELECT
     plugin_executions_block.completion_status
 FROM {{ ref('plugin_executions_block') }}
 LEFT JOIN {{ ref('unstruct_plugins') }}
-    ON unstruct_plugins.plugin_surrogate_key = plugin_executions_block.plugin_surrogate_key
+    ON
+        unstruct_plugins.plugin_surrogate_key = plugin_executions_block.plugin_surrogate_key
 
 UNION ALL
 

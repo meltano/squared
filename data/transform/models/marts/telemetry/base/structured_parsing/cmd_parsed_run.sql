@@ -55,8 +55,8 @@ _mappers AS (
     FROM target_pairs
     INNER JOIN
         target_pairs AS t2 ON
-            target_pairs.command =
-            t2.command AND target_pairs.plugin_index >
+            target_pairs.command
+            = t2.command AND target_pairs.plugin_index >
             t2.plugin_index AND target_pairs.plugin_index <
             t2.target_pair_index
 ),

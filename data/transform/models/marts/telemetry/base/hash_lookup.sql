@@ -90,7 +90,7 @@ WITH base AS (
                 )
             )
         ) AS f
-        
+
 
 )
 

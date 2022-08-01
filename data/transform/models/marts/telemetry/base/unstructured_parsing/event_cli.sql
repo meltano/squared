@@ -18,4 +18,3 @@ SELECT
     *,
     SPLIT_PART(schema_name, '/', -1) AS schema_version
 FROM base
-

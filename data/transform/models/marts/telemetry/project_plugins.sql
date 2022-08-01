@@ -108,6 +108,6 @@ SELECT
     projects_7d,
     plugin_categories_7d,
     plugin_categories_28d / NULLIF(projects_28d, 0) AS app_28d,
-    plugin_categories_14d /  NULLIF(projects_14d, 0) AS app_14d,
+    plugin_categories_14d / NULLIF(projects_14d, 0) AS app_14d,
     plugin_categories_7d / NULLIF( projects_7d, 0) AS app_7d
 FROM plugins_per_project

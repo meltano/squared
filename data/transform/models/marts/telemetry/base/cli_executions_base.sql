@@ -217,13 +217,20 @@ combined AS (
         COALESCE(unstruct_prep.is_plugin_sqlfluff, FALSE) AS is_plugin_sqlfluff,
         COALESCE(unstruct_prep.is_plugin_great_ex, FALSE) AS is_plugin_great_ex,
         -- OS Features
-        COALESCE(unstructured_executions.environment_name_hash IS NOT NULL, FALSE) AS is_os_feature_environments,
+        COALESCE(
+            unstructured_executions.environment_name_hash IS NOT NULL, FALSE
+        ) AS is_os_feature_environments,
         COALESCE(
             unstruct_prep.is_os_feature_mappers,
             FALSE
         ) AS is_os_feature_mappers,
-        COALESCE(unstructured_executions.cli_command IN ('meltano test', 'test'), FALSE) AS is_os_feature_test,
-        COALESCE(unstructured_executions.cli_command IN ('meltano run', 'run'), FALSE) AS is_os_feature_run,
+        COALESCE(
+            unstructured_executions.cli_command IN ('meltano test', 'test'),
+            FALSE
+        ) AS is_os_feature_test,
+        COALESCE(
+            unstructured_executions.cli_command IN ('meltano run', 'run'), FALSE
+        ) AS is_os_feature_run,
         COALESCE(unstruct_prep.is_plugin_other, FALSE) AS is_plugin_other,
         NULL AS is_acquired_date,
         NULL AS is_churned_date,

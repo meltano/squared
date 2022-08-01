@@ -19,12 +19,10 @@ SELECT
     plugin_executions.plugin_category,
     plugin_executions.plugin_surrogate_key,
     -- CLI Attributes
-    COALESCE(cli_executions_base.started_ts, cli_executions_base.event_created_at) AS cli_started_ts,
     cli_executions_base.cli_command,
     cli_executions_base.environment_name_hash AS env_id,
     hash_lookup.unhashed_value AS env_name,
     cli_executions_base.exit_code AS cli_exit_code,
-    DATEDIFF(millisecond, cli_executions_base.started_ts, cli_executions_base.finish_ts) AS cli_processing_ms,
     cli_executions_base.meltano_version,
     cli_executions_base.num_cpu_cores_available,
     cli_executions_base.windows_edition,
@@ -36,15 +34,23 @@ SELECT
     cli_executions_base.python_implementation,
     cli_executions_base.system_name,
     cli_executions_base.system_version,
-    -- Project Attributes
     project_dim.project_id,
     project_dim.first_event_at AS project_created_at,
+    -- Project Attributes
     project_dim.is_active AS project_is_active,
     project_dim.project_id_source,
-    -- Host Attributes
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location,
-    ip_address_dim.ip_address_hash
+    -- Host Attributes
+    ip_address_dim.ip_address_hash,
+    COALESCE(
+        cli_executions_base.started_ts, cli_executions_base.event_created_at
+    ) AS cli_started_ts,
+    DATEDIFF(
+        MILLISECOND,
+        cli_executions_base.started_ts,
+        cli_executions_base.finish_ts
+    ) AS cli_processing_ms
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id

@@ -1,9 +1,9 @@
 WITH base AS (
 
     SELECT
+        context.*,
         event_unstruct.event_id,
-        context.value:schema::STRING AS schema_name,
-        context.*
+        context.value:schema::STRING AS schema_name
     FROM {{ ref('event_unstruct') }},
         LATERAL FLATTEN(
             input => PARSE_JSON(event_unstruct.contexts::VARIANT):data
@@ -17,7 +17,7 @@ WITH base AS (
 min_index AS (
 
     SELECT
-        event_id,
+        base.event_id,
         MIN(base.index) AS first_index
     FROM base
     GROUP BY 1
