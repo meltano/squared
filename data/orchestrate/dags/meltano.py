@@ -27,6 +27,8 @@ operator = Variable.get("OPERATOR_TYPE", "k8")
 if operator == "k8":
     from meltano_k8_operator import MeltanoKubernetesPodOperator
 
+meltano_log_level = Variable.get("MELTANO_LOG_LEVEL", "info")
+
 logger = logging.getLogger(__name__)
 
 DEFAULT_ARGS = {
@@ -104,8 +106,8 @@ def _meltano_elt_generator(schedules):
             task = MeltanoKubernetesPodOperator(
                 task_id="extract_load",
                 name="extract_load",
-                environment=os.environ.get('MELTANO_ENVIRONMENT'),
-                log_level=os.environ.get('MELTANO_CLI_LOG_LEVEL'),
+                environment=os.environ.get('MELTANO_ENVIRONMENT', 'prod'),
+                log_level=meltano_log_level,
                 arguments=[f"meltano schedule run {schedule['name']}"],
                 dag=dag,
                 # retry_delay=retry_delay,
@@ -175,8 +177,8 @@ def _meltano_job_generator(schedules):
                     task = MeltanoKubernetesPodOperator(
                         task_id=task_id,
                         name=task_id,
-                        environment=os.environ.get('MELTANO_ENVIRONMENT'),
-                        log_level=os.environ.get('MELTANO_CLI_LOG_LEVEL'),
+                        environment=os.environ.get('MELTANO_ENVIRONMENT', 'prod'),
+                        log_level=meltano_log_level,
                         arguments=[f'meltano run {run_args}'],
                         dag=dag,
                         # retry_delay=retry_delay,
