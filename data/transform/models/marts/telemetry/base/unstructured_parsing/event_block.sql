@@ -7,7 +7,7 @@ WITH base AS (
         ):data:schema::STRING AS schema_name,
         PARSE_JSON(
             unstruct_event::VARIANT
-        ):data:data:type::STRING AS type,
+        ):data:data:type::STRING AS block_type,
         PARSE_JSON(
             unstruct_event::VARIANT
         ):data:data:event::STRING AS event

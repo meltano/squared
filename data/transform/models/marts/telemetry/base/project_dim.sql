@@ -8,7 +8,8 @@ WITH active_projects AS (
     FROM {{ ref('structured_executions') }}
     INNER JOIN
         {{ ref('cli_executions_base') }} ON
-            structured_executions.execution_id = cli_executions_base.execution_id
+            structured_executions.execution_id
+            = cli_executions_base.execution_id
     WHERE structured_executions.command_category IN (
         'meltano invoke',
         'meltano elt',
@@ -26,7 +27,8 @@ WITH active_projects AS (
     FROM {{ ref('unstructured_executions') }}
     INNER JOIN
         {{ ref('cli_executions_base') }} ON
-            unstructured_executions.execution_id = cli_executions_base.execution_id
+            unstructured_executions.execution_id
+            = cli_executions_base.execution_id
     WHERE unstructured_executions.cli_command IN (
         'invoke',
         'elt',

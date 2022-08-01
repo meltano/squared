@@ -29,7 +29,7 @@ SELECT
     event_block.event_id,
     event_block.event,
     execution_mapping.execution_id,
-    event_block.type AS block_type,
+    event_block.block_type,
     context_exception.exception,
     stg_snowplow__events.event_created_at,
     context_plugins.plugins_obj,

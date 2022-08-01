@@ -13,7 +13,8 @@ WITH base AS (
         ):data:data:exit_timestamp::TIMESTAMP AS exit_timestamp,
         PARSE_JSON(
             unstruct_event::VARIANT
-        ):data:data:process_duration_microseconds::INT AS process_duration_microseconds
+        ):data:data:process_duration_microseconds::INT
+        AS process_duration_microseconds
     FROM {{ ref('event_unstruct') }}
     WHERE
         event_name = 'exit_event'

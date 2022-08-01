@@ -26,7 +26,8 @@ SELECT
 FROM {{ ref('plugin_executions_block') }}
 LEFT JOIN {{ ref('unstruct_plugins') }}
     ON
-        unstruct_plugins.plugin_surrogate_key = plugin_executions_block.plugin_surrogate_key
+        unstruct_plugins.plugin_surrogate_key
+        = plugin_executions_block.plugin_surrogate_key
 
 UNION ALL
 
@@ -44,9 +45,10 @@ SELECT DISTINCT
     NULL AS plugin_ended,
     NULL AS plugin_runtime_ms,
     NULL AS block_type,
-    -- TODO: if failed and invoke set to fail, if failed and ELT set to UNKNOWN_EL_PAIR_FAILURE_MISSING_CLI, 
     CASE
         WHEN base.exit_code = '0' THEN 'SUCCESS_BLOCK_CLI_LEVEL'
+        -- We can't parse out what plugin failed in ELT without more information
+        WHEN base.cli_command = 'elt' THEN 'UNKNOWN_FAILED_OR_ABORTED'
         ELSE 'FAILED_BLOCK_CLI_LEVEL'
     END AS completion_status
 FROM base
