@@ -82,6 +82,6 @@ module "meltano" {
   superset_db_database    = local.inventory.superset_database.database
   superset_db_port        = local.inventory.superset_database.port
   superset_admin_password = random_password.superset_password.result
-  superset_dependencies   = "'snowflake-connector-python==2.7.9' 'typing-extensions==4.3.0' 'snowflake-sqlalchemy==1.2.4'"
+  superset_dependencies   = "'snowflake-connector-python==2.7.9' 'snowflake-sqlalchemy==1.2.4'"
   superset_webserver_host = "internal-095a2699-meltano-superset-608a-2127736714.us-east-1.elb.amazonaws.com"
 }
