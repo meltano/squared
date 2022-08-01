@@ -43,8 +43,7 @@ blend AS (
 
 snow_more_events AS (
     -- retrieve snowplow event counts where project id has more in snow than GA
-    SELECT
-        snow.*
+    SELECT snow.*
     FROM snow LEFT JOIN blend ON snow.project_id = blend.project_id
     WHERE blend.project_id IS NOT NULL
 ),

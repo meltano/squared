@@ -147,15 +147,6 @@ models:
         tests:
           - not_null
 
-  - name: plugin_executions
-    description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
-    columns:
-      - name: plugin_exec_pk
-        description: The unique plugin execution ID.
-        tests:
-          - not_null
-          - unique
-
   - name: fact_plugin_usage
     description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
     columns:
@@ -170,8 +161,8 @@ models:
         tests:
           - not_null
 
-      - name: event_ts
-        description: The event timestamp.
+      - name: cli_started_ts
+        description: The CLI started timestamp.
         tests:
           - not_null
 

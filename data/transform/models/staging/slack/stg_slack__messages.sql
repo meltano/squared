@@ -71,6 +71,5 @@ renamed AS (
 
 )
 
-SELECT
-    *
+SELECT *
 FROM renamed

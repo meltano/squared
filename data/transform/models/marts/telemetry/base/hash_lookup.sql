@@ -72,6 +72,14 @@ WITH base AS (
             )
         ) AS f
 
+    UNION ALL
+
+    SELECT
+        exception_message AS unhashed_value,
+        SHA2_HEX(exception_message) AS hash_value,
+        'runtime_error' AS category
+    FROM {{ ref('runtime_exceptions') }}
+
 )
 
 SELECT

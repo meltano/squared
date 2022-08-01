@@ -1,0 +1,8 @@
+exception_message,plugin_category
+Loader failed,loaders
+Extractor failed,extractors
+Mappers failed,mappers
+`dbt run` failed,transformers
+Extractor and loader failed,extractors
+Unexpected completion sequence in ExtractLoadBlock set. Intermediate block (likely a mapper) failed.,mappers
+Could not find catalog. Verify that the tap supports discovery mode and advertises the `discover` capability as well as either `catalog` or `properties`,extractors

@@ -86,3 +86,32 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: opt_outs
+    description: Projects that sent an opt out event.
+    columns:
+      - name: project_id
+        tests:
+          - not_null
+          - unique
+      - name: opted_out_at
+        tests:
+          - not_null
+
+  - name: plugin_executions
+    description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
+    columns:
+      - name: plugin_exec_pk
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
+      - name: completion_status
+        tests:
+          - accepted_values:
+              values: [
+                'SUCCESS',
+                'FAILED',
+                'ABORTED',
+                'UNKNOWN_FAILED_OR_ABORTED'
+              ]

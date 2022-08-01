@@ -1,7 +1,7 @@
 WITH plugins AS (
     SELECT DISTINCT
-        plugin_executions.event_ts::DATE AS date_day,
-        plugin_executions.project_id,
+        cli_executions_base.started_ts::DATE AS date_day,
+        project_dim.project_id,
         CASE
             WHEN
                 plugin_executions.plugin_category NOT IN (
@@ -13,7 +13,7 @@ WITH plugins AS (
     LEFT JOIN {{ ref('cli_executions_base') }}
         ON plugin_executions.execution_id = cli_executions_base.execution_id
     LEFT JOIN {{ ref('project_dim') }}
-        ON plugin_executions.project_id = project_dim.project_id
+        ON cli_executions_base.project_id = project_dim.project_id
     LEFT JOIN {{ ref('unstructured_executions') }}
         ON plugin_executions.execution_id = unstructured_executions.execution_id
     WHERE
@@ -21,7 +21,7 @@ WITH plugins AS (
         AND DATEDIFF(
             'day',
             project_dim.first_event_at::TIMESTAMP,
-            plugin_executions.event_ts::DATE
+            cli_executions_base.started_ts::DATE
         ) >= 7
         -- TODO: move project_uuid_source upstream to cli_executions_base
         AND COALESCE(
@@ -107,7 +107,7 @@ SELECT
     plugin_categories_14d,
     projects_7d,
     plugin_categories_7d,
-    plugin_categories_28d / projects_28d AS app_28d,
-    plugin_categories_14d / projects_14d AS app_14d,
-    plugin_categories_7d / projects_7d AS app_7d
+    plugin_categories_28d / NULLIF(projects_28d, 0) AS app_28d,
+    plugin_categories_14d / NULLIF(projects_14d, 0) AS app_14d,
+    plugin_categories_7d / NULLIF( projects_7d, 0) AS app_7d
 FROM plugins_per_project
