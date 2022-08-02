@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 SELECT
     {{ dbt_utils.surrogate_key(
         [

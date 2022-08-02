@@ -20,8 +20,7 @@ SELECT
     plugin_executions.plugin_surrogate_key,
     -- CLI Attributes
     cli_executions_base.cli_command,
-    cli_executions_base.environment_name_hash AS env_id,
-    hash_lookup.unhashed_value AS env_name,
+    environment_dim.env_name,
     cli_executions_base.exit_code AS cli_exit_code,
     cli_executions_base.meltano_version,
     cli_executions_base.num_cpu_cores_available,
@@ -58,7 +57,7 @@ LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
     ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
--- TODO: move this parsing up stream
-LEFT JOIN {{ ref('hash_lookup') }}
-    ON cli_executions_base.environment_name_hash = hash_lookup.hash_value
-        AND hash_lookup.category = 'environment'
+LEFT JOIN {{ ref('execution_env_map') }}
+    ON cli_executions_base.execution_id = execution_env_map.execution_id
+LEFT JOIN {{ ref('environment_dim') }}
+    ON execution_env_map.environment_fk = environment_dim.environment_pk
