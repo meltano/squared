@@ -80,7 +80,6 @@ combined AS (
         NULL AS machine,
         NULL AS system_release,
         NULL AS is_dev_build,
-        NULL AS environment_name_hash,
         NULL AS python_implementation,
         NULL AS system_name,
         NULL AS system_version,
@@ -158,7 +157,6 @@ combined AS (
         unstructured_executions.machine,
         unstructured_executions.system_release,
         unstructured_executions.is_dev_build,
-        unstructured_executions.environment_name_hash,
         unstructured_executions.python_implementation,
         unstructured_executions.system_name,
         unstructured_executions.system_version,
@@ -218,7 +216,7 @@ combined AS (
         COALESCE(unstruct_prep.is_plugin_great_ex, FALSE) AS is_plugin_great_ex,
         -- OS Features
         COALESCE(
-            unstructured_executions.environment_name_hash IS NOT NULL, FALSE
+            unstructured_executions.env_hash IS NOT NULL, FALSE
         ) AS is_os_feature_environments,
         COALESCE(
             unstruct_prep.is_os_feature_mappers,
@@ -262,7 +260,6 @@ SELECT
     combined.machine,
     combined.system_release,
     combined.is_dev_build,
-    combined.environment_name_hash,
     combined.python_implementation,
     combined.system_name,
     combined.system_version,
