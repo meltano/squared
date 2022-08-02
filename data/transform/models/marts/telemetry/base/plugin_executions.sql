@@ -53,37 +53,37 @@ WITH base AS (
 )
 
 SELECT
-    plugin_exec_pk,
-    execution_id,
-    plugin_started,
-    plugin_ended,
-    plugin_runtime_ms,
-    event_source,
-    event_count,
-    event_type,
-    plugin_name,
-    parent_name,
-    executable,
-    namespace,
-    pip_url,
-    plugin_variant,
-    plugin_command,
-    plugin_type,
-    plugin_category,
-    plugin_surrogate_key,
-    completion_status AS completion_sub_status,
+    base.plugin_exec_pk,
+    base.execution_id,
+    base.plugin_started,
+    base.plugin_ended,
+    base.plugin_runtime_ms,
+    base.event_source,
+    base.event_count,
+    base.event_type,
+    base.plugin_name,
+    base.parent_name,
+    base.executable,
+    base.namespace,
+    base.pip_url,
+    base.plugin_variant,
+    base.plugin_command,
+    base.plugin_type,
+    base.plugin_category,
+    base.plugin_surrogate_key,
+    base.completion_status AS completion_sub_status,
     CASE
-        WHEN completion_status IN (
+        WHEN base.completion_status IN (
             'SUCCESS',
             'SUCCESS_STRUCT',
             'SUCCESS_BLOCK_CLI_LEVEL'
         ) THEN 'SUCCESS'
-        WHEN completion_status IN ('FAILED') THEN 'FAILED'
-        WHEN completion_status IN (
+        WHEN base.completion_status IN ('FAILED') THEN 'FAILED'
+        WHEN base.completion_status IN (
             'ABORTED-SKIPPED',
             'INCOMPLETE_EL_PAIR'
         ) THEN 'ABORTED'
-        WHEN completion_status IN (
+        WHEN base.completion_status IN (
             'NULL_EXCEPTION',
             'EXCEPTION_PARSING_FAILED',
             'OTHER_FAILURE',
@@ -92,3 +92,7 @@ SELECT
         ELSE 'OTHER'
     END AS completion_status
 FROM base
+-- Exclude non-activated projects based on GA vs Snowplow
+INNER JOIN
+    {{ ref('cli_execs_blended') }} ON
+        base.execution_id = cli_execs_blended.execution_id
