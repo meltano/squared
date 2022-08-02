@@ -1,6 +1,6 @@
 WITH plugins AS (
     SELECT DISTINCT
-        cli_executions_base.started_ts::DATE AS date_day,
+        cli_executions_base.event_created_at::DATE AS date_day,
         project_dim.project_id,
         CASE
             WHEN
@@ -21,7 +21,7 @@ WITH plugins AS (
         AND DATEDIFF(
             'day',
             project_dim.first_event_at::TIMESTAMP,
-            cli_executions_base.started_ts::DATE
+            cli_executions_base.event_created_at::DATE
         ) >= 7
         -- TODO: move project_uuid_source upstream to cli_executions_base
         AND COALESCE(
