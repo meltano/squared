@@ -216,7 +216,7 @@ combined AS (
         COALESCE(unstruct_prep.is_plugin_great_ex, FALSE) AS is_plugin_great_ex,
         -- OS Features
         COALESCE(
-            unstructured_executions.env_hash IS NOT NULL, FALSE
+            unstructured_executions.environment_name_hash IS NOT NULL, FALSE
         ) AS is_os_feature_environments,
         COALESCE(
             unstruct_prep.is_os_feature_mappers,
