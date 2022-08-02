@@ -134,4 +134,19 @@ models:
       - name: event_date
         tests:
           - not_null
-          
+
+  - name: environment_dim
+    description: This table contains attributes about project environments.
+    columns:
+      - name: environment_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: execution_env_map
+    columns:
+      - name: environment_fk
+        tests:
+         - relationships:
+              to: ref('environment_dim')
+              field: environment_pk

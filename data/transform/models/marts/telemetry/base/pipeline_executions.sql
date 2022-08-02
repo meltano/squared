@@ -2,7 +2,7 @@ WITH plugin_prep AS (
     SELECT
         plugin_executions.execution_id,
         cli_executions_base.project_id,
-        cli_executions_base.environment_name_hash AS env_id,
+        environment_dim.env_hash AS env_id,
         ARRAY_AGG(
             COALESCE(
                 plugin_executions.plugin_surrogate_key,
@@ -12,6 +12,10 @@ WITH plugin_prep AS (
     FROM {{ ref('plugin_executions') }}
     LEFT JOIN {{ ref('cli_executions_base') }}
         ON plugin_executions.execution_id = cli_executions_base.execution_id
+    LEFT JOIN {{ ref('execution_env_map') }}
+        ON plugin_executions.execution_id = execution_env_map.execution_id
+    LEFT JOIN {{ ref('environment_dim') }}
+        ON execution_env_map.environment_fk = environment_dim.environment_pk
     WHERE cli_executions_base.cli_command IN ('elt', 'run')
     GROUP BY 1, 2, 3
 )

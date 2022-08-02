@@ -9,7 +9,8 @@ SELECT
     cli_executions_base.python_version,
     ip_address_dim.ip_address_hash,
     ip_address_dim.cloud_provider,
-    ip_address_dim.execution_location
+    ip_address_dim.execution_location,
+    environment_dim.env_name
 FROM {{ ref('cli_executions_base') }}
 LEFT JOIN {{ ref('pipeline_executions') }}
     ON cli_executions_base.execution_id = pipeline_executions.execution_id
@@ -19,3 +20,7 @@ LEFT JOIN {{ ref('date_dim') }}
     ON cli_executions_base.event_date = date_dim.date_day
 LEFT JOIN {{ ref('ip_address_dim') }}
     ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
+LEFT JOIN {{ ref('execution_env_map') }}
+    ON cli_executions_base.execution_id = execution_env_map.execution_id
+LEFT JOIN {{ ref('environment_dim') }}
+    ON execution_env_map.environment_fk = environment_dim.environment_pk
