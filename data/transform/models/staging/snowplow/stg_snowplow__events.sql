@@ -16,10 +16,9 @@ WITH source AS (
 
         {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
-        FROM raw.snowplow.events
-        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
-            -- filter test events
-            AND app_id != 'test'
+        FROM raw.snowplow.events SAMPLE ROW (100000 ROWS)
+        WHERE COALESCE(app_id, '') != 'test'
+
         {% else %}
 
         FROM {{ source('snowplow', 'events') }}
