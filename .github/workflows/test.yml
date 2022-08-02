@@ -153,4 +153,4 @@ jobs:
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_prep)
     # Run Test
-    - run: meltano run dbt-snowflake:deps hub_metrics_prep
+    - run: meltano run dbt-snowflake:deps hub_metrics_publish

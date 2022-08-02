@@ -31,8 +31,8 @@ plugins:
     pip_url: awscli==1.21.7
     executable: aws
     commands:
-      s3_copy_metrics: s3 cp metrics.yml s3://prod-meltano-bucket-01/hub_metrics/
-      s3_copy_audit: s3 cp audit.yml s3://prod-meltano-bucket-01/hub_metrics/
+      s3_copy_metrics: s3 cp metrics.yml ${HUB_METRICS_S3_PATH}
+      s3_copy_audit: s3 cp audit.yml ${HUB_METRICS_S3_PATH}
   - name: superset
     variant: apache
     pip_url: apache-superset==1.5.0 markupsafe==2.0.1 snowflake-sqlalchemy
