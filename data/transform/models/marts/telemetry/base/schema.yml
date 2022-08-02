@@ -115,3 +115,23 @@ models:
                 'ABORTED',
                 'UNKNOWN_FAILED_OR_ABORTED'
               ]
+
+  - name: cli_executions_base
+    columns:
+      - name: execution_id
+        tests:
+          - not_null
+          - unique
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+          
