@@ -91,6 +91,7 @@ WITH base AS (
 )
 
 SELECT
+    DISTINCT
     {{ dbt_utils.surrogate_key(
         ['hash_value', 'category']
     ) }} AS hash_value_id,
