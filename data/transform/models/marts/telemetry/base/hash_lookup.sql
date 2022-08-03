@@ -34,6 +34,14 @@ WITH base AS (
     UNION ALL
 
     SELECT DISTINCT
+        'git+' || repo || '.git' AS unhashed_value,
+        SHA2_HEX('git+' || repo || '.git') AS hash_value,
+        'plugin_pip_url' AS category
+    FROM {{ ref('stg_meltanohub__plugins') }}
+
+    UNION ALL
+
+    SELECT DISTINCT
         variant AS unhashed_value,
         SHA2_HEX(variant) AS hash_value,
         'plugin_variant' AS category
