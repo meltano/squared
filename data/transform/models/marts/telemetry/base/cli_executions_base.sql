@@ -80,7 +80,7 @@ combined AS (
         NULL AS machine,
         NULL AS system_release,
         NULL AS is_dev_build,
-        NULL AS environment_name_hash,
+        cmd_parsed_all.environment AS environment_name_hash,
         NULL AS python_implementation,
         NULL AS system_name,
         NULL AS system_version,
@@ -136,6 +136,9 @@ combined AS (
     FROM {{ ref('structured_executions') }}
     LEFT JOIN {{ ref('event_commands_parsed') }}
         ON structured_executions.command = event_commands_parsed.command
+    LEFT JOIN
+        {{ ref('cmd_parsed_all') }} ON
+            structured_executions.command = cmd_parsed_all.command
     LEFT JOIN retention
         ON structured_executions.project_id = retention.project_id
 
