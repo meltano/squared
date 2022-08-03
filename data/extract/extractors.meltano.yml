@@ -46,7 +46,7 @@ plugins:
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
     config:
-      start_date: '2021-01-01'
+      start_date: '2020-05-01'
       auto_join_channels: false
       selected_channels:
       - C01SK13R9NJ
