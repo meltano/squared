@@ -42,9 +42,9 @@ schedules:
   interval: 0 6 * * *
   job: google_analytics_el
 
-- name: hub_metrics_prep_and_publish
+- name: hub_metrics_publish
   interval: 0 9 * * *
-  job: hub_metrics_prep_and_publish
+  job: hub_metrics_publish
 
 - name: marts_refresh
   interval: 0 8 * * * 1-5
@@ -99,16 +99,7 @@ jobs:
   - dbt-snowflake:run_staging_google_analytics
   - dbt-snowflake:test_staging_google_analytics
 
-# TODO: how to reuse so I dont have to redefine twice
-- name: hub_metrics_prep
-  tasks:
-  - dbt-snowflake:run_hub_metrics
-  - dbt-snowflake:test_hub_metrics
-  # - great_expectations:test_dbt_hub_metrics
-  - tap-snowflake-metrics target-yaml-metrics
-  - tap-snowflake-audit target-yaml-audit
-
-- name: hub_metrics_prep_and_publish
+- name: hub_metrics_publish
   tasks:
   - dbt-snowflake:run_hub_metrics
   - dbt-snowflake:test_hub_metrics
