@@ -10,10 +10,13 @@ WITH base AS (
         event_type,
         plugin_category,
         COALESCE(
-            cli_command IN ('run', 'elt')
-            AND completion_status = 'SUCCESS',
+            cli_command IN ('run', 'elt'),
             FALSE
-        ) AS is_success_exec
+        ) AS is_exec,
+        COALESCE(
+            completion_status = 'SUCCESS',
+            FALSE
+        ) AS is_success
     FROM {{ ref('fact_plugin_usage') }}
     WHERE cli_started_ts >= DATEADD(MONTH, -3, CURRENT_DATE)
 
@@ -27,14 +30,17 @@ agg_variant AS (
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
             DISTINCT CASE WHEN
-                is_success_exec
+                is_success AND is_exec
                 THEN project_id END
         ) AS success_projects,
         SUM(
-            CASE WHEN is_success_exec
+            CASE WHEN is_success AND is_exec
                 THEN event_count END
         ) AS success_execs,
-        SUM(event_count) AS all_execs
+        SUM(
+            CASE WHEN is_exec
+                THEN event_count END
+        ) AS all_execs
     FROM base
     WHERE event_type = 'unstructured'
     GROUP BY 1, 2, 3
@@ -47,15 +53,17 @@ agg_pip_url AS (
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
             DISTINCT CASE WHEN
-                is_success_exec
+                is_success AND is_exec
                 THEN project_id END
         ) AS success_projects,
         SUM(
-            CASE WHEN
-                is_success_exec
+            CASE WHEN is_success AND is_exec
                 THEN event_count END
         ) AS success_execs,
-        SUM(event_count) AS all_execs
+        SUM(
+            CASE WHEN is_exec
+                THEN event_count END
+        ) AS all_execs
     FROM base
     WHERE event_type = 'unstructured'
     GROUP BY 1, 2
@@ -67,15 +75,17 @@ agg_legacy AS (
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
             DISTINCT CASE WHEN
-                is_success_exec
+                is_success AND is_exec
                 THEN project_id END
         ) AS success_projects,
         SUM(
-            CASE WHEN
-                is_success_exec
+            CASE WHEN is_success AND is_exec
                 THEN event_count END
         ) AS success_execs,
-        SUM(event_count) AS all_execs
+        SUM(
+            CASE WHEN is_exec
+                THEN event_count END
+        ) AS all_execs
     FROM base
     WHERE plugin_category = 'singer'
     GROUP BY 1
