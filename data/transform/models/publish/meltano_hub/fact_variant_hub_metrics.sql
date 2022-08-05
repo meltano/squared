@@ -7,13 +7,13 @@ WITH base AS (
         plugin_name,
         parent_name,
         project_id,
+        event_type,
+        plugin_category,
         COALESCE(
             cli_command IN ('run', 'elt')
             AND completion_status = 'SUCCESS',
             FALSE
-        ) AS is_success_exec,
-        event_type,
-        plugin_category
+        ) AS is_success_exec
     FROM {{ ref('fact_plugin_usage') }}
     WHERE cli_started_ts >= DATEADD(MONTH, -3, CURRENT_DATE)
 
@@ -88,6 +88,17 @@ SELECT
     stg_meltanohub__plugins.plugin_type,
     stg_meltanohub__plugins.pip_url,
     stg_meltanohub__plugins.is_default,
+    agg_legacy.all_projects AS legacy_all_projects,
+    agg_legacy.success_projects AS legacy_success_projects,
+    agg_legacy.success_execs AS legacy_success_execs,
+    agg_legacy.all_execs AS legacy_all_execs,
+    fact_repo_metrics.created_at_ts AS created_at_timestamp,
+    fact_repo_metrics.last_push_ts AS last_push_timestamp,
+    fact_repo_metrics.last_updated_ts AS last_updated_timestamp,
+    fact_repo_metrics.num_forks::INT AS num_forks,
+    fact_repo_metrics.num_open_issues::INT AS num_open_issues,
+    fact_repo_metrics.num_stargazers::INT AS num_stargazers,
+    fact_repo_metrics.num_watchers::INT AS num_watchers,
     COALESCE(
         agg_variant.all_projects,
         agg_pip_url.all_projects
@@ -103,18 +114,7 @@ SELECT
     COALESCE(
         agg_variant.all_execs,
         agg_pip_url.all_execs
-    ) AS all_execs,
-    agg_legacy.all_projects AS legacy_all_projects,
-    agg_legacy.success_projects AS legacy_success_projects,
-    agg_legacy.success_execs AS legacy_success_execs,
-    agg_legacy.all_execs AS legacy_all_execs,
-    fact_repo_metrics.created_at_ts AS created_at_timestamp,
-    fact_repo_metrics.last_push_ts AS last_push_timestamp,
-    fact_repo_metrics.last_updated_ts AS last_updated_timestamp,
-    fact_repo_metrics.num_forks::INT AS num_forks,
-    fact_repo_metrics.num_open_issues::INT AS num_open_issues,
-    fact_repo_metrics.num_stargazers::INT AS num_stargazers,
-    fact_repo_metrics.num_watchers::INT AS num_watchers
+    ) AS all_execs
 FROM {{ ref('stg_meltanohub__plugins') }}
 LEFT JOIN agg_variant
     ON agg_variant.plugin_name = stg_meltanohub__plugins.name
