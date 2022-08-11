@@ -58,6 +58,8 @@ LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
     ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
+    AND COALESCE(cli_executions_base.event_created_at
+        < ip_address_dim.active_to, TRUE)
 -- TODO: move this parsing up stream
 LEFT JOIN {{ ref('hash_lookup') }}
     ON cli_executions_base.environment_name_hash = hash_lookup.hash_value

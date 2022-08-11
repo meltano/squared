@@ -67,6 +67,7 @@ jobs:
   tasks:
   - tap-spreadsheets-anywhere coalesce-gcp-ips target-snowflake
   - dbt-snowflake:run_snapshot_spreadsheets_anywhere
+  - dbt-snowflake:test_snapshot_spreadsheets_anywhere
 
 - name: snowplow_el
   tasks:

@@ -74,7 +74,6 @@ models:
       - name: ip_address_hash
         tests:
           - not_null
-          - unique
 
   - name: opt_outs
     description: Projects that sent an opt out event.
