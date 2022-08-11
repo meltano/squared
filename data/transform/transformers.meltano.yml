@@ -15,8 +15,7 @@ plugins:
       run_staging_meltanohub: run --select staging.meltanohub.*
       test_staging_meltanohub: test --select staging.meltanohub.*,test_type:generic
   
-      run_staging_spreadsheets_anywhere: run --select staging.spreadsheets_anywhere.*
-      test_staging_spreadsheets_anywhere: test --select staging.spreadsheets_anywhere.*,test_type:generic
+      run_snapshot_spreadsheets_anywhere: snapshot --select spreadsheets_anywhere.*
   
       run_staging_snowplow: run --select staging.snowplow.*
       test_staging_snowplow: test --select staging.snowplow.*,test_type:generic
