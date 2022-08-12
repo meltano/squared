@@ -27,6 +27,11 @@ seeds:
   quote_columns: false
   +schema: SEED
 
+snapshots:
+  target_database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+  target_schema: snapshots
+  transient: false
+
 models:
   squared:
 
@@ -49,8 +54,6 @@ models:
         +schema: slack
       snowplow:
         +schema: snowplow
-      spreadsheets_anywhere:
-        +schema: spreadsheets_anywhere
     # ------------------
     # Publish
     # ------------------

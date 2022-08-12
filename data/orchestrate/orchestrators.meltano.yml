@@ -51,6 +51,12 @@ schedules:
   job: marts_refresh
 
 jobs:
+
+- name: dbt_docs
+  tasks:
+  - dbt-snowflake:docs-generate
+  - dbt-snowflake:docs-serve
+
 - name: meltanohub_el
   tasks:
   - tap-meltanohub target-snowflake
@@ -60,8 +66,8 @@ jobs:
 - name: spreadsheets_anywhere_el
   tasks:
   - tap-spreadsheets-anywhere coalesce-gcp-ips target-snowflake
-  - dbt-snowflake:run_staging_spreadsheets_anywhere
-  - dbt-snowflake:test_staging_spreadsheets_anywhere
+  - dbt-snowflake:run_snapshot_spreadsheets_anywhere
+  - dbt-snowflake:test_snapshot_spreadsheets_anywhere
 
 - name: snowplow_el
   tasks:
