@@ -121,7 +121,7 @@ plugins:
     config:
       account: epa06486
       password: ${SNOWFLAKE_PASSWORD}
-  - name: tap-snowflake-metrics
+  - name: tap-snowflake-metrics-legacy
     inherit_from: tap-snowflake
     metadata:
       '*':
@@ -137,6 +137,32 @@ plugins:
     - '*FACT_HUB_METRICS.NUM_WATCHERS'
     - '*FACT_HUB_METRICS.MELTANO_EXEC_COUNT_3M'
     - '*FACT_HUB_METRICS.MELTANO_PROJECT_ID_COUNT_3M'
+  - name: tap-snowflake-metrics
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+    - '*FACT_VARIANT_HUB_METRICS.NAME'
+    - '*FACT_VARIANT_HUB_METRICS.VARIANT'
+    - '*FACT_VARIANT_HUB_METRICS.REPO'
+    - '*FACT_VARIANT_HUB_METRICS.PLUGIN_TYPE'
+    - '*FACT_VARIANT_HUB_METRICS.PIP_URL'
+    - '*FACT_VARIANT_HUB_METRICS.ALL_PROJECTS'
+    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_PROJECTS'
+    - '*FACT_VARIANT_HUB_METRICS.ALL_EXECS'
+    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_EXECS'
+    - '*FACT_VARIANT_HUB_METRICS.LEGACY_ALL_PROJECTS'
+    - '*FACT_VARIANT_HUB_METRICS.LEGACY_SUCCESS_PROJECTS'
+    - '*FACT_VARIANT_HUB_METRICS.LEGACY_ALL_EXECS'
+    - '*FACT_VARIANT_HUB_METRICS.LEGACY_SUCCESS_EXECS'
+    - '*FACT_HUB_METRICS.CREATED_AT_TIMESTAMP'
+    - '*FACT_HUB_METRICS.LAST_PUSH_TIMESTAMP'
+    - '*FACT_HUB_METRICS.LAST_UPDATED_TIMESTAMP'
+    - '*FACT_HUB_METRICS.NUM_FORKS'
+    - '*FACT_HUB_METRICS.NUM_OPEN_ISSUES'
+    - '*FACT_HUB_METRICS.NUM_STARGAZERS'
+    - '*FACT_HUB_METRICS.NUM_WATCHERS'
   - name: tap-snowflake-audit
     inherit_from: tap-snowflake
     metadata:

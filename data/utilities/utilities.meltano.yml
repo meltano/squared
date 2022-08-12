@@ -31,7 +31,8 @@ plugins:
     pip_url: awscli==1.21.7
     executable: aws
     commands:
-      s3_copy_metrics: s3 cp metrics.yml ${HUB_METRICS_S3_PATH}
+      s3_copy_metrics: s3 cp variant_metrics.yml ${HUB_METRICS_S3_PATH}
+      s3_copy_metrics_legacy: s3 cp metrics.yml ${HUB_METRICS_S3_PATH}
       s3_copy_audit: s3 cp audit.yml ${HUB_METRICS_S3_PATH}
   - name: superset
     variant: apache

@@ -105,6 +105,7 @@ jobs:
   - dbt-snowflake:test_hub_metrics
   # - great_expectations:test_dbt_hub_metrics
   - tap-snowflake-metrics target-yaml-metrics awscli:s3_copy_metrics
+  - tap-snowflake-metrics-legacy target-yaml-metrics-legacy awscli:s3_copy_metrics_legacy
   - tap-snowflake-audit target-yaml-audit awscli:s3_copy_audit
 
 - name: marts_refresh
