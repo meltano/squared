@@ -60,14 +60,16 @@ jobs:
 - name: meltanohub_el
   tasks:
   - tap-meltanohub target-snowflake
+  - dbt-snowflake:test_source_meltanohub
+  - dbt-snowflake:run_snapshot_meltanohub
   - dbt-snowflake:run_staging_meltanohub
   - dbt-snowflake:test_staging_meltanohub
 
 - name: spreadsheets_anywhere_el
   tasks:
   - tap-spreadsheets-anywhere coalesce-gcp-ips target-snowflake
+  - dbt-snowflake:test_source_spreadsheets_anywhere
   - dbt-snowflake:run_snapshot_spreadsheets_anywhere
-  - dbt-snowflake:test_snapshot_spreadsheets_anywhere
 
 - name: snowplow_el
   tasks:
