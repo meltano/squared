@@ -2,6 +2,9 @@ version: 2
 
 models:
   - name: stg_meltanohub__plugins
+    description: This table includes plugin definitions from MeltanoHub. It does not filter out definitions that were
+      removed from the MeltanoHub. There is also a snapshot of the source table to keep track of changes over time. Plugins
+      that have been hard deleted can be found in the snapshot table.
     columns:
       - name: id
         tests:
