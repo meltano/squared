@@ -43,6 +43,8 @@ release_versions AS (
 base AS (
 
     SELECT
+        cloud_ips.active_from,
+        cloud_ips.active_to,
         MD5(unique_ips.user_ipaddress) AS ip_address_hash,
         CASE
             WHEN release_versions.releases LIKE '%amzn%' THEN 'AWS'
@@ -51,9 +53,7 @@ base AS (
             WHEN release_versions.releases LIKE '%azure%' THEN 'AZURE'
             ELSE 'NONE'
         END AS release_cloud_name,
-        COALESCE(cloud_ips.cloud_name, 'NONE') AS cloud_provider,
-        cloud_ips.active_from,
-        cloud_ips.active_to
+        COALESCE(cloud_ips.cloud_name, 'NONE') AS cloud_provider
     FROM unique_ips
     LEFT JOIN cloud_ips
         ON unique_ips.user_ipaddress = cloud_ips.user_ipaddress

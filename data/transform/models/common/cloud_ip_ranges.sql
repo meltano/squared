@@ -39,9 +39,9 @@ parsing AS (
         ip_address,
         service,
         region,
-        PARSE_IP(ip_address, 'INET') AS obj,
         active_from,
-        active_to
+        active_to,
+        PARSE_IP(ip_address, 'INET') AS obj
     FROM ips
 
 )
@@ -51,8 +51,8 @@ SELECT
     ip_address,
     service,
     region,
-    obj:ipv4_range_start::INT AS ipv4_range_start,
-    obj:ipv4_range_end::INT AS ipv4_range_end,
     active_from,
-    active_to
+    active_to,
+    obj:ipv4_range_start::INT AS ipv4_range_start,
+    obj:ipv4_range_end::INT AS ipv4_range_end
 FROM parsing
