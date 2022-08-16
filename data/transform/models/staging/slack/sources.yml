@@ -7,3 +7,4 @@ sources:
     tables:
       - name: users
       - name: messages
+      - name: threads
