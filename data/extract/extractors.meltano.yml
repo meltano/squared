@@ -58,7 +58,7 @@ plugins:
     - messages.*
   - name: tap-google-analytics
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
+    pip_url: git+https://github.com/ajbosco/tap-google-analytics.git@optional_filters
     config:
       view_id: '188392047' # CLI
       # view_id: '188274549' # Meltano Website
