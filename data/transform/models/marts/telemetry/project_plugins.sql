@@ -23,11 +23,7 @@ WITH plugins AS (
             project_dim.first_event_at::TIMESTAMP,
             cli_executions_base.event_created_at::DATE
         ) >= 7
-        -- TODO: move project_uuid_source upstream to cli_executions_base
-        AND COALESCE(
-            unstructured_executions.project_uuid_source,
-            ''
-        ) != 'random'
+        AND project_dim.project_id_source != 'random'
 
 ),
 
