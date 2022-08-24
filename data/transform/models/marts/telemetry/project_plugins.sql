@@ -14,8 +14,6 @@ WITH plugins AS (
         ON plugin_executions.execution_id = cli_executions_base.execution_id
     LEFT JOIN {{ ref('project_dim') }}
         ON cli_executions_base.project_id = project_dim.project_id
-    LEFT JOIN {{ ref('unstructured_executions') }}
-        ON plugin_executions.execution_id = unstructured_executions.execution_id
     WHERE
         cli_executions_base.is_exec_event
         AND DATEDIFF(
