@@ -12,7 +12,7 @@ SELECT
     cli_executions_base.exit_code,
     cli_executions_base.is_ci_environment,
     cli_executions_base.is_exec_event,
-    ip_address_dim.ip_address_hash,
+    cli_executions_base.ip_address_hash,
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location
 FROM {{ ref('cli_executions_base') }}
@@ -24,5 +24,7 @@ LEFT JOIN {{ ref('date_dim') }}
     ON cli_executions_base.event_date = date_dim.date_day
 LEFT JOIN {{ ref('ip_address_dim') }}
     ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
-        AND COALESCE(cli_executions_base.event_created_at
-            < ip_address_dim.active_to, TRUE)
+        AND cli_executions_base.event_created_at
+        BETWEEN ip_address_dim.active_from AND COALESCE(
+            ip_address_dim.active_to, CURRENT_TIMESTAMP
+        )
