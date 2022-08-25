@@ -19,12 +19,15 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+      - name: tap-snowflake-metrics-legacy
+        config:
+          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
-          tables: USERDEV_PROD.MELTANO_HUB.FACT_HUB_METRICS
+          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          tables: USERDEV_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
+          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-snowflake
         config:
@@ -32,6 +35,7 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+          default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
       transformers:
       - name: dbt-snowflake
         config:
@@ -58,6 +62,7 @@ environments:
           warehouse: CORE
   env:
     USER_PREFIX: melty
+    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin

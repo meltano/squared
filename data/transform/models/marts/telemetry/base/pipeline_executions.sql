@@ -1,16 +1,23 @@
 WITH plugin_prep AS (
     SELECT
-        execution_id,
-        project_id,
-        env_id,
+        plugin_executions.execution_id,
+        cli_executions_base.project_id,
+        cli_executions_base.environment_name_hash AS env_id,
         ARRAY_AGG(
             COALESCE(
-                plugin_surrogate_key,
-                plugin_name
+                plugin_executions.plugin_surrogate_key,
+                plugin_executions.plugin_name
             )
+        ) WITHIN GROUP (
+            ORDER BY plugin_executions.plugin_started, COALESCE(
+                plugin_executions.plugin_surrogate_key,
+                plugin_executions.plugin_name
+            ) DESC
         ) AS plugins
     FROM {{ ref('plugin_executions') }}
-    WHERE cli_command IN ('elt', 'run')
+    LEFT JOIN {{ ref('cli_executions_base') }}
+        ON plugin_executions.execution_id = cli_executions_base.execution_id
+    WHERE cli_executions_base.cli_command IN ('elt', 'run')
     GROUP BY 1, 2, 3
 )
 

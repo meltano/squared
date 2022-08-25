@@ -16,6 +16,8 @@ cloud_ips AS (
 
     SELECT
         parsed.user_ipaddress,
+        cloud_ip_ranges.active_from,
+        cloud_ip_ranges.active_to,
         MAX(cloud_ip_ranges.cloud_name) AS cloud_name,
         LISTAGG(cloud_ip_ranges.ip_address, ', ') AS cloud_ip_addresses,
         LISTAGG(cloud_ip_ranges.service, ', ') AS cloud_services,
@@ -23,7 +25,7 @@ cloud_ips AS (
     FROM parsed, {{ ref('cloud_ip_ranges') }}
     WHERE parsed.obj:ipv4 BETWEEN cloud_ip_ranges.ipv4_range_start
         AND cloud_ip_ranges.ipv4_range_end
-    GROUP BY 1
+    GROUP BY 1, 2, 3
 
 ),
 
@@ -41,6 +43,8 @@ release_versions AS (
 base AS (
 
     SELECT
+        cloud_ips.active_from,
+        cloud_ips.active_to,
         MD5(unique_ips.user_ipaddress) AS ip_address_hash,
         CASE
             WHEN release_versions.releases LIKE '%amzn%' THEN 'AWS'
@@ -68,7 +72,9 @@ SELECT
             OR release_cloud_name != 'NONE'
             THEN 'REMOTE'
         ELSE 'NOT_REMOTE'
-    END AS execution_location
+    END AS execution_location,
+    active_from,
+    active_to
 FROM base
 
 UNION ALL
@@ -77,4 +83,6 @@ SELECT
     'UNKNOWN' AS ip_address_hash,
     'UNKNOWN' AS release_cloud_name,
     'UNKNOWN' AS cloud_provider,
-    'UNKNOWN' AS execution_location
+    'UNKNOWN' AS execution_location,
+    NULL AS active_from,
+    NULL AS active_to

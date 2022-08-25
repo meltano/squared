@@ -7,8 +7,9 @@ WITH active_projects AS (
     SELECT DISTINCT cli_executions_base.project_id
     FROM {{ ref('structured_executions') }}
     INNER JOIN
-    {{ ref('cli_executions_base') }} ON
-        structured_executions.execution_id = cli_executions_base.execution_id
+        {{ ref('cli_executions_base') }} ON
+            structured_executions.execution_id
+            = cli_executions_base.execution_id
     WHERE structured_executions.command_category IN (
         'meltano invoke',
         'meltano elt',
@@ -25,8 +26,9 @@ WITH active_projects AS (
     SELECT DISTINCT cli_executions_base.project_id
     FROM {{ ref('unstructured_executions') }}
     INNER JOIN
-    {{ ref('cli_executions_base') }} ON
-        unstructured_executions.execution_id = cli_executions_base.execution_id
+        {{ ref('cli_executions_base') }} ON
+            unstructured_executions.execution_id
+            = cli_executions_base.execution_id
     WHERE unstructured_executions.cli_command IN (
         'invoke',
         'elt',
@@ -37,6 +39,22 @@ WITH active_projects AS (
     AND cli_executions_base.event_created_at >= DATEADD(
         'month', -1, CURRENT_DATE()
     )
+),
+
+first_project_source AS (
+
+    SELECT DISTINCT
+        project_id,
+        FIRST_VALUE(
+            CASE
+                WHEN cli_command != 'init'
+                    THEN project_uuid_source
+            END
+        ) IGNORE NULLS OVER (
+            PARTITION BY project_id ORDER BY event_created_at ASC
+        ) AS first_source
+    FROM {{ ref('cli_executions_base') }}
+
 )
 
 SELECT
@@ -56,7 +74,10 @@ SELECT
     ) AS exec_event_total,
     MAX(
         COALESCE(
-            cli_executions_base.project_uuid_source,
+            COALESCE(
+                first_project_source.first_source,
+                cli_executions_base.project_uuid_source
+            ),
             'UNKNOWN'
         )
     ) AS project_id_source
@@ -64,4 +85,7 @@ FROM {{ ref('cli_executions_base') }}
 LEFT JOIN
     active_projects ON
         cli_executions_base.project_id = active_projects.project_id
+LEFT JOIN
+    first_project_source ON
+        cli_executions_base.project_id = first_project_source.project_id
 GROUP BY 1

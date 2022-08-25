@@ -67,68 +67,71 @@ legacy AS (
 
 _run_parse AS (
     SELECT
-        command,
+        unique_commands.command,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'tap-%'
-                    OR value::STRING LIKE 'pipelinewise-tap-%' THEN index
+                    flat.value::STRING LIKE 'tap-%'
+                    OR flat.value::STRING LIKE 'pipelinewise-tap-%'
+                    THEN flat.index
             END
         ) AS tap_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'target-%'
-                    OR value::STRING LIKE 'pipelinewise-target-%' THEN index
+                    flat.value::STRING LIKE 'target-%'
+                    OR flat.value::STRING LIKE 'pipelinewise-target-%'
+                    THEN flat.index
             END
         ) AS target_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'dbt%' THEN index
+                    flat.value::STRING LIKE 'dbt%' THEN flat.index
             END
         ) AS dbt_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'airflow%' THEN index
+                    flat.value::STRING LIKE 'airflow%' THEN flat.index
             END
         ) AS airflow_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'dagster%'
-                    OR value::STRING LIKE 'dagit%' THEN index
+                    flat.value::STRING LIKE 'dagster%'
+                    OR flat.value::STRING LIKE 'dagit%' THEN flat.index
             END
         ) AS dagster_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'lightdash%' THEN index
+                    flat.value::STRING LIKE 'lightdash%' THEN flat.index
             END
         ) AS lightdash_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'superset%' THEN index
+                    flat.value::STRING LIKE 'superset%' THEN flat.index
             END
         ) AS superset_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'sqlfluff%' THEN index
+                    flat.value::STRING LIKE 'sqlfluff%' THEN flat.index
             END
         ) AS sqlfluff_index,
         MAX(
             CASE
                 WHEN
-                    value::STRING LIKE 'great_expectations%'
-                    OR value::STRING LIKE 'great-expectations%' THEN index
+                    flat.value::STRING LIKE 'great_expectations%'
+                    OR flat.value::STRING LIKE 'great-expectations%'
+                    THEN flat.index
             END
         ) AS ge_index
     FROM unique_commands,
-        LATERAL FLATTEN(input => STRTOK_TO_ARRAY(command, ' '))
-    WHERE command_category = 'meltano run'
+        LATERAL FLATTEN(input => STRTOK_TO_ARRAY(command, ' ')) AS flat
+    WHERE unique_commands.command_category = 'meltano run'
     GROUP BY 1
 ),
 

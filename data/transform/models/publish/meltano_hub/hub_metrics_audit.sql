@@ -1,5 +1,5 @@
 SELECT
-    MAX(event_ts) AS updated_date,
+    MAX(cli_started_ts) AS updated_date,
     'meltano_metrics' AS metric_type
 FROM {{ ref('fact_plugin_usage') }}
 

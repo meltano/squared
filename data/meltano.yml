@@ -1,7 +1,7 @@
 version: 1
+default_environment: userdev
 send_anonymous_usage_stats: true
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
-default_environment: userdev
 
 include_paths:
 - ./environments/*.meltano.yml

@@ -11,3 +11,4 @@ LEFT JOIN
         structured_executions.command = cmd_parsed_all.command
 LEFT JOIN {{ ref('hash_lookup') }}
     ON cmd_parsed_all.environment = hash_lookup.hash_value
+        AND hash_lookup.category = 'environment'

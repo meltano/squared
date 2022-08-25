@@ -77,7 +77,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['1-0-0']
+              values: ['1-0-0', '1-1-0']
 
   - name: context_environment
     description: Snowplow environment contexts parsed.
@@ -123,13 +123,80 @@ models:
           - accepted_values:
               values: ['project_id', 'send_anonymous_usage_stats']
 
-  - name: opt_outs
-    description: Projects that sent an opt out event.
+  - name: event_block
+    description: Snowplow block events parsed.
     columns:
-      - name: project_id
+      - name: event_id
         tests:
           - not_null
           - unique
-      - name: opted_out_at
+      - name: schema_version
         tests:
           - not_null
+          - accepted_values:
+              values: ['1-0-0']
+      - name: event
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['initialized', 'started', 'completed', 'failed']
+
+  - name: context_plugins
+    description: Snowplow plugins context events parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
+  - name: event_cli
+    description: Snowplow cli events parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0', '1-0-1']
+      - name: event
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['started', 'inflight', 'completed', 'skipped', 'failed', 'aborted']
+
+  - name: event_exit
+    description: Snowplow exit events parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0', '1-0-1']
+
+  - name: unstruct_plugin_executions
+    description: Unstructured plugin executions from the CLI level.
+    columns:
+      - name: unstruct_plugin_exec_pk
+        tests:
+          - not_null
+          - unique
+
+  - name: plugin_executions_block
+    description: Plugin executions.
+    columns:
+      - name: plugin_exec_block_pk
+        tests:
+          - not_null
+          - unique

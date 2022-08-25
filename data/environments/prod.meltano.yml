@@ -19,9 +19,12 @@ environments:
           user: MELTANO
           role: REPORTER
           warehouse: REPORTER
-      - name: tap-snowflake-metrics
+      - name: tap-snowflake-metrics-legacy
         config:
           tables: PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-metrics
+        config:
+          tables: PROD.MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
@@ -32,6 +35,7 @@ environments:
           user: MELTANO
           role: LOADER
           warehouse: LOADER
+          default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
       transformers:
       - name: dbt-snowflake
         config:

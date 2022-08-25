@@ -24,7 +24,7 @@ WITH source AS (
 
         FROM {{ source('snowplow', 'events') }}
 
-            {% if is_incremental() %}
+        {% if is_incremental() %}
 
             WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }})
 
@@ -38,8 +38,7 @@ WITH source AS (
 
 clean_new_source AS (
 
-    SELECT
-        *
+    SELECT *
     FROM source
     WHERE row_num = 1
     {% if is_incremental() %}
@@ -191,6 +190,5 @@ renamed AS (
 
 )
 
-SELECT
-    *
+SELECT *
 FROM renamed

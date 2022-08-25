@@ -16,7 +16,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -39,7 +39,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -52,43 +52,11 @@ jobs:
     # Run Test
     - run: meltano install utilities sqlfluff
     - run: meltano install transformer dbt-snowflake
-    - run: meltano invoke dbt-snowflake:deps
-    - run: meltano invoke sqlfluff lint -v
+    - run: meltano run dbt-snowflake:deps
+    - run: meltano run sqlfluff:lint
 
-  el_tests:
+  dbt_seed:
     runs-on: ubuntu-latest
-    needs: [airflow_tests, sqlfluff_tests]
-    defaults:
-      run:
-        working-directory: data/
-    environment: test
-    strategy:
-      matrix:
-        extract-source: ['slack', 'google_analytics', 'gitlab', 'github_meltano', 'github_search', 'meltanohub']
-        # Excluding until mappers are supported using jobs https://github.com/meltano/squared/issues/289
-        # , 'spreadsheets_anywhere']
-    env:
-      MELTANO_ENVIRONMENT: cicd
-      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-        cache: 'pip'
-    - run: pip install -r requirements.txt
-    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
-    - run: echo "TARGET_SNOWFLAKE_DEFAULT_TARGET_SCHEMA=${{ env.CI_BRANCH }}_${{ matrix.extract-source }}" >> $GITHUB_ENV
-    # Run Test
-    - run: make install_extractor EXTRACT_SOURCE=${{ matrix.extract-source }}
-    - run: meltano install loader target-snowflake
-    - run: make run_meltano EXTRACT_SOURCE=${{ matrix.extract-source }}
-
-  transform_tests:
-    runs-on: ubuntu-latest
-    needs: [el_tests]
     defaults:
       run:
         working-directory: data/
@@ -96,7 +64,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -108,11 +76,59 @@ jobs:
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
     - run: meltano install transformer dbt-snowflake
-    - run: meltano invoke dbt-snowflake:deps
-    - run: meltano invoke dbt-snowflake:compile
-    - run: meltano invoke dbt-snowflake:seed
-    - run: meltano invoke dbt-snowflake run
-    - run: meltano invoke dbt-snowflake:test
+    - run: meltano run dbt-snowflake:deps dbt-snowflake:seed
+
+  el_tests:
+    runs-on: ubuntu-latest
+    needs: [airflow_tests, sqlfluff_tests, dbt_seed]
+    defaults:
+      run:
+        working-directory: data/
+    environment: test
+    strategy:
+      matrix:
+        extract-source: ['meltanohub_el', 'spreadsheets_anywhere_el', 'github_search_el', 'github_meltano_el', 'gitlab_el', 'slack_el', 'google_analytics_el', 'snowplow_el']
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.SHA }}'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    # Install Plugins
+    - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
+    # Run Test
+    - run: meltano run dbt-snowflake:deps ${{ matrix.extract-source }}
+
+  transform_tests:
+    runs-on: ubuntu-latest
+    needs: [el_tests]
+    defaults:
+      run:
+        working-directory: data/
+    environment: test
+    env:
+      MELTANO_ENVIRONMENT: cicd
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      CI_BRANCH: 'b${{ github.SHA }}'
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.8'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Run Test
+    - run: meltano install transformer dbt-snowflake
+    - run: meltano run dbt-snowflake:deps dbt-snowflake:run dbt-snowflake:test
 
   reverse_el_tests:
     runs-on: ubuntu-latest
@@ -124,7 +140,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -134,10 +150,7 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    # Install Plugins
+    - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
-    - run: meltano install extractor tap-snowflake-metrics
-    - run: meltano install extractor tap-snowflake-audit
-    - run: meltano install loader target-yaml-metrics
-    - run: meltano install loader target-yaml-audit
-    - run: meltano run tap-snowflake-metrics target-yaml-metrics
-    - run: meltano run tap-snowflake-audit target-yaml-audit
+    - run: meltano run dbt-snowflake:deps hub_metrics_publish

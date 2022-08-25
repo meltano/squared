@@ -6,7 +6,7 @@
   "label": "dbt Snowflake",
   "docs": "https://docs.meltano.com/guide/transformation",
   "repo": "https://github.com/dbt-labs/dbt-snowflake",
-  "pip_url": "dbt-core~=1.0.0 dbt-snowflake~=1.0.0",
+  "pip_url": "dbt-core~=1.1.0 dbt-snowflake~=1.1.0",
   "executable": "dbt",
   "settings": [
     {

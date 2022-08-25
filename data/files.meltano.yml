@@ -1,0 +1,5 @@
+plugins:
+  files:
+  - name: files-airflow
+    variant: meltano
+    pip_url: git+https://github.com/meltano/files-airflow.git@ba72d83f9fc039493e5e80b9c0921ee52cebf6bb

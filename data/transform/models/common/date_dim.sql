@@ -185,6 +185,5 @@ calculated AS (
 
 )
 
-SELECT
-    *
+SELECT *
 FROM calculated
