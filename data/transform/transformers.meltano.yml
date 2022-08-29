@@ -13,10 +13,12 @@ plugins:
       test_marts: test --select marts.* common.* --exclude staging.*
   
       run_staging_meltanohub: run --select staging.meltanohub.*
+      run_snapshot_meltanohub: snapshot --select meltanohub.*
+      test_source_meltanohub: test --select source:tap_meltanohub
       test_staging_meltanohub: test --select staging.meltanohub.*,test_type:generic
   
-      run_staging_spreadsheets_anywhere: run --select staging.spreadsheets_anywhere.*
-      test_staging_spreadsheets_anywhere: test --select staging.spreadsheets_anywhere.*,test_type:generic
+      run_snapshot_spreadsheets_anywhere: snapshot --select spreadsheets_anywhere.*
+      test_source_spreadsheets_anywhere: test --select source:tap_spreadsheets_anywhere
   
       run_staging_snowplow: run --select staging.snowplow.*
       test_staging_snowplow: test --select staging.snowplow.*,test_type:generic

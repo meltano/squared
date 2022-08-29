@@ -1,12 +1,12 @@
 WITH plugin_use_3m AS (
 
     SELECT
-        COALESCE(parent_name, plugin_name) AS plugin_name,
+        COALESCE(NULLIF(parent_name, 'UNKNOWN'), plugin_name) AS plugin_name,
         SUM(event_count) AS execution_count,
         COUNT(DISTINCT project_id) AS project_count
     FROM {{ ref('fact_plugin_usage') }}
     WHERE plugin_category = 'singer'
-        AND event_ts >= DATEADD(MONTH, -3, CURRENT_DATE) -- noqa: PRS, L048
+        AND cli_started_ts >= DATEADD(MONTH, -3, CURRENT_DATE)
     GROUP BY 1
 
 ),

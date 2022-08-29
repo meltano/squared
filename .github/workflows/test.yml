@@ -16,7 +16,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -39,7 +39,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -64,7 +64,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -91,7 +91,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -116,7 +116,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -140,7 +140,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -151,6 +151,6 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Install Plugins
-    - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_prep)
+    - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
-    - run: meltano run dbt-snowflake:deps hub_metrics_prep
+    - run: meltano run dbt-snowflake:deps hub_metrics_publish

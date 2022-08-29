@@ -58,17 +58,6 @@ models:
           - not_null
           - unique
 
-  - name: pipeline_dim
-    description: This table contains attributes about pipelines.
-    columns:
-      - name: pipeline_pk
-        tests:
-          - not_null
-          - unique
-      - name: project_id
-        tests:
-          - not_null
-
   - name: pipeline_executions
     description: This table contains pipeline executions.
     columns:
@@ -85,4 +74,52 @@ models:
       - name: ip_address_hash
         tests:
           - not_null
+
+  - name: opt_outs
+    description: Projects that sent an opt out event.
+    columns:
+      - name: project_id
+        tests:
+          - not_null
           - unique
+      - name: opted_out_at
+        tests:
+          - not_null
+
+  - name: plugin_executions
+    description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
+    columns:
+      - name: plugin_exec_pk
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
+      - name: completion_status
+        tests:
+          - accepted_values:
+              values: [
+                'SUCCESS',
+                'FAILED',
+                'ABORTED',
+                'UNKNOWN_FAILED_OR_ABORTED'
+              ]
+
+  - name: cli_executions_base
+    columns:
+      - name: execution_id
+        tests:
+          - not_null
+          - unique
+      - name: event_created_at
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
+      - name: event_count
+        tests:
+          - not_null
+      - name: event_date
+        tests:
+          - not_null
+          

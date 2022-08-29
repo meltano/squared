@@ -29,9 +29,12 @@ environments:
           user: CICD
           role: CICD
           warehouse: CICD
-      - name: tap-snowflake-metrics
+      - name: tap-snowflake-metrics-legacy
         config:
           tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-metrics
+        config:
+          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
@@ -72,3 +75,4 @@ environments:
     # DEFAULT_START_DATE: "2022-04-01"
     AIRFLOW__CORE__PLUGINS_FOLDER: $MELTANO_PROJECT_ROOT/orchestrate/plugins_local
     AIRFLOW_VAR_OPERATOR_TYPE: bash
+    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/

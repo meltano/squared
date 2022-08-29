@@ -147,15 +147,6 @@ models:
         tests:
           - not_null
 
-  - name: plugin_executions
-    description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
-    columns:
-      - name: plugin_exec_pk
-        description: The unique plugin execution ID.
-        tests:
-          - not_null
-          - unique
-
   - name: fact_plugin_usage
     description: This table contains plugin usage data at the plugin_name, plugin_type, execution_id level.
     columns:
@@ -170,8 +161,8 @@ models:
         tests:
           - not_null
 
-      - name: event_ts
-        description: The event timestamp.
+      - name: cli_started_ts
+        description: The CLI started timestamp.
         tests:
           - not_null
 
@@ -309,13 +300,22 @@ models:
         tests:
           - not_null
           - unique
+
+      - name: is_active
+        description: A boolean whether the project is considered active.
+
       - name: first_event_at
+        description: The timestamp of the projects first event.
         tests:
           - not_null
+
       - name: last_event_at
+        description: The timestamp of the projects most recent event.
         tests:
           - not_null
+
       - name: exec_event_total
+        description: The count of how many total executions the project has had.
         tests:
           - not_null
 
@@ -326,6 +326,12 @@ models:
         description: The day identifier.
         tests:
           - not_null
+
+      - name: started_ts
+        description: The execution start time.
+
+      - name: finish_ts
+        description: The execution end time.
 
       - name: execution_id
         description: The unique identifier for a CLI execution.
@@ -355,6 +361,15 @@ models:
       - name: python_version
         description: The python version used.
 
+      - name: exit_code
+        description: The execution exit code.
+
+      - name: is_ci_environment
+        description: A boolean whether the execution environment had CI env vars present.
+
+      - name: is_exec_event
+        description: A boolean whether the execution used a CLI command thats considered a plugin execution.
+
       - name: ip_address_hash
         description: The hash of the IP address.
 
@@ -363,3 +378,23 @@ models:
 
       - name: execution_location
         description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)
+
+  - name: pipeline_dim
+    description: This table contains attributes about pipelines.
+    columns:
+      - name: pipeline_pk
+        description: The pipelines unique identifier.
+        tests:
+          - not_null
+          - unique
+
+      - name: project_id
+        description: The project unique identifier.
+        tests:
+          - not_null
+
+      - name: env_id
+        description: The environment used to run the pipeline.
+
+      - name: plugin_count
+        description: The amount of plugins used in the pipeline.
