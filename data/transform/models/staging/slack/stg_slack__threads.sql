@@ -43,6 +43,7 @@ renamed AS (
         reply_users,
         reply_users_count,
         subscribed,
+        message_surrogate_key,
         TO_TIMESTAMP_NTZ(ts::INT) AS message_created_at,
         TO_TIMESTAMP_NTZ(thread_ts::INT) AS thread_ts
     FROM clean_source
