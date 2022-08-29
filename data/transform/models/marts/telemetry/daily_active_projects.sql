@@ -12,7 +12,7 @@ daily_project_active AS (
         date_dim.date_day,
         base.project_id
     FROM {{ ref('date_dim') }}
-    LEFT JOIN base
+    INNER JOIN base
         ON base.exec_date BETWEEN DATEADD(
             DAY, -28, date_dim.date_day
         ) AND date_dim.date_day
