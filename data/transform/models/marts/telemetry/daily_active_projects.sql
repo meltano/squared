@@ -1,7 +1,3 @@
-{{
-    config(materialized='table')
-}}
-
 WITH base AS (
     SELECT
         project_id,
