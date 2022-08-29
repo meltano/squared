@@ -19,9 +19,12 @@ environments:
           user: MELTANO
           role: REPORTER
           warehouse: REPORTER
-      - name: tap-snowflake-metrics
+      - name: tap-snowflake-metrics-legacy
         config:
           tables: PROD.MELTANO_HUB.FACT_HUB_METRICS
+      - name: tap-snowflake-metrics
+        config:
+          tables: PROD.MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT

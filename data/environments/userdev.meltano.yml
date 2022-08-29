@@ -19,12 +19,15 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+      - name: tap-snowflake-metrics-legacy
+        config:
+          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
-          tables: USERDEV_PROD.MELTANO_HUB.FACT_HUB_METRICS
+          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          tables: USERDEV_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
+          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
       loaders:
       - name: target-snowflake
         config:

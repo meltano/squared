@@ -5,8 +5,8 @@ WITH base AS (
         unstruct_event_flattened.plugins_obj,
         unstruct_exec_flattened.cli_command,
         MAX(unstruct_event_flattened.exception) AS exception_dict,
-        MAX(unstruct_event_flattened.event_created_at) AS plugin_started,
-        MIN(unstruct_event_flattened.event_created_at) AS plugin_ended,
+        MIN(unstruct_event_flattened.event_created_at) AS plugin_started,
+        MAX(unstruct_event_flattened.event_created_at) AS plugin_ended,
         MAX(unstruct_event_flattened.block_type) AS block_type,
         ARRAY_AGG(unstruct_event_flattened.event) AS event_statuses
     FROM {{ ref('unstruct_event_flattened') }}
@@ -101,7 +101,7 @@ SELECT
     ex_map_top.plugin_category AS top_ex_plugin_category,
     ex_map_nested.plugin_category AS nested_ex_plugin_category,
     DATEDIFF(
-        MILLISECOND, flattened.plugin_ended, flattened.plugin_started
+        MILLISECOND, flattened.plugin_started, flattened.plugin_ended
     ) AS plugin_runtime_ms,
     CASE
         WHEN flattened.cli_command = 'elt' THEN

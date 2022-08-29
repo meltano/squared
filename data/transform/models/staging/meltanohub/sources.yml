@@ -6,3 +6,8 @@ sources:
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_MELTANOHUB'
     tables:
       - name: plugins
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null

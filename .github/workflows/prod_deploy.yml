@@ -13,7 +13,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
       DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
       AWS_DEFAULT_REGION: us-east-1
     steps:
@@ -73,7 +73,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
       DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
       AWS_DEFAULT_REGION: us-east-1
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -107,7 +107,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: prod
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
       SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
     steps:
     - uses: actions/checkout@v3

@@ -1,0 +1,25 @@
+config-version: 2
+version: 2
+sources:
+  - name: tap_spreadsheets_anywhere
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_SPREADSHEETS_ANYWHERE'
+    tables:
+      - name: aws_ips
+        columns:
+          - name: ip_prefix
+            tests:
+              - unique
+              - not_null
+      - name: gcp_ips
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
+      - name: azure_ips
+        columns:
+          - name: id
+            tests:
+              - unique
+              - not_null
