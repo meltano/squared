@@ -298,3 +298,23 @@ COPY INTO raw.snowplow.events FROM (
 ) FILE_FORMAT = (
     FORMAT_NAME = 'RAW.SNOWPLOW.snowplow_tsv'
 ) ON_ERROR = 'CONTINUE';
+
+
+-- Bad Events
+CREATE STAGE RAW.SNOWPLOW.SNOWCAT_S3_STAGE_BAD
+  url = 's3://mirror-sc-data-snowcat.meltano.com/customer-data/meltano/enriched/bad/'
+  storage_integration = S3_SNOWCAT_INT;
+
+CREATE OR REPLACE TABLE RAW.SNOWPLOW.EVENTS_BAD
+(
+    jsontext    VARIANT,
+    uploaded_at TIMESTAMP_NTZ(9) DEFAULT CAST(CURRENT_TIMESTAMP() AS TIMESTAMP_NTZ(9))
+);
+
+CREATE OR REPLACE PIPE raw.snowplow.events_bad_pipe auto_ingest= TRUE AS
+COPY INTO raw.snowplow.EVENTS_BAD (jsontext)
+    FROM @RAW.SNOWPLOW.SNOWCAT_S3_STAGE_BAD
+    FILE_FORMAT = (
+      FORMAT_NAME = 'RAW.SNOWPLOW.snowplow_tsv'
+    )
+ON_ERROR = 'CONTINUE';
