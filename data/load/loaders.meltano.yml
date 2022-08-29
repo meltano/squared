@@ -2,7 +2,7 @@ plugins:
   loaders:
   - name: target-yaml
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/target-yaml.git
+    pip_url: git+https://github.com/MeltanoLabs/target-yaml.git@20f37a2ae5a85125fed36a733afab179d0bc8a70
     config:
       file_naming_scheme: '{stream_name}.yml'
       overwrite_behavior: replace_records
@@ -40,7 +40,7 @@ plugins:
         audit_log: {}
   - name: target-snowflake
     variant: transferwise
-    pip_url: pipelinewise-target-snowflake
+    pip_url: pipelinewise-target-snowflake==2.2.0
     config:
       account: epa06486
       file_format: CSV
