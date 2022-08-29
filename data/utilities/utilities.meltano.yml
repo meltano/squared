@@ -2,7 +2,7 @@ plugins:
   utilities:
   - name: sqlfluff
     variant: sqlfluff
-    pip_url: sqlfluff[dbt]==1.2.1; sqlfluff-templater-dbt==1.2.1; dbt-core~=1.1.0;
+    pip_url: sqlfluff==1.2.1; sqlfluff-templater-dbt==1.2.1; dbt-core~=1.1.0;
       dbt-snowflake~=1.1.0
     settings:
     - name: user
@@ -39,7 +39,7 @@ plugins:
     pip_url: apache-superset==1.5.0 markupsafe==2.0.1 snowflake-sqlalchemy
   - name: great_expectations
     variant: great-expectations
-    pip_url: great_expectations; sqlalchemy; snowflake-sqlalchemy
+    pip_url: great_expectations==0.15.20; sqlalchemy==1.4.40; snowflake-sqlalchemy==1.4.1
     settings:
     # Custom settings
     - name: raw_database
@@ -60,7 +60,7 @@ plugins:
       password: ${SNOWFLAKE_PASSWORD}
   - name: permifrost
     namespace: permifrost
-    pip_url: permifrost
+    pip_url: permifrost==0.14.0
     executable: permifrost
     commands:
       run: run utilities/permifrost/roles.yml

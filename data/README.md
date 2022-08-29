@@ -7,18 +7,7 @@ For a few plugins they dont have subdiretories so they are described here.
 
 This is a utility for linting and fixing SQL, including dbt templated SQL.
 Refer to their [GitHub repo](https://github.com/sqlfluff/sqlfluff) for more details.
-
-### Add and Install
-
-Use [this example](https://gitlab.com/rabidaudio/meltano-sqlfluff-example) to get SQLFluff installed and configured in your project.
-
-If this plugin is run in an ephemeral environment or is run on a machine with a fresh clone of the repo, you will need to install the configured python packages before you can execute the plugin:
-
-```bash
-meltano install utility sqlfluff
-# For example: Run linting
-meltano invoke sqlfluff lint -v
-```
+Visit [MeltanoHub](https://hub.meltano.com/utilities/sqlfluff) for the most up to date installation instructions.
 
 ### Linting in CI
 
@@ -67,4 +56,4 @@ These take a relative start date or 1 day and writes to an isolated Snowflake en
 Once tests pass and the code is merged, Docker images are built and terraform is executed to deploy the new code.
 Additionally `dbt seed` is run against production to update any CSV files that were added via the merge request and dbt docs are built and deployed using GitLab pages.
 
-Periodically a schdule is run in CI to drop any old CI data so the Snowflake database stays clean.
+Periodically a schedule is run in CI to drop any old CI data so the Snowflake database stays clean.
