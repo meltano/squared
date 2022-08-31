@@ -27,6 +27,7 @@ agg_variant AS (
         plugin_variant,
         plugin_type,
         parent_name AS plugin_name,
+        pip_url,
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
             DISTINCT CASE WHEN
@@ -43,30 +44,35 @@ agg_variant AS (
         ) AS all_execs
     FROM base
     WHERE event_type = 'unstructured'
-    GROUP BY 1, 2, 3
+    GROUP BY 1, 2, 3, 4
 ),
 
-agg_pip_url AS (
+agg_hub_matches AS (
+
     SELECT
-        pip_url,
-        plugin_type,
-        COUNT(DISTINCT project_id) AS all_projects,
-        COUNT(
-            DISTINCT CASE WHEN
-                is_success AND is_exec
-                THEN project_id END
-        ) AS success_projects,
-        SUM(
-            CASE WHEN is_success AND is_exec
-                THEN event_count END
-        ) AS success_execs,
-        SUM(
-            CASE WHEN is_exec
-                THEN event_count END
-        ) AS all_execs
-    FROM base
-    WHERE event_type = 'unstructured'
-    GROUP BY 1, 2
+        stg_meltanohub__plugins.name,
+        stg_meltanohub__plugins.variant,
+        stg_meltanohub__plugins.plugin_type,
+        SUM(agg_variant.all_projects) AS all_projects,
+        SUM(agg_variant.success_projects) AS success_projects,
+        SUM(agg_variant.all_execs) AS all_execs,
+        SUM(agg_variant.success_execs) AS success_execs
+    FROM {{ ref('stg_meltanohub__plugins') }}
+    -- Usage is attributed if the variant matches whats on the hub or if the pip_url matches
+    -- but the variant does not. That accounts for the `original` variant case where the
+    -- python package is the same but the variant doesnt reflect it.
+    LEFT JOIN agg_variant
+        ON (
+            agg_variant.plugin_name = stg_meltanohub__plugins.name
+            AND agg_variant.plugin_type = stg_meltanohub__plugins.plugin_type
+            AND agg_variant.plugin_variant = stg_meltanohub__plugins.variant
+        ) OR (
+            agg_variant.plugin_name = stg_meltanohub__plugins.name
+            AND agg_variant.plugin_type = stg_meltanohub__plugins.plugin_type
+            AND agg_variant.pip_url = stg_meltanohub__plugins.pip_url
+            AND agg_variant.plugin_variant != stg_meltanohub__plugins.variant
+        )
+    GROUP BY 1, 2, 3
 ),
 
 agg_legacy AS (
@@ -109,30 +115,15 @@ SELECT
     fact_repo_metrics.num_open_issues::INT AS num_open_issues,
     fact_repo_metrics.num_stargazers::INT AS num_stargazers,
     fact_repo_metrics.num_watchers::INT AS num_watchers,
-    COALESCE(
-        agg_variant.all_projects,
-        agg_pip_url.all_projects
-    ) AS all_projects,
-    COALESCE(
-        agg_variant.success_projects,
-        agg_pip_url.success_projects
-    ) AS success_projects,
-    COALESCE(
-        agg_variant.success_execs,
-        agg_pip_url.success_execs
-    ) AS success_execs,
-    COALESCE(
-        agg_variant.all_execs,
-        agg_pip_url.all_execs
-    ) AS all_execs
+    agg_hub_matches.all_projects,
+    agg_hub_matches.success_projects,
+    agg_hub_matches.success_execs,
+    agg_hub_matches.all_execs
 FROM {{ ref('stg_meltanohub__plugins') }}
-LEFT JOIN agg_variant
-    ON agg_variant.plugin_name = stg_meltanohub__plugins.name
-        AND agg_variant.plugin_type = stg_meltanohub__plugins.plugin_type
-        AND agg_variant.plugin_variant = stg_meltanohub__plugins.variant
-LEFT JOIN agg_pip_url
-    ON agg_pip_url.pip_url = stg_meltanohub__plugins.pip_url
-        AND agg_pip_url.plugin_type = stg_meltanohub__plugins.plugin_type
+LEFT JOIN agg_hub_matches
+    ON agg_hub_matches.name = stg_meltanohub__plugins.name
+        AND agg_hub_matches.plugin_type = stg_meltanohub__plugins.plugin_type
+        AND agg_hub_matches.variant = stg_meltanohub__plugins.variant
 LEFT JOIN {{ ref('fact_repo_metrics') }}
     ON LOWER(stg_meltanohub__plugins.repo) = LOWER(
         'https://github.com/' || fact_repo_metrics.repo_full_name
