@@ -58,9 +58,10 @@ agg_hub_matches AS (
         SUM(agg_variant.all_execs) AS all_execs,
         SUM(agg_variant.success_execs) AS success_execs
     FROM {{ ref('stg_meltanohub__plugins') }}
-    -- Usage is attributed if the variant matches whats on the hub or if the pip_url matches
-    -- but the variant does not. That accounts for the `original` variant case where the
-    -- python package is the same but the variant doesnt reflect it.
+    -- Usage is attributed if the variant matches whats on the hub or if the
+    -- pip_url matches but the variant does not. That accounts for the
+    -- `original` variant case where the python package is the same but the
+    -- variant doesnt reflect it.
     LEFT JOIN agg_variant
         ON (
             agg_variant.plugin_name = stg_meltanohub__plugins.name
