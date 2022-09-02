@@ -110,6 +110,7 @@ plugins:
             and name != 'singer-target-template'
     select:
     - repositories.*
+    - readme.*
     # - issues.*
     # - issue_comments.*
     - '!*.comments'
