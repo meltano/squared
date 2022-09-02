@@ -19,7 +19,6 @@ renamed AS (
     SELECT
         id AS repo_id,
         name AS repo_name,
-        split_part(full_name, '/', 1) AS repo_namespace,
         full_name AS repo_full_name,
         fork AS is_fork,
         forks_count AS num_forks,
@@ -38,9 +37,10 @@ renamed AS (
         language,
         private AS is_private,
         size AS size_kb,
-        DATEDIFF(DAY, created_at, CURRENT_TIMESTAMP()) AS repo_lifespan_days,
         _sdc_batched_at AS batch_ts,
         search_name AS repo_search_name,
+        SPLIT_PART(full_name, '/', 1) AS repo_namespace,
+        DATEDIFF(DAY, created_at, CURRENT_TIMESTAMP()) AS repo_lifespan_days,
         CASE
             WHEN name LIKE 'tap-%'
                  OR name LIKE '%-tap-%'
