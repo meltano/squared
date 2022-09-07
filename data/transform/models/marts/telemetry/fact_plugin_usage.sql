@@ -39,6 +39,8 @@ SELECT
     -- Project Attributes
     project_dim.is_active AS project_is_active,
     project_dim.project_id_source,
+    project_dim.latest_project_age_in_days,
+    project_dim.is_ephemeral_project_id,
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location,
     -- Host Attributes
