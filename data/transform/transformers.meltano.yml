@@ -2,6 +2,7 @@ plugins:
   transformers:
   - name: dbt-snowflake
     variant: dbt-labs
+    pip_url: dbt-core~=1.1.0 dbt-snowflake~=1.1.0
     commands:
       create_userdev_env:
         args: "run-operation create_userdev_env --args \"{'db_list': ['RAW'], 'dry_run':\

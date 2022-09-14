@@ -2,7 +2,7 @@ plugins:
   extractors:
   - name: tap-meltanohub
     namespace: tap_meltanohub
-    pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git
+    pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git@1b99b0ee7853b2d9db36de6afa16b15c1affce7b
     executable: tap-meltanohub
     capabilities:
     - catalog
@@ -18,7 +18,7 @@ plugins:
     - plugins.*
   - name: tap-spreadsheets-anywhere
     variant: ets
-    pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git
+    pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git@5d9115985d3f9e7a568c6dcc68975f0c038253ff
     config:
       tables:
         - path: https://ip-ranges.amazonaws.com
@@ -40,11 +40,11 @@ plugins:
           start_date: "2020-01-01T00:00:00Z"
           key_properties: [id]
           name: azure_ips
-          pattern: "ServiceTags_Public_20220822.json"
+          pattern: "ServiceTags_Public_20220905.json"
           json_path: "values"
   - name: tap-slack
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@f0205cd4016d6cd4f46cf11841aaffe13fb2cc8d
+    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.5
     config:
       start_date: '2020-05-01'
       auto_join_channels: false
@@ -74,7 +74,7 @@ plugins:
     - threads.*
   - name: tap-google-analytics
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git
+    pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git@v0.0.4
     config:
       view_id: '188392047' # CLI
       # view_id: '188274549' # Meltano Website

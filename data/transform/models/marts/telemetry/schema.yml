@@ -398,3 +398,26 @@ models:
 
       - name: plugin_count
         description: The amount of plugins used in the pipeline.
+
+  - name: daily_active_projects
+    description: This table contains rows at the project ID x date grain for every day that its considered active.
+    columns:
+      - name: date_day
+        description: The pipelines unique identifier.
+        tests:
+          - not_null
+
+      - name: project_id
+        description: The project unique identifier.
+        tests:
+          - not_null
+
+      - name: is_added_date
+        description: A boolean whether the project was added on that date. This is new projects that meet the criteria (i.e. >= 7 days old, executed a pipeline, etc.) to be added to the list of active projects.
+
+      - name: is_reactivated_date
+        description: A boolean whether the project was reactivated on that date. Reactivated means that the project was active in the past, churned, became active again.
+
+      - name: is_last_active_date
+        description: A boolean whether the project is considered churned following this date.
+          The table only holds active projects so this is a flag to tell us that the date is the last active date based on the criteria, meaning it hasn't executed a pipeline in almost a month.

@@ -2,7 +2,7 @@ plugins:
   mappers:
   - name: meltano-map-transformer
     variant: meltano
-    pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git
+    pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git@v0.0.4
     mappings:
     - name: coalesce-gcp-ips
       config:
