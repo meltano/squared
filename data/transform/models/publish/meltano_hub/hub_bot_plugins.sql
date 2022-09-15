@@ -60,7 +60,8 @@ LEFT JOIN
         stg_github_search__repositories.repo_url = hub_repos_to_exclude.repo_url
 LEFT JOIN
     {{ ref('stg_github_search__readme') }} ON
-        stg_github_search__repositories.repo_url = hub_repos_to_exclude.repo_url
+        stg_github_search__repositories.repo_url
+        = stg_github_search__readme.repo_url
 WHERE stg_github_search__repositories.visibility = 'public'
     AND stg_github_search__repositories.is_disabled = FALSE
     AND stg_github_search__repositories.is_archived = FALSE

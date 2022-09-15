@@ -16,8 +16,8 @@ renamed AS (
         repo AS repo_name,
         org AS repo_namespace,
         size AS size_kb,
-        CONCAT('https://github.com/', org, repo) AS repo_url,
-        TRY_BASE64_DECODE_STRING(content) AS readme_text
+        CONCAT('https://github.com/', org, '/', repo) AS repo_url,
+        TRY_BASE64_DECODE_STRING(REPLACE(content, '\\n', '')) AS readme_text
     FROM source
     WHERE row_num = 1
 
