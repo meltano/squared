@@ -24,7 +24,7 @@ renamed AS (
 
     SELECT
         id AS channel_id,
-        creator_user_id,
+        creator AS creator_user_id,
         is_archived,
         is_channel,
         is_ext_shared,

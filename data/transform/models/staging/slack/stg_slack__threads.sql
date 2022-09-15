@@ -17,7 +17,7 @@ clean_source AS (
             PARTITION BY
                 thread_message_surrogate_key
             ORDER BY _sdc_batched_at DESC
-        ) AS row_number
+        ) AS row_num
     FROM source
 
 ),
