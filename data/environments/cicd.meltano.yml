@@ -6,6 +6,9 @@ environments:
       - name: tap-slack
         config:
           start_date: ${DEFAULT_START_DATE}
+      - name: tap-slack-public
+        config:
+          start_date: ${DEFAULT_START_DATE}
       - name: tap-google-analytics
         config:
           start_date: ${DEFAULT_START_DATE}

@@ -7,6 +7,15 @@ WITH source AS (
         *
     FROM {{ source('tap_slack', 'messages') }}
 
+    UNION ALL
+
+    SELECT
+        {{ dbt_utils.surrogate_key(
+            ['ts', 'client_msg_id', 'user', 'bot_id']
+        ) }} AS message_surrogate_key,
+        *
+    FROM {{ source('tap_slack_public', 'messages') }}
+
 ),
 
 clean_source AS (

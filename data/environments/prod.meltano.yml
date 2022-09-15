@@ -3,6 +3,9 @@ environments:
   config:
     plugins:
       extractors:
+      - name: tap-slack-public
+        config:
+          thread_lookback_days: 7
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'

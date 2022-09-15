@@ -3,6 +3,9 @@ environments:
   config:
     plugins:
       extractors:
+      - name: tap-slack-public
+        config:
+          start_date: '2022-09-01'
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'
@@ -61,7 +64,7 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
   env:
-    USER_PREFIX: melty
+    USER_PREFIX: pnadolny
     HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
