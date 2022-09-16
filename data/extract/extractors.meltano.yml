@@ -122,13 +122,14 @@ plugins:
             ('tap-' in name or 'target-' in full_name)
             and name != 'singer-tap-template'
             and name != 'singer-target-template'
+        issues:
+          __filter__: record['type'] = 'issue'
     select:
     - repositories.*
-    # - issues.*
+    - readme.*
+    - issues.*
+    - pull_requests.*
     # - issue_comments.*
-    - '!*.comments'
-    - '!*.body'
-    - '!*.reactions'  # Broken JSON Schema validator for issues
   - name: tap-snowflake
     variant: transferwise
     pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@15699411cc0ff87f11a3f7e637f01a2eb8cbf9da
