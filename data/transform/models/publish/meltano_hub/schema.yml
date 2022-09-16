@@ -69,3 +69,13 @@ models:
         description: The metric type (i.e. meltano_metrics, github_metrics)
         tests:
           - not_null
+
+  - name: hub_bot_plugins
+    description: The details of plugins that need to be added to MeltanoHub. The criteria for filtering what plugins need to be included can be found in the where clause
+      but the basics are that its not already listed, is public, is older than 7 days, has updates in the last year, isnt a fork (for now), etc.
+    columns:
+      - name: repo_url
+        description: The GitHub repository of the plugin.
+        tests:
+          - not_null
+          - unique
