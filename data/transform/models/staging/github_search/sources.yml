@@ -9,3 +9,4 @@ sources:
       - name: issue_comments
       - name: repositories
       - name: readme
+      - name: pull_requests

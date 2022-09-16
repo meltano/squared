@@ -5,7 +5,15 @@ WITH source AS (
         ROW_NUMBER() OVER (
             PARTITION BY id
             ORDER BY _sdc_batched_at DESC
-        ) AS row_num
+        ) AS row_num,
+        -- The same repo url shows up as multiple IDs, probably because the
+        -- repo was created/deleted/recreated with the same org/repo_name so
+        -- the url is the same. We will filter for only the newest created
+        -- version.
+        ROW_NUMBER() OVER (
+            PARTITION BY html_url
+            ORDER BY created_at DESC
+        ) AS url_row_num
     FROM {{ source('tap_github_search', 'repositories') }}
     WHERE (
         (name LIKE 'tap-%' OR name LIKE '%-tap-%')
@@ -48,7 +56,7 @@ renamed AS (
             ELSE 'target'
         END AS connector_type
     FROM source
-    WHERE row_num = 1
+    WHERE row_num = 1 AND url_row_num = 1
 
 )
 
