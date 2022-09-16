@@ -6,9 +6,10 @@ WITH source AS (
             PARTITION BY id
             ORDER BY _sdc_batched_at DESC
         ) AS row_num,
-        -- The same repo url shows up as multiple IDs, probably because the repo was
-        -- created/deleted/recreated with the same org/repo_name so the url is the
-        -- same. We will filter for only the newest created version.
+        -- The same repo url shows up as multiple IDs, probably because the
+        -- repo was created/deleted/recreated with the same org/repo_name so
+        -- the url is the same. We will filter for only the newest created
+        -- version.
         ROW_NUMBER() OVER (
             PARTITION BY html_url
             ORDER BY created_at DESC
