@@ -56,6 +56,20 @@ plugins:
     - users.*
     - channels.*
     - messages.*
+
+  - name: tap-slack-public
+    inherit_from: tap-slack
+    config:
+      start_date: '2021-01-01'
+      auto_join_channels: false
+      thread_lookback_days: 1
+      selected_channels: []
+      channel_types:
+      - public_channel
+    select:
+    - channels.*
+    - messages.*
+    - threads.*
   - name: tap-google-analytics
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-google-analytics.git@v0.0.4
