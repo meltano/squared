@@ -39,14 +39,13 @@ environments:
           role: LOADER
           warehouse: LOADER
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: MELTANO
           role: TRANSFORMER
           warehouse: TRANSFORMER
           database: PROD
-      utilities:
       - name: sqlfluff
         config:
           user: MELTANO

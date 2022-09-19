@@ -39,7 +39,7 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
           default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: ${USER_PREFIX}
@@ -52,7 +52,6 @@ environments:
           # database_raw: USERDEV_RAW
           # source_schema_prefix: ${USER_PREFIX}_
           target_schema_prefix: ${USER_PREFIX}_
-      utilities:
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}
