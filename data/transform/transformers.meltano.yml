@@ -8,7 +8,7 @@ plugins:
     settings:
     - name: ext_type
       env: DBT_EXT_TYPE
-      value: postgres
+      value: snowflake
     - name: project_dir
       value: "$MELTANO_PROJECT_ROOT/transform"
       label: Projects Directory

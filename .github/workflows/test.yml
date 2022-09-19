@@ -51,7 +51,7 @@ jobs:
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Run Test
     - run: meltano install utilities sqlfluff dbt-snowflake
-    - run: meltano run sqlfluff:lint
+    - run: meltano run dbt-snowflake:deps sqlfluff:lint
 
   dbt_seed:
     runs-on: ubuntu-latest
