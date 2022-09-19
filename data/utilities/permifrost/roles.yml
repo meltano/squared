@@ -28,7 +28,11 @@ databases:
     - cicd_prod:
         shared: no
 
-    - jigsaw_labs:
+    - jigsaw_labs_raw:
+        shared: no
+    - jigsaw_labs_prep:
+        shared: no
+    - jigsaw_labs_prod:
         shared: no
 
     - pnadolny_raw:
@@ -279,19 +283,31 @@ roles:
         privileges:
             databases:
                 read:
-                    - jigsaw_labs
+                    - jigsaw_labs_raw
+                    - jigsaw_labs_prep
+                    - jigsaw_labs_prod
                 write:
-                    - jigsaw_labs
+                    - jigsaw_labs_raw
+                    - jigsaw_labs_prep
+                    - jigsaw_labs_prod
             schemas:
                 read:
-                    - jigsaw_labs.*
+                    - jigsaw_labs_raw.*
+                    - jigsaw_labs_prep.*
+                    - jigsaw_labs_prod.*
                 write:
-                    - jigsaw_labs.*
+                    - jigsaw_labs_raw.*
+                    - jigsaw_labs_prep.*
+                    - jigsaw_labs_prod.*
             tables:
                 read:
-                    - jigsaw_labs.*.*
+                    - jigsaw_labs_raw.*.*
+                    - jigsaw_labs_prep.*.*
+                    - jigsaw_labs_prod.*.*
                 write:
-                    - jigsaw_labs.*.*
+                    - jigsaw_labs_raw.*.*
+                    - jigsaw_labs_prep.*.*
+                    - jigsaw_labs_prod.*.*
 
 # ==========================================
 # User Roles ("Special" or elevated users)
