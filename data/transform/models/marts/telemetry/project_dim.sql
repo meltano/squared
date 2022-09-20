@@ -4,41 +4,14 @@
 
 WITH active_projects AS (
 
-    SELECT DISTINCT cli_executions_base.project_id
-    FROM {{ ref('structured_executions') }}
-    INNER JOIN
-        {{ ref('cli_executions_base') }} ON
-            structured_executions.execution_id
-            = cli_executions_base.execution_id
-    WHERE structured_executions.command_category IN (
-        'meltano invoke',
-        'meltano elt',
-        'meltano run',
-        'meltano ui',
-        'meltano test'
-    )
-    AND cli_executions_base.event_created_at >= DATEADD(
-        'month', -1, CURRENT_DATE()
+    SELECT
+        DISTINCT
+        project_id
+    FROM {{ ref('daily_active_projects') }}
+    WHERE date_day >= DATEADD(
+        'day', -28, CURRENT_DATE()
     )
 
-    UNION ALL
-
-    SELECT DISTINCT cli_executions_base.project_id
-    FROM {{ ref('unstructured_executions') }}
-    INNER JOIN
-        {{ ref('cli_executions_base') }} ON
-            unstructured_executions.execution_id
-            = cli_executions_base.execution_id
-    WHERE unstructured_executions.cli_command IN (
-        'invoke',
-        'elt',
-        'run',
-        'ui',
-        'test'
-    )
-    AND cli_executions_base.event_created_at >= DATEADD(
-        'month', -1, CURRENT_DATE()
-    )
 ),
 
 first_project_source AS (
