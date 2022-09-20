@@ -1,0 +1,23 @@
+{
+  "plugin_type": "extractors",
+  "name": "tap-dbt-artifacts",
+  "namespace": "tap_dbt_artifacts",
+  "variant": "prratek",
+  "label": "dbt Artifacts",
+  "docs": "https://hub.meltano.com/extractors/tap-dbt-artifacts",
+  "repo": "https://github.com/prratek/tap-dbt-artifacts",
+  "pip_url": "git+https://github.com/prratek/tap-dbt-artifacts.git",
+  "capabilities": [
+    "catalog",
+    "discover"
+  ],
+  "settings": [
+    {
+      "name": "dbt_target_dir",
+      "kind": "string",
+      "label": "dbt Target Dir",
+      "description": "The full path to your dbt project's target directory.",
+      "placeholder": "Ex. \"/path/to/dbt/target\""
+    }
+  ]
+}

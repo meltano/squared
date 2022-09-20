@@ -186,3 +186,11 @@ plugins:
     select:
     - '*HUB_METRICS_AUDIT.UPDATED_DATE'
     - '*HUB_METRICS_AUDIT.METRIC_TYPE'
+  - name: tap-dbt-artifacts
+    variant: prratek
+    pip_url: git+https://github.com/pnadolny13/tap-dbt-artifacts.git@dependency_bumps
+    select:
+    - '*.*'
+    - '!sources.*'
+    config:
+      dbt_target_dir: ./.meltano/transformers/dbt/target
