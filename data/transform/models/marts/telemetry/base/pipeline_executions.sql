@@ -25,6 +25,7 @@ SELECT
     plugin_prep.*,
     cli_executions_base.cli_runtime_ms AS pipeline_runtime_ms,
     CASE
+        WHEN cli_executions_base.cli_runtime_ms IS NULL THEN 'N/A'
         WHEN cli_executions_base.cli_runtime_ms <= 5000 THEN '< 5s'
         WHEN
             cli_executions_base.cli_runtime_ms
@@ -54,7 +55,7 @@ SELECT
             cli_executions_base.cli_runtime_ms
             BETWEEN 3600001 AND 10800000 THEN '1hr - 3hr'
         WHEN cli_executions_base.cli_runtime_ms >= 10800001 THEN '3hr+'
-        ELSE 'failed'
+        ELSE 'Failed to bucket'
     END AS pipeline_runtime_bin,
     {{ dbt_utils.surrogate_key(
         [
