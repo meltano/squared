@@ -248,11 +248,6 @@ SELECT
     combined.python_version,
     combined.started_ts,
     combined.finish_ts,
-    DATEDIFF(
-        MILLISECOND,
-        combined.started_ts,
-        combined.finish_ts
-    ) AS cli_runtime_ms,
     combined.num_cpu_cores_available,
     combined.windows_edition,
     combined.machine,
@@ -283,7 +278,12 @@ SELECT
     combined.is_plugin_other,
     combined.is_acquired_date,
     combined.is_churned_date,
-    combined.is_retained_date
+    combined.is_retained_date,
+    DATEDIFF(
+        MILLISECOND,
+        combined.started_ts,
+        combined.finish_ts
+    ) AS cli_runtime_ms
 FROM combined
 LEFT JOIN {{ ref('hash_lookup') }}
     ON combined.environment_name_hash = hash_lookup.hash_value
