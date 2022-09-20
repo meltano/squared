@@ -1,4 +1,5 @@
 SELECT
+    date_dim.date_day,
     plugin_executions.plugin_exec_pk,
     plugin_executions.execution_id,
     plugin_executions.plugin_started,
@@ -21,7 +22,7 @@ SELECT
     -- CLI Attributes
     cli_executions_base.cli_command,
     cli_executions_base.environment_name_hash AS env_id,
-    hash_lookup.unhashed_value AS env_name,
+    cli_executions_base.environment_name AS env_name,
     cli_executions_base.exit_code AS cli_exit_code,
     cli_executions_base.meltano_version,
     cli_executions_base.num_cpu_cores_available,
@@ -41,19 +42,19 @@ SELECT
     project_dim.project_id_source,
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location,
+    -- Pipeline Attributes
+    pipeline_executions.pipeline_pk AS pipeline_fk,
+    pipeline_executions.pipeline_runtime_bin,
     -- Host Attributes
     cli_executions_base.ip_address_hash,
-    COALESCE(
-        cli_executions_base.started_ts, cli_executions_base.event_created_at
-    ) AS cli_started_ts,
-    DATEDIFF(
-        MILLISECOND,
-        cli_executions_base.started_ts,
-        cli_executions_base.finish_ts
-    ) AS cli_processing_ms
+    cli_executions_base.started_ts AS cli_started_ts,
+    cli_executions_base.finished_ts AS cli_finished_ts,
+    cli_executions_base.cli_runtime_ms
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id
+LEFT JOIN {{ ref('date_dim') }}
+    ON cli_executions_base.event_date = date_dim.date_day
 LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
@@ -62,7 +63,5 @@ LEFT JOIN {{ ref('ip_address_dim') }}
         BETWEEN ip_address_dim.active_from AND COALESCE(
             ip_address_dim.active_to, CURRENT_TIMESTAMP
         )
--- TODO: move this parsing up stream
-LEFT JOIN {{ ref('hash_lookup') }}
-    ON cli_executions_base.environment_name_hash = hash_lookup.hash_value
-        AND hash_lookup.category = 'environment'
+LEFT JOIN {{ ref('pipeline_executions') }}
+    ON cli_executions_base.execution_id = pipeline_executions.execution_id

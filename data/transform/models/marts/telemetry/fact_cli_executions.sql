@@ -1,10 +1,12 @@
 SELECT
     date_dim.date_day,
     cli_executions_base.started_ts,
-    cli_executions_base.finish_ts,
+    cli_executions_base.finished_ts,
+    cli_executions_base.cli_runtime_ms,
     cli_executions_base.execution_id,
     cli_executions_base.project_id AS project_id,
     pipeline_dim.pipeline_pk AS pipeline_fk,
+    pipeline_executions.pipeline_runtime_bin,
     cli_executions_base.event_count,
     cli_executions_base.cli_command,
     cli_executions_base.meltano_version,

@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 SELECT
     context_project.project_uuid AS project_id,
     MIN(stg_snowplow__events.event_created_at) AS opted_out_at

@@ -74,7 +74,7 @@ combined AS (
         structured_executions.project_id,
         NULL AS project_uuid_source,
         NULL AS started_ts,
-        structured_executions.event_created_at AS finish_ts,
+        structured_executions.event_created_at AS finished_ts,
         NULL AS num_cpu_cores_available,
         NULL AS windows_edition,
         NULL AS machine,
@@ -92,7 +92,6 @@ combined AS (
         NULL AS python_version,
         NULL AS is_ci_environment,
         event_commands_parsed.is_exec_event,
-        event_commands_parsed.is_pipeline_exec_event,
         event_commands_parsed.is_legacy_event,
         -- Plugins
         event_commands_parsed.is_plugin_dbt,
@@ -155,7 +154,7 @@ combined AS (
         unstructured_executions.project_id,
         unstructured_executions.project_uuid_source,
         unstructured_executions.started_ts,
-        unstructured_executions.finish_ts,
+        unstructured_executions.finished_ts,
         unstructured_executions.num_cpu_cores_available,
         unstructured_executions.windows_edition,
         unstructured_executions.machine,
@@ -187,17 +186,6 @@ combined AS (
             ),
             FALSE
         ) AS is_exec_event,
-        COALESCE(
-            unstructured_executions.cli_command IN (
-                'meltano invoke',
-                'meltano elt',
-                'meltano run',
-                'invoke',
-                'elt',
-                'run'
-            ),
-            FALSE
-        ) AS is_pipeline_exec_event,
         COALESCE(unstructured_executions.cli_command IN (
                 'meltano transforms',
                 'meltano dashboards',
@@ -259,13 +247,14 @@ SELECT
     combined.meltano_version,
     combined.python_version,
     combined.started_ts,
-    combined.finish_ts,
+    combined.finished_ts,
     combined.num_cpu_cores_available,
     combined.windows_edition,
     combined.machine,
     combined.system_release,
     combined.is_dev_build,
     combined.environment_name_hash,
+    hash_lookup.unhashed_value AS environment_name,
     combined.python_implementation,
     combined.system_name,
     combined.system_version,
@@ -273,7 +262,6 @@ SELECT
     combined.is_tracking_disabled,
     combined.is_ci_environment,
     combined.is_exec_event,
-    combined.is_pipeline_exec_event,
     combined.is_legacy_event,
     combined.is_plugin_dbt,
     combined.is_plugin_singer,
@@ -290,5 +278,13 @@ SELECT
     combined.is_plugin_other,
     combined.is_acquired_date,
     combined.is_churned_date,
-    combined.is_retained_date
+    combined.is_retained_date,
+    DATEDIFF(
+        MILLISECOND,
+        combined.started_ts,
+        combined.finished_ts
+    ) AS cli_runtime_ms
 FROM combined
+LEFT JOIN {{ ref('hash_lookup') }}
+    ON combined.environment_name_hash = hash_lookup.hash_value
+        AND hash_lookup.category = 'environment'

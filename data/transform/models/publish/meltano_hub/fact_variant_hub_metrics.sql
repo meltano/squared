@@ -18,7 +18,10 @@ WITH base AS (
             FALSE
         ) AS is_success
     FROM {{ ref('fact_plugin_usage') }}
-    WHERE cli_started_ts >= DATEADD(MONTH, -3, CURRENT_DATE)
+    WHERE
+        COALESCE(
+            cli_started_ts, cli_finished_ts
+        ) >= DATEADD(MONTH, -3, CURRENT_DATE)
 
 ),
 

@@ -161,8 +161,8 @@ models:
         tests:
           - not_null
 
-      - name: cli_started_ts
-        description: The CLI started timestamp.
+      - name: cli_finished_ts
+        description: The CLI finished timestamp.
         tests:
           - not_null
 
@@ -330,7 +330,7 @@ models:
       - name: started_ts
         description: The execution start time.
 
-      - name: finish_ts
+      - name: finished_ts
         description: The execution end time.
 
       - name: execution_id
