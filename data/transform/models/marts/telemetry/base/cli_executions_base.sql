@@ -154,7 +154,7 @@ combined AS (
         unstructured_executions.project_id,
         unstructured_executions.project_uuid_source,
         unstructured_executions.started_ts,
-        unstructured_executions.finish_ts AS finished_ts,
+        unstructured_executions.finished_ts,
         unstructured_executions.num_cpu_cores_available,
         unstructured_executions.windows_edition,
         unstructured_executions.machine,

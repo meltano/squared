@@ -330,7 +330,7 @@ models:
       - name: started_ts
         description: The execution start time.
 
-      - name: finish_ts
+      - name: finished_ts
         description: The execution end time.
 
       - name: execution_id

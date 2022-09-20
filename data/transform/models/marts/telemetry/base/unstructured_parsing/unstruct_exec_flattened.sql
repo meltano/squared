@@ -20,7 +20,7 @@ WITH base AS (
 SELECT
     base.execution_id,
     MIN(base.event_created_at) AS started_ts,
-    MAX(base.event_created_at) AS finish_ts,
+    MAX(base.event_created_at) AS finished_ts,
     MAX(base.user_ipaddress) AS user_ipaddress,
     MAX(base.project_id) AS project_id,
     MAX(
