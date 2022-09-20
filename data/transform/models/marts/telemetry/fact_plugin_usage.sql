@@ -46,8 +46,8 @@ SELECT
     pipeline_executions.pipeline_runtime_bin,
     -- Host Attributes
     cli_executions_base.ip_address_hash,
-    cli_executions_base.started_ts,
-    cli_executions_base.finish_ts,
+    cli_executions_base.started_ts AS cli_started_ts,
+    cli_executions_base.finished_ts AS cli_finished_ts,
     cli_executions_base.cli_runtime_ms
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
