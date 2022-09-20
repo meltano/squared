@@ -1,4 +1,5 @@
 SELECT
+    date_dim.date_day,
     plugin_executions.plugin_exec_pk,
     plugin_executions.execution_id,
     plugin_executions.plugin_started,
@@ -52,6 +53,8 @@ SELECT
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id
+LEFT JOIN {{ ref('date_dim') }}
+    ON cli_executions_base.event_date = date_dim.date_day
 LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
