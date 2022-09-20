@@ -282,7 +282,7 @@ SELECT
     DATEDIFF(
         MILLISECOND,
         combined.started_ts,
-        combined.finish_ts
+        combined.finished_ts
     ) AS cli_runtime_ms
 FROM combined
 LEFT JOIN {{ ref('hash_lookup') }}
