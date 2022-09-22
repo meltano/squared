@@ -307,6 +307,8 @@ models:
 
       - name: is_active
         description: A boolean whether the project is considered active.
+        tests:
+          - not_null
 
       - name: first_event_at
         description: The timestamp of the projects first event.
