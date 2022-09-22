@@ -5,8 +5,6 @@ WITH snow_v2 AS (
         DATE_TRUNC('WEEK', started_ts) AS event_week_start_date,
         COUNT(DISTINCT execution_id) AS events
     FROM {{ ref('unstruct_exec_flattened') }}
-    -- TODO: find a better way to do this without needing struct events
-    WHERE struct_project_id IS NOT NULL
     GROUP BY 1, 2
 
 ),
@@ -21,6 +19,7 @@ snow_pre_v2 AS (
         {{ ref('stg_snowplow__events') }}
     WHERE contexts IS NULL
         AND event = 'struct'
+        AND se_label IS NOT NULL
     GROUP BY 1, 2
 
 ),
