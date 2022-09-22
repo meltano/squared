@@ -292,6 +292,10 @@ models:
       - name: execution_location
         description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)
 
+      - name: is_active_cli_execution
+        description: A boolean whether the execution happened when the project was considered active.
+        tests:
+          - not_null
 
   - name: project_dim
     description: This table summarizes attributes of projects.
@@ -303,6 +307,8 @@ models:
 
       - name: is_active
         description: A boolean whether the project is considered active.
+        tests:
+          - not_null
 
       - name: first_event_at
         description: The timestamp of the projects first event.
@@ -378,6 +384,11 @@ models:
 
       - name: execution_location
         description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)
+
+      - name: is_active_cli_execution
+        description: A boolean whether the execution happened when the project was considered active.
+        tests:
+          - not_null
 
   - name: pipeline_dim
     description: This table contains attributes about pipelines.

@@ -49,7 +49,11 @@ SELECT
     cli_executions_base.ip_address_hash,
     cli_executions_base.started_ts AS cli_started_ts,
     cli_executions_base.finished_ts AS cli_finished_ts,
-    cli_executions_base.cli_runtime_ms
+    cli_executions_base.cli_runtime_ms,
+    COALESCE(
+        daily_active_projects.project_id IS NOT NULL,
+        FALSE
+    ) AS is_active_cli_execution
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id
@@ -65,3 +69,6 @@ LEFT JOIN {{ ref('ip_address_dim') }}
         )
 LEFT JOIN {{ ref('pipeline_executions') }}
     ON cli_executions_base.execution_id = pipeline_executions.execution_id
+LEFT JOIN {{ ref('daily_active_projects') }}
+    ON cli_executions_base.project_id = daily_active_projects.project_id
+        AND date_dim.date_day = daily_active_projects.date_day

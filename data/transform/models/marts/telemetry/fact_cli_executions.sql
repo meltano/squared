@@ -16,7 +16,11 @@ SELECT
     cli_executions_base.is_exec_event,
     cli_executions_base.ip_address_hash,
     ip_address_dim.cloud_provider,
-    ip_address_dim.execution_location
+    ip_address_dim.execution_location,
+    COALESCE(
+        daily_active_projects.project_id IS NOT NULL,
+        FALSE
+    ) AS is_active_cli_execution
 FROM {{ ref('cli_executions_base') }}
 LEFT JOIN {{ ref('pipeline_executions') }}
     ON cli_executions_base.execution_id = pipeline_executions.execution_id
@@ -30,3 +34,6 @@ LEFT JOIN {{ ref('ip_address_dim') }}
         BETWEEN ip_address_dim.active_from AND COALESCE(
             ip_address_dim.active_to, CURRENT_TIMESTAMP
         )
+LEFT JOIN {{ ref('daily_active_projects') }}
+    ON cli_executions_base.project_id = daily_active_projects.project_id
+        AND date_dim.date_day = daily_active_projects.date_day
