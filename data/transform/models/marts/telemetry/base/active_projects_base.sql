@@ -17,8 +17,10 @@ LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id
 LEFT JOIN {{ ref('project_base') }}
     ON cli_executions_base.project_id = project_base.project_id
+LEFT JOIN {{ ref('pipeline_executions') }}
+    ON cli_executions_base.execution_id = pipeline_executions.execution_id
 WHERE
-    cli_executions_base.is_exec_event
+    pipeline_executions.pipeline_pk IS NOT NULL
     AND DATEDIFF(
         'day',
         project_base.first_event_at::TIMESTAMP,
