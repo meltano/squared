@@ -374,7 +374,7 @@ models:
         description: A boolean whether the execution environment had CI env vars present.
 
       - name: is_exec_event
-        description: A boolean whether the execution used a CLI command thats considered a plugin execution.
+        description: A boolean whether the execution used a CLI command thats considered an execution.
 
       - name: ip_address_hash
         description: The hash of the IP address.

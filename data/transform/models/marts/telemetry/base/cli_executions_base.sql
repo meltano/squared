@@ -91,7 +91,6 @@ combined AS (
         NULL AS meltano_version,
         NULL AS python_version,
         NULL AS is_ci_environment,
-        event_commands_parsed.is_exec_event,
         event_commands_parsed.is_legacy_event,
         -- Plugins
         event_commands_parsed.is_plugin_dbt,
@@ -171,21 +170,6 @@ combined AS (
         unstructured_executions.meltano_version,
         unstructured_executions.python_version,
         unstructured_executions.is_ci_environment,
-        COALESCE(
-            unstructured_executions.cli_command IN (
-                'meltano invoke',
-                'meltano elt',
-                'meltano run',
-                'meltano test',
-                'meltano ui',
-                'invoke',
-                'elt',
-                'run',
-                'test',
-                'ui'
-            ),
-            FALSE
-        ) AS is_exec_event,
         COALESCE(unstructured_executions.cli_command IN (
                 'meltano transforms',
                 'meltano dashboards',
@@ -261,7 +245,6 @@ SELECT
     combined.exit_code,
     combined.is_tracking_disabled,
     combined.is_ci_environment,
-    combined.is_exec_event,
     combined.is_legacy_event,
     combined.is_plugin_dbt,
     combined.is_plugin_singer,
@@ -279,6 +262,15 @@ SELECT
     combined.is_acquired_date,
     combined.is_churned_date,
     combined.is_retained_date,
+    COALESCE(
+        combined.cli_command IN (
+            'invoke',
+            'elt',
+            'run',
+            'test'
+        ),
+        FALSE
+    ) AS is_exec_event,
     DATEDIFF(
         MILLISECOND,
         combined.started_ts,
