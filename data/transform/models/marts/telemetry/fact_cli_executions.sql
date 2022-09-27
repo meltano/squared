@@ -41,6 +41,10 @@ LEFT JOIN {{ ref('ip_address_dim') }}
 LEFT JOIN {{ ref('daily_active_projects') }}
     ON cli_executions_base.project_id = daily_active_projects.project_id
         AND date_dim.date_day = daily_active_projects.date_day
-LEFT JOIN {{ ref('daily_active_projects') }} AS daily_active_projects_eom
+LEFT JOIN {{ ref('daily_active_projects') }}
+    AS daily_active_projects_eom -- noqa: L031
     ON cli_executions_base.project_id = daily_active_projects_eom.project_id
-        AND CASE WHEN date_dim.last_day_of_month <= CURRENT_DATE THEN date_dim.last_day_of_month ELSE date_dim.date_day END = daily_active_projects_eom.date_day
+        AND CASE WHEN date_dim.last_day_of_month <= CURRENT_DATE
+            THEN date_dim.last_day_of_month
+            ELSE date_dim.date_day
+        END = daily_active_projects_eom.date_day
