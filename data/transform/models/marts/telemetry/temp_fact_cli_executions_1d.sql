@@ -138,6 +138,9 @@ SELECT
     base.execution_location,
     base.is_active_cli_execution,
     base.is_active_eom_cli_execution,
+    project_segments_monthly.monthly_piplines_all,
+    project_segments_monthly.monthly_piplines_active,
+    project_segments_monthly.monthly_piplines_active_eom,
     COALESCE(
         project_segments_monthly.monthly_piplines_all_segment,
         'NO_PIPELINES'
