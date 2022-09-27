@@ -3,7 +3,7 @@ WITH base AS (
         project_id,
         date_day AS exec_date,
         COUNT(*) AS exec_count
-    FROM {{ ref('active_projects_base') }}
+    FROM {{ ref('temp_active_projects_base_1d') }}
     GROUP BY 1, 2
 ),
 
