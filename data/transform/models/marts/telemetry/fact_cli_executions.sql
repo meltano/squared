@@ -43,9 +43,14 @@ WITH base AS (
     LEFT JOIN {{ ref('daily_active_projects') }}
         ON cli_executions_base.project_id = daily_active_projects.project_id
             AND date_dim.date_day = daily_active_projects.date_day
-    LEFT JOIN {{ ref('daily_active_projects') }} AS daily_active_projects_eom
+    LEFT JOIN {{ ref('daily_active_projects') }}
+        AS daily_active_projects_eom -- noqa: L031
         ON cli_executions_base.project_id = daily_active_projects_eom.project_id
-            AND CASE WHEN date_dim.last_day_of_month <= CURRENT_DATE THEN date_dim.last_day_of_month ELSE date_dim.date_day END = daily_active_projects_eom.date_day
+            AND CASE
+                WHEN date_dim.last_day_of_month <= CURRENT_DATE
+                    THEN date_dim.last_day_of_month
+                ELSE date_dim.date_day
+            END = daily_active_projects_eom.date_day
 ),
 
 project_segments_monthly AS (
@@ -54,22 +59,56 @@ project_segments_monthly AS (
         project_id,
         first_day_of_month,
         COUNT(DISTINCT execution_id) AS monthly_piplines_all,
-        COUNT(DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END) AS monthly_piplines_active,
-        COUNT(DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END) AS monthly_piplines_active_eom,
+        COUNT(
+            DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END
+        ) AS monthly_piplines_active,
+        COUNT(
+            DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END
+        ) AS monthly_piplines_active_eom,
         CASE
             WHEN COUNT(DISTINCT execution_id) < 50 THEN 'GUPPY'
             WHEN COUNT(DISTINCT execution_id) BETWEEN 50 AND 5000 THEN 'MARLIN'
             WHEN COUNT(DISTINCT execution_id) > 5000 THEN 'WHALE'
         END AS monthly_piplines_all_segment,
         CASE
-            WHEN COUNT(DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END) < 50 THEN 'GUPPY'
-            WHEN COUNT(DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END) BETWEEN 50 AND 5000 THEN 'MARLIN'
-            WHEN COUNT(DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END) > 5000 THEN 'WHALE'
+            WHEN
+                COUNT(
+                    DISTINCT CASE
+                        WHEN is_active_cli_execution THEN execution_id
+                    END
+                ) < 50 THEN 'GUPPY'
+            WHEN
+                COUNT(
+                    DISTINCT CASE
+                        WHEN is_active_cli_execution THEN execution_id
+                    END
+                ) BETWEEN 50 AND 5000 THEN 'MARLIN'
+            WHEN
+                COUNT(
+                    DISTINCT CASE
+                        WHEN is_active_cli_execution THEN execution_id
+                    END
+                ) > 5000 THEN 'WHALE'
         END AS monthly_piplines_active_segment,
         CASE
-            WHEN COUNT(DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END) < 50 THEN 'GUPPY'
-            WHEN COUNT(DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END) BETWEEN 50 AND 5000 THEN 'MARLIN'
-            WHEN COUNT(DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END) > 5000 THEN 'WHALE'
+            WHEN
+                COUNT(
+                    DISTINCT CASE
+                        WHEN is_active_eom_cli_execution THEN execution_id
+                    END
+                ) < 50 THEN 'GUPPY'
+            WHEN
+                COUNT(
+                    DISTINCT CASE
+                        WHEN is_active_eom_cli_execution THEN execution_id
+                    END
+                ) BETWEEN 50 AND 5000 THEN 'MARLIN'
+            WHEN
+                COUNT(
+                    DISTINCT CASE
+                        WHEN is_active_eom_cli_execution THEN execution_id
+                    END
+                ) > 5000 THEN 'WHALE'
         END AS monthly_piplines_active_eom_segment
     FROM base
     WHERE pipeline_fk IS NOT NULL
@@ -107,4 +146,5 @@ SELECT
 FROM base
 LEFT JOIN project_segments_monthly
     ON base.project_id = project_segments_monthly.project_id
-    AND base.first_day_of_month = project_segments_monthly.first_day_of_month
+        AND base.first_day_of_month
+        = project_segments_monthly.first_day_of_month
