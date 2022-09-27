@@ -142,10 +142,12 @@ SELECT
         project_segments_monthly.monthly_piplines_all_segment,
         'NO_PIPELINES'
     ) AS monthly_piplines_all_segment,
-    COALESCE(project_segments_monthly.monthly_piplines_active_segment,
+    COALESCE(
+        project_segments_monthly.monthly_piplines_active_segment,
         'NO_PIPELINES'
     ) AS monthly_piplines_active_segment,
-    COALESCE(project_segments_monthly.monthly_piplines_active_eom_segment,
+    COALESCE(
+        project_segments_monthly.monthly_piplines_active_eom_segment,
         'NO_PIPELINES'
     ) AS monthly_piplines_active_eom_segment
 FROM base
