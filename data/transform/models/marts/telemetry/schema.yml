@@ -339,6 +339,9 @@ models:
       - name: finished_ts
         description: The execution end time.
 
+      - name: cli_runtime_ms
+        description: The total runtime (ms) of the execution, when available.
+
       - name: execution_id
         description: The unique identifier for a CLI execution.
         tests:
@@ -352,6 +355,9 @@ models:
 
       - name: pipeline_fk
         description: The unique identifier for the pipeline.
+
+      - name: pipeline_runtime_bin
+        description: The bin that the total runtime fits into e.g. 5-10s or 1-3hrs etc.
 
       - name: event_count
         description: The count of the amount of times the command was executed on that date. Historic Google Analytics data is summarized at the day grain.
@@ -387,6 +393,38 @@ models:
 
       - name: is_active_cli_execution
         description: A boolean whether the execution happened when the project was considered active.
+        tests:
+          - not_null
+
+      - name: is_active_eom_cli_execution
+        description: A boolean whether the execution happened when the project was active at the end of the month.
+          This helps exclude projects that churned and include projects that were still in the exploratory window before being active.
+        tests:
+          - not_null
+
+      - name: monthly_piplines_all
+        description: The count of monthly pipelines by that project.
+
+      - name: monthly_piplines_active
+        description: The count of monthly pipelines by that project where they were active at the time of running identifier.
+
+      - name: monthly_piplines_active_eom
+        description: The count of monthly pipelines by that project where they are active at the end of the month.
+
+      - name: monthly_piplines_all_segment
+        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+        tests:
+          - not_null
+
+      - name: monthly_piplines_active_segment
+        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+          Applying the active filter based on whether the project was active when the execution happened.
+        tests:
+          - not_null
+
+      - name: monthly_piplines_active_eom_segment
+        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+          Applying the active filter based on whether the project was active at the end of the month.
         tests:
           - not_null
 
