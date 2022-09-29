@@ -21,7 +21,7 @@ WITH base AS (
         ip_address_dim.cloud_provider,
         ip_address_dim.execution_location,
         COALESCE(
-            daily_active_projects.project_id IS NOT NULL,
+            temp_daily_active_projects_1d.project_id IS NOT NULL,
             FALSE
         ) AS is_active_cli_execution,
         COALESCE(
@@ -41,10 +41,12 @@ WITH base AS (
             BETWEEN ip_address_dim.active_from AND COALESCE(
                 ip_address_dim.active_to, CURRENT_TIMESTAMP
             )
-    LEFT JOIN {{ ref('daily_active_projects') }}
-        ON cli_executions_base.project_id = daily_active_projects.project_id
-            AND date_dim.date_day = daily_active_projects.date_day
-    LEFT JOIN {{ ref('daily_active_projects') }}
+    LEFT JOIN {{ ref('temp_daily_active_projects_1d') }}
+        ON
+            cli_executions_base.project_id
+            = temp_daily_active_projects_1d.project_id
+            AND date_dim.date_day = temp_daily_active_projects_1d.date_day
+    LEFT JOIN {{ ref('temp_daily_active_projects_1d') }}
         AS daily_active_projects_eom -- noqa: L031
         ON cli_executions_base.project_id = daily_active_projects_eom.project_id
             AND CASE WHEN date_dim.last_day_of_month <= CURRENT_DATE
