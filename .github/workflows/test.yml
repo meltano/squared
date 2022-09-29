@@ -25,7 +25,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Airflow
     - run: meltano install orchestrator airflow
     - run: meltano test airflow
@@ -48,7 +48,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
     - run: meltano install utilities sqlfluff
     - run: meltano install transformer dbt-snowflake
@@ -86,6 +86,7 @@ jobs:
         working-directory: data/
     environment: test
     strategy:
+      fail-fast: false
       matrix:
         extract-source: ['meltanohub_el', 'spreadsheets_anywhere_el', 'github_search_el', 'github_meltano_el', 'gitlab_el', 'slack_el', 'google_analytics_el', 'snowplow_el']
     env:
@@ -100,7 +101,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
     # Run Test
@@ -149,7 +150,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
