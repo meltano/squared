@@ -45,14 +45,3 @@ plugins:
       account: epa06486
       add_metadata_columns: true
       password: ${SNOWFLAKE_PASSWORD}
-      batch_config:
-        encoding:
-          format: jsonl
-          compression: gzip
-  - name: target-snowflake-batch
-    inherit_from: target-snowflake
-    config:
-      batch_config:
-        encoding:
-          format: jsonl
-          compression: gzip

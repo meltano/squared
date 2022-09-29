@@ -94,13 +94,6 @@ plugins:
   - name: tap-github
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@chore-update-sdk-version
-    config:
-      batch_config:
-        encoding:
-          format: jsonl
-          compression: gzip
-        storage:
-          root: "file://${MELTANO_PROJECT_ROOT}/output"
   - name: tap-github-meltano
     inherit_from: tap-github
     config:
