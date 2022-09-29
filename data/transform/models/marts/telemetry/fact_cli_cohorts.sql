@@ -1,6 +1,6 @@
 WITH cohort_snapshots AS (
     SELECT
-        DATE_TRUNC('month', project_dim.first_event_at) AS cohort_id,
+        DATE_TRUNC('month', project_dim.project_first_event_at) AS cohort_id,
         DATE_TRUNC(
             'month', cli_executions_base.event_date
         ) AS snapshot_month,

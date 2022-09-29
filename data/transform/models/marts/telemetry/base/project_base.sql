@@ -18,6 +18,16 @@ SELECT
     cli_executions_base.project_id,
     MIN(cli_executions_base.event_created_at) AS first_event_at,
     MAX(cli_executions_base.event_created_at) AS last_event_at,
+    DATEDIFF(
+        'day',
+        MIN(cli_executions_base.event_created_at),
+        MAX(cli_executions_base.event_created_at)
+    ) AS lifespan_days,
+    DATEDIFF(
+        'hour',
+        MIN(cli_executions_base.event_created_at),
+        MAX(cli_executions_base.event_created_at)
+    ) AS lifespan_hours,
     SUM(
         CASE
             WHEN

@@ -51,9 +51,9 @@ WITH base AS (
 )
 SELECT
     base.*,
-    project_dim.first_event_at AS first_event_date,
-    project_dim.last_event_at AS last_event_date,
-    project_dim.is_active,
+    project_dim.project_first_event_at AS first_event_date,
+    project_dim.project_last_event_at AS last_event_date,
+    project_dim.is_currently_active AS is_active,
     project_dim.exec_event_total,
     project_dim.project_id_source
 FROM base
