@@ -351,7 +351,7 @@ models:
       - name: is_currently_active
         description: A boolean whether the project is active as of today.
         tests:
-          - not_nul
+          - not_null
 
       - name: project_lifespan_days
         description: The length between the projects first and last event, in days.
