@@ -1,10 +1,10 @@
 WITH active_projects AS (
 
     SELECT
-		project_id,
-		MIN(date_day) AS first_active_date,
-		MAX(date_day) AS last_active_date
-	FROM {{ ref('daily_active_projects') }}
+        project_id,
+        MIN(date_day) AS first_active_date,
+        MAX(date_day) AS last_active_date
+    FROM {{ ref('daily_active_projects') }}
     GROUP BY 1
 
 )
@@ -17,9 +17,12 @@ SELECT
     project_base.project_id_source,
     active_projects.first_active_date AS project_first_active_date,
     active_projects.last_active_date AS project_last_active_date,
-    COALESCE(active_projects.last_active_date = CURRENT_DATE(), FALSE) AS is_currently_active,
     project_base.lifespan_days AS project_lifespan_days,
     project_base.lifespan_hours AS project_lifespan_hours,
+    COALESCE(
+        active_projects.last_active_date = CURRENT_DATE(),
+        FALSE
+    ) AS is_currently_active,
     COALESCE(
         project_base.lifespan_hours <= 24
         AND project_base.first_event_at::DATE != CURRENT_DATE,
