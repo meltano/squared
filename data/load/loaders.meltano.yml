@@ -45,3 +45,9 @@ plugins:
       account: epa06486
       add_metadata_columns: true
       password: ${SNOWFLAKE_PASSWORD}
+      batch_config:
+        encoding:
+          format: jsonl
+          compression: gzip
+        storage:
+          root: "file://${MELTANO_PROJECT_ROOT}/output"
