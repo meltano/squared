@@ -57,7 +57,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: "file://{$MELTANO_PROJECT_ROOT}/output"
+          root: "file://${MELTANO_PROJECT_ROOT}/output"
     select:
     - users.*
     - channels.*
@@ -100,7 +100,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: "file://{$MELTANO_PROJECT_ROOT}/output"
+          root: "file://${MELTANO_PROJECT_ROOT}/output"
   - name: tap-github-meltano
     inherit_from: tap-github
     config:
@@ -153,7 +153,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: "file://{$MELTANO_PROJECT_ROOT}/output"
+          root: "file://${MELTANO_PROJECT_ROOT}/output"
   - name: tap-snowflake-metrics-legacy
     inherit_from: tap-snowflake
     metadata:
