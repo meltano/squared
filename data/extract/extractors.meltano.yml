@@ -143,7 +143,7 @@ plugins:
     - pull_requests.*
     # - issue_comments.*
   - name: tap-snowflake
-    variant: meltanolabs
+    namespace: tap_snowflake
     pip_url: git+https://github.com/MeltanoLabs/tap-snowflake.git@working-mvp
     config:
       account: epa06486
