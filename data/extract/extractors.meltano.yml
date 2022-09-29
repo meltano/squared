@@ -44,7 +44,7 @@ plugins:
           json_path: "values"
   - name: tap-slack
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.5
+    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@chore-update-sdk-version
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
@@ -52,11 +52,16 @@ plugins:
       - C01SK13R9NJ
       channel_types:
       - private_channel
+      batch_config:
+        encoding:
+          format: jsonl
+          compression: gzip
+        storage:
+          root: "file://{$MELTANO_PROJECT_ROOT}/output"
     select:
     - users.*
     - channels.*
     - messages.*
-
   - name: tap-slack-public
     inherit_from: tap-slack
     config:
@@ -88,7 +93,14 @@ plugins:
     - issues.*
   - name: tap-github
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
+    pip_url: git+https://github.com/MeltanoLabs/tap-github@chore-update-sdk-version
+    config:
+      batch_config:
+        encoding:
+          format: jsonl
+          compression: gzip
+        storage:
+          root: "file://{$MELTANO_PROJECT_ROOT}/output"
   - name: tap-github-meltano
     inherit_from: tap-github
     config:
@@ -131,11 +143,16 @@ plugins:
     - pull_requests.*
     # - issue_comments.*
   - name: tap-snowflake
-    variant: transferwise
-    pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@15699411cc0ff87f11a3f7e637f01a2eb8cbf9da
+    pip_url: git+https://github.com/MeltanoLabs/tap-snowflake.git@working-mvp
     config:
       account: epa06486
       password: ${SNOWFLAKE_PASSWORD}
+      batch_config:
+        encoding:
+          format: jsonl
+          compression: gzip
+        storage:
+          root: "file://{$MELTANO_PROJECT_ROOT}/output"
   - name: tap-snowflake-metrics-legacy
     inherit_from: tap-snowflake
     metadata:

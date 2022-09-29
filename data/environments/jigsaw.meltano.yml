@@ -9,11 +9,11 @@ environments:
       loaders:
       - name: target-snowflake
         config:
-          dbname: JIGSAW_LABS_RAW
+          database: JIGSAW_LABS_RAW
           user: ${USER_PREFIX}
           role: jigsaw_labs_developer
           warehouse: CORE
-          default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
+          schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
       transformers:
       - name: dbt-snowflake
         config:

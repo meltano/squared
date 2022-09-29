@@ -34,7 +34,7 @@ environments:
       # Reverse ETL connections:
       - name: tap-snowflake
         config:
-          dbname: CICD_PROD
+          database: CICD_PROD
           user: CICD
           role: CICD
           warehouse: CICD
@@ -50,11 +50,11 @@ environments:
       loaders:
       - name: target-snowflake
         config:
-          dbname: CICD_RAW
+          database: CICD_RAW
           user: CICD
           role: CICD
           warehouse: CICD
-          default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
+          schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
       transformers:
       - name: dbt-snowflake
         config:
