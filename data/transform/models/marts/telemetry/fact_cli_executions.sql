@@ -7,7 +7,17 @@ WITH base AS (
         cli_executions_base.finished_ts,
         cli_executions_base.cli_runtime_ms,
         cli_executions_base.execution_id,
-        cli_executions_base.project_id AS project_id,
+        -- Project Attributes
+        project_dim.project_id,
+        project_dim.project_first_event_at,
+        project_dim.project_last_event_at,
+        project_dim.project_first_active_date,
+        project_dim.project_last_active_date,
+        project_dim.project_lifespan_days,
+        project_dim.is_ephemeral_project_id,
+        project_dim.project_id_source,
+        project_dim.is_currently_active,
+        -- Pipeline Attributes
         pipeline_dim.pipeline_pk AS pipeline_fk,
         pipeline_executions.pipeline_runtime_bin,
         cli_executions_base.event_count,
@@ -29,6 +39,8 @@ WITH base AS (
             FALSE
         ) AS is_active_eom_cli_execution
     FROM {{ ref('cli_executions_base') }}
+    LEFT JOIN {{ ref('project_dim') }}
+        ON cli_executions_base.project_id = project_dim.project_id
     LEFT JOIN {{ ref('pipeline_executions') }}
         ON cli_executions_base.execution_id = pipeline_executions.execution_id
     LEFT JOIN {{ ref('pipeline_dim') }}
@@ -122,6 +134,14 @@ SELECT
     base.cli_runtime_ms,
     base.execution_id,
     base.project_id,
+    base.project_first_event_at,
+    base.project_last_event_at,
+    base.project_first_active_date,
+    base.project_last_active_date,
+    base.project_lifespan_days,
+    base.is_ephemeral_project_id,
+    base.project_id_source,
+    base.is_currently_active,
     base.pipeline_fk,
     base.pipeline_runtime_bin,
     base.event_count,
