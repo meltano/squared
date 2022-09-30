@@ -219,11 +219,29 @@ models:
         tests:
           - not_null
 
-      - name: project_created_at
-        description: The date the project sent its first event.
+      - name: project_first_event_at
+        description: The timestamp of the first event the project sent.
+        tests:
+          - not_null
 
-      - name: project_is_active
-        description: Whether the project is active or not.
+      - name: project_lifespan_days
+        description: The length between the projects first and last event, in days.
+        tests:
+          - not_null
+
+      - name: is_ephemeral_project_id
+        description: A boolean whether the project is considered ephemeral or not. Ephemeral
+          means the project lifespan was <= 24 hours and their first event was not today.
+        tests:
+          - not_null
+
+      - name: is_currently_active
+        description: A boolean whether the project is active as of today.
+        tests:
+          - not_null
+
+      - name: project_id_source
+        description: The source of the project ID (i.e. explicit, random, derived) if known.
 
       - name: env_id
         description: The Meltano config environment hash value.
@@ -305,23 +323,49 @@ models:
           - not_null
           - unique
 
-      - name: is_active
-        description: A boolean whether the project is considered active.
+      - name: project_first_event_at
+        description: The timestamp of the first event the project sent.
         tests:
           - not_null
 
-      - name: first_event_at
-        description: The timestamp of the projects first event.
-        tests:
-          - not_null
-
-      - name: last_event_at
-        description: The timestamp of the projects most recent event.
+      - name: project_last_event_at
+        description: The timestamp of the last event the project sent.
         tests:
           - not_null
 
       - name: exec_event_total
         description: The count of how many total executions the project has had.
+        tests:
+          - not_null
+
+      - name: project_id_source
+        description: The source of the project ID (i.e. explicit, random, derived) if known.
+
+
+      - name: project_first_active_date
+        description: The first date that the project was considered active.
+
+      - name: project_last_active_date
+        description: The last date that the project was considered active.
+
+      - name: is_currently_active
+        description: A boolean whether the project is active as of today.
+        tests:
+          - not_null
+
+      - name: project_lifespan_days
+        description: The length between the projects first and last event, in days.
+        tests:
+          - not_null
+
+      - name: project_lifespan_hours
+        description: The length between the projects first and last event, in hours.
+        tests:
+          - not_null
+
+      - name: is_ephemeral_project_id
+        description: A boolean whether the project is considered ephemeral or not. Ephemeral
+          means the project lifespan was <= 24 hours and their first event was not today.
         tests:
           - not_null
 
@@ -350,6 +394,41 @@ models:
 
       - name: project_id
         description: The unique identifier for a Meltano project, found in the meltano.yml file.
+        tests:
+          - not_null
+
+      - name: project_first_event_at
+        description: The timestamp of the first event the project sent.
+        tests:
+          - not_null
+
+      - name: project_last_event_at
+        description: The timestamp of the last event the project sent.
+        tests:
+          - not_null
+
+      - name: project_first_active_date
+        description: The first date that the project was considered active.
+
+      - name: project_last_active_date
+        description: The last date that the project was considered active.
+
+      - name: project_lifespan_days
+        description: The length between the projects first and last event, in days.
+        tests:
+          - not_null
+
+      - name: is_ephemeral_project_id
+        description: A boolean whether the project is considered ephemeral or not. Ephemeral
+          means the project lifespan was <= 24 hours and their first event was not today.
+        tests:
+          - not_null
+
+      - name: project_id_source
+        description: The source of the project ID (i.e. explicit, random, derived) if known.
+
+      - name: is_currently_active
+        description: A boolean whether the project is active as of today.
         tests:
           - not_null
 
