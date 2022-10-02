@@ -1,0 +1,34 @@
+{
+    "plugin_type": "utilities",
+    "name": "metabase",
+    "namespace": "metabase",
+    "label": "Metabase",
+    "description": "Metabase is the easy, open-source way for everyone in your company to ask questions and learn from data.",
+    "docs": "https://hub.meltano.com/utilities/metabase/metabase",
+    "repo": "https://github.com/metabase/metabase",
+    "variant": "metabase",
+    "pip_url": "",
+    "settings": [],
+    "commands": {
+        "ui": {
+            "args": "metabase",
+            "container_spec": {
+                "image": "metabase/metabase:latest",
+                "env": {
+                    "PWD": "/",
+                    "HOME": "/root",
+                    "MB_DB_FILE": "/metabase-data/metabase.db",
+                    "JAVA_HOME": "/opt/java/openjdk",
+                    "PATH": "/opt/java/openjdk/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+                },
+                "ports": {
+                    "3000": "3000/tcp"
+                },
+                "volumes": [
+                    "$MELTANO_PROJECT_ROOT/analyze/metabase/:/metabase-data"
+                ]
+            }
+        }
+    },
+    "logo_url": "https://hub.meltano.com/assets/logos/utilities/metabase.png"
+}

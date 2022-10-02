@@ -65,3 +65,5 @@ plugins:
     commands:
       run: run utilities/permifrost/roles.yml
       spec-test: spec-test utilities/permifrost/roles.yml
+  - name: metabase
+    variant: metabase
