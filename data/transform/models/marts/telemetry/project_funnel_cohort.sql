@@ -1,34 +1,34 @@
 {% set mapping = {
-	"NOT_OPT_OUT": {
-		'filter': "has_opted_out = FALSE"
+    "NOT_OPT_OUT": {
+        'filter': "has_opted_out = FALSE"
 	},
-	"ADD_OR_INSTALL": {
-		'parent_name': 'NOT_OPT_OUT',
-		'filter': "ARRAY_CONTAINS( 'add'::VARIANT, cli_command_array ) OR ARRAY_CONTAINS( 'install'::VARIANT, cli_command_array )"
+    "ADD_OR_INSTALL": {
+        'parent_name': 'NOT_OPT_OUT',
+        'filter': "(ARRAY_CONTAINS( 'add'::VARIANT, cli_command_array ) OR ARRAY_CONTAINS( 'install'::VARIANT, cli_command_array ))"
 	},
-	"EXEC_EVENT": {
-		'parent_name': 'ADD_OR_INSTALL',
-		'filter': "is_exec_event = TRUE"
+    "EXEC_EVENT": {
+        'parent_name': 'ADD_OR_INSTALL',
+        'filter': "is_exec_event = TRUE"
 	},
-	"PIPELINE_ATTEMPT": {
-		'parent_name': 'EXEC_EVENT',
-		'filter': "ARRAY_SIZE( pipeline_array ) > 0"
+    "PIPELINE_ATTEMPT": {
+        'parent_name': 'EXEC_EVENT',
+        'filter': "ARRAY_SIZE( pipeline_array ) > 0"
 	},
-	"PIPELINE_SUCCESS": {
-		'parent_name': 'PIPELINE_ATTEMPT',
-		'filter': "ARRAY_CONTAINS( 'SUCCESS'::VARIANT, pipe_completion_statuses )"
+    "PIPELINE_SUCCESS": {
+        'parent_name': 'PIPELINE_ATTEMPT',
+        'filter': "ARRAY_CONTAINS( 'SUCCESS'::VARIANT, pipe_completion_statuses )"
 	},
-	"GREATER_1_DAY": {
-		'parent_name': 'PIPELINE_SUCCESS',
-		'filter': "project_lifespan_days >= 1"
+    "GREATER_1_DAY": {
+        'parent_name': 'PIPELINE_SUCCESS',
+        'filter': "project_lifespan_days >= 1"
 	},
-	"GREATER_7_DAY": {
-		'parent_name': 'GREATER_1_DAY',
-		'filter': "project_lifespan_days >= 7"
+    "GREATER_7_DAY": {
+        'parent_name': 'GREATER_1_DAY',
+        'filter': "project_lifespan_days >= 7"
 	},
-	"STILL_ACTIVE": {
-		'parent_name': 'GREATER_7_DAY',
-		'filter': "is_currently_active = TRUE"
+    "STILL_ACTIVE": {
+        'parent_name': 'GREATER_7_DAY',
+        'filter': "is_currently_active = TRUE"
 	}
 	}
 %}
