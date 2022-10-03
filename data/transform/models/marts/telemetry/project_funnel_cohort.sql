@@ -1,36 +1,35 @@
 
 {% set mapping = {
 	"NOT_OPT_OUT": {
-		'parent_name': 'all_projects',
-		'query': "has_opted_out = FALSE"
+		'filter': "has_opted_out = FALSE"
 	},
 	"ADD_OR_INSTALL": {
 		'parent_name': 'NOT_OPT_OUT',
-		'query': "ARRAY_CONTAINS( 'add'::VARIANT, cli_command_array ) OR ARRAY_CONTAINS( 'install'::VARIANT, cli_command_array )"
+		'filter': "ARRAY_CONTAINS( 'add'::VARIANT, cli_command_array ) OR ARRAY_CONTAINS( 'install'::VARIANT, cli_command_array )"
 	},
 	"EXEC_EVENT": {
 		'parent_name': 'ADD_OR_INSTALL',
-		'query': "is_exec_event = TRUE"
+		'filter': "is_exec_event = TRUE"
 	},
 	"PIPELINE_ATTEMPT": {
 		'parent_name': 'EXEC_EVENT',
-		'query': "ARRAY_SIZE( pipeline_array ) > 0"
+		'filter': "ARRAY_SIZE( pipeline_array ) > 0"
 	},
 	"PIPELINE_SUCCESS": {
 		'parent_name': 'PIPELINE_ATTEMPT',
-		'query': "ARRAY_CONTAINS( 'SUCCESS'::VARIANT, pipe_completion_statuses )"
+		'filter': "ARRAY_CONTAINS( 'SUCCESS'::VARIANT, pipe_completion_statuses )"
 	},
 	"GREATER_1_DAY": {
 		'parent_name': 'PIPELINE_SUCCESS',
-		'query': "project_lifespan_days >= 1"
+		'filter': "project_lifespan_days >= 1"
 	},
 	"GREATER_7_DAY": {
 		'parent_name': 'GREATER_1_DAY',
-		'query': "project_lifespan_days >= 7"
+		'filter': "project_lifespan_days >= 7"
 	},
 	"STILL_ACTIVE": {
 		'parent_name': 'GREATER_7_DAY',
-		'query': "is_currently_active = TRUE"
+		'filter': "is_currently_active = TRUE"
 	}
 	}
 %}
@@ -69,12 +68,11 @@ cohort_execs AS (
 agg_base AS (
     SELECT
         cohort_week,
-        COUNT(DISTINCT ip_address_hash) AS all_ips,
 		COUNT(
 			DISTINCT CASE WHEN project_id_source != 'random' THEN project_id END
-		) AS all_projects,
+		) AS base_all,
 		{% for filter_name, attribs in mapping.items() %}
-			{{ funnel_filter(loop.index, filter_name, mapping) }} AS {{filter_name}}
+			{{ compounding_funnel_filters(loop.index, filter_name, mapping, "COUNT(DISTINCT CASE WHEN project_id_source != 'random'", "THEN project_id END)") }} AS {{filter_name}}
 			{%- if not loop.last %},{% endif -%}
 		{% endfor %}
     FROM cohort_execs
@@ -92,8 +90,8 @@ SELECT
         cohort_week,
         '{{ loop.index }}' || '_' || '{{ filter_name }}' AS funnel_level,
         {{ filter_name }} AS funnel_level_value,
-		{{ attribs['parent_name'] }} AS parent_level_value,
-        all_projects
+		{{ attribs.get('parent_name', 'base_all' }} AS parent_level_value,
+        base_all
     FROM agg_base
 
     {% endfor %}
