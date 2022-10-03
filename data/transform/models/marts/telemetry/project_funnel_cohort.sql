@@ -90,7 +90,7 @@ SELECT
         cohort_week,
         '{{ loop.index }}' || '_' || '{{ filter_name }}' AS funnel_level,
         {{ filter_name }} AS funnel_level_value,
-		{{ attribs.get('parent_name', 'base_all' }} AS parent_level_value,
+		{{ attribs.get('parent_name', 'base_all') }} AS parent_level_value,
         base_all
     FROM agg_base
 
