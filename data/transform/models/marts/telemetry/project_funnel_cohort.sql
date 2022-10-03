@@ -1,4 +1,3 @@
-
 {% set mapping = {
 	"NOT_OPT_OUT": {
 		'filter': "has_opted_out = FALSE"
@@ -68,11 +67,18 @@ cohort_execs AS (
 agg_base AS (
     SELECT
         cohort_week,
-		COUNT(
-			DISTINCT CASE WHEN project_id_source != 'random' THEN project_id END
-		) AS base_all,
-		{% for filter_name, attribs in mapping.items() %}
-			{{ compounding_funnel_filters(loop.index, filter_name, mapping, "COUNT(DISTINCT CASE WHEN project_id_source != 'random'", "THEN project_id END)") }} AS {{filter_name}}
+        COUNT(
+            DISTINCT CASE WHEN project_id_source != 'random'
+                THEN project_id END
+        ) AS base_all,
+        {% for filter_name, attribs in mapping.items() %}
+        {{ compounding_funnel_filters(
+			loop.index,
+			filter_name,
+			mapping,
+			"COUNT(DISTINCT CASE WHEN project_id_source != 'random'",
+			"THEN project_id END)"
+		) }} AS {{ filter_name }}
 			{%- if not loop.last %},{% endif -%}
 		{% endfor %}
     FROM cohort_execs
@@ -80,18 +86,18 @@ agg_base AS (
 )
 
 
-    {% for filter_name, attribs in mapping.items() %}    
+{% for filter_name, attribs in mapping.items() %}    
 
 {%- if not loop.first %}
 UNION ALL
-    {% endif -%}
+{% endif -%}
 
 SELECT
-        cohort_week,
-        '{{ loop.index }}' || '_' || '{{ filter_name }}' AS funnel_level,
-        {{ filter_name }} AS funnel_level_value,
-		{{ attribs.get('parent_name', 'base_all') }} AS parent_level_value,
-        base_all
-    FROM agg_base
+    cohort_week,
+    '{{ loop.index }}' || '_' || '{{ filter_name }}' AS funnel_level,
+    {{ filter_name }} AS funnel_level_value,
+    {{ attribs.get('parent_name', 'base_all') }} AS parent_level_value,
+    base_all
+FROM agg_base
 
-    {% endfor %}
+{% endfor %}
