@@ -7,6 +7,17 @@ This project is used to process data for [MeltanoHub](https://hub.meltano.com/) 
 The primary maintainer is @pnadolny13. 
 The primary slack channel for discussion is [#meltano-squared](https://meltano.slack.com/archives/C02GH7KNPAL).
 
+## Why use Meltano to manage data at Meltano?
+*"We don't just eat our own dog food, we embrace it! Meltano supercharges every part of our day-to-day work inside the data team."*
+
+Our data team keeps on pushing the edge on use cases for [Meltano](https://docs.meltano.com/getting-started/meltano-at-a-glance), and utilizes all of the advanced features, including deployment to Kubernetes and CI/CD integrations. (All of which you can find in this repository)
+
+We love our own Meltano because it allowed us to **start simple, provides DataOps out-of-the-box, integrates with everything, is easily customizable** (we do a lot of customizations), **it's a mature system and has first class ELT support** (our most important use case).
+
+To get started with Meltano yourself, head over to the [Installation](https://docs.meltano.com/getting-started/installation), or if you already have Meltano installed, to [the Meltano Tutorial](https://docs.meltano.com/getting-started/part1). 
+
+---
+
 ## Repo Plugins
 
 These are all of the plugins that are currently being using in this repo.
