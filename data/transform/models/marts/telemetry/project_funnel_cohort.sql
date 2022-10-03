@@ -33,148 +33,99 @@ agg_base AS (
         cohort_week,
         COUNT(DISTINCT ip_address_hash) AS all_ips,
         COUNT(
-            DISTINCT CASE WHEN project_id_source != 'random' THEN project_id END
+            DISTINCT CASE WHEN {{ funnel_filter(0) }} THEN project_id END
         ) AS all_projects,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE THEN project_id
+                    {{ funnel_filter(1) }} THEN project_id
             END
         ) AS projects_not_opted_out,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) THEN project_id
+                    {{ funnel_filter(2) }} THEN project_id
             END
         ) AS projects_add_or_install_plugin,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) AND is_exec_event = TRUE THEN project_id
+                    {{ funnel_filter(3) }} THEN project_id
             END
         ) AS projects_exec_event,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) AND is_exec_event = TRUE AND ARRAY_SIZE(
-                        pipeline_array
-                    ) > 0 THEN project_id
+                    {{ funnel_filter(4) }} THEN project_id
             END
         ) AS projects_pipeline_attempts,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) AND is_exec_event = TRUE AND ARRAY_SIZE(
-                        pipeline_array
-                    ) > 0 AND ARRAY_CONTAINS(
-                        'SUCCESS'::VARIANT, pipe_completion_statuses
-                    ) THEN project_id
+                    {{ funnel_filter(5) }} THEN project_id
             END
         ) AS projects_pipeline_success,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) AND is_exec_event = TRUE AND ARRAY_SIZE(
-                        pipeline_array
-                    ) > 0 AND ARRAY_CONTAINS(
-                        'SUCCESS'::VARIANT, pipe_completion_statuses
-                    ) AND project_lifespan_days >= 1 THEN project_id
+                    {{ funnel_filter(6) }} THEN project_id
             END
         ) AS projects_success_grt_1d,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) AND is_exec_event = TRUE AND ARRAY_SIZE(
-                        pipeline_array
-                    ) > 0 AND ARRAY_CONTAINS(
-                        'SUCCESS'::VARIANT, pipe_completion_statuses
-                    ) AND project_lifespan_days >= 7 THEN project_id
+                    {{ funnel_filter(7) }} THEN project_id
             END
         ) AS projects_success_grt_7d,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    project_id_source != 'random' AND has_opted_out = FALSE AND (
-                        ARRAY_CONTAINS(
-                            'add'::VARIANT, cli_command_array
-                        ) OR ARRAY_CONTAINS(
-                            'install'::VARIANT, cli_command_array
-                        )
-                    ) AND is_exec_event = TRUE AND ARRAY_SIZE(
-                        pipeline_array
-                    ) > 0 AND ARRAY_CONTAINS(
-                        'SUCCESS'::VARIANT, pipe_completion_statuses
-                    ) AND is_currently_active THEN project_id
+                   {{ funnel_filter(8) }} THEN project_id
             END
-        ) AS projects_success_still_active,
-        COUNT(
-            DISTINCT CASE WHEN project_lifespan_days >= 7 THEN project_id END
-        ) AS all_grt_7_days,
-        COUNT(
-            DISTINCT CASE WHEN is_currently_active THEN project_id END
-        ) AS all_still_active_today,
-        COUNT(
-            DISTINCT CASE
-                WHEN
-                    pipeline_fk IS NOT NULL AND completion_status != 'SUCCESS' THEN project_id
-            END
-        ) AS all_where_pipeline_fail,
-        COUNT(
-            DISTINCT CASE WHEN is_ephemeral_project_id THEN project_id END
-        ) AS all_ephemeral_projects
+        ) AS projects_success_still_active
     FROM cohort_execs
     GROUP BY 1
 )
 
 {% set mapping = {
-	"NOT_OPT_OUT": 'projects_not_opted_out',
-	"ADD_OR_INSTALL": 'projects_add_or_install_plugin',
-	"EXEC_EVENT": 'projects_exec_event',
-	"PIPELINE_ATTEMPT": 'projects_pipeline_attempts',
-	"PIPELINE_SUCCESS": 'projects_pipeline_success',
-	"GREATER_1_DAY": 'projects_success_grt_1d',
-	"GREATER_7_DAY": 'projects_success_grt_7d',
-	"STILL_ACTIVE": 'projects_success_still_active'
+	"1_NOT_OPT_OUT": {
+		'name': 'projects_not_opted_out',
+		'parent_name': 'all_projects',
+		'query': "has_opted_out = FALSE"
+	},
+	"2_ADD_OR_INSTALL": {
+		'name': 'projects_add_or_install_plugin',
+		'parent_name': 'projects_not_opted_out',
+		'query': "ARRAY_CONTAINS( 'add'::VARIANT, cli_command_array ) OR ARRAY_CONTAINS( 'install'::VARIANT, cli_command_array )"
+	},
+	"3_EXEC_EVENT": {
+		'name': 'projects_exec_event',
+		'parent_name': 'projects_add_or_install_plugin'
+	},
+	"4_PIPELINE_ATTEMPT": {
+		'name': 'projects_pipeline_attempts',
+		'parent_name': 'projects_exec_event'
+	},
+	"5_PIPELINE_SUCCESS": {
+		'name': 'projects_pipeline_success',
+		'parent_name': 'projects_pipeline_attempts'
+	},
+	"6_GREATER_1_DAY": {
+		'name': 'projects_success_grt_1d',
+		'parent_name': 'projects_pipeline_success'
+	},
+	"7_GREATER_7_DAY": {
+		'name': 'projects_success_grt_7d',
+		'parent_name': 'projects_success_grt_1d'
+	},
+	"8_STILL_ACTIVE": {
+		'name': 'projects_success_still_active',
+		'parent_name': 'projects_success_grt_7d'
+	}
 	}
 %}
 
-    {% for name, value in mapping.items() %}    
+    {% for filter_name, attribs in mapping.items() %}    
 
 {%- if not loop.first %}
 UNION ALL
@@ -182,8 +133,9 @@ UNION ALL
 
 SELECT
         cohort_week,
-        '{{ name }}' AS funnel_level,
-        {{ value }} AS funnel_level_value,
+        '{{ filter_name }}' AS funnel_level,
+        {{ attribs['name'] }} AS funnel_level_value,
+		{{ attribs['parent_name'] }} AS parent_level_value,
         all_projects
     FROM agg_base
 
