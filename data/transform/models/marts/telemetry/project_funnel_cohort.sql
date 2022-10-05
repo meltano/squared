@@ -45,7 +45,15 @@ WITH base AS (
     LEFT JOIN prep.workspace.opt_outs
         ON fact_cli_executions.project_id = opt_outs.project_id
 ),
-
+single_event AS (
+    SELECT
+        project_id,
+        SUM(event_count) AS total_events,
+        MAX(cli_command) AS command
+    FROM base
+    GROUP BY 1
+    HAVING total_events = 1
+),
 cohort_execs AS (
     SELECT
         base.*,
@@ -60,15 +68,18 @@ cohort_execs AS (
         ) OVER (PARTITION BY base.project_id) AS pipeline_array,
         ARRAY_AGG(
             DISTINCT base.cli_command
-        ) OVER (PARTITION BY base.project_id) AS cli_command_array
+        ) OVER (PARTITION BY base.project_id) AS cli_command_array,
+        COALESCE(single_event.project_id IS NOT NULL AND command IN ('discover', 'init'), FALSE) AS is_single_event_project
     FROM base
+    LEFT JOIN single_event
+        ON base.project_id = single_event.project_id
 ),
 
 agg_base AS (
     SELECT
         cohort_week,
         COUNT(
-            DISTINCT CASE WHEN project_id_source != 'random'
+            DISTINCT CASE WHEN project_id_source != 'random' AND is_single_event_project = FALSE AND cli_command_array != array_construct('discover')
                 THEN project_id END
         ) AS base_all,
         {% for filter_name, attribs in mapping.items() %}
@@ -76,7 +87,7 @@ agg_base AS (
 			loop.index,
 			filter_name,
 			mapping,
-			"COUNT(DISTINCT CASE WHEN project_id_source != 'random'",
+			"COUNT(DISTINCT CASE WHEN project_id_source != 'random' AND is_single_event_project = FALSE AND cli_command_array != array_construct('discover')",
 			"THEN project_id END)"
 		) }} AS {{ filter_name }}
 			{%- if not loop.last %},{% endif -%}
