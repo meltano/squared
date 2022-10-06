@@ -130,7 +130,11 @@ cohort_execs AS (
         ) AS is_ci_only_project,
         FIRST_VALUE(
             base.meltano_version
-        ) OVER (PARTITION BY base.project_id ORDER BY COALESCE(started_ts, date_day) ASC) AS first_meltano_version
+        ) OVER (
+            PARTITION BY
+                base.project_id
+            ORDER BY COALESCE(base.started_ts, base.date_day) ASC
+        ) AS first_meltano_version
     FROM base
     LEFT JOIN ci_only
         ON base.project_id = ci_only.project_id
