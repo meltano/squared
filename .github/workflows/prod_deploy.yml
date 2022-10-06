@@ -118,7 +118,4 @@ jobs:
     - run: pip install -r requirements.txt
     # Seed Production
     - run: meltano install transformer dbt-snowflake
-    - run: meltano run dbt-snowflake:deps
-    - run: meltano run dbt-snowflake:compile
-    - run: meltano run dbt-snowflake:seed
-    - run: meltano run dbt-snowflake:run_dbt_artifacts
+    - run: meltano run dbt-snowflake:deps dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed
