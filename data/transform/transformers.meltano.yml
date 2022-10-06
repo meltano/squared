@@ -2,7 +2,7 @@ plugins:
   transformers:
   - name: dbt-snowflake
     variant: dbt-labs
-    pip_url: dbt-core~=1.1.0 dbt-snowflake~=1.1.0
+    pip_url: dbt-core~=1.2.0 dbt-snowflake~=1.2.0
     commands:
       create_userdev_env:
         args: "run-operation create_userdev_env --args \"{'db_list': ['RAW'], 'dry_run':\
@@ -10,8 +10,10 @@ plugins:
         description: Clones all production schemas in the PREP database that the user
           has access to.
   
-      run_marts: run --select marts.* common.* --exclude staging.*
-      test_marts: test --select marts.* common.* --exclude staging.*
+      run_dbt_artifacts: run --select dbt_artifacts.*
+
+      run_marts: run --select marts.* common.* --exclude staging.*,dbt_artifacts.*
+      test_marts: test --select marts.* common.* --exclude staging.*,dbt_artifacts.*
   
       run_staging_meltanohub: run --select staging.meltanohub.*
       run_snapshot_meltanohub: snapshot --select meltanohub.*

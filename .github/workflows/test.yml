@@ -76,7 +76,7 @@ jobs:
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
     - run: meltano install transformer dbt-snowflake
-    - run: meltano run dbt-snowflake:deps dbt-snowflake:seed
+    - run: meltano run dbt-snowflake:deps dbt-snowflake:seed dbt-snowflake:run_dbt_artifacts
 
   el_tests:
     runs-on: ubuntu-latest
