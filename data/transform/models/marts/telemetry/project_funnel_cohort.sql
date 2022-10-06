@@ -66,8 +66,8 @@ WITH base AS (
     SELECT
         fact_cli_executions.*,
         fact_plugin_usage.completion_status,
-        COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out,
         project_dim.project_lifespan_hours,
+        COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out,
         DATEDIFF(
             'minute',
             fact_cli_executions.project_first_event_at,
@@ -81,15 +81,19 @@ WITH base AS (
     LEFT JOIN {{ ref('project_dim') }}
         ON fact_cli_executions.project_id = project_dim.project_id
 ),
+
 ci_only AS (
     SELECT
         base.project_id,
         MAX(is_ci_environment) AS is_ci_environment,
-        COUNT(DISTINCT COALESCE(is_ci_environment, FALSE)) AS is_ci_environment_count
+        COUNT(
+            DISTINCT COALESCE(is_ci_environment, FALSE)
+        ) AS is_ci_environment_count
     FROM base
     GROUP BY 1
     HAVING is_ci_environment_count = 1
 ),
+
 cohort_execs AS (
     SELECT
         base.*,
@@ -101,12 +105,17 @@ cohort_execs AS (
         ) OVER (PARTITION BY base.project_id) AS pipe_completion_statuses,
         ARRAY_AGG(
             DISTINCT CASE
-                WHEN cli_command IN ('add', 'install') THEN base.completion_status
+                WHEN
+                    base.cli_command IN (
+                        'add', 'install'
+                    ) THEN base.completion_status
             END
-        ) OVER (PARTITION BY base.project_id) AS add_or_install_completion_status,
+        ) OVER (
+            PARTITION BY base.project_id
+        ) AS add_or_install_completion_status,
         ARRAY_AGG(
             DISTINCT CASE
-                WHEN is_exec_event THEN base.completion_status
+                WHEN base.is_exec_event THEN base.completion_status
             END
         ) OVER (PARTITION BY base.project_id) AS exec_event_completion_status,
         ARRAY_AGG(
@@ -115,7 +124,10 @@ cohort_execs AS (
         ARRAY_AGG(
             DISTINCT base.cli_command
         ) OVER (PARTITION BY base.project_id) AS cli_command_array,
-        COALESCE(ci_only.project_id IS NOT NULL AND ci_only.is_ci_environment = TRUE, FALSE) AS is_ci_only_project
+        COALESCE(
+            ci_only.project_id IS NOT NULL AND ci_only.is_ci_environment = TRUE,
+            FALSE
+        ) AS is_ci_only_project
     FROM base
     LEFT JOIN ci_only
         ON base.project_id = ci_only.project_id
