@@ -8,7 +8,7 @@
     },
     "NOT_NULL_VERSION": {
         'parent_name': 'NOT_CI_ONLY',
-        'filter': "(cohort_week < '2022-06-01' OR meltano_version IS NOT NULL)"
+        'filter': "(cohort_week < '2022-06-01' OR first_meltano_version IS NOT NULL)"
     },
     "NOT_OPT_OUT": {
         'parent_name': 'NOT_NULL_VERSION',
@@ -127,7 +127,14 @@ cohort_execs AS (
         COALESCE(
             ci_only.project_id IS NOT NULL AND ci_only.is_ci_environment = TRUE,
             FALSE
-        ) AS is_ci_only_project
+        ) AS is_ci_only_project,
+        FIRST_VALUE(
+            base.meltano_version
+        ) OVER (
+            PARTITION BY
+                base.project_id
+            ORDER BY COALESCE(base.started_ts, base.date_day) ASC
+        ) AS first_meltano_version
     FROM base
     LEFT JOIN ci_only
         ON base.project_id = ci_only.project_id
