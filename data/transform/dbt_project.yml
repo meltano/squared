@@ -93,5 +93,5 @@ models:
       +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
       +schema: dbt_artifacts
     sources:
-      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_RAW') }}"
-      +schema: "{{ env_var('DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX', '') }}DBT_ARTIFACTS"
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +schema: "{{ env_var('DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX', '') }}SOURCE_DBT_ARTIFACTS"
