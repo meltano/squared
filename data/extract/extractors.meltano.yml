@@ -102,6 +102,11 @@ plugins:
     - repositories.*
     - pull_requests.*
     - issues.*
+    # Exclude text descriptions for internal issues on private repos.
+    - !pull_requests.body
+    - !pull_requests.title
+    - !issues.body
+    - !issues.title
   - name: tap-github-search
     inherit_from: tap-github
     config:
