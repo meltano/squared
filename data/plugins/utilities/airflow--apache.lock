@@ -1,12 +1,13 @@
 {
-  "plugin_type": "orchestrators",
+  "plugin_type": "utilities",
   "name": "airflow",
   "namespace": "airflow",
   "variant": "apache",
   "label": "Airflow",
   "docs": "https://docs.meltano.com/guide/orchestration",
   "repo": "https://github.com/apache/airflow",
-  "pip_url": "apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt",
+  "pip_url": "git+https://github.com/meltano/airflow-ext.git@main apache-airflow==2.3.3 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.3/constraints-no-providers-3.8.txt",
+  "executable": "airflow_invoker",
   "settings": [
     {
       "name": "core.dags_folder",
@@ -21,9 +22,9 @@
       "label": "Plugins Folder"
     },
     {
-      "name": "core.sql_alchemy_conn",
+      "name": "database.sql_alchemy_conn",
       "env": "AIRFLOW__CORE__SQL_ALCHEMY_CONN",
-      "value": "sqlite:///$MELTANO_PROJECT_ROOT/.meltano/orchestrators/airflow/airflow.db",
+      "value": "sqlite:///$MELTANO_PROJECT_ROOT/airflow/airflow.db",
       "label": "SQL Alchemy Connection"
     },
     {
@@ -43,9 +44,31 @@
       "env": "AIRFLOW__WEBSERVER__WEB_SERVER_PORT",
       "value": 8080,
       "label": "Webserver Port"
+    },
+    {
+      "name": "extension.airflow_home",
+      "env": "AIRFLOW_HOME",
+      "value": "$MELTANO_PROJECT_ROOT/airflow",
+      "label": "Airflow Home",
+      "description": "The directory where Airflow will store its configuration, logs, and other files.\n"
+    },
+    {
+      "name": "extension.airflow_config",
+      "env": "AIRFLOW_CONFIG",
+      "value": "$MELTANO_PROJECT_ROOT/airflow/airflow.cfg",
+      "label": "Airflow Home",
+      "description": "The path where the Airflow configuration file will be stored.\n"
     }
   ],
   "commands": {
+    "describe": {
+      "args": "describe",
+      "executable": "airflow_extension"
+    },
+    "initialize": {
+      "args": "initialize",
+      "executable": "airflow_extension"
+    },
     "create-admin": {
       "args": "users create --username admin --firstname FIRST_NAME --lastname LAST_NAME --role Admin --email admin@example.org",
       "description": "Create an admin user."
@@ -55,12 +78,5 @@
       "description": "Start the Airflow webserver."
     }
   },
-  "requires": {
-    "files": [
-      {
-        "name": "files-airflow",
-        "variant": "meltano"
-      }
-    ]
-  }
+  "ext_repo": "https://github.com/meltano/airflow-ext"
 }
