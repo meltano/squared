@@ -10,7 +10,7 @@ WITH base AS (
         MAX(block_type) AS block_type,
         ARRAY_AGG(event) AS event_statuses
     FROM {{ ref('unstruct_event_flattened') }}
-    WHERE event != 'telemetry_state_change_event'
+    WHERE event_name != 'telemetry_state_change_event'
     GROUP BY 1, 2, 3
 
 ),

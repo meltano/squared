@@ -19,7 +19,6 @@ SELECT
     -- TODO: plugins list is deduped so this will undercount executions
     ARRAY_AGG(DISTINCT plugins_obj) AS plugins,
     MAX(project_uuid_source) AS project_uuid_source,
-    -- ?? Is there options_keys reference
     ARRAY_AGG(options_obj) AS options_obj,
     MAX(freedesktop_id) AS freedesktop_id,
     MAX(freedesktop_id_like) AS freedesktop_id_like,
@@ -42,15 +41,13 @@ SELECT
     MAX(
         NULLIF((exception::VARIANT):cause::STRING, 'null')
     ) AS exception_cause,
-    -- Structured - ??? are we going to have issues with removing this?
     -- Tracing
     -- TODO: event states are deduped here, maybe agg differently
-    -- Is this right?
     ARRAY_AGG(event) AS event_states,
     ARRAY_AGG(
         DISTINCT block_type
     ) AS event_block_types,
     ARRAY_AGG(DISTINCT event_name) AS event_names
 FROM {{ ref('unstruct_event_flattened') }}
-WHERE event != 'telemetry_state_change_event'
+WHERE event_name != 'telemetry_state_change_event'
 GROUP BY 1
