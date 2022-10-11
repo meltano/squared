@@ -15,6 +15,7 @@ INNER JOIN
         unstruct_exec_flattened.project_id = event_src_activation.project_id
 WHERE
     unstruct_exec_flattened.started_ts >= event_src_activation.sp_activate_date
+    AND event_created_at >= DATEADD('month', -25, DATE_TRUNC('month', CURRENT_DATE))
 
 UNION ALL
 
@@ -35,6 +36,7 @@ WHERE
     -- Only count legacy structured events without context.
     -- Structured with context will be rolled up into unstructured
     AND stg_snowplow__events.contexts IS NULL
+    AND event_created_at >= DATEADD('month', -25, DATE_TRUNC('month', CURRENT_DATE))
 
 UNION ALL
 
@@ -50,5 +52,6 @@ LEFT JOIN
     {{ ref('event_src_activation') }} ON
         stg_ga__cli_events.project_id = event_src_activation.project_id
 WHERE
-    event_src_activation.sp_activate_date IS NULL
-    OR stg_ga__cli_events.event_date < event_src_activation.sp_activate_date
+    (event_src_activation.sp_activate_date IS NULL
+    OR stg_ga__cli_events.event_date < event_src_activation.sp_activate_date)
+    AND event_date >= DATEADD('month', -25, DATE_TRUNC('month', CURRENT_DATE))

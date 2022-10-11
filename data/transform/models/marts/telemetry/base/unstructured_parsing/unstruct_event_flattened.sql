@@ -42,7 +42,7 @@ SELECT
     context_project.environment_name_hash,
     context_project.client_uuid,
     context_project.send_anonymous_usage_stats,
-    context_project.send_anonymous_usage_stats_source,
+    context_project.send_anonymous_usage_stats_source
 FROM {{ ref('event_cli') }}
 LEFT JOIN {{ ref('context_cli') }}
     ON event_cli.event_id = context_cli.event_id
