@@ -219,3 +219,6 @@ LEFT JOIN {{ ref('context_environment') }}
     ON event_telemetry_state_change.event_id = context_environment.event_id
 LEFT JOIN {{ ref('context_project') }}
     ON event_telemetry_state_change.event_id = context_project.event_id
+-- The original implementation didn't have a project_uuid so they aren't
+-- useful for anything and should be excluded.
+WHERE context_project.project_uuid IS NOT NULL
