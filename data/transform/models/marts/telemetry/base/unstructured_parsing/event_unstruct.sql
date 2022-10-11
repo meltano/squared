@@ -5,6 +5,8 @@ WITH base AS (
         event_name,
         unstruct_event,
         contexts,
+        event_created_at,
+        user_ipaddress,
         PARSE_JSON(
             unstruct_event::VARIANT
         ):schema AS schema_name,

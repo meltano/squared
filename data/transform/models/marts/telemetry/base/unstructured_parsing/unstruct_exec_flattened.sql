@@ -49,9 +49,8 @@ SELECT
     ARRAY_AGG(event) AS event_states,
     ARRAY_AGG(
         DISTINCT block_type
-    ) AS event_block_types
-    -- ,
-    -- ARRAY_AGG(DISTINCT event_name) AS event_names
+    ) AS event_block_types,
+    ARRAY_AGG(DISTINCT event_name) AS event_names
 FROM {{ ref('unstruct_event_flattened') }}
 WHERE event != 'telemetry_state_change_event'
 GROUP BY 1

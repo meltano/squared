@@ -3,10 +3,11 @@
 }}
 
 SELECT
-    stg_snowplow__events.event_created_at,
-    stg_snowplow__events.user_ipaddress,
+    event_cli.event_created_at,
+    event_cli.user_ipaddress,
     event_cli.event_id,
     event_cli.event,
+    event_cli.event_name,
     NULL AS block_type,
     context_exception.exception,
     context_plugins.plugins_obj,
@@ -50,16 +51,15 @@ LEFT JOIN {{ ref('context_environment') }}
     ON event_cli.event_id = context_environment.event_id
 LEFT JOIN {{ ref('context_project') }}
     ON event_cli.event_id = context_project.event_id
-LEFT JOIN {{ ref('stg_snowplow__events') }}
-    ON event_cli.event_id = stg_snowplow__events.event_id
 
 UNION ALL
 
 SELECT
-    stg_snowplow__events.event_created_at,
-    stg_snowplow__events.user_ipaddress,
+    event_block.event_created_at,
+    event_block.user_ipaddress,
     event_block.event_id,
     event_block.event,
+    event_block.event_name,
     event_block.block_type,
     context_exception.exception,
     context_plugins.plugins_obj,
@@ -103,16 +103,15 @@ LEFT JOIN {{ ref('context_environment') }}
     ON event_block.event_id = context_environment.event_id
 LEFT JOIN {{ ref('context_project') }}
     ON event_block.event_id = context_project.event_id
-LEFT JOIN {{ ref('stg_snowplow__events') }}
-    ON event_block.event_id = stg_snowplow__events.event_id
 
 UNION ALL
 
 SELECT
-    stg_snowplow__events.event_created_at,
-    stg_snowplow__events.user_ipaddress,
+    event_exit.event_created_at,
+    event_exit.user_ipaddress,
     event_exit.event_id,
     event_exit.event,
+    event_exit.event_name,
     NULL AS block_type,
     context_exception.exception,
     context_plugins.plugins_obj,
@@ -156,5 +155,3 @@ LEFT JOIN {{ ref('context_environment') }}
     ON event_exit.event_id = context_environment.event_id
 LEFT JOIN {{ ref('context_project') }}
     ON event_exit.event_id = context_project.event_id
-LEFT JOIN {{ ref('stg_snowplow__events') }}
-    ON event_exit.event_id = stg_snowplow__events.event_id
