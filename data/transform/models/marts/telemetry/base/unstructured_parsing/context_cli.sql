@@ -37,7 +37,8 @@ base_1_1_0_onward AS (
         MAX(SPLIT_PART(schema_name, '/', -1)) AS schema_version
     FROM {{ ref('context_base') }}
     WHERE
-        schema_name != 'iglu:com.meltano/cli_context/jsonschema/1-0-0'
+        schema_name = 'iglu:com.meltano/cli_context/%'
+        AND schema_name != 'iglu:com.meltano/cli_context/jsonschema/1-0-0'
     GROUP BY 1
 
 )
