@@ -16,7 +16,9 @@ WITH base AS (
         MAX(context:data:is_dev_build::STRING) AS is_dev_build,
         MAX(context:data:is_ci_environment::STRING) AS is_ci_environment,
         MAX(context:data:python_version::STRING) AS python_version,
-        MAX(context:data:python_implementation::STRING) AS python_implementation,
+        MAX(
+            context:data:python_implementation::STRING
+        ) AS python_implementation,
         MAX(context:data:system_name::STRING) AS system_name,
         MAX(context:data:system_release::STRING) AS system_release,
         MAX(context:data:system_version::STRING) AS system_version,

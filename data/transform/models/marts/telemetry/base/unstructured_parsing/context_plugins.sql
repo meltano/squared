@@ -4,7 +4,7 @@ WITH base AS (
         context,
         event_id,
         schema_name,
-        index
+        context_index
     FROM {{ ref('context_base') }}
     WHERE
         schema_name LIKE 'iglu:com.meltano/plugins_context/%'
@@ -15,7 +15,7 @@ min_index AS (
 
     SELECT
         base.event_id,
-        MIN(base.index) AS first_index
+        MIN(base.context_index) AS first_index
     FROM base
     GROUP BY 1
 
@@ -27,7 +27,7 @@ base_parsed AS (
         base.event_id,
         SPLIT_PART(base.schema_name, '/', -1) AS schema_version,
         base.context:data:plugins::STRING AS plugin_block,
-        (base.index - min_index.first_index)::STRING AS plugin_index
+        (base.context_index - min_index.first_index)::STRING AS plugin_index
     FROM base
     LEFT JOIN min_index ON base.event_id = min_index.event_id
 

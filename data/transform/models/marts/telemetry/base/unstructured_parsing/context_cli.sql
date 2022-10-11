@@ -42,12 +42,10 @@ base_1_1_0_onward AS (
 
 )
 
-SELECT
-    *
+SELECT *
 FROM base_1_0_0
 
 UNION ALL
 
-SELECT
-    *
+SELECT *
 FROM base_1_1_0_onward
