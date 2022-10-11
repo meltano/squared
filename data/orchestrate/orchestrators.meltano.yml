@@ -4,7 +4,7 @@ plugins:
     variant: apache
     pip_url: git+https://github.com/meltano/airflow-ext.git@main apache-airflow==2.3.3
       --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.3/constraints-no-providers-3.8.txt
-      pytest kubernetes==11.0.0 apache-airflow-providers-cncf-kubernetes==2.0.0
+      pytest kubernetes==23.6.0 apache-airflow-providers-cncf-kubernetes==4.4.0
     commands:
       test_dag_generator:
         args: ${MELTANO_PROJECT_ROOT}/orchestrate/tests/test_dag_generator.py
