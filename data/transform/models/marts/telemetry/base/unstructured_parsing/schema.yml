@@ -37,6 +37,20 @@ models:
         tests:
           - not_null
 
+  - name: unstruct_event_flattened
+    description: This table includes the unstructured Snowplow data at the event level.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: context_uuid
+        tests:
+          - not_null
+      - name: project_uuid
+        tests:
+          - not_null
+
   - name: event_unstruct
     description: Snowplow project contexts parsed.
     columns:
