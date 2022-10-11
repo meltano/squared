@@ -66,6 +66,19 @@ models:
           - accepted_values:
               values: ['1-0-0']
 
+  - name: context_cli
+    description: Snowplow cli contexts parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0', '1-1-0']
+
   - name: context_project
     description: Snowplow project contexts parsed.
     columns:
