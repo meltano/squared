@@ -60,7 +60,6 @@ models:
           - unique
       - name: schema_version
         tests:
-          - not_null
           - accepted_values:
               values: ['1-0-0']
 
