@@ -1,16 +1,13 @@
 WITH base AS (
 
     SELECT
-        context.*,
-        event_unstruct.event_id,
-        context.value:schema::STRING AS schema_name
-    FROM {{ ref('event_unstruct') }},
-        LATERAL FLATTEN(
-            input => PARSE_JSON(event_unstruct.contexts::VARIANT):data
-        ) AS context
+        context,
+        event_id,
+        schema_name,
+        context_index
+    FROM {{ ref('context_base') }}
     WHERE
-        context.value:schema LIKE 'iglu:com.meltano/plugins_context/%'
-        AND event_unstruct.contexts IS NOT NULL
+        schema_name LIKE 'iglu:com.meltano/plugins_context/%'
 
 ),
 
@@ -18,7 +15,7 @@ min_index AS (
 
     SELECT
         base.event_id,
-        MIN(base.index) AS first_index
+        MIN(base.context_index) AS first_index
     FROM base
     GROUP BY 1
 
@@ -29,8 +26,8 @@ base_parsed AS (
     SELECT
         base.event_id,
         SPLIT_PART(base.schema_name, '/', -1) AS schema_version,
-        base.value:data:plugins::STRING AS plugin_block,
-        (base.index - min_index.first_index)::STRING AS plugin_index
+        base.context:data:plugins::STRING AS plugin_block,
+        (base.context_index - min_index.first_index)::STRING AS plugin_index
     FROM base
     LEFT JOIN min_index ON base.event_id = min_index.event_id
 
