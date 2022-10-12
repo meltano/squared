@@ -3,7 +3,7 @@ plugins:
   - name: dbt-snowflake
     namespace: dbt_ext
     label: dbt Snowflake extension
-    pip_url: dbt-core~=1.1.0 dbt-snowflake~=1.1.0 git+https://github.com/meltano/dbt-ext.git@feat/working-dbt-ext
+    pip_url: dbt-core~=1.2.0 dbt-snowflake~=1.2.0 git+https://github.com/meltano/dbt-ext.git@feat/working-dbt-ext
     executable: dbt_invoker
     settings:
     - name: ext_type
@@ -44,6 +44,7 @@ plugins:
       kind: string
       label: Schema
       description: The schema to build models into by default.
+
     commands:
       clean:
         args: clean
@@ -97,8 +98,10 @@ plugins:
         description: Clones all production schemas in the PREP database that the user
           has access to.
   
-      run_marts: run --select marts.* common.* --exclude staging.*
-      test_marts: test --select marts.* common.* --exclude staging.*
+      run_dbt_artifacts: run --select dbt_artifacts.*
+
+      run_marts: run --select marts.* common.* --exclude staging.*,dbt_artifacts.*
+      test_marts: test --select marts.* common.* --exclude staging.*,dbt_artifacts.*
   
       run_staging_meltanohub: run --select staging.meltanohub.*
       run_snapshot_meltanohub: snapshot --select meltanohub.*

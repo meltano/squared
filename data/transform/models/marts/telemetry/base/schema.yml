@@ -122,4 +122,15 @@ models:
       - name: event_date
         tests:
           - not_null
-          
+
+  - name: event_src_activation
+    description: '{{ doc("event_src_activation") }}'
+    columns:
+      - name: project_id
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
+      - name: sp_activate_date
+        tests:
+          - not_null

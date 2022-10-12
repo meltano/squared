@@ -6,7 +6,9 @@ WITH plugin_use_3m AS (
         COUNT(DISTINCT project_id) AS project_count
     FROM {{ ref('fact_plugin_usage') }}
     WHERE plugin_category = 'singer'
-        AND cli_started_ts >= DATEADD(MONTH, -3, CURRENT_DATE)
+        AND COALESCE(
+            cli_started_ts, cli_finished_ts
+        ) >= DATEADD(MONTH, -3, CURRENT_DATE)
     GROUP BY 1
 
 ),

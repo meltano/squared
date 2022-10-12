@@ -2,8 +2,8 @@ plugins:
   utilities:
   - name: sqlfluff
     variant: sqlfluff
-    pip_url: sqlfluff==1.2.1; sqlfluff-templater-dbt==1.2.1; dbt-core~=1.1.0;
-      dbt-snowflake~=1.1.0
+    pip_url: sqlfluff==1.2.1; sqlfluff-templater-dbt==1.2.1; dbt-core~=1.2.0;
+      dbt-snowflake~=1.2.0
     settings:
     - name: user
       env: DBT_SNOWFLAKE_USER

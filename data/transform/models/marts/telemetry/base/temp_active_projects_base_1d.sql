@@ -23,5 +23,5 @@ WHERE
         'day',
         project_base.first_event_at::TIMESTAMP,
         cli_executions_base.event_created_at::DATE
-    ) >= 7
+    ) >= 1
     AND project_base.project_id_source != 'random'

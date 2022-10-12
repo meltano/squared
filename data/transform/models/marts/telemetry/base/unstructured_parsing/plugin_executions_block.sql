@@ -1,19 +1,16 @@
 WITH base AS (
 
     SELECT
-        unstruct_event_flattened.execution_id,
-        unstruct_event_flattened.plugins_obj,
-        unstruct_exec_flattened.cli_command,
-        MAX(unstruct_event_flattened.exception) AS exception_dict,
-        MIN(unstruct_event_flattened.event_created_at) AS plugin_started,
-        MAX(unstruct_event_flattened.event_created_at) AS plugin_ended,
-        MAX(unstruct_event_flattened.block_type) AS block_type,
-        ARRAY_AGG(unstruct_event_flattened.event) AS event_statuses
+        context_uuid AS execution_id,
+        plugins_obj,
+        command AS cli_command,
+        MAX(exception) AS exception_dict,
+        MIN(event_created_at) AS plugin_started,
+        MAX(event_created_at) AS plugin_ended,
+        MAX(block_type) AS block_type,
+        ARRAY_AGG(event) AS event_statuses
     FROM {{ ref('unstruct_event_flattened') }}
-    LEFT JOIN {{ ref('unstruct_exec_flattened') }}
-        ON
-            unstruct_event_flattened.execution_id
-            = unstruct_exec_flattened.execution_id
+    WHERE event_name != 'telemetry_state_change_event'
     GROUP BY 1, 2, 3
 
 ),
