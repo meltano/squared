@@ -2,9 +2,6 @@ WITH base AS (
 
     SELECT
         event_id,
-        event_name,
-        event_created_at,
-        user_ipaddress,
         PARSE_JSON(
             unstruct_event::VARIANT
         ):data:schema::STRING AS schema_name,
@@ -17,10 +14,7 @@ WITH base AS (
         PARSE_JSON(
             unstruct_event::VARIANT
         ):data:data:process_duration_microseconds::INT
-        AS process_duration_microseconds,
-        PARSE_JSON(
-            unstruct_event::VARIANT
-        ):data:data:event::STRING AS event
+        AS process_duration_microseconds
     FROM {{ ref('event_unstruct') }}
     WHERE
         event_name = 'exit_event'
