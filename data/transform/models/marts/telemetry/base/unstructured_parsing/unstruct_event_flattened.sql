@@ -244,7 +244,7 @@ SELECT
         event_legacy_with_context.legacy_se_category,
         ' ',
         2
-    ) AS cli_command,
+    ) AS command,
     NULL AS sub_command,
     context_cli.options_obj,
     context_environment.freedesktop_version_id,

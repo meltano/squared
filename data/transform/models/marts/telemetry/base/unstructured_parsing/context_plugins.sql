@@ -25,6 +25,7 @@ base_parsed AS (
 
     SELECT
         base.event_id,
+        schema_name,
         SPLIT_PART(base.schema_name, '/', -1) AS schema_version,
         base.context:data:plugins::STRING AS plugin_block,
         (base.context_index - min_index.first_index)::STRING AS plugin_index
@@ -35,7 +36,8 @@ base_parsed AS (
 
 SELECT
     event_id,
+    schema_name,
     schema_version,
     OBJECT_AGG(plugin_index, plugin_block::VARIANT) AS plugins_obj
 FROM base_parsed
-GROUP BY 1, 2
+GROUP BY 1, 2, 3
