@@ -2,9 +2,6 @@ WITH base AS (
 
     SELECT
         event_id,
-        event_name,
-        event_created_at,
-        user_ipaddress,
         PARSE_JSON(
             unstruct_event::VARIANT
         ):data:schema::STRING AS schema_name,
@@ -16,10 +13,7 @@ WITH base AS (
         ):data:data:changed_to::STRING AS changed_to,
         PARSE_JSON(
             unstruct_event::VARIANT
-        ):data:data:setting_name::STRING AS setting_name,
-        PARSE_JSON(
-            unstruct_event::VARIANT
-        ):data:data:event::STRING AS event
+        ):data:data:setting_name::STRING AS setting_name
     FROM {{ ref('event_unstruct') }}
     WHERE
         event_name = 'telemetry_state_change_event'

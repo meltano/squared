@@ -1,13 +1,17 @@
 WITH base AS (
 
     SELECT
-        event_id,
-        MAX(schema_name) AS schema_name,
-        MAX(context:data:context_uuid::STRING) AS context_uuid,
-        MAX(context:data:exception::STRING) AS exception
-    FROM {{ ref('context_base') }}
+        event_unstruct.event_id,
+        MAX(context.value:schema) AS schema_name,
+        MAX(context.value:data:context_uuid::STRING) AS context_uuid,
+        MAX(context.value:data:exception::STRING) AS exception
+    FROM {{ ref('event_unstruct') }},
+        LATERAL FLATTEN(
+            input => PARSE_JSON(event_unstruct.contexts::VARIANT):data
+        ) AS context
     WHERE
-        schema_name LIKE 'iglu:com.meltano/exception_context/%'
+        context.value:schema LIKE 'iglu:com.meltano/exception_context/%'
+        AND event_unstruct.contexts IS NOT NULL
     GROUP BY 1
 
 )
