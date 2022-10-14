@@ -67,7 +67,8 @@ plugins:
       spec-test: spec-test utilities/permifrost/roles.yml
   - name: data-diff
     namespace: data_diff
-    pip_url: data-diff[snowflake] /Users/pnadolny/Documents/Git/GitHub/pnadolny/data-diff-ext/data-diff-ext
+    pip_url: data-diff[snowflake] git+https://github.com/pnadolny13/data-diff-ext.git@add_custom_diff
+    # pip_url: data-diff[snowflake] /Users/pnadolny/Documents/Git/GitHub/pnadolny/data-diff-ext
     commands:
       describe:
         executable: data_diff_extension
