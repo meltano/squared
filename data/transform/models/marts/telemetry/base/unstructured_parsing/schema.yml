@@ -1,22 +1,6 @@
 version: 2
 
 models:
-  - name: execution_mapping
-    description: This table maps every event_id to an execution_id and project_id. These attributes
-      are nested a particular context in the contexts field so they need to be parsed out to allow us
-      to join all events in the same execution together.
-    columns:
-      - name: event_id
-        tests:
-          - not_null
-          - unique
-      - name: execution_id
-        tests:
-          - not_null
-      - name: project_id
-        tests:
-          - not_null
-
   - name: unstruct_plugins_base
     description: This table contains unique plugins details sourced from the unstructured event data.
       This data is still in its hashed form. The set attributes for the plugin (i.e. name_hash, variant_name_hash, etc.)
@@ -53,6 +37,20 @@ models:
         tests:
           - not_null
 
+  - name: unstruct_event_flattened
+    description: This table includes the unstructured Snowplow data at the event level.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: context_uuid
+        tests:
+          - not_null
+      - name: project_uuid
+        tests:
+          - not_null
+
   - name: event_unstruct
     description: Snowplow project contexts parsed.
     columns:
@@ -62,9 +60,21 @@ models:
           - unique
       - name: schema_version
         tests:
-          - not_null
           - accepted_values:
               values: ['1-0-0']
+
+  - name: context_cli
+    description: Snowplow cli contexts parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0', '1-1-0']
 
   - name: context_project
     description: Snowplow project contexts parsed.
