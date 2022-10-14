@@ -25,7 +25,7 @@ base_parsed AS (
 
     SELECT
         base.event_id,
-        schema_name,
+        base.schema_name,
         SPLIT_PART(base.schema_name, '/', -1) AS schema_version,
         base.context:data:plugins AS plugin_block,
         (base.context_index - min_index.first_index)::STRING AS plugin_index

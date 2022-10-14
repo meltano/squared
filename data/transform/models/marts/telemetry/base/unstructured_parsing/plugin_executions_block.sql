@@ -40,7 +40,8 @@ flattened AS (
         GET(plugin.value::VARIANT, 'category')::STRING AS plugin_category
     FROM base,
         LATERAL FLATTEN(
-            input => PARSE_JSON(GET(plugins_obj, '0'))
+            -- TODO: this excludes non-index 0 plugins within a single event
+            input => GET(plugins_obj, 0)
         ) AS plugin
     WHERE base.plugins_obj IS NOT NULL
 ),
