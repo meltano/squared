@@ -1,30 +1,26 @@
 WITH base AS (
 
     SELECT
-        event_unstruct.event_id,
-        MAX(context.value:schema::STRING) AS schema_name,
-        MAX(context.value:data:context_uuid::STRING) AS context_uuid,
-        MAX(context.value:data:project_uuid::STRING) AS project_uuid,
+        event_id,
+        MAX(context:schema::STRING) AS schema_name,
+        MAX(context:data:context_uuid::STRING) AS context_uuid,
+        MAX(context:data:project_uuid::STRING) AS project_uuid,
         MAX(
-            context.value:data:project_uuid_source::STRING
+            context:data:project_uuid_source::STRING
         ) AS project_uuid_source,
         MAX(
-            context.value:data:environment_name_hash::STRING
+            context:data:environment_name_hash::STRING
         ) AS environment_name_hash,
-        MAX(context.value:data:client_uuid::STRING) AS client_uuid,
+        MAX(context:data:client_uuid::STRING) AS client_uuid,
         MAX(
-            context.value:data:send_anonymous_usage_stats::BOOLEAN
+            context:data:send_anonymous_usage_stats::BOOLEAN
         ) AS send_anonymous_usage_stats,
         MAX(
-            context.value:data:send_anonymous_usage_stats_source::STRING
+            context:data:send_anonymous_usage_stats_source::STRING
         ) AS send_anonymous_usage_stats_source
-    FROM {{ ref('event_unstruct') }},
-        LATERAL FLATTEN(
-            input => PARSE_JSON(event_unstruct.contexts::VARIANT):data
-        ) AS context
+    FROM {{ ref('context_base') }}
     WHERE
-        context.value:schema LIKE 'iglu:com.meltano/project_context/%'
-        AND event_unstruct.contexts IS NOT NULL
+        schema_name LIKE 'iglu:com.meltano/project_context/%'
     GROUP BY 1
 
 )
