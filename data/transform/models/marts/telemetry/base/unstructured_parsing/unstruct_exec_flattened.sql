@@ -2,8 +2,20 @@
     config(materialized='table')
 }}
 
+WITH plugins AS (
+
+    SELECT
+        context_uuid,
+        ARRAY_AGG(DISTINCT plugin_list.value) AS plugin_list_of_lists
+    FROM {{ ref('unstruct_event_flattened') }},
+        LATERAL FLATTEN(input => plugins_obj) AS plugin_list
+    WHERE event_name != 'telemetry_state_change_event'
+    GROUP BY 1
+
+)
 SELECT
-    context_uuid AS execution_id,
+    unstruct_event_flattened.context_uuid AS execution_id,
+    plugins.plugin_list_of_lists AS plugins,
     MIN(event_created_at) AS started_ts,
     MAX(event_created_at) AS finished_ts,
     MAX(user_ipaddress) AS user_ipaddress,
@@ -16,8 +28,6 @@ SELECT
     MAX(sub_command) AS cli_sub_command,
     MAX(machine) AS machine,
     MAX(system_release) AS system_release,
-    -- TODO: plugins list is deduped so this will undercount executions
-    ARRAY_AGG(DISTINCT plugins_obj) AS plugins,
     MAX(project_uuid_source) AS project_uuid_source,
     ARRAY_AGG(options_obj) AS options_obj,
     MAX(freedesktop_id) AS freedesktop_id,
@@ -49,5 +59,7 @@ SELECT
     ) AS event_block_types,
     ARRAY_AGG(DISTINCT event_name) AS event_names
 FROM {{ ref('unstruct_event_flattened') }}
+LEFT JOIN plugins
+    ON unstruct_event_flattened.context_uuid = plugins.context_uuid
 WHERE event_name != 'telemetry_state_change_event'
-GROUP BY 1
+GROUP BY 1, 2
