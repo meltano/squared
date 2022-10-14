@@ -65,3 +65,13 @@ plugins:
     commands:
       run: run utilities/permifrost/roles.yml
       spec-test: spec-test utilities/permifrost/roles.yml
+  - name: data-diff
+    namespace: data_diff
+    pip_url: data-diff[snowflake] /Users/pnadolny/Documents/Git/GitHub/pnadolny/data-diff-ext/data-diff-ext
+    commands:
+      describe:
+        executable: data_diff_extension
+        args: describe
+      diff_dbt_tables:
+        executable: data_diff_extension
+        args: diff-dbt-tables
