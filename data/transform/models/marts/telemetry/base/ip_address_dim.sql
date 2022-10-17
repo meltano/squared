@@ -19,9 +19,12 @@ cloud_ips AS (
         cloud_ip_ranges.active_from,
         cloud_ip_ranges.active_to,
         MAX(cloud_ip_ranges.cloud_name) AS cloud_name,
-        LISTAGG(cloud_ip_ranges.ip_address, ', ') AS cloud_ip_addresses,
-        LISTAGG(cloud_ip_ranges.service, ', ') AS cloud_services,
-        LISTAGG(cloud_ip_ranges.region, ', ') AS cloud_regions
+        LISTAGG(
+            DISTINCT cloud_ip_ranges.ip_address,
+            ', '
+        ) AS cloud_ip_addresses,
+        LISTAGG(DISTINCT cloud_ip_ranges.service, ', ') AS cloud_services,
+        LISTAGG(DISTINCT cloud_ip_ranges.region, ', ') AS cloud_regions
     FROM parsed, {{ ref('cloud_ip_ranges') }}
     WHERE parsed.obj:ipv4 BETWEEN cloud_ip_ranges.ipv4_range_start
         AND cloud_ip_ranges.ipv4_range_end
@@ -33,7 +36,7 @@ release_versions AS (
 
     SELECT
         unique_ips.user_ipaddress,
-        LISTAGG(unstructured_executions.system_release, '') AS releases
+        LISTAGG(DISTINCT unstructured_executions.system_release, '') AS releases
     FROM unique_ips
     INNER JOIN {{ ref('unstructured_executions') }}
         ON unique_ips.user_ipaddress = unstructured_executions.user_ipaddress
