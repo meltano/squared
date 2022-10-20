@@ -28,7 +28,7 @@
 	},
     "EXEC_EVENT_ATTEMPT": {
         'parent_name': 'ADD_OR_INSTALL_SUCCESS',
-        'filter': "is_exec_event = TRUE"
+        'filter': "is_exec_event_lifetime = TRUE"
 	},
     "EXEC_EVENT_SUCCESS": {
         'parent_name': 'EXEC_EVENT_ATTEMPT',
@@ -52,11 +52,11 @@
 	},
     "ACTIVE_EXECUTION": {
         'parent_name': 'GREATER_7_DAY',
-        'filter': "is_active_cli_execution = TRUE"
+        'filter': "is_active_cli_execution_lifetime = TRUE"
 	},
     "STILL_ACTIVE": {
         'parent_name': 'ACTIVE_EXECUTION',
-        'filter': "is_currently_active = TRUE"
+        'filter': "is_currently_active_lifetime = TRUE"
 	}
 	}
 %}
@@ -92,6 +92,16 @@ ci_only AS (
     FROM base
     GROUP BY 1
     HAVING is_ci_environment_count = 1
+),
+
+project_attribs AS (
+    SELECT
+        base.project_id,
+        MAX(is_exec_event) AS is_exec_event_lifetime,
+        MAX(is_active_cli_execution) AS is_active_cli_execution_lifetime,
+        MAX(is_currently_active) AS is_currently_active_lifetime
+    FROM base
+    GROUP BY 1
 ),
 
 cohort_execs AS (
@@ -134,10 +144,16 @@ cohort_execs AS (
             PARTITION BY
                 base.project_id
             ORDER BY COALESCE(base.started_ts, base.date_day) ASC
-        ) AS first_meltano_version
+        ) AS first_meltano_version,
+        project_attribs.is_exec_event_lifetime,
+        project_attribs.is_active_cli_execution_lifetime,
+        project_attribs.is_currently_active_lifetime
     FROM base
     LEFT JOIN ci_only
         ON base.project_id = ci_only.project_id
+    LEFT JOIN project_attribs
+        ON base.project_id = project_attribs.project_id
+        
 ),
 
 agg_base AS (
