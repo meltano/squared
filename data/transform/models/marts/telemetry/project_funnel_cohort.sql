@@ -42,8 +42,32 @@
         'parent_name': 'PIPELINE_ATTEMPT',
         'filter': "ARRAY_CONTAINS( 'SUCCESS'::VARIANT, pipe_completion_statuses )"
 	},
-    "GREATER_1_DAY": {
+    "ADD_OR_INSTALL_NON_GSG": {
         'parent_name': 'PIPELINE_SUCCESS',
+        'filter': "non_gsg_add > 0"
+	},
+    "ADD_OR_INSTALL_NON_GSG_SUCCESS": {
+        'parent_name': 'ADD_OR_INSTALL_NON_GSG',
+        'filter': "non_gsg_add_success > 0"
+	},
+    "EXEC_NON_GSG": {
+        'parent_name': 'ADD_OR_INSTALL_NON_GSG_SUCCESS',
+        'filter': "non_gsg_exec > 0"
+	},
+    "EXEC_NON_GSG_SUCCESS": {
+        'parent_name': 'EXEC_NON_GSG',
+        'filter': "non_gsg_exec_success > 0"
+	},
+    "PIPELINE_NON_GSG": {
+        'parent_name': 'EXEC_NON_GSG_SUCCESS',
+        'filter': "non_gsg_pipeline > 0"
+	},
+    "PIPELINE_NON_GSG_SUCCESS": {
+        'parent_name': 'PIPELINE_NON_GSG',
+        'filter': "non_gsg_pipeline_success > 0"
+	},
+    "GREATER_1_DAY": {
+        'parent_name': 'PIPELINE_NON_GSG_SUCCESS',
         'filter': "project_lifespan_hours >= 24"
 	},
     "GREATER_7_DAY": {
@@ -66,6 +90,8 @@ WITH base AS (
     SELECT
         fact_cli_executions.*,
         fact_plugin_usage.completion_status,
+        fact_plugin_usage.plugin_name,
+        fact_plugin_usage.plugin_type,
         project_dim.project_lifespan_hours,
         COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out,
         DATEDIFF(
@@ -96,10 +122,91 @@ ci_only AS (
 
 project_attribs AS (
     SELECT
-        base.project_id,
+        project_id,
         MAX(is_exec_event) AS is_exec_event_lifetime,
         MAX(is_active_cli_execution) AS is_active_cli_execution_lifetime,
-        MAX(is_currently_active) AS is_currently_active_lifetime
+        MAX(is_currently_active) AS is_currently_active_lifetime,
+        COUNT(
+            DISTINCT CASE
+                WHEN cli_command IN ('add', 'install')
+                    AND plugin_name NOT IN (
+                        'tap-gitlab',
+                        'tap-github',
+                        'target-jsonl',
+                        'target-postgres'
+                    )
+                    AND plugin_type IN ('extractors', 'loaders')
+                    THEN plugin_name
+            END
+        ) AS non_gsg_add,
+        COUNT(
+            DISTINCT CASE
+                WHEN cli_command IN ('add', 'install')
+                    AND plugin_name NOT IN (
+                        'tap-gitlab',
+                        'tap-github',
+                        'target-jsonl',
+                        'target-postgres'
+                    )
+                    AND plugin_type IN ('extractors', 'loaders')
+                    AND completion_status = 'SUCCESS'
+                    THEN plugin_name
+            END
+        ) AS non_gsg_add_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN is_exec_event
+                    AND plugin_name NOT IN (
+                        'tap-gitlab',
+                        'tap-github',
+                        'target-jsonl',
+                        'target-postgres'
+                    )
+                    AND plugin_type IN ('extractors', 'loaders')
+                    THEN plugin_name
+            END
+        ) AS non_gsg_exec,
+        COUNT(
+            DISTINCT CASE
+                WHEN is_exec_event
+                    AND plugin_name NOT IN (
+                        'tap-gitlab',
+                        'tap-github',
+                        'target-jsonl',
+                        'target-postgres'
+                    )
+                    AND plugin_type IN ('extractors', 'loaders')
+                    AND completion_status = 'SUCCESS'
+                    THEN plugin_name
+            END
+        ) AS non_gsg_exec_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN pipeline_fk IS NOT NULL
+                    AND plugin_name NOT IN (
+                        'tap-gitlab',
+                        'tap-github',
+                        'target-jsonl',
+                        'target-postgres'
+                    )
+                    AND plugin_type IN ('extractors', 'loaders')
+                    THEN plugin_name
+            END
+        ) AS non_gsg_pipeline,
+        COUNT(
+            DISTINCT CASE
+                WHEN pipeline_fk IS NOT NULL
+                    AND plugin_name NOT IN (
+                        'tap-gitlab',
+                        'tap-github',
+                        'target-jsonl',
+                        'target-postgres'
+                    )
+                    AND plugin_type IN ('extractors', 'loaders')
+                    AND completion_status = 'SUCCESS'
+                    THEN plugin_name
+            END
+        ) AS non_gsg_pipeline_success
     FROM base
     GROUP BY 1
 ),
@@ -107,6 +214,15 @@ project_attribs AS (
 cohort_execs AS (
     SELECT
         base.*,
+        project_attribs.is_exec_event_lifetime,
+        project_attribs.is_active_cli_execution_lifetime,
+        project_attribs.is_currently_active_lifetime,
+        project_attribs.non_gsg_add,
+        project_attribs.non_gsg_add_success,
+        project_attribs.non_gsg_exec,
+        project_attribs.non_gsg_exec_success,
+        project_attribs.non_gsg_pipeline,
+        project_attribs.non_gsg_pipeline_success,
         DATE_TRUNC(WEEK, base.project_first_event_at) AS cohort_week,
         ARRAY_AGG(
             DISTINCT CASE
@@ -144,16 +260,13 @@ cohort_execs AS (
             PARTITION BY
                 base.project_id
             ORDER BY COALESCE(base.started_ts, base.date_day) ASC
-        ) AS first_meltano_version,
-        project_attribs.is_exec_event_lifetime,
-        project_attribs.is_active_cli_execution_lifetime,
-        project_attribs.is_currently_active_lifetime
+        ) AS first_meltano_version
     FROM base
     LEFT JOIN ci_only
         ON base.project_id = ci_only.project_id
     LEFT JOIN project_attribs
         ON base.project_id = project_attribs.project_id
-        
+
 ),
 
 agg_base AS (
