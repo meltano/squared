@@ -26,3 +26,72 @@ models:
         description: The count of distinct authors that made the contributions.
       - name: comments
         description: The comments on the issues or merge requests.
+
+  - name: singer_contributions
+    description: This table includes all issues and PR for the Singer ecosystem, including some Metadata related to MeltanoHub.
+    columns:
+      - name: contribution_type
+        tests:
+          - not_null
+      - name: organization_name
+        tests:
+          - not_null
+      - name: repo_name
+        tests:
+          - not_null
+      - name: html_url
+        tests:
+          - not_null
+      - name: last_updated_ts
+        tests:
+          - not_null
+      - name: created_at_ts
+        tests:
+          - not_null
+      - name: closed_at_ts
+      - name: pr_merged_at_ts
+      - name: is_team_contribution
+        tests:
+          - not_null
+      - name: is_bot_user
+        tests:
+          - not_null
+      - name: title
+        tests:
+          - not_null
+      - name: state
+        tests:
+          - not_null
+      - name: is_fork
+        tests:
+          - not_null
+      - name: is_hub_default
+        tests:
+          - not_null
+      - name: is_draft_pr
+      - name: author_username
+      - name: assignee_username
+      - name: comment_count
+        tests:
+          - not_null
+      - name: reactions_count
+        tests:
+          - not_null
+      - name: num_open_issues
+        tests:
+          - not_null
+      - name: visibility
+        tests:
+          - not_null
+      - name: is_archived
+        tests:
+          - not_null
+      - name: repo_created_at_ts
+        tests:
+          - not_null
+      - name: repo_updated_at_ts
+        tests:
+          - not_null
+      - name: repo_last_push_ts
+        tests:
+          - not_null
