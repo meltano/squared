@@ -50,5 +50,9 @@ plugins:
     variant: AutoIDM
     pip_url: target-apprise
     config:
-      uris:
-      - ${SLACK_WEBHOOK_URI}
+      stream_maps:
+        USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+          TITLE: null
+          title: TITLE
+          BODY: null
+          body: BODY

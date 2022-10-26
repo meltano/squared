@@ -52,6 +52,10 @@ schedules:
 
 jobs:
 
+- name: slack_notifications
+  tasks:
+  - tap-snowflake-singer-activity target-apprise
+
 - name: dbt_docs
   tasks:
   - dbt-snowflake:docs-generate
