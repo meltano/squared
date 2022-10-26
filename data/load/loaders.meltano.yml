@@ -46,3 +46,9 @@ plugins:
       file_format: CSV
       add_metadata_columns: true
       password: ${SNOWFLAKE_PASSWORD}
+  - name: target-apprise
+    variant: AutoIDM
+    pip_url: target-apprise
+    config:
+      uris:
+      - ${SLACK_WEBHOOK_URI}

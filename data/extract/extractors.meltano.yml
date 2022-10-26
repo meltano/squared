@@ -186,3 +186,11 @@ plugins:
     select:
     - '*HUB_METRICS_AUDIT.UPDATED_DATE'
     - '*HUB_METRICS_AUDIT.METRIC_TYPE'
+  - name: tap-snowflake-singer-activity
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+    - '*SLACK_ALERTS.TITLE'
+    - '*SLACK_ALERTS.BODY'

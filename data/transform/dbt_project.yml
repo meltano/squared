@@ -63,6 +63,8 @@ models:
       +materialized: table
       meltano_hub:
         +schema: meltano_hub
+      slack_notifications:
+        +schema: slack_notifications
     # ------------------
     # Common
     # ------------------
