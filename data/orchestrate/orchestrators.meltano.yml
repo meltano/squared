@@ -10,6 +10,10 @@ plugins:
         executable: pytest
 
 schedules:
+- name: slack_notifications
+  interval: 0 12 * * *
+  job: slack_notifications
+
 - name: meltanohub_el
   interval: 0 6 * * *
   job: meltanohub_el
