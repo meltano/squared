@@ -45,7 +45,7 @@ environments:
       - name: target-apprise
         config:
           stream_maps:
-            PNADOLNY_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
               TITLE: null
               title: TITLE
               BODY: null
