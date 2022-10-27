@@ -45,7 +45,7 @@ environments:
       - name: target-apprise
         config:
           stream_maps:
-            USERDEV_PROD-${USER_PREFIX}_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+            PNADOLNY_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
               TITLE: null
               title: TITLE
               BODY: null
@@ -75,7 +75,7 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
   env:
-    USER_PREFIX: melty
+    USER_PREFIX: PNADOLNY
     HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin

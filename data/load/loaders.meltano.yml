@@ -49,10 +49,3 @@ plugins:
   - name: target-apprise
     variant: AutoIDM
     pip_url: target-apprise
-    config:
-      stream_maps:
-        USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
-          TITLE: null
-          title: TITLE
-          BODY: null
-          body: BODY

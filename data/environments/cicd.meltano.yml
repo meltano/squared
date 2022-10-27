@@ -58,14 +58,15 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise
-        config:
-          stream_maps:
-            CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SLACK_ALERTS:
-              TITLE: null
-              title: TITLE
-              BODY: null
-              body: BODY
+      # Excluded from CI for now
+      # - name: target-apprise
+      #   config:
+      #     stream_maps:
+      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+      #         TITLE: null
+      #         title: TITLE
+      #         BODY: null
+      #         body: BODY
       transformers:
       - name: dbt-snowflake
         config:
