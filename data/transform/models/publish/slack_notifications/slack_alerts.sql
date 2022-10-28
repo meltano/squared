@@ -57,7 +57,7 @@ base AS (
         ) AS issues_closed
     FROM {{ ref('singer_contributions') }}
     CROSS JOIN most_recent_date
-    WHERE is_bot_user = FALSE
+    WHERE singer_contributions.is_bot_user = FALSE
 )
 
 SELECT
