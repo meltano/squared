@@ -64,6 +64,7 @@ models:
       meltano_hub:
         +schema: meltano_hub
       slack_notifications:
+        +materialized: view
         +schema: slack_notifications
     # ------------------
     # Common
