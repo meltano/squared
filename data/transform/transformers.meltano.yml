@@ -43,6 +43,8 @@ plugins:
 
       run_hub_metrics: run --select publish.meltano_hub.*
       test_hub_metrics: test --select publish.meltano_hub.*
+
+      run_slack_notifications: run --select publish.slack_notifications.*
     config:
       account: epa06486
       database_raw: RAW
