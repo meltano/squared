@@ -27,7 +27,7 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Airflow
-    - run: meltano install orchestrator airflow
+    - run: meltano install utility airflow
     - run: meltano test airflow
 
   sqlfluff_tests:
