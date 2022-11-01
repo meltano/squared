@@ -40,7 +40,7 @@ plugins:
           start_date: "2020-01-01T00:00:00Z"
           key_properties: [id]
           name: azure_ips
-          pattern: "ServiceTags_Public_20221003.json"
+          pattern: "ServiceTags_Public_20221017.json"
           json_path: "values"
   - name: tap-slack
     variant: meltanolabs
@@ -186,3 +186,11 @@ plugins:
     select:
     - '*HUB_METRICS_AUDIT.UPDATED_DATE'
     - '*HUB_METRICS_AUDIT.METRIC_TYPE'
+  - name: tap-snowflake-singer-activity
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+    - '*SLACK_ALERTS.TITLE'
+    - '*SLACK_ALERTS.BODY'

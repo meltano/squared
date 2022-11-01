@@ -31,6 +31,9 @@ environments:
       - name: tap-snowflake-audit
         config:
           tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
+      - name: tap-snowflake-singer-activity
+        config:
+          tables: PROD.SLACK_NOTIFICATIONS.SLACK_ALERTS
       loaders:
       - name: target-snowflake
         config:
@@ -39,6 +42,14 @@ environments:
           role: LOADER
           warehouse: LOADER
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
+      - name: target-apprise
+        config:
+          stream_maps:
+            PROD-SLACK_NOTIFICATIONS-SLACK_ALERTS:
+              TITLE: null
+              title: TITLE
+              BODY: null
+              body: BODY
       transformers:
       - name: dbt-snowflake
         config:

@@ -11,6 +11,10 @@ plugins:
         executable: pytest
 
 schedules:
+- name: slack_notifications
+  interval: 0 12 * * *
+  job: slack_notifications
+
 - name: meltanohub_el
   interval: 0 6 * * *
   job: meltanohub_el
@@ -20,7 +24,7 @@ schedules:
   job: spreadsheets_anywhere_el
 
 - name: snowplow_el
-  interval: 0 6 * * 1-5
+  interval: 0 6 * * *
   job: snowplow_el
 
 - name: github_search_el
@@ -48,10 +52,15 @@ schedules:
   job: hub_metrics_publish
 
 - name: marts_refresh
-  interval: 0 8 * * * 1-5
+  interval: 0 8 * * *
   job: marts_refresh
 
 jobs:
+
+- name: slack_notifications
+  tasks:
+  - dbt-snowflake:run_slack_notifications
+  - tap-snowflake-singer-activity target-apprise
 
 - name: dbt_docs
   tasks:
