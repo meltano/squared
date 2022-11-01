@@ -7,7 +7,7 @@ plugins:
       pytest kubernetes==23.6.0 apache-airflow-providers-cncf-kubernetes==4.4.0
     commands:
       test_dag_generator:
-        args: ${MELTANO_PROJECT_ROOT}/orchestrate/tests/test_dag_generator.py
+        args: ${MELTANO_PROJECT_ROOT}/orchestrate/airflow/tests/test_dag_generator.py
         executable: pytest
 
 schedules:
