@@ -1,10 +1,20 @@
 WITH most_recent_date AS (
-    SELECT GREATEST(
-            MAX(created_at_ts),
-            MAX(pr_merged_at_ts),
-            MAX(closed_at_ts)
-        )::DATE AS max_date
-    FROM {{ ref('singer_contributions') }}
+
+    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+
+        SELECT GREATEST(
+                MAX(created_at_ts),
+                MAX(pr_merged_at_ts),
+                MAX(closed_at_ts)
+            )::DATE AS max_date
+        FROM {{ ref('singer_contributions') }}
+
+    {% else %}
+
+        SELECT CURRENT_DATE() AS max_date
+
+    {% endif %}
+
 ),
 
 base AS (
