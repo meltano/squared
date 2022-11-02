@@ -38,4 +38,4 @@ WHERE ga_event_count > struct_event_count
     -- These are slightly off but are vs exec events
     AND command_category NOT LIKE 'meltano add %'
     AND command_category != 'meltano select'
-    AND diff_pct > 0.5;
+    AND diff_pct > 0.5
