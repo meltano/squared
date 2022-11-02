@@ -1,5 +1,6 @@
+# Originally created from a copy of `prod` environment (`prod.meltano.yml`)
 environments:
-- name: prod
+- name: staging
   config:
     plugins:
       extractors:
@@ -69,9 +70,9 @@ environments:
           role: TRANSFORMER
           warehouse: TRANSFORMER
   env:
-    SF_RAW_DB: RAW
-    SF_PROD_DB: PROD
-    HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
+    SF_RAW_DB: STAGING_RAW
+    SF_PROD_DB: STAGING_PROD
+    HUB_METRICS_S3_PATH: s3://staging-meltano-bucket-01/hub_metrics/
     PERMISSION_BOT_USER: permission_bot
     PERMISSION_BOT_WAREHOUSE: ADMIN
     PERMISSION_BOT_DATABASE: SNOWFLAKE_SAMPLE_DATA
