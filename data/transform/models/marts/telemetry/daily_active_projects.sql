@@ -110,8 +110,11 @@ SELECT
         FALSE
     ) AS is_active_month_end,
     COALESCE(
-        is_active_month_start = is_active_month_end, FALSE
-    ) AS eom_unchanged,
+        is_active_month_start = TRUE AND is_active_month_end = TRUE, FALSE
+    ) AS eom_active_unchanged,
+    COALESCE(
+        is_active_month_start = FALSE AND is_active_month_end = FALSE, FALSE
+    ) AS eom_inactive_unchanged,
     COALESCE(
         is_active_month_start = TRUE AND is_active_month_end = FALSE, FALSE
     ) AS eom_churned,
