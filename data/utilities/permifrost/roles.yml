@@ -42,6 +42,13 @@ databases:
     - pnadolny_prod:
         shared: no
 
+    - staging_raw:
+        shared: no
+    - staging_prep:
+        shared: no
+    - staging_prod:
+        shared: no
+
     - tmurphy_prep:
         shared: no
     - tmurphy_prod:
@@ -462,6 +469,52 @@ roles:
                     - pnadolny_prod.*.*
                     - pnadolny_raw.*.*
 
+    # System user role for Staging
+    - staging:
+        warehouses:
+            - staging
+        owns:
+            databases:
+                - staging_prep
+                - staging_prod
+                - staging_raw
+            schemas:
+                - staging_prep.*
+                - staging_prod.*
+                - staging_raw.*
+            tables:
+                - staging_prep.*.*
+                - staging_prod.*.*
+                - staging_raw.*.*
+        privileges:
+            databases:
+                read:
+                    - staging_prep
+                    - staging_prod
+                    - staging_raw
+                write:
+                    - staging_prep
+                    - staging_prod
+                    - staging_raw
+            schemas:
+                read:
+                    - staging_prep.*
+                    - staging_prod.*
+                    - staging_raw.*
+                write:
+                    - staging_prep.*
+                    - staging_prod.*
+                    - staging_raw.*
+            tables:
+                read:
+                    - staging_prep.*.*
+                    - staging_prod.*.*
+                    - staging_raw.*.*
+                write:
+                    - staging_prep.*.*
+                    - staging_prod.*.*
+                    - staging_raw.*.*
+
     - tmurphy:
         member_of:
             - developer
@@ -529,6 +582,11 @@ users:
             - sysadmin
             - maintainer
 
+    - staging:
+        can_login: yes
+        member_of:
+            - staging
+
     - tmurphy:
         can_login: yes
         member_of:
@@ -575,6 +633,9 @@ warehouses:
         size: x-small
 
     - reporter:
+        size: x-small
+
+    - staging:
         size: x-small
 
     - transformer:
