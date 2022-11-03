@@ -68,6 +68,7 @@ base AS (
     FROM {{ ref('singer_contributions') }}
     CROSS JOIN most_recent_date
     WHERE singer_contributions.is_bot_user = FALSE
+        AND singer_contributions.is_hub_listed = TRUE
 )
 
 SELECT
