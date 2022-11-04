@@ -33,27 +33,100 @@ plugin_aggregates AS (
     SELECT
         cli_executions_base.project_id,
         COUNT(DISTINCT plugin_executions.plugin_name) AS plugin_name_count_all,
-        COUNT(DISTINCT plugin_executions.parent_name) AS plugin_parent_name_count_all,
+        COUNT(
+            DISTINCT plugin_executions.parent_name
+        ) AS plugin_parent_name_count_all,
         COUNT(DISTINCT plugin_executions.pip_url) AS plugin_pip_url_count_all,
-        COUNT(DISTINCT CASE WHEN COALESCE(cli_executions_base.exit_code, 1) = 0 THEN plugin_executions.plugin_name END) AS plugin_name_count_success,
-        COUNT(DISTINCT CASE WHEN COALESCE(cli_executions_base.exit_code, 1) = 0 THEN plugin_executions.parent_name END) AS plugin_parent_name_count_success,
-        COUNT(DISTINCT CASE WHEN COALESCE(cli_executions_base.exit_code, 1) = 0 THEN plugin_executions.pip_url END) AS plugin_pip_url_count_success,
-        COUNT(DISTINCT  CASE WHEN plugin_executions.plugin_type IN ('extractors', 'loaders') THEN plugin_executions.plugin_name END) AS el_plugin_name_count_all,
-        COUNT(DISTINCT  CASE WHEN plugin_executions.plugin_type IN ('extractors', 'loaders') THEN plugin_executions.parent_name END) AS el_plugin_parent_name_count_all,
-        COUNT(DISTINCT  CASE WHEN plugin_executions.plugin_type IN ('extractors', 'loaders') THEN plugin_executions.pip_url END) AS el_plugin_pip_url_count_all,
-        COUNT(DISTINCT CASE WHEN plugin_executions.plugin_type IN ('extractors', 'loaders') AND COALESCE(cli_executions_base.exit_code, 1) = 0 THEN plugin_executions.plugin_name END) AS el_plugin_name_count_success,
-        COUNT(DISTINCT CASE WHEN plugin_executions.plugin_type IN ('extractors', 'loaders') AND COALESCE(cli_executions_base.exit_code, 1) = 0 THEN plugin_executions.parent_name END) AS el_plugin_parent_name_count_success,
-        COUNT(DISTINCT CASE WHEN plugin_executions.plugin_type IN ('extractors', 'loaders') AND COALESCE(cli_executions_base.exit_code, 1) = 0 THEN plugin_executions.pip_url END) AS el_plugin_pip_url_count_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN plugin_executions.plugin_name
+            END
+        ) AS plugin_name_count_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN plugin_executions.parent_name
+            END
+        ) AS plugin_parent_name_count_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN plugin_executions.pip_url
+            END
+        ) AS plugin_pip_url_count_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    ) THEN plugin_executions.plugin_name
+            END
+        ) AS el_plugin_name_count_all,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    ) THEN plugin_executions.parent_name
+            END
+        ) AS el_plugin_parent_name_count_all,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    ) THEN plugin_executions.pip_url
+            END
+        ) AS el_plugin_pip_url_count_all,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    ) AND COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN plugin_executions.plugin_name
+            END
+        ) AS el_plugin_name_count_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    ) AND COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN plugin_executions.parent_name
+            END
+        ) AS el_plugin_parent_name_count_success,
+        COUNT(
+            DISTINCT CASE
+                WHEN
+                    plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    ) AND COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN plugin_executions.pip_url
+            END
+        ) AS el_plugin_pip_url_count_success,
         COUNT(
             DISTINCT CASE
                 WHEN cli_executions_base.cli_command IN ('add', 'install')
-                    AND plugin_name NOT IN (
+                    AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
                         'target-jsonl',
                         'target-postgres'
                     )
-                    AND plugin_executions.plugin_type IN ('extractors', 'loaders')
+                    AND plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    )
                     THEN plugin_executions.plugin_name
             END
         ) AS non_gsg_add,
@@ -66,8 +139,10 @@ plugin_aggregates AS (
                         'target-jsonl',
                         'target-postgres'
                     )
-                    AND plugin_executions.plugin_type IN ('extractors', 'loaders')
-                    AND completion_status = 'SUCCESS'
+                    AND plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    )
+                    AND plugin_executions.completion_status = 'SUCCESS'
                     THEN plugin_executions.plugin_name
             END
         ) AS non_gsg_add_success,
@@ -80,7 +155,9 @@ plugin_aggregates AS (
                         'target-jsonl',
                         'target-postgres'
                     )
-                    AND plugin_executions.plugin_type IN ('extractors', 'loaders')
+                    AND plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    )
                     THEN plugin_executions.plugin_name
             END
         ) AS non_gsg_exec,
@@ -93,7 +170,9 @@ plugin_aggregates AS (
                         'target-jsonl',
                         'target-postgres'
                     )
-                    AND plugin_executions.plugin_type IN ('extractors', 'loaders')
+                    AND plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    )
                     AND plugin_executions.completion_status = 'SUCCESS'
                     THEN plugin_executions.plugin_name
             END
@@ -107,7 +186,9 @@ plugin_aggregates AS (
                         'target-jsonl',
                         'target-postgres'
                     )
-                    AND plugin_executions.plugin_type IN ('extractors', 'loaders')
+                    AND plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    )
                     THEN plugin_executions.plugin_name
             END
         ) AS non_gsg_pipeline,
@@ -120,7 +201,9 @@ plugin_aggregates AS (
                         'target-jsonl',
                         'target-postgres'
                     )
-                    AND plugin_executions.plugin_type IN ('extractors', 'loaders')
+                    AND plugin_executions.plugin_type IN (
+                        'extractors', 'loaders'
+                    )
                     AND plugin_executions.completion_status = 'SUCCESS'
                     THEN plugin_executions.plugin_name
             END
@@ -173,10 +256,26 @@ project_aggregates AS (
             END
         ) AS exec_event_success_total,
         -- If we see null or non CI environment then FALSE
-        COALESCE(MIN(COALESCE(is_ci_environment, FALSE)), FALSE) AS is_ci_only,
+        COALESCE(
+            MIN(COALESCE(cli_executions_base.is_ci_environment, FALSE)),
+            FALSE
+        ) AS is_ci_only,
         COUNT(DISTINCT pipeline_dim.pipeline_pk) AS unique_pipelines_count,
-        SUM(CASE WHEN pipeline_dim.pipeline_pk IS NOT NULL THEN cli_executions_base.event_count END) AS pipeline_runs_count_all,
-        SUM(CASE WHEN pipeline_dim.pipeline_pk IS NOT NULL AND COALESCE(cli_executions_base.exit_code, 1) = 0 THEN cli_executions_base.event_count END) AS pipeline_runs_count_success,
+        SUM(
+            CASE
+                WHEN
+                    pipeline_dim.pipeline_pk IS NOT NULL
+                    THEN cli_executions_base.event_count
+            END
+        ) AS pipeline_runs_count_all,
+        SUM(
+            CASE
+                WHEN
+                    pipeline_dim.pipeline_pk IS NOT NULL AND COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN cli_executions_base.event_count
+            END
+        ) AS pipeline_runs_count_success,
         {% for cli_command in [
             'add',
             'config',
@@ -199,12 +298,26 @@ project_aggregates AS (
             'upgrade',
             'version',
         ] %}
-            SUM(CASE WHEN cli_executions_base.cli_command = '{{ cli_command }}' THEN cli_executions_base.event_count  END) AS {{ cli_command }}_count_all,
-            SUM(CASE WHEN cli_executions_base.cli_command = '{{ cli_command }}' AND COALESCE(cli_executions_base.exit_code, 1) = 0 THEN cli_executions_base.event_count END) AS  {{ cli_command }}_count_success
+        SUM(
+            CASE
+                WHEN
+                    cli_executions_base.cli_command = '{{ cli_command }}'
+                    THEN cli_executions_base.event_count
+            END
+        ) AS {{ cli_command }}_count_all,
+        SUM(
+            CASE
+                WHEN
+                    cli_executions_base.cli_command = '{{ cli_command }}'
+                    AND COALESCE(
+                        cli_executions_base.exit_code, 1
+                    ) = 0 THEN cli_executions_base.event_count
+            END
+        ) AS {{ cli_command }}_count_success
             {%- if not loop.last %},{% endif -%}
 		{% endfor %}
-        -- Active execution events
-        -- Current segment
+    -- Active execution events
+    -- Current segment
     FROM {{ ref('cli_executions_base') }}
     LEFT JOIN {{ ref('pipeline_executions') }}
         ON cli_executions_base.execution_id = pipeline_executions.execution_id
