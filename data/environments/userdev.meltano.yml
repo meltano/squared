@@ -88,4 +88,4 @@ environments:
     # Secrets via KMS
     KMS_PUBLIC_KEY_PATH: utilities/kms/Publickey.pem
     KMS_DOTENV_PATH: .env
-    KMS_SECTRETS_PATH: utilities/kms/secrets.yml
+    KMS_SECTRETS_PATH: secrets.yml
