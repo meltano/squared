@@ -63,8 +63,6 @@ models:
         tests:
           - not_null
       - name: is_fork
-        tests:
-          - not_null
       - name: is_hub_default
         tests:
           - not_null
@@ -78,20 +76,14 @@ models:
         tests:
           - not_null
       - name: num_open_issues
-        tests:
-          - not_null
       - name: visibility
-        tests:
-          - not_null
       - name: is_archived
-        tests:
-          - not_null
       - name: repo_created_at_ts
-        tests:
-          - not_null
       - name: repo_updated_at_ts
+      - name: repo_last_push_ts
+      - name: is_ownership_transferred
         tests:
           - not_null
-      - name: repo_last_push_ts
+      - name: is_hub_listed
         tests:
           - not_null

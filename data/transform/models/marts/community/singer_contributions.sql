@@ -29,6 +29,7 @@ SELECT
     stg_github_search__repositories.created_at_ts AS repo_created_at_ts,
     stg_github_search__repositories.last_updated_ts AS repo_updated_at_ts,
     stg_github_search__repositories.last_push_ts AS repo_last_push_ts,
+    COALESCE(stg_github_search__repositories.created_at_ts IS NULL, FALSE) AS is_ownership_transferred,
     COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_github_search__issues') }}
 LEFT JOIN {{ ref('stg_github_search__repositories') }}
@@ -82,6 +83,7 @@ SELECT
     stg_github_search__repositories.created_at_ts AS repo_created_at_ts,
     stg_github_search__repositories.last_updated_ts AS repo_updated_at_ts,
     stg_github_search__repositories.last_push_ts AS repo_last_push_ts,
+    COALESCE(stg_github_search__repositories.created_at_ts IS NULL, FALSE) AS is_ownership_transferred,
     COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_github_search__pull_requests') }}
 LEFT JOIN {{ ref('stg_github_search__repositories') }}

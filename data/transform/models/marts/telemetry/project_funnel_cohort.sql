@@ -102,7 +102,7 @@ WITH base AS (
     FROM {{ ref('fact_cli_executions') }}
     LEFT JOIN {{ ref('fact_plugin_usage') }}
         ON fact_cli_executions.execution_id = fact_plugin_usage.execution_id
-    LEFT JOIN prep.workspace.opt_outs
+    LEFT JOIN {{ ref('opt_outs') }}
         ON fact_cli_executions.project_id = opt_outs.project_id
     LEFT JOIN {{ ref('project_dim') }}
         ON fact_cli_executions.project_id = project_dim.project_id
