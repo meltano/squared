@@ -19,7 +19,5 @@ RUN meltano install utilities great_expectations awscli
 ENV MELTANO_PROJECT_ROOT /project
 ENV MELTANO_PROJECT_READONLY 1
 
-RUN meltano invoke dbt-snowflake:deps
-
 ENTRYPOINT [ "/bin/sh", "-c" ]
 CMD ["meltano"]
