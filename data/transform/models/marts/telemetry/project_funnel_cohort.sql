@@ -89,7 +89,9 @@ WITH active_executions AS (
 
     SELECT
         project_id,
-        SUM(CASE WHEN is_active_cli_execution THEN 1 END) AS active_executions_count
+        SUM(
+            CASE WHEN is_active_cli_execution THEN 1 END
+        ) AS active_executions_count
     FROM {{ ref('fact_cli_executions') }}
     GROUP BY 1
 ),
@@ -97,9 +99,9 @@ WITH active_executions AS (
 project_base AS (
 
     SELECT
-        DATE_TRUNC(WEEK, project_first_event_at) AS cohort_week,
+        project_dim.*,
         active_executions.active_executions_count,
-        project_dim.*
+        DATE_TRUNC(WEEK, project_dim.project_first_event_at) AS cohort_week
     FROM {{ ref('project_dim') }}
     LEFT JOIN active_executions
         ON project_dim.project_id = active_executions.project_id
