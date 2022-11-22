@@ -159,6 +159,7 @@ SELECT
     project_segments_monthly.monthly_piplines_all,
     project_segments_monthly.monthly_piplines_active,
     project_segments_monthly.monthly_piplines_active_eom,
+    prev_project_segments_monthly.monthly_piplines_active_eom AS monthly_piplines_previous,
     COALESCE(
         project_segments_monthly.monthly_piplines_all_segment,
         'NO_PIPELINES'
@@ -170,9 +171,17 @@ SELECT
     COALESCE(
         project_segments_monthly.monthly_piplines_active_eom_segment,
         'NO_PIPELINES'
-    ) AS monthly_piplines_active_eom_segment
+    ) AS monthly_piplines_active_eom_segment,
+    COALESCE(
+        prev_project_segments_monthly.monthly_piplines_active_eom_segment,
+        'NO_PIPELINES'
+    ) AS monthly_piplines_previous_segment
 FROM base
 LEFT JOIN project_segments_monthly
     ON base.project_id = project_segments_monthly.project_id
         AND base.first_day_of_month
         = project_segments_monthly.first_day_of_month
+LEFT JOIN project_segments_monthly AS prev_project_segments_monthly
+    ON base.project_id = prev_project_segments_monthly.project_id
+        AND DATEADD(month, -1, base.first_day_of_month)
+        = prev_project_segments_monthly.first_day_of_month
