@@ -48,4 +48,4 @@ plugins:
       password: ${SNOWFLAKE_PASSWORD}
   - name: target-apprise
     variant: AutoIDM
-    pip_url: git+https://github.com/pnadolny13/target-apprise.git@apprise_bugfix_commit_pinned
+    pip_url: target-apprise==0.0.2

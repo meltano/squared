@@ -70,55 +70,55 @@ project_segments_monthly AS (
     SELECT
         project_id,
         first_day_of_month,
-        COUNT(DISTINCT execution_id) AS monthly_piplines_all,
-        COUNT(
-            DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END
+        SUM(event_count) AS monthly_piplines_all,
+        SUM(
+            CASE WHEN is_active_cli_execution THEN event_count END
         ) AS monthly_piplines_active,
-        COUNT(
-            DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END
+        SUM(
+            CASE WHEN is_active_eom_cli_execution THEN event_count END
         ) AS monthly_piplines_active_eom,
         CASE
-            WHEN COUNT(DISTINCT execution_id) < 50 THEN 'GUPPY'
-            WHEN COUNT(DISTINCT execution_id) BETWEEN 50 AND 5000 THEN 'MARLIN'
-            WHEN COUNT(DISTINCT execution_id) > 5000 THEN 'WHALE'
+            WHEN SUM(event_count) < 50 THEN 'GUPPY'
+            WHEN SUM(event_count) BETWEEN 50 AND 5000 THEN 'MARLIN'
+            WHEN SUM(event_count) > 5000 THEN 'WHALE'
         END AS monthly_piplines_all_segment,
         CASE
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_cli_execution THEN event_count
                     END
                 ) < 50 THEN 'GUPPY'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_cli_execution THEN event_count
                     END
                 ) BETWEEN 50 AND 5000 THEN 'MARLIN'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_cli_execution THEN event_count
                     END
                 ) > 5000 THEN 'WHALE'
         END AS monthly_piplines_active_segment,
         CASE
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_eom_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_eom_cli_execution THEN event_count
                     END
                 ) < 50 THEN 'GUPPY'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_eom_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_eom_cli_execution THEN event_count
                     END
                 ) BETWEEN 50 AND 5000 THEN 'MARLIN'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_eom_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_eom_cli_execution THEN event_count
                     END
                 ) > 5000 THEN 'WHALE'
         END AS monthly_piplines_active_eom_segment
