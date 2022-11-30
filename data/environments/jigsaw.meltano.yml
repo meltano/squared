@@ -14,7 +14,7 @@ environments:
           role: jigsaw_labs_developer
           warehouse: CORE
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: ${USER_PREFIX}

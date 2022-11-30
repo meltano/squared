@@ -50,7 +50,7 @@ environments:
               title: TITLE
               BODY: null
               body: BODY
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: MELTANO

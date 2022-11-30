@@ -98,7 +98,6 @@ packages:
 Then run the following and paste the output into the appropriate file and finish editing:
 
 ```bash
-meltano invoke dbt-snowflake:deps
 meltano invoke dbt-snowflake run-operation generate_model_yaml --args '{"model_name": "fact_plugin_usage"}'
 ```
 
