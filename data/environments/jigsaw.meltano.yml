@@ -25,7 +25,6 @@ environments:
           database_raw: JIGSAW_LABS_RAW
           source_schema_prefix: JIGSAW_LABS_
           target_schema_prefix: JIGSAW_LABS_
-      utilities:
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}

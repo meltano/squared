@@ -60,7 +60,6 @@ environments:
           database: STAGING_PROD
           database_prep: STAGING_PREP
           database_raw: STAGING_RAW
-      utilities:
       - name: sqlfluff
         config:
           user: STAGING
