@@ -4,8 +4,8 @@
 
 {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
--- Dummy test during CI since this is data sensitive
-SELECT '' WHERE 1 != 1
+    -- Dummy test during CI since this is data sensitive
+    SELECT '' WHERE 1 != 1
 
 {% else %}
 
