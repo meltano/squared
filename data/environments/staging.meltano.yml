@@ -39,7 +39,7 @@ environments:
               title: TITLE
               BODY: null
               body: BODY
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: STAGING
@@ -48,7 +48,6 @@ environments:
           database: STAGING_PROD
           database_prep: STAGING_PREP
           database_raw: STAGING_RAW
-      utilities:
       - name: sqlfluff
         config:
           user: STAGING

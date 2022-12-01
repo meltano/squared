@@ -64,7 +64,7 @@ environments:
       #         title: TITLE
       #         BODY: null
       #         body: BODY
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: CICD
@@ -75,7 +75,6 @@ environments:
           database_raw: CICD_RAW
           source_schema_prefix: ${CI_BRANCH}_
           target_schema_prefix: ${CI_BRANCH}_
-      utilities:
       - name: sqlfluff
         config:
           user: CICD
