@@ -50,14 +50,13 @@ environments:
               title: TITLE
               BODY: null
               body: BODY
-      transformers:
+      utilities:
       - name: dbt-snowflake
         config:
           user: MELTANO
           role: TRANSFORMER
           warehouse: TRANSFORMER
           database: PROD
-      utilities:
       - name: sqlfluff
         config:
           user: MELTANO
