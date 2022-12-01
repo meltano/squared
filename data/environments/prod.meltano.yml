@@ -30,14 +30,6 @@ environments:
           role: LOADER
           warehouse: LOADER
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise
-        config:
-          stream_maps:
-            PROD-SLACK_NOTIFICATIONS-SLACK_ALERTS:
-              TITLE: null
-              title: TITLE
-              BODY: null
-              body: BODY
       utilities:
       - name: dbt-snowflake
         config:

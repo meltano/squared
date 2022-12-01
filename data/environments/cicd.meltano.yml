@@ -34,7 +34,7 @@ environments:
       # Reverse ETL connections:
       - name: tap-snowflake
         config:
-          dbname: CICD_PROD
+          database: CICD_PROD
           user: CICD
           role: CICD
           warehouse: CICD
@@ -55,15 +55,6 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      # Excluded from CI for now
-      # - name: target-apprise
-      #   config:
-      #     stream_maps:
-      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SLACK_ALERTS:
-      #         TITLE: null
-      #         title: TITLE
-      #         BODY: null
-      #         body: BODY
       utilities:
       - name: dbt-snowflake
         config:

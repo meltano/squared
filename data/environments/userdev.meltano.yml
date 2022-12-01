@@ -39,14 +39,6 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
           default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise
-        config:
-          stream_maps:
-            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
-              TITLE: null
-              title: TITLE
-              BODY: null
-              body: BODY
       utilities:
       - name: dbt-snowflake
         config:
