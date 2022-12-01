@@ -19,22 +19,10 @@ environments:
           start_date: '2020-01-01'
       - name: tap-snowflake
         config:
-          dbname: STAGING_PROD
+          database: STAGING_PROD
           user: STAGING
           role: STAGING
           warehouse: STAGING
-      - name: tap-snowflake-metrics-legacy
-        config:
-          tables: STAGING_PROD.MELTANO_HUB.FACT_HUB_METRICS
-      - name: tap-snowflake-metrics
-        config:
-          tables: STAGING_PROD.MELTANO_HUB.FACT_VARIANT_HUB_METRICS
-      - name: tap-snowflake-audit
-        config:
-          tables: STAGING_PROD.MELTANO_HUB.HUB_METRICS_AUDIT
-      - name: tap-snowflake-singer-activity
-        config:
-          tables: STAGING_PROD.SLACK_NOTIFICATIONS.SLACK_ALERTS
       loaders:
       - name: target-snowflake
         config:

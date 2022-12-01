@@ -18,22 +18,19 @@ environments:
           start_date: '2021-05-01'
       - name: tap-snowflake
         config:
-          dbname: USERDEV_PROD
+          database: USERDEV_PROD
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
-      - name: tap-snowflake-metrics-legacy
-        config:
-          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
-          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          schema: ${USER_PREFIX}_MELTANO_HUB
       - name: tap-snowflake-audit
         config:
-          tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
+          schema: ${USER_PREFIX}_MELTANO_HUB
       - name: tap-snowflake-singer-activity
         config:
-          tables: USERDEV_PROD.${USER_PREFIX}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+          schema: ${USER_PREFIX}_SLACK_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:

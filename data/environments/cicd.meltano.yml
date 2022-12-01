@@ -38,18 +38,15 @@ environments:
           user: CICD
           role: CICD
           warehouse: CICD
-      - name: tap-snowflake-metrics-legacy
-        config:
-          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
-          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          schema: ${CI_BRANCH}_MELTANO_HUB
       - name: tap-snowflake-audit
         config:
-          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
+          schema: ${CI_BRANCH}_MELTANO_HUB
       - name: tap-snowflake-singer-activity
         config:
-          tables: CICD_PROD.${CI_BRANCH}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+          schema: ${CI_BRANCH}_SLACK_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
