@@ -56,6 +56,7 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+          skip_pre_invoke: True
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
           database_raw: RAW
