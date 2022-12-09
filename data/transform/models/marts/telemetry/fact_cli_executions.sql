@@ -17,6 +17,7 @@ WITH base AS (
         project_dim.is_ephemeral_project_id,
         project_dim.project_id_source,
         project_dim.is_currently_active,
+        project_dim.init_project_directory,
         -- Pipeline Attributes
         pipeline_dim.pipeline_pk AS pipeline_fk,
         pipeline_executions.pipeline_runtime_bin,
@@ -142,6 +143,7 @@ SELECT
     base.is_ephemeral_project_id,
     base.project_id_source,
     base.is_currently_active,
+    base.init_project_directory,
     base.pipeline_fk,
     base.pipeline_runtime_bin,
     base.event_count,

@@ -23,7 +23,14 @@ WITH first_values AS (
             PARTITION BY
                 project_id
             ORDER BY COALESCE(started_ts, finished_ts) ASC
-        ) AS last_meltano_version
+        ) AS last_meltano_version,
+        FIRST_VALUE(
+            GET(options_obj, 0):init:project_directory
+        ) IGNORE NULLS OVER (
+            PARTITION BY
+                project_id
+            ORDER BY COALESCE(started_ts, finished_ts) ASC
+        ) AS first_project_directory
     FROM {{ ref('cli_executions_base') }}
 
 ),
@@ -360,6 +367,10 @@ SELECT
         first_values.last_meltano_version,
         'UNKNOWN'
     ) AS last_meltano_version,
+    COALESCE(
+        first_values.first_project_directory,
+        'UNKNOWN'
+    ) AS init_project_directory,
     COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out
 FROM project_aggregates
 LEFT JOIN

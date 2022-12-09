@@ -42,6 +42,7 @@ SELECT
     project_dim.is_ephemeral_project_id,
     project_dim.is_currently_active,
     project_dim.project_id_source,
+    project_dim.init_project_directory,
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location,
     -- Pipeline Attributes
