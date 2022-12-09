@@ -91,6 +91,7 @@ combined AS (
         NULL AS meltano_version,
         NULL AS python_version,
         NULL AS is_ci_environment,
+        NULL AS options_obj,
         event_commands_parsed.is_legacy_event,
         -- Plugins
         event_commands_parsed.is_plugin_dbt,
@@ -170,6 +171,7 @@ combined AS (
         unstructured_executions.meltano_version,
         unstructured_executions.python_version,
         unstructured_executions.is_ci_environment,
+        unstructured_executions.options_obj,
         COALESCE(unstructured_executions.cli_command IN (
                 'meltano transforms',
                 'meltano dashboards',
@@ -245,6 +247,7 @@ SELECT
     combined.exit_code,
     combined.is_tracking_disabled,
     combined.is_ci_environment,
+    combined.options_obj,
     combined.is_legacy_event,
     combined.is_plugin_dbt,
     combined.is_plugin_singer,
