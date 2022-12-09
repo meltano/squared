@@ -16,8 +16,6 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        title,
-        description,
         state,
         labels,
         author_username,

@@ -86,6 +86,10 @@ plugins:
     - projects.*
     - merge_requests.*
     - issues.*
+    - '!issues.description'
+    - '!issues.title'
+    - '!merge_requests.description'
+    - '!merge_requests.title'
   - name: tap-github
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
@@ -103,10 +107,10 @@ plugins:
     - pull_requests.*
     - issues.*
     # Exclude text descriptions for internal issues on private repos.
-    - !issues.body
-    - !issues.title
-    - !pull_requests.body
-    - !pull_requests.title
+    - '!issues.body'
+    - '!issues.title'
+    - '!pull_requests.body'
+    - '!pull_requests.title'
   - name: tap-github-search
     inherit_from: tap-github
     config:
