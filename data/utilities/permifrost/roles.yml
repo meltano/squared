@@ -582,6 +582,11 @@ users:
             - sysadmin
             - maintainer
 
+    - rbaum:
+        can_login: yes
+        member_of:
+            - accountadmin
+
     - staging:
         can_login: yes
         member_of:
