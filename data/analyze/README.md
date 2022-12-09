@@ -1,4 +1,4 @@
-# Local Superset
+# Local Superset (Experimental)
 
 This analyze module includes utilities to get Superset up and running locally using Docker along with the assets you need to be able to view the current state of the charts and dashboards.
 

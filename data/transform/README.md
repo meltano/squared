@@ -3,7 +3,7 @@
 The [dbt plugin](https://github.com/dbt-labs/dbt-core) in used to as part of the T step in ELT.
 It manages all of the SQL transformation logic that happens after the source data has been replicated to the data warehouse.
 Follow the [data transformation docs](https://docs.meltano.com/guide/transformation) to get dbt installed in your project.
-Visit [MeltanoHub](https://hub.meltano.com/transformers/) to get the most up to date installation instructions.
+Visit [MeltanoHub](https://hub.meltano.com/utilities/dbt-snowflake) to get the most up to date installation instructions.
 
 ## Squared Implementation Notes
 
@@ -98,7 +98,6 @@ packages:
 Then run the following and paste the output into the appropriate file and finish editing:
 
 ```bash
-meltano invoke dbt-snowflake:deps
 meltano invoke dbt-snowflake run-operation generate_model_yaml --args '{"model_name": "fact_plugin_usage"}'
 ```
 

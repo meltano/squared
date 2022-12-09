@@ -2,7 +2,7 @@
 
 The [Airflow](https://github.com/apache/airflow/) plugin is used to orchestrate our Meltano pipelines.
 Follow the [orchestrate docs](https://docs.meltano.com/guide/orchestration) to get airflow installed in your project.
-Visit [MeltanoHub](https://hub.meltano.com/orchestrators/airflow) to get the most up to date installation instructions.
+Visit [MeltanoHub](https://hub.meltano.com/utilities/airflow) to get the most up to date installation instructions.
 
 
 ## Squared Implementation Notes

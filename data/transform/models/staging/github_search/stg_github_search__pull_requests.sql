@@ -24,7 +24,6 @@ renamed AS (
         merge_commit_sha,
         statuses_url,
         labels,
-        reactions,
         assignees,
         requested_reviewers,
         milestone,
@@ -35,10 +34,10 @@ renamed AS (
         closed_at AS closed_at_ts,
         merged_at AS merged_at_ts,
         locked AS is_locked,
-        comments AS comment_count,
         draft AS is_draft,
         user:id::INT AS author_id,
         user:login::STRING AS author_username,
+        COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user,
         assignee:id::INT AS assignee_id,
         assignee:login::STRING AS assignee_username,
         head:ref::STRING AS head_branch_name,
@@ -48,5 +47,13 @@ renamed AS (
 
 )
 
-SELECT *
+SELECT
+    renamed.*,
+    stg_github_search__issues_base.reactions,
+    COALESCE(stg_github_search__issues_base.comment_count, 0) AS comment_count,
+    COALESCE(
+        stg_github_search__issues_base.reactions_count, 0
+    ) AS reactions_count
 FROM renamed
+LEFT JOIN {{ ref('stg_github_search__issues_base') }}
+    ON renamed.graphql_node_id = stg_github_search__issues_base.graphql_node_id

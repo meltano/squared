@@ -47,6 +47,9 @@ environments:
       - name: tap-snowflake-audit
         config:
           tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
+      - name: tap-snowflake-singer-activity
+        config:
+          tables: CICD_PROD.${CI_BRANCH}_SLACK_NOTIFICATIONS.SLACK_ALERTS
       loaders:
       - name: target-snowflake
         config:
@@ -55,7 +58,16 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      transformers:
+      # Excluded from CI for now
+      # - name: target-apprise
+      #   config:
+      #     stream_maps:
+      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+      #         TITLE: null
+      #         title: TITLE
+      #         BODY: null
+      #         body: BODY
+      utilities:
       - name: dbt-snowflake
         config:
           user: CICD
@@ -66,7 +78,6 @@ environments:
           database_raw: CICD_RAW
           source_schema_prefix: ${CI_BRANCH}_
           target_schema_prefix: ${CI_BRANCH}_
-      utilities:
       - name: sqlfluff
         config:
           user: CICD

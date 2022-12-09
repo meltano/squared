@@ -17,6 +17,7 @@ WITH base AS (
         project_dim.is_ephemeral_project_id,
         project_dim.project_id_source,
         project_dim.is_currently_active,
+        project_dim.init_project_directory,
         -- Pipeline Attributes
         pipeline_dim.pipeline_pk AS pipeline_fk,
         pipeline_executions.pipeline_runtime_bin,
@@ -70,55 +71,55 @@ project_segments_monthly AS (
     SELECT
         project_id,
         first_day_of_month,
-        COUNT(DISTINCT execution_id) AS monthly_piplines_all,
-        COUNT(
-            DISTINCT CASE WHEN is_active_cli_execution THEN execution_id END
+        SUM(event_count) AS monthly_piplines_all,
+        SUM(
+            CASE WHEN is_active_cli_execution THEN event_count END
         ) AS monthly_piplines_active,
-        COUNT(
-            DISTINCT CASE WHEN is_active_eom_cli_execution THEN execution_id END
+        SUM(
+            CASE WHEN is_active_eom_cli_execution THEN event_count END
         ) AS monthly_piplines_active_eom,
         CASE
-            WHEN COUNT(DISTINCT execution_id) < 50 THEN 'GUPPY'
-            WHEN COUNT(DISTINCT execution_id) BETWEEN 50 AND 5000 THEN 'MARLIN'
-            WHEN COUNT(DISTINCT execution_id) > 5000 THEN 'WHALE'
+            WHEN SUM(event_count) < 50 THEN 'GUPPY'
+            WHEN SUM(event_count) BETWEEN 50 AND 5000 THEN 'MARLIN'
+            WHEN SUM(event_count) > 5000 THEN 'WHALE'
         END AS monthly_piplines_all_segment,
         CASE
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_cli_execution THEN event_count
                     END
                 ) < 50 THEN 'GUPPY'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_cli_execution THEN event_count
                     END
                 ) BETWEEN 50 AND 5000 THEN 'MARLIN'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_cli_execution THEN event_count
                     END
                 ) > 5000 THEN 'WHALE'
         END AS monthly_piplines_active_segment,
         CASE
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_eom_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_eom_cli_execution THEN event_count
                     END
                 ) < 50 THEN 'GUPPY'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_eom_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_eom_cli_execution THEN event_count
                     END
                 ) BETWEEN 50 AND 5000 THEN 'MARLIN'
             WHEN
-                COUNT(
-                    DISTINCT CASE
-                        WHEN is_active_eom_cli_execution THEN execution_id
+                SUM(
+                    CASE
+                        WHEN is_active_eom_cli_execution THEN event_count
                     END
                 ) > 5000 THEN 'WHALE'
         END AS monthly_piplines_active_eom_segment
@@ -142,6 +143,7 @@ SELECT
     base.is_ephemeral_project_id,
     base.project_id_source,
     base.is_currently_active,
+    base.init_project_directory,
     base.pipeline_fk,
     base.pipeline_runtime_bin,
     base.event_count,
@@ -159,6 +161,8 @@ SELECT
     project_segments_monthly.monthly_piplines_all,
     project_segments_monthly.monthly_piplines_active,
     project_segments_monthly.monthly_piplines_active_eom,
+    prev_project_segments_monthly.monthly_piplines_active_eom
+    AS monthly_piplines_previous,
     COALESCE(
         project_segments_monthly.monthly_piplines_all_segment,
         'NO_PIPELINES'
@@ -170,9 +174,18 @@ SELECT
     COALESCE(
         project_segments_monthly.monthly_piplines_active_eom_segment,
         'NO_PIPELINES'
-    ) AS monthly_piplines_active_eom_segment
+    ) AS monthly_piplines_active_eom_segment,
+    COALESCE(
+        prev_project_segments_monthly.monthly_piplines_active_eom_segment,
+        'NO_PIPELINES'
+    ) AS monthly_piplines_previous_segment
 FROM base
 LEFT JOIN project_segments_monthly
     ON base.project_id = project_segments_monthly.project_id
         AND base.first_day_of_month
         = project_segments_monthly.first_day_of_month
+LEFT JOIN project_segments_monthly
+    AS prev_project_segments_monthly -- noqa: L031
+    ON base.project_id = prev_project_segments_monthly.project_id
+        AND DATEADD(MONTH, -1, base.first_day_of_month)
+        = prev_project_segments_monthly.first_day_of_month

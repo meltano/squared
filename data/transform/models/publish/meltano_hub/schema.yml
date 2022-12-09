@@ -79,3 +79,75 @@ models:
         tests:
           - not_null
           - unique
+
+  - name: fact_variant_hub_metrics
+    description: This table includes metrics that are published to S3 and are consumed by MeltanoHub for displaying plugin usage metrics.
+      This replaces fact_hub_metrics since it has more fine grain detail at the variant level.
+    columns:
+      - name: name
+        description: The plugin name.
+
+      - name: variant
+        description: The plugin variant name.
+
+      - name: repo
+        description: The plugin repo.
+
+      - name: plugin_type
+        description: The plugin type.
+
+      - name: pip_url
+        description: The pip url for the plugin.
+
+      - name: is_default
+        description: A boolean whether the plugins is the hub default or not.
+
+      - name: all_projects_by_name
+        description: The sum of all distinct projects based on the plugin name. This includes both >2.0 telemetry with variant level data
+          and legacy structured events without variant data. It should act as a top level quantity of how many projects use the plugin
+          no matter what variant.
+
+      - name: success_projects_by_name
+        description: Similar to `all_projects_by_name` but only where projects had a successful execution.
+
+      - name: all_projects_unstruct_by_name
+        description: The sum of all distinct projects based on the plugin name, restricted to events >2.0 with variant level data.
+          It should act as a top level quantity for variant metrics of how many projects use the plugin no matter what variant.
+
+      - name: success_projects_unstruct_by_name
+        description: Similar to `all_projects_unstruct_by_name` but only where projects had a successful execution.
+
+      - name: all_projects_unstruct_by_variant
+        description: The sum of all distinct projects based on the plugin variant, restricted to events >2.0 with variant level data.
+          Projects can use multiple variants so summing all variants shouldn't equal `all_projects_unstruct_by_name`.
+
+      - name: success_projects_unstruct_by_variant
+        description: Similar to `all_projects_unstruct_by_variant` but only where projects had a successful execution.
+
+      - name: all_execs_by_name
+        description: The sum of all executions based on the plugin name. This includes both >2.0 telemetry with variant level data
+          and legacy structured events without variant data. It should act as a top level quantity of how many executions were performed
+          with this plugin no matter what variant.
+
+      - name: success_execs_by_name
+        description: Similar to `all_execs_by_name` but only where projects had a successful execution.
+
+      - name: all_execs_unstruct_by_name
+        description: The sum of all executions based on the plugin name, restricted to events >2.0 with variant level data.
+          It should act as a top level quantity for variant metrics of how many executions were performed with this plugin no matter what variant.
+
+      - name: success_execs_unstruct_by_name
+        description: Similar to `all_execs_unstruct_by_name` but only where projects had a successful execution.
+
+      - name: all_execs_unstruct_by_variant
+        description: The sum of all executions based on the plugin variant, restricted to events >2.0 with variant level data.
+          Projects can use multiple variants so summing all variants shouldn't equal `all_execs_unstruct_by_name`.
+
+      - name: success_execs_unstruct_by_variant
+        description: Similar to `all_execs_unstruct_by_variant` but only where projects had a successful execution.
+
+      - name: all_projects
+        description: A renamed duplicate of `all_projects_unstruct_by_variant`.
+
+      - name: all_execs
+        description: A renamed duplicate of `all_execs_unstruct_by_variant`.
