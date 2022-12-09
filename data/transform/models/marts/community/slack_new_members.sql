@@ -14,7 +14,7 @@ WITH new_member_message AS (
 
 SELECT
     stg_slack__users.user_id,
-    stg_slack__users.email,
+    stg_slack__users.email_hash,
     stg_slack__users.email_domain,
     new_member_message.message_created_at,
     stg_slack__users.is_deleted

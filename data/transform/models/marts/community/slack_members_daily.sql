@@ -16,7 +16,7 @@ base AS (
 
     SELECT
         stg_slack__users.user_id,
-        stg_slack__users.email,
+        stg_slack__users.email_hash,
         stg_slack__users.email_domain,
         -- The slack bot was added on 2021-04-01. So we dont know the exact
         -- added date for user prior to that.
