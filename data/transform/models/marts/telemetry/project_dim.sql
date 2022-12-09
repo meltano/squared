@@ -129,7 +129,19 @@ SELECT
         project_base.lifespan_hours <= 24
         AND project_base.first_event_at::DATE != CURRENT_DATE,
         FALSE
-    ) AS is_ephemeral_project_id
+    ) AS is_ephemeral_project_id,
+    COALESCE(
+        project_base.init_project_directory IN (
+            'e5ca2eeb4da09ea1a66c3d9391b5bf43296e309c619c04914ac5bffbb3e7cf54', -- `new_project` original path
+            '781d839e18d017b347cf90a22e18b407e3cdacb2a9cc907d3693893a790fdc4c'), -- `b54c6cfe2f8f831389a5b9ca409f410c` new UUID path
+        FALSE
+    ) AS is_codespace_demo,
+    COALESCE(
+        project_base.init_project_directory IN (
+            'edd9334eaeaa3b81f964e18c5840955de8791ea220740459f7393deca03085f6', -- `my-meltano-project` full tutorial
+            'ffd7f2044d5bf2efc6bd4353979041951c565125c08186e3160be926a6ee1e75'), -- `my-new-project` new GSG tutuorial
+        FALSE
+    ) AS is_gsg_tutorial
 FROM {{ ref('project_base') }}
 LEFT JOIN
     active_projects ON
