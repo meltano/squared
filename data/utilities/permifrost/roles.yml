@@ -515,6 +515,9 @@ roles:
                     - staging_prod.*.*
                     - staging_raw.*.*
 
+    - rbaum: 
+        member_of: []
+
     - tmurphy:
         member_of:
             - developer
@@ -581,6 +584,11 @@ users:
             - useradmin
             - sysadmin
             - maintainer
+
+    - rbaum:
+        can_login: yes
+        member_of:
+            - accountadmin
 
     - staging:
         can_login: yes
