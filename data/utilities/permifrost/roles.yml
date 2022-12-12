@@ -515,6 +515,9 @@ roles:
                     - staging_prod.*.*
                     - staging_raw.*.*
 
+    - rbaum: 
+        member_of: []
+
     - tmurphy:
         member_of:
             - developer
