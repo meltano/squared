@@ -4,7 +4,7 @@
 
 SELECT
     event_cli.event_created_at,
-    event_cli.user_ipaddress,
+    event_cli.ip_address_hash,
     event_cli.event_id,
     event_cli.event,
     event_cli.event_name,
@@ -59,7 +59,7 @@ UNION ALL
 
 SELECT
     event_block.event_created_at,
-    event_block.user_ipaddress,
+    event_block.ip_address_hash,
     event_block.event_id,
     event_block.event,
     event_block.event_name,
@@ -114,7 +114,7 @@ UNION ALL
 
 SELECT
     event_exit.event_created_at,
-    event_exit.user_ipaddress,
+    event_exit.ip_address_hash,
     event_exit.event_id,
     event_exit.event,
     event_exit.event_name,
@@ -169,7 +169,7 @@ UNION ALL
 
 SELECT
     event_telemetry_state_change.event_created_at,
-    event_telemetry_state_change.user_ipaddress,
+    event_telemetry_state_change.ip_address_hash,
     event_telemetry_state_change.event_id,
     event_telemetry_state_change.event,
     event_telemetry_state_change.event_name,
@@ -227,7 +227,7 @@ UNION ALL
 
 SELECT
     event_legacy_with_context.event_created_at,
-    event_legacy_with_context.user_ipaddress,
+    event_legacy_with_context.ip_address_hash,
     event_legacy_with_context.event_id,
     NULL AS event,
     event_legacy_with_context.event_name,

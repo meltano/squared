@@ -9,7 +9,7 @@ SELECT
     event_id,
     'legacy' AS event_name,
     event_created_at,
-    user_ipaddress,
+    ip_address_hash,
     legacy_se_category,
     legacy_se_action,
     legacy_se_label

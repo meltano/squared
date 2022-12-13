@@ -9,7 +9,7 @@ SELECT
     1 AS event_count,
     stg_snowplow__events.se_category AS command_category,
     stg_snowplow__events.se_action AS command,
-    MD5(stg_snowplow__events.user_ipaddress) AS ip_address_hash,
+    stg_snowplow__events.ip_address_hash,
     cli_execs_blended.project_id,
     cli_execs_blended.execution_id,
     cli_execs_blended.event_created_at,

@@ -74,6 +74,7 @@ renamed AS (
         v_etl,
         user_id,
         user_ipaddress,
+        MD5(user_ipaddress) AS ip_address_hash,
         user_fingerprint,
         domain_userid,
         domain_sessionidx,

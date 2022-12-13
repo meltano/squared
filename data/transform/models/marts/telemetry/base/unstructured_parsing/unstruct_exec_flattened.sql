@@ -19,7 +19,7 @@ SELECT
     plugins.plugin_list_of_lists AS plugins,
     MIN(unstruct_event_flattened.event_created_at) AS started_ts,
     MAX(unstruct_event_flattened.event_created_at) AS finished_ts,
-    MAX(unstruct_event_flattened.user_ipaddress) AS user_ipaddress,
+    MAX(unstruct_event_flattened.ip_address_hash) AS ip_address_hash,
     MAX(unstruct_event_flattened.project_uuid) AS project_id,
     MAX(
         unstruct_event_flattened.freedesktop_version_id
