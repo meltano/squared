@@ -6,7 +6,7 @@ WITH base AS (
         unstruct_event,
         contexts,
         event_created_at,
-        user_ipaddress,
+        ip_address_hash,
         se_category AS legacy_se_category,
         se_action AS legacy_se_action,
         -- TODO: do we need all of these?

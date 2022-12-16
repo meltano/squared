@@ -167,7 +167,7 @@ combined AS (
         unstructured_executions.exit_code,
         FALSE AS is_tracking_disabled,
         1 AS event_count,
-        MD5(unstructured_executions.user_ipaddress) AS ip_address_hash,
+        unstructured_executions.ip_address_hash,
         unstructured_executions.meltano_version,
         unstructured_executions.python_version,
         unstructured_executions.is_ci_environment,
