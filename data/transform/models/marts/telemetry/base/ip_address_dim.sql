@@ -1,6 +1,5 @@
 WITH unique_ips AS (
-    SELECT
-        DISTINCT
+    SELECT DISTINCT
         user_ipaddress,
         ip_address_hash
     FROM {{ ref('stg_snowplow__events') }}
