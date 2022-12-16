@@ -1,6 +1,6 @@
 version: 1
 default_environment: userdev
-send_anonymous_usage_stats: true
+send_anonymous_usage_stats: false
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
 
 include_paths:

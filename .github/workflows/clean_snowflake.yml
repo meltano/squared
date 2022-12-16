@@ -25,6 +25,5 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano invoke dbt-snowflake:deps
+    - run: meltano install utility dbt-snowflake
     - run: meltano invoke dbt-snowflake run-operation clear_ci_schemas

@@ -7,3 +7,11 @@ sources:
     tables:
       - name: users
       - name: messages
+      - name: channels
+  - name: tap_slack_public
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_SLACK_PUBLIC'
+    tables:
+      - name: messages
+      - name: channels
+      - name: threads

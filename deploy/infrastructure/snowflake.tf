@@ -41,4 +41,11 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     filter_prefix = "customer-data/meltano/enriched/stream/"
     filter_suffix = ".gz"
   }
+
+  queue {
+    queue_arn     = local.snowpipe.snowflake_sqs_arn
+    events        = ["s3:ObjectCreated:*"]
+    filter_prefix = "customer-data/meltano/enriched/bad/"
+    filter_suffix = ".gz"
+  }
 }

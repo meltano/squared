@@ -23,6 +23,8 @@ clean-targets:
 - dbt_packages
 - logs
 
+on-run-end: "{% if target.name in ('prod', 'cicd') %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+
 seeds:
   quote_columns: false
   +schema: SEED
@@ -61,6 +63,9 @@ models:
       +materialized: table
       meltano_hub:
         +schema: meltano_hub
+      slack_notifications:
+        +materialized: view
+        +schema: slack_notifications
     # ------------------
     # Common
     # ------------------
@@ -85,3 +90,11 @@ models:
           +schema: workspace
           +materialized: view
         +schema: community
+  dbt_artifacts:
+    +schema: dbt_artifacts
+    staging:
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +schema: dbt_artifacts
+    sources:
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +schema: "{{ env_var('DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX', '') }}SOURCE_DBT_ARTIFACTS"

@@ -1,7 +1,3 @@
-# This file is managed by the 'files-airflow' file bundle and updated automatically when `meltano upgrade` is run.
-# To prevent any manual changes from being overwritten, remove the file bundle from `meltano.yml` or disable automatic updates:
-#     meltano config --plugin-type=files files-airflow set _update orchestrate/dags/meltano.py false
-
 # If you want to define a custom DAG, create
 # a new file under orchestrate/dags/ and Airflow
 # will pick it up automatically.
@@ -116,9 +112,7 @@ def _meltano_elt_generator(schedules):
             elt = BashOperator(
                 task_id="extract_load",
                 bash_command=f"cd {PROJECT_ROOT}; {MELTANO_BIN} schedule run {schedule['name']}",
-                # retries=1,
                 dag=dag,
-                # retry_delay=retry_delay,
             )
 
         # register the dag
@@ -150,15 +144,15 @@ def _meltano_job_generator(schedules):
         common_tags.append(f"job:{schedule['job']['name']}")
         interval = schedule["cron_interval"]
         args = DEFAULT_ARGS.copy()
-        args["start_date"] = datetime.utcnow()
+        args["start_date"] = schedule.get("start_date", datetime(1970, 1, 1, 0, 0, 0))
 
         with DAG(
-                base_id,
-                tags=common_tags,
-                catchup=False,
-                default_args=args,
-                schedule_interval=interval,
-                max_active_runs=1,
+            base_id,
+            tags=common_tags,
+            catchup=False,
+            default_args=args,
+            schedule_interval=interval,
+            max_active_runs=1,
         ) as dag:
             previous_task = None
             for idx, task in enumerate(schedule["job"]["tasks"]):
@@ -187,9 +181,7 @@ def _meltano_job_generator(schedules):
                     task = BashOperator(
                         task_id=task_id,
                         bash_command=f"cd {PROJECT_ROOT}; {MELTANO_BIN} run {run_args}",
-                        # retries=1,
                         dag=dag,
-                        # retry_delay=retry_delay,
                     )
                 if previous_task:
                     task.set_upstream(previous_task)
@@ -199,9 +191,7 @@ def _meltano_job_generator(schedules):
                 )
 
         globals()[base_id] = dag
-        logger.info(
-            f"DAG created for schedule '{schedule['name']}', task='{run_args}'"
-        )
+        logger.info(f"DAG created for schedule '{schedule['name']}', task='{run_args}'")
 
 
 def create_dags():

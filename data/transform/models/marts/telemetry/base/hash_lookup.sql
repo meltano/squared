@@ -30,6 +30,7 @@ WITH base AS (
         SHA2_HEX(pip_url) AS hash_value,
         'plugin_pip_url' AS category
     FROM {{ ref('snapshot_meltanohub_plugins') }}
+    WHERE pip_url IS NOT NULL
 
     UNION ALL
 

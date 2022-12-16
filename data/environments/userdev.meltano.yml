@@ -3,6 +3,9 @@ environments:
   config:
     plugins:
       extractors:
+      - name: tap-slack-public
+        config:
+          start_date: '2022-09-01'
       - name: tap-google-analytics
         config:
           start_date: '2022-02-20'
@@ -28,6 +31,9 @@ environments:
       - name: tap-snowflake-audit
         config:
           tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
+      - name: tap-snowflake-singer-activity
+        config:
+          tables: USERDEV_PROD.${USER_PREFIX}_SLACK_NOTIFICATIONS.SLACK_ALERTS
       loaders:
       - name: target-snowflake
         config:
@@ -36,12 +42,21 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
           default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      transformers:
+      - name: target-apprise
+        config:
+          stream_maps:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+              TITLE: null
+              title: TITLE
+              BODY: null
+              body: BODY
+      utilities:
       - name: dbt-snowflake
         config:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+          skip_pre_invoke: True
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
           database_raw: RAW
@@ -49,7 +64,6 @@ environments:
           # database_raw: USERDEV_RAW
           # source_schema_prefix: ${USER_PREFIX}_
           target_schema_prefix: ${USER_PREFIX}_
-      utilities:
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}
@@ -61,7 +75,7 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
   env:
-    USER_PREFIX: melty
+    USER_PREFIX: PNADOLNY
     HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
@@ -71,3 +85,7 @@ environments:
     AIRFLOW__SCHEDULER__DAG_DIR_LIST_INTERVAL: '30'
     AIRFLOW_VAR_MELTANO_ENVIRONMENT: userdev
     AIRFLOW_VAR_OPERATOR_TYPE: bash
+    # Secrets via KMS
+    KMS_PUBLIC_KEY_PATH: utilities/kms/Publickey.pem
+    KMS_DOTENV_PATH: .env
+    KMS_SECTRETS_PATH: secrets.yml
