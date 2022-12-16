@@ -100,7 +100,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['1-0-0']
+              values: ['1-0-0', '1-1-0']
 
   - name: context_exception
     description: Snowplow exception contexts parsed.

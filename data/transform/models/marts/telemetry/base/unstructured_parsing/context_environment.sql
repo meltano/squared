@@ -4,6 +4,7 @@ WITH base AS (
         event_id,
         MAX(schema_name) AS schema_name,
         MAX(context:data:context_uuid::STRING) AS context_uuid,
+        MAX(context:data:parent_context_uuid::STRING) AS parent_context_uuid,
         MAX(
             context:data:freedesktop_version_id::STRING
         ) AS freedesktop_version_id,
