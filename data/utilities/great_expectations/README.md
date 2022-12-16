@@ -2,6 +2,8 @@
 
 ## Adding and Installing
 
+Visit [MeltanoHub](https://hub.meltano.com/utilities/great_expectations) for the most up to date installation instructions.
+
 Run the following command to get great_expecations installed in your Meltano project.
 Depending on your datasource you might need to install additional python dependencies (i.e. sqlalchemy, PyAthena, and PyAthena for this case).
 

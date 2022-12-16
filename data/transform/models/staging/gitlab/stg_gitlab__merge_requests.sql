@@ -16,8 +16,6 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        title,
-        description,
         state,
         target_branch,
         source_branch,

@@ -16,7 +16,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -25,6 +25,5 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano invoke dbt-snowflake:deps
+    - run: meltano install utility dbt-snowflake
     - run: meltano invoke dbt-snowflake run-operation clear_ci_schemas

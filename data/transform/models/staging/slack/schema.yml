@@ -7,3 +7,24 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_slack__users
+    columns:
+      - name: user_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_slack__channels
+    columns:
+      - name: channel_id
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_slack__threads
+    columns:
+      - name: thread_message_surrogate_key
+        tests:
+          - unique
+          - not_null

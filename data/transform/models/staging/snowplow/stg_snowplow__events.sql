@@ -18,8 +18,9 @@ WITH source AS (
 
         FROM raw.snowplow.events
         WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
-            -- filter test events
-            AND app_id != 'test'
+            -- only meltano events. For the first ~6 months no app_id was
+            -- sent from Meltano. So nulls are from meltano.
+            AND COALESCE(app_id, 'meltano') = 'meltano'
         {% else %}
 
         FROM {{ source('snowplow', 'events') }}
@@ -185,7 +186,8 @@ renamed AS (
         event_name,
         event_format,
         event_version,
-        event_fingerprint
+        event_fingerprint,
+        MD5(user_ipaddress) AS ip_address_hash
     FROM clean_new_source
 
 )

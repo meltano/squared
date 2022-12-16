@@ -1,15 +1,20 @@
 plugins:
-  orchestrators:
+  utilities:
   - name: airflow
     variant: apache
-    pip_url: apache-airflow==2.1.2 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.1.2/constraints-${MELTANO__PYTHON_VERSION}.txt
-      pytest kubernetes==11.0.0 apache-airflow-providers-cncf-kubernetes==2.0.0
+    pip_url: git+https://github.com/meltano/airflow-ext.git@main apache-airflow==2.3.3
+      --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.3/constraints-no-providers-${MELTANO__PYTHON_VERSION}.txt
+      pytest kubernetes==23.6.0 apache-airflow-providers-cncf-kubernetes==4.4.0
     commands:
       test_dag_generator:
-        args: ${MELTANO_PROJECT_ROOT}/orchestrate/tests/test_dag_generator.py
+        args: ${MELTANO_PROJECT_ROOT}/orchestrate/airflow/tests/test_dag_generator.py
         executable: pytest
 
 schedules:
+- name: slack_notifications
+  interval: 0 12 * * *
+  job: slack_notifications
+
 - name: meltanohub_el
   interval: 0 6 * * *
   job: meltanohub_el
@@ -19,7 +24,7 @@ schedules:
   job: spreadsheets_anywhere_el
 
 - name: snowplow_el
-  interval: 0 6 * * 1-5
+  interval: 0 6 * * *
   job: snowplow_el
 
 - name: github_search_el
@@ -47,10 +52,15 @@ schedules:
   job: hub_metrics_publish
 
 - name: marts_refresh
-  interval: 0 8 * * * 1-5
+  interval: 0 8 * * *
   job: marts_refresh
 
 jobs:
+
+- name: slack_notifications
+  tasks:
+  - dbt-snowflake:run_slack_notifications
+  - tap-snowflake-singer-activity target-apprise
 
 - name: dbt_docs
   tasks:
@@ -60,14 +70,16 @@ jobs:
 - name: meltanohub_el
   tasks:
   - tap-meltanohub target-snowflake
+  - dbt-snowflake:test_source_meltanohub
+  - dbt-snowflake:run_snapshot_meltanohub
   - dbt-snowflake:run_staging_meltanohub
   - dbt-snowflake:test_staging_meltanohub
 
 - name: spreadsheets_anywhere_el
   tasks:
   - tap-spreadsheets-anywhere coalesce-gcp-ips target-snowflake
+  - dbt-snowflake:test_source_spreadsheets_anywhere
   - dbt-snowflake:run_snapshot_spreadsheets_anywhere
-  - dbt-snowflake:test_snapshot_spreadsheets_anywhere
 
 - name: snowplow_el
   tasks:
@@ -94,7 +106,8 @@ jobs:
 
 - name: slack_el
   tasks:
-  - tap-slack target-snowflake
+  - tap-slack target-snowflake 
+  - tap-slack-public target-snowflake
   - dbt-snowflake:run_staging_slack
   - dbt-snowflake:test_staging_slack
 
@@ -111,7 +124,6 @@ jobs:
   - dbt-snowflake:test_hub_metrics
   # - great_expectations:test_dbt_hub_metrics
   - tap-snowflake-metrics target-yaml-metrics awscli:s3_copy_metrics
-  - tap-snowflake-metrics-legacy target-yaml-metrics-legacy awscli:s3_copy_metrics_legacy
   - tap-snowflake-audit target-yaml-audit awscli:s3_copy_audit
 
 - name: marts_refresh

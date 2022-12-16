@@ -2,6 +2,9 @@ WITH base AS (
 
     SELECT
         event_id,
+        event_name,
+        event_created_at,
+        ip_address_hash,
         PARSE_JSON(
             unstruct_event::VARIANT
         ):data:schema::STRING AS schema_name,

@@ -13,7 +13,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
       DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
       AWS_DEFAULT_REGION: us-east-1
     steps:
@@ -26,7 +26,7 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r data/requirements.txt
-    - run: cd data && meltano schedule list --format=json > orchestrate/schedules.cache.json
+    - run: cd data && meltano schedule list --format=json > orchestrate/airflow/schedules.cache.json
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -73,7 +73,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
       DOCKER_REGISTRY: 158444585956.dkr.ecr.us-east-1.amazonaws.com
       AWS_DEFAULT_REGION: us-east-1
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -107,7 +107,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: prod
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
       SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
     steps:
     - uses: actions/checkout@v3
@@ -117,7 +117,5 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     # Seed Production
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano invoke dbt-snowflake:deps
-    - run: meltano invoke dbt-snowflake:compile
-    - run: meltano invoke dbt-snowflake:seed
+    - run: meltano install utility dbt-snowflake
+    - run: meltano run dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed

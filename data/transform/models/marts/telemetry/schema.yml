@@ -161,8 +161,8 @@ models:
         tests:
           - not_null
 
-      - name: cli_started_ts
-        description: The CLI started timestamp.
+      - name: cli_finished_ts
+        description: The CLI finished timestamp.
         tests:
           - not_null
 
@@ -219,11 +219,29 @@ models:
         tests:
           - not_null
 
-      - name: project_created_at
-        description: The date the project sent its first event.
+      - name: project_first_event_at
+        description: The timestamp of the first event the project sent.
+        tests:
+          - not_null
 
-      - name: project_is_active
-        description: Whether the project is active or not.
+      - name: project_lifespan_days
+        description: The length between the projects first and last event, in days.
+        tests:
+          - not_null
+
+      - name: is_ephemeral_project_id
+        description: A boolean whether the project is considered ephemeral or not. Ephemeral
+          means the project lifespan was <= 24 hours and their first event was not today.
+        tests:
+          - not_null
+
+      - name: is_currently_active
+        description: A boolean whether the project is active as of today.
+        tests:
+          - not_null
+
+      - name: project_id_source
+        description: The source of the project ID (i.e. explicit, random, derived) if known.
 
       - name: env_id
         description: The Meltano config environment hash value.
@@ -292,6 +310,10 @@ models:
       - name: execution_location
         description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)
 
+      - name: is_active_cli_execution
+        description: A boolean whether the execution happened when the project was considered active.
+        tests:
+          - not_null
 
   - name: project_dim
     description: This table summarizes attributes of projects.
@@ -301,21 +323,49 @@ models:
           - not_null
           - unique
 
-      - name: is_active
-        description: A boolean whether the project is considered active.
-
-      - name: first_event_at
-        description: The timestamp of the projects first event.
+      - name: project_first_event_at
+        description: The timestamp of the first event the project sent.
         tests:
           - not_null
 
-      - name: last_event_at
-        description: The timestamp of the projects most recent event.
+      - name: project_last_event_at
+        description: The timestamp of the last event the project sent.
         tests:
           - not_null
 
       - name: exec_event_total
         description: The count of how many total executions the project has had.
+        tests:
+          - not_null
+
+      - name: project_id_source
+        description: The source of the project ID (i.e. explicit, random, derived) if known.
+
+
+      - name: project_first_active_date
+        description: The first date that the project was considered active.
+
+      - name: project_last_active_date
+        description: The last date that the project was considered active.
+
+      - name: is_currently_active
+        description: A boolean whether the project is active as of today.
+        tests:
+          - not_null
+
+      - name: project_lifespan_days
+        description: The length between the projects first and last event, in days.
+        tests:
+          - not_null
+
+      - name: project_lifespan_hours
+        description: The length between the projects first and last event, in hours.
+        tests:
+          - not_null
+
+      - name: is_ephemeral_project_id
+        description: A boolean whether the project is considered ephemeral or not. Ephemeral
+          means the project lifespan was <= 24 hours and their first event was not today.
         tests:
           - not_null
 
@@ -330,8 +380,11 @@ models:
       - name: started_ts
         description: The execution start time.
 
-      - name: finish_ts
+      - name: finished_ts
         description: The execution end time.
+
+      - name: cli_runtime_ms
+        description: The total runtime (ms) of the execution, when available.
 
       - name: execution_id
         description: The unique identifier for a CLI execution.
@@ -344,8 +397,46 @@ models:
         tests:
           - not_null
 
+      - name: project_first_event_at
+        description: The timestamp of the first event the project sent.
+        tests:
+          - not_null
+
+      - name: project_last_event_at
+        description: The timestamp of the last event the project sent.
+        tests:
+          - not_null
+
+      - name: project_first_active_date
+        description: The first date that the project was considered active.
+
+      - name: project_last_active_date
+        description: The last date that the project was considered active.
+
+      - name: project_lifespan_days
+        description: The length between the projects first and last event, in days.
+        tests:
+          - not_null
+
+      - name: is_ephemeral_project_id
+        description: A boolean whether the project is considered ephemeral or not. Ephemeral
+          means the project lifespan was <= 24 hours and their first event was not today.
+        tests:
+          - not_null
+
+      - name: project_id_source
+        description: The source of the project ID (i.e. explicit, random, derived) if known.
+
+      - name: is_currently_active
+        description: A boolean whether the project is active as of today.
+        tests:
+          - not_null
+
       - name: pipeline_fk
         description: The unique identifier for the pipeline.
+
+      - name: pipeline_runtime_bin
+        description: The bin that the total runtime fits into e.g. 5-10s or 1-3hrs etc.
 
       - name: event_count
         description: The count of the amount of times the command was executed on that date. Historic Google Analytics data is summarized at the day grain.
@@ -368,7 +459,7 @@ models:
         description: A boolean whether the execution environment had CI env vars present.
 
       - name: is_exec_event
-        description: A boolean whether the execution used a CLI command thats considered a plugin execution.
+        description: A boolean whether the execution used a CLI command thats considered an execution.
 
       - name: ip_address_hash
         description: The hash of the IP address.
@@ -378,6 +469,43 @@ models:
 
       - name: execution_location
         description: The location of where the command was executed (i.e. REMOTE, NOT_REMOTE, UNKNOWN)
+
+      - name: is_active_cli_execution
+        description: A boolean whether the execution happened when the project was considered active.
+        tests:
+          - not_null
+
+      - name: is_active_eom_cli_execution
+        description: A boolean whether the execution happened when the project was active at the end of the month.
+          This helps exclude projects that churned and include projects that were still in the exploratory window before being active.
+        tests:
+          - not_null
+
+      - name: monthly_piplines_all
+        description: The count of monthly pipelines by that project.
+
+      - name: monthly_piplines_active
+        description: The count of monthly pipelines by that project where they were active at the time of running identifier.
+
+      - name: monthly_piplines_active_eom
+        description: The count of monthly pipelines by that project where they are active at the end of the month.
+
+      - name: monthly_piplines_all_segment
+        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+        tests:
+          - not_null
+
+      - name: monthly_piplines_active_segment
+        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+          Applying the active filter based on whether the project was active when the execution happened.
+        tests:
+          - not_null
+
+      - name: monthly_piplines_active_eom_segment
+        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+          Applying the active filter based on whether the project was active at the end of the month.
+        tests:
+          - not_null
 
   - name: pipeline_dim
     description: This table contains attributes about pipelines.
@@ -398,3 +526,26 @@ models:
 
       - name: plugin_count
         description: The amount of plugins used in the pipeline.
+
+  - name: daily_active_projects
+    description: This table contains rows at the project ID x date grain for every day that its considered active.
+    columns:
+      - name: date_day
+        description: The pipelines unique identifier.
+        tests:
+          - not_null
+
+      - name: project_id
+        description: The project unique identifier.
+        tests:
+          - not_null
+
+      - name: is_added_date
+        description: A boolean whether the project was added on that date. This is new projects that meet the criteria (i.e. >= 7 days old, executed a pipeline, etc.) to be added to the list of active projects.
+
+      - name: is_reactivated_date
+        description: A boolean whether the project was reactivated on that date. Reactivated means that the project was active in the past, churned, became active again.
+
+      - name: is_last_active_date
+        description: A boolean whether the project is considered churned following this date.
+          The table only holds active projects so this is a flag to tell us that the date is the last active date based on the criteria, meaning it hasn't executed a pipeline in almost a month.

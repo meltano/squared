@@ -29,7 +29,7 @@ renamed AS (
         is_bot,
         is_app_user,
         is_email_confirmed,
-        profile:email::STRING AS email,
+        MD5(profile:email::STRING) AS email_hash,
         SUBSTR(
             profile:email::STRING, CHARINDEX('@', profile:email::STRING) + 1
         ) AS email_domain,

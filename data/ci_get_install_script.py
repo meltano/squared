@@ -12,10 +12,7 @@ for job in data.get('jobs'):
             for index, plugin in enumerate(plugins):
                 if ':' in plugin:
                     plugin = plugin.split(':')[0]
-                    if plugin.startswith('dbt'):
-                      script.add(f'meltano install transformer {plugin};')
-                    else:
-                      script.add(f'meltano install utility {plugin};')
+                    script.add(f'meltano install utility {plugin};')
                 elif plugin.startswith('tap-'):
                   script.add(f'meltano install extractor {plugin};')
                 elif plugin.startswith('target-'):

@@ -120,6 +120,8 @@ Permissions are managed by permifrost using SECURITYADMIN.
 
 All tables and schemas are created and owned by sub-roles as appropriate.
 
+See the associated object creation script in the [utilities/snowflake](../snowflake/) directory.
+
 ### Databases
 
 - raw: Data in the form that comes directly out of the source (Meltano taps).

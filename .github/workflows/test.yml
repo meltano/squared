@@ -16,7 +16,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -27,7 +27,7 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Airflow
-    - run: meltano install orchestrator airflow
+    - run: meltano install utility airflow
     - run: meltano test airflow
 
   sqlfluff_tests:
@@ -39,7 +39,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -50,10 +50,8 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Run Test
-    - run: meltano install utilities sqlfluff
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano run dbt-snowflake:deps
-    - run: meltano run sqlfluff:lint
+    - run: meltano install utilities sqlfluff dbt-snowflake
+    - run: meltano run dbt-snowflake:deps sqlfluff:lint
 
   dbt_seed:
     runs-on: ubuntu-latest
@@ -64,7 +62,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -75,8 +73,8 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano run dbt-snowflake:deps dbt-snowflake:seed
+    - run: meltano install utility dbt-snowflake
+    - run: meltano run dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed
 
   el_tests:
     runs-on: ubuntu-latest
@@ -91,7 +89,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -104,7 +102,7 @@ jobs:
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
     # Run Test
-    - run: meltano run dbt-snowflake:deps ${{ matrix.extract-source }}
+    - run: meltano run ${{ matrix.extract-source }}
 
   transform_tests:
     runs-on: ubuntu-latest
@@ -116,7 +114,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -127,8 +125,8 @@ jobs:
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano run dbt-snowflake:deps dbt-snowflake:run dbt-snowflake:test
+    - run: meltano install utility dbt-snowflake
+    - run: meltano run dbt-snowflake:run dbt-snowflake:test
 
   reverse_el_tests:
     runs-on: ubuntu-latest
@@ -140,7 +138,7 @@ jobs:
     env:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.RUN_ID }}_${{ github.RUN_ATTEMPT }}'
+      CI_BRANCH: 'b${{ github.SHA }}'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -153,4 +151,4 @@ jobs:
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
-    - run: meltano run dbt-snowflake:deps hub_metrics_publish
+    - run: meltano run hub_metrics_publish

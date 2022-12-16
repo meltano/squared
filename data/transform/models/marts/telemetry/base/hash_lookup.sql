@@ -4,7 +4,7 @@ WITH base AS (
         name AS unhashed_value,
         SHA2_HEX(name) AS hash_value,
         'plugin_name' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM {{ ref('snapshot_meltanohub_plugins') }}
 
     UNION ALL
 
@@ -12,7 +12,7 @@ WITH base AS (
         namespace AS unhashed_value,
         SHA2_HEX(namespace) AS hash_value,
         'plugin_namespace' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM {{ ref('snapshot_meltanohub_plugins') }}
 
     UNION ALL
 
@@ -20,7 +20,7 @@ WITH base AS (
         executable AS unhashed_value,
         SHA2_HEX(executable) AS hash_value,
         'plugin_executable' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM {{ ref('snapshot_meltanohub_plugins') }}
     WHERE executable IS NOT NULL
 
     UNION ALL
@@ -29,7 +29,8 @@ WITH base AS (
         pip_url AS unhashed_value,
         SHA2_HEX(pip_url) AS hash_value,
         'plugin_pip_url' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM {{ ref('snapshot_meltanohub_plugins') }}
+    WHERE pip_url IS NOT NULL
 
     UNION ALL
 
@@ -37,7 +38,7 @@ WITH base AS (
         'git+' || repo || '.git' AS unhashed_value,
         SHA2_HEX('git+' || repo || '.git') AS hash_value,
         'plugin_pip_url' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM {{ ref('snapshot_meltanohub_plugins') }}
 
     UNION ALL
 
@@ -45,7 +46,7 @@ WITH base AS (
         variant AS unhashed_value,
         SHA2_HEX(variant) AS hash_value,
         'plugin_variant' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM {{ ref('snapshot_meltanohub_plugins') }}
 
     UNION ALL
 
@@ -60,9 +61,9 @@ WITH base AS (
         command.value::STRING AS unhashed_value,
         SHA2_HEX(command.value::STRING) AS hash_value,
         'plugin_command' AS category
-    FROM {{ ref('stg_meltanohub__plugins') }},
+    FROM {{ ref('snapshot_meltanohub_plugins') }},
         LATERAL FLATTEN(input=>OBJECT_KEYS(commands)) AS command
-    WHERE stg_meltanohub__plugins.commands IS NOT NULL
+    WHERE snapshot_meltanohub_plugins.commands IS NOT NULL
 
     UNION ALL
 
