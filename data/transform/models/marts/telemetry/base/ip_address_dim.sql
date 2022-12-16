@@ -1,12 +1,15 @@
 WITH unique_ips AS (
-    SELECT DISTINCT user_ipaddress
+    SELECT
+        DISTINCT
+        user_ipaddress,
+        ip_address_hash
     FROM {{ ref('stg_snowplow__events') }}
 ),
 
 parsed AS (
 
     SELECT
-        user_ipaddress,
+        ip_address_hash,
         PARSE_IP(user_ipaddress, 'INET') AS obj
     FROM unique_ips
 
@@ -15,7 +18,7 @@ parsed AS (
 cloud_ips AS (
 
     SELECT
-        parsed.user_ipaddress,
+        parsed.ip_address_hash,
         cloud_ip_ranges.active_from,
         cloud_ip_ranges.active_to,
         MAX(cloud_ip_ranges.cloud_name) AS cloud_name,
@@ -35,11 +38,11 @@ cloud_ips AS (
 release_versions AS (
 
     SELECT
-        unique_ips.user_ipaddress,
+        unique_ips.ip_address_hash,
         LISTAGG(DISTINCT unstructured_executions.system_release, '') AS releases
     FROM unique_ips
     INNER JOIN {{ ref('unstructured_executions') }}
-        ON unique_ips.user_ipaddress = unstructured_executions.user_ipaddress
+        ON unique_ips.ip_address_hash = unstructured_executions.ip_address_hash
     GROUP BY 1
 ),
 
@@ -48,7 +51,7 @@ base AS (
     SELECT
         cloud_ips.active_from,
         cloud_ips.active_to,
-        MD5(unique_ips.user_ipaddress) AS ip_address_hash,
+        unique_ips.ip_address_hash,
         CASE
             WHEN release_versions.releases LIKE '%amzn%' THEN 'AWS'
             WHEN release_versions.releases LIKE '%aws%' THEN 'AWS'
@@ -59,9 +62,9 @@ base AS (
         COALESCE(cloud_ips.cloud_name, 'NONE') AS cloud_provider
     FROM unique_ips
     LEFT JOIN cloud_ips
-        ON unique_ips.user_ipaddress = cloud_ips.user_ipaddress
+        ON unique_ips.ip_address_hash = cloud_ips.ip_address_hash
     LEFT JOIN release_versions
-        ON unique_ips.user_ipaddress = release_versions.user_ipaddress
+        ON unique_ips.ip_address_hash = release_versions.ip_address_hash
 
 )
 
