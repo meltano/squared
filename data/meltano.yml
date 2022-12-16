@@ -12,6 +12,5 @@ include_paths:
 - ./utilities/*.meltano.yml
 
 # Feature Flags - https://docs.meltano.com/reference/settings#feature-flags
-
 # fail if any referenced env vars are missing
 ff.strict_env_var_mode: true

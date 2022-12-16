@@ -49,3 +49,4 @@ plugins:
       account: epa06486
       database_raw: RAW
       database_prep: PREP
+      password: ${SNOWFLAKE_PASSWORD}
