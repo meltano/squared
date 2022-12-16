@@ -74,7 +74,6 @@ renamed AS (
         v_etl,
         user_id,
         user_ipaddress,
-        MD5(user_ipaddress) AS ip_address_hash,
         user_fingerprint,
         domain_userid,
         domain_sessionidx,
@@ -187,7 +186,8 @@ renamed AS (
         event_name,
         event_format,
         event_version,
-        event_fingerprint
+        event_fingerprint,
+        MD5(user_ipaddress) AS ip_address_hash
     FROM clean_new_source
 
 )
