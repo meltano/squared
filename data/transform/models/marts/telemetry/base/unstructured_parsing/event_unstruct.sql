@@ -19,9 +19,6 @@ WITH base AS (
         ):data AS event_data
     FROM {{ ref('stg_snowplow__events') }}
     WHERE contexts IS NOT NULL
-        AND event_created_at >= DATEADD(
-            'month', -25, DATE_TRUNC('month', CURRENT_DATE)
-        )
 
 )
 
