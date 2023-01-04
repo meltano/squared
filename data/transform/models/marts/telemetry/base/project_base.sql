@@ -371,7 +371,11 @@ SELECT
         first_values.first_project_directory,
         'UNKNOWN'
     ) AS init_project_directory,
-    COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out
+    COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out,
+    COALESCE(
+        project_org_mapping.org_name,
+        'UNKNOWN'
+    ) AS project_org_name
 FROM project_aggregates
 LEFT JOIN
     first_values ON
@@ -380,3 +384,5 @@ LEFT JOIN {{ ref('opt_outs') }}
     ON project_aggregates.project_id = opt_outs.project_id
 LEFT JOIN plugin_aggregates
     ON project_aggregates.project_id = plugin_aggregates.project_id
+LEFT JOIN project_org_mapping
+    ON project_aggregates.project_id = project_org_mapping.project_id

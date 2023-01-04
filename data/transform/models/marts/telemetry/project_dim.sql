@@ -25,6 +25,7 @@ SELECT
     project_base.last_meltano_version,
     project_base.init_project_directory,
     project_base.has_opted_out,
+    project_base.project_org_name,
     COALESCE(project_base.event_total, 0) AS event_total,
     COALESCE(project_base.exec_event_total, 0) AS exec_event_total,
     COALESCE(

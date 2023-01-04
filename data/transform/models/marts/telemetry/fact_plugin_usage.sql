@@ -43,8 +43,10 @@ SELECT
     project_dim.is_currently_active,
     project_dim.project_id_source,
     project_dim.init_project_directory,
+    project_dim.project_org_name,
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location,
+    ip_address_dim.org_name,
     -- Pipeline Attributes
     pipeline_executions.pipeline_pk AS pipeline_fk,
     pipeline_executions.pipeline_runtime_bin,
@@ -66,9 +68,12 @@ LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
     ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
-        AND cli_executions_base.event_created_at
-        BETWEEN ip_address_dim.active_from AND COALESCE(
-            ip_address_dim.active_to, CURRENT_TIMESTAMP
+        AND (
+            ip_address_dim.active_from IS NULL
+            OR cli_executions_base.event_created_at
+            BETWEEN ip_address_dim.active_from AND COALESCE(
+                ip_address_dim.active_to, CURRENT_TIMESTAMP
+            )
         )
 LEFT JOIN {{ ref('pipeline_executions') }}
     ON cli_executions_base.execution_id = pipeline_executions.execution_id
