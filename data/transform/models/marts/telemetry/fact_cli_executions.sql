@@ -50,15 +50,15 @@ WITH base AS (
         ON pipeline_executions.pipeline_pk = pipeline_dim.pipeline_pk
     LEFT JOIN {{ ref('date_dim') }}
         ON cli_executions_base.event_date = date_dim.date_day
-LEFT JOIN {{ ref('ip_address_dim') }}
-    ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
-        AND (
-            ip_address_dim.active_from IS NULL
-            OR cli_executions_base.event_created_at
-            BETWEEN ip_address_dim.active_from AND COALESCE(
-                ip_address_dim.active_to, CURRENT_TIMESTAMP
+    LEFT JOIN {{ ref('ip_address_dim') }}
+        ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
+            AND (
+                ip_address_dim.active_from IS NULL
+                OR cli_executions_base.event_created_at
+                BETWEEN ip_address_dim.active_from AND COALESCE(
+                    ip_address_dim.active_to, CURRENT_TIMESTAMP
+                )
             )
-        )
     LEFT JOIN {{ ref('daily_active_projects') }}
         ON cli_executions_base.project_id = daily_active_projects.project_id
             AND date_dim.date_day = daily_active_projects.date_day
