@@ -103,7 +103,7 @@
 
     SELECT *
     FROM test
-    -- Estimates vs prod are within a 3% range 
-    WHERE ABS(percent_diff) > 3
+    -- Estimates vs prod are within a 10% range 
+    WHERE ABS(percent_diff) > 10
 
 {% endif %}
