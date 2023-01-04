@@ -161,6 +161,7 @@ SELECT
     base.ip_address_hash,
     base.cloud_provider,
     base.execution_location,
+    base.project_org_name,
     base.org_name,
     base.is_active_cli_execution,
     base.is_active_eom_cli_execution,
