@@ -115,6 +115,10 @@ jobs:
       with:
         python-version: '3.8'
         cache: 'pip'
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     - run: pip install -r requirements.txt
     # Seed Production
     - run: meltano install utility dbt-snowflake

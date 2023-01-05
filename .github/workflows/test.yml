@@ -48,7 +48,11 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
     - run: meltano install utilities sqlfluff dbt-snowflake
     - run: meltano run dbt-snowflake:deps sqlfluff:lint
@@ -72,6 +76,10 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
     - run: meltano install utility dbt-snowflake
     - run: meltano run dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed
@@ -98,7 +106,11 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
     # Run Test
@@ -124,6 +136,10 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
     - run: meltano install utility dbt-snowflake
     - run: meltano run dbt-snowflake:run dbt-snowflake:test
@@ -147,7 +163,11 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
