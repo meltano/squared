@@ -82,7 +82,7 @@ SELECT
     base.active_to,
     COALESCE(ip_org_mapping.org_name, 'UNKNOWN') AS org_name
 FROM base
-LEFT JOIN {{ ref('ip_org_mapping') }}
+LEFT JOIN {{ ref('internal_data', 'ip_org_mapping') }}
     ON base.ip_address_hash = MD5(ip_org_mapping.ip_address)
 
 UNION ALL
