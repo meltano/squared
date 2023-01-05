@@ -18,6 +18,7 @@ WITH base AS (
         project_dim.project_id_source,
         project_dim.is_currently_active,
         project_dim.init_project_directory,
+        project_dim.project_org_name,
         -- Pipeline Attributes
         pipeline_dim.pipeline_pk AS pipeline_fk,
         pipeline_executions.pipeline_runtime_bin,
@@ -31,6 +32,7 @@ WITH base AS (
         cli_executions_base.ip_address_hash,
         ip_address_dim.cloud_provider,
         ip_address_dim.execution_location,
+        ip_address_dim.org_name,
         COALESCE(
             daily_active_projects.project_id IS NOT NULL,
             FALSE
@@ -50,9 +52,12 @@ WITH base AS (
         ON cli_executions_base.event_date = date_dim.date_day
     LEFT JOIN {{ ref('ip_address_dim') }}
         ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
-            AND cli_executions_base.event_created_at
-            BETWEEN ip_address_dim.active_from AND COALESCE(
-                ip_address_dim.active_to, CURRENT_TIMESTAMP
+            AND (
+                ip_address_dim.active_from IS NULL
+                OR cli_executions_base.event_created_at
+                BETWEEN ip_address_dim.active_from AND COALESCE(
+                    ip_address_dim.active_to, CURRENT_TIMESTAMP
+                )
             )
     LEFT JOIN {{ ref('daily_active_projects') }}
         ON cli_executions_base.project_id = daily_active_projects.project_id
@@ -156,6 +161,8 @@ SELECT
     base.ip_address_hash,
     base.cloud_provider,
     base.execution_location,
+    base.project_org_name,
+    base.org_name,
     base.is_active_cli_execution,
     base.is_active_eom_cli_execution,
     project_segments_monthly.monthly_piplines_all,

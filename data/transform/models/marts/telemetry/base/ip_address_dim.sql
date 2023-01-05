@@ -68,19 +68,22 @@ base AS (
 )
 
 SELECT
-    ip_address_hash,
-    release_cloud_name,
-    cloud_provider,
+    base.ip_address_hash,
+    base.release_cloud_name,
+    base.cloud_provider,
     CASE
         WHEN
-            cloud_provider != 'NONE'
-            OR release_cloud_name != 'NONE'
+            base.cloud_provider != 'NONE'
+            OR base.release_cloud_name != 'NONE'
             THEN 'REMOTE'
         ELSE 'NOT_REMOTE'
     END AS execution_location,
-    active_from,
-    active_to
+    base.active_from,
+    base.active_to,
+    COALESCE(ip_org_mapping.org_name, 'UNKNOWN') AS org_name
 FROM base
+LEFT JOIN {{ ref('ip_org_mapping') }}
+    ON base.ip_address_hash = MD5(ip_org_mapping.ip_address)
 
 UNION ALL
 
@@ -90,4 +93,5 @@ SELECT
     'UNKNOWN' AS cloud_provider,
     'UNKNOWN' AS execution_location,
     NULL AS active_from,
-    NULL AS active_to
+    NULL AS active_to,
+    NULL AS org_name
