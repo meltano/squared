@@ -2,6 +2,7 @@ version: 1
 default_environment: userdev
 send_anonymous_usage_stats: false
 project_id: c15e971a-d318-4a9d-979b-1039ce5fd1b1
+
 include_paths:
 - ./environments/*.meltano.yml
 - ./extract/*.meltano.yml
@@ -9,3 +10,7 @@ include_paths:
 - ./orchestrate/*.meltano.yml
 - ./transform/*.meltano.yml
 - ./utilities/*.meltano.yml
+
+# Feature Flags - https://docs.meltano.com/reference/settings#feature-flags
+# fail if any referenced env vars are missing
+ff.strict_env_var_mode: true

@@ -7,6 +7,8 @@ plugins:
     settings:
     - name: user
       env: DBT_SNOWFLAKE_USER
+    - name: password
+      env: DBT_SNOWFLAKE_PASSWORD
     - name: role
       env: DBT_SNOWFLAKE_ROLE
     - name: database
@@ -26,6 +28,7 @@ plugins:
       account: epa06486
       role: TRANSFORMER
       warehouse: CORE
+      password: ${SNOWFLAKE_PASSWORD}
   - name: awscli
     namespace: awscli
     pip_url: awscli==1.21.7
