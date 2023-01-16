@@ -41,6 +41,9 @@ plugins:
       run_staging_google_analytics: run --select staging.google_analytics.*
       test_staging_google_analytics: test --select staging.google_analytics.*,test_type:generic
 
+      run_staging_cloudwatch: run --select staging.cloudwatch.*
+      test_staging_cloudwatch: test --select staging.cloudwatch.*,test_type:generic
+
       run_hub_metrics: run --select publish.meltano_hub.*
       test_hub_metrics: test --select publish.meltano_hub.*
 

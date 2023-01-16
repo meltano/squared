@@ -3,6 +3,9 @@ environments:
   config:
     plugins:
       extractors:
+      - name: tap-cloudwatch
+        config:
+          start_date: ${DEFAULT_START_DATE}
       - name: tap-slack
         config:
           start_date: ${DEFAULT_START_DATE}
