@@ -101,6 +101,18 @@ Then run the following and paste the output into the appropriate file and finish
 meltano invoke dbt-snowflake run-operation generate_model_yaml --args '{"model_name": "fact_plugin_usage"}'
 ```
 
+### Private dbt Packages
+
+This project uses dbt packages from private repositories.
+In order to access them [GitHub deploy keys](https://docs.github.com/en/developers/overview/managing-deploy-keys#deploy-keys) are used.
+The public key needs to be configured on the private repo and this repo installs the private key via a CI environment variable and the [webfactory/ssh-agent](https://github.com/webfactory/ssh-agent) GitHub action.
+
+Refer to the GitHub documentation for more details but use the following command to generate a set of keys:
+
+`ssh-keygen -t ed25519 -C "git@github.com:owner/repo.git"`
+
+Using the repo name in the comments is important in order for the GitHub action to recognize it as a deploy key.
+
 ### dbt Docs
 
 The [dbt docs](https://docs.getdbt.com/docs/building-a-dbt-project/documentation) for this project are generated in CI after a new deployment to production and are served using GitLab Pages at https://meltano.gitlab.io/squared/. 
