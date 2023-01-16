@@ -1,3 +1,4 @@
+-- Markdown tester tool https://app.slack.com/block-kit-builder/
 WITH most_recent_date AS (
 
     {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
@@ -67,6 +68,8 @@ base AS (
         ) AS issues_closed
     FROM {{ ref('singer_contributions') }}
     CROSS JOIN most_recent_date
+    LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
+        ON singer_contributions.repo_url = stg_meltanohub__plugins.repo
     WHERE singer_contributions.is_bot_user = FALSE
 )
 
