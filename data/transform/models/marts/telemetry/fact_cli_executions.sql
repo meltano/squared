@@ -85,8 +85,8 @@ project_segments_monthly AS (
         ) AS monthly_piplines_active_eom,
         CASE
             WHEN SUM(event_count) < 50 THEN 'GUPPY'
-            WHEN SUM(event_count) BETWEEN 50 AND 5000 THEN 'MARLIN'
-            WHEN SUM(event_count) > 5000 THEN 'WHALE'
+            WHEN SUM(event_count) BETWEEN 50 AND 2000 THEN 'MARLIN'
+            WHEN SUM(event_count) > 2000 THEN 'WHALE'
         END AS monthly_piplines_all_segment,
         CASE
             WHEN
@@ -100,13 +100,13 @@ project_segments_monthly AS (
                     CASE
                         WHEN is_active_cli_execution THEN event_count
                     END
-                ) BETWEEN 50 AND 5000 THEN 'MARLIN'
+                ) BETWEEN 50 AND 2000 THEN 'MARLIN'
             WHEN
                 SUM(
                     CASE
                         WHEN is_active_cli_execution THEN event_count
                     END
-                ) > 5000 THEN 'WHALE'
+                ) > 2000 THEN 'WHALE'
         END AS monthly_piplines_active_segment,
         CASE
             WHEN
@@ -120,13 +120,13 @@ project_segments_monthly AS (
                     CASE
                         WHEN is_active_eom_cli_execution THEN event_count
                     END
-                ) BETWEEN 50 AND 5000 THEN 'MARLIN'
+                ) BETWEEN 50 AND 2000 THEN 'MARLIN'
             WHEN
                 SUM(
                     CASE
                         WHEN is_active_eom_cli_execution THEN event_count
                     END
-                ) > 5000 THEN 'WHALE'
+                ) > 2000 THEN 'WHALE'
         END AS monthly_piplines_active_eom_segment
     FROM base
     WHERE pipeline_fk IS NOT NULL

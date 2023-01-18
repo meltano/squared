@@ -15,6 +15,10 @@ schedules:
   interval: 0 12 * * *
   job: slack_notifications
 
+- name: cloudwatch_el
+  interval: 0 6 * * *
+  job: cloudwatch_el
+
 - name: meltanohub_el
   interval: 0 6 * * *
   job: meltanohub_el
@@ -130,3 +134,9 @@ jobs:
   tasks:
   - dbt-snowflake:run_marts
   - dbt-snowflake:test_marts
+
+- name: cloudwatch_el
+  tasks:
+  - tap-cloudwatch target-snowflake
+  - dbt-snowflake:run_staging_cloudwatch
+  - dbt-snowflake:test_staging_cloudwatch
