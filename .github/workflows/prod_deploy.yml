@@ -30,6 +30,10 @@ jobs:
 
     # Install deps while we have access to the private git repo
     # skip_pre_invoke config is overridden to true in self hosted deployment using env var.
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     - run: cd data && meltano install utility dbt-snowflake
     - run: cd data && meltano invoke dbt-snowflake:deps
 
