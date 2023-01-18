@@ -1,0 +1,14 @@
+version: 2
+
+models:
+  - name: slack_alerts
+    description: This table includes the message to be sent to Slack for the singer-ecosystem-activity channel.
+    columns:
+      - name: title
+        description: The Slack message title.
+        tests:
+          - not_null
+      - name: body
+        description: The body of the Slack message, in markdown format.
+        tests:
+          - not_null

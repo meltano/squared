@@ -119,3 +119,4 @@ jobs:
     # Seed Production
     - run: meltano install utility dbt-snowflake
     - run: meltano run dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed
+    - run: meltano run dbt-snowflake:materialize_views
