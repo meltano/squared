@@ -3,6 +3,9 @@ environments:
   config:
     plugins:
       extractors:
+      - name: tap-cloudwatch
+        config:
+          start_date: "2023-01-16"
       - name: tap-slack-public
         config:
           start_date: '2022-09-01'
@@ -59,10 +62,10 @@ environments:
           skip_pre_invoke: True
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
-          database_raw: RAW
-          # Uncomment for reading custom a RAW schema
-          # database_raw: USERDEV_RAW
-          # source_schema_prefix: ${USER_PREFIX}_
+          # database_raw: RAW
+          # Uncomment for reading a custom RAW schema
+          database_raw: USERDEV_RAW
+          source_schema_prefix: ${USER_PREFIX}_
           target_schema_prefix: ${USER_PREFIX}_
       - name: sqlfluff
         config:
