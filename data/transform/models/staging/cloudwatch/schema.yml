@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: stg_cloudwatch__log
+    columns:
+      - name: log_id
+        tests:
+          - unique
+          - not_null
+      - name: created_at_ts
+        tests:
+          - not_null
