@@ -5,7 +5,7 @@ environments:
       extractors:
       - name: tap-cloudwatch
         config:
-          start_date: ${DEFAULT_START_DATE}
+          start_date: ${DEFAULT_START_DATE_HR}
       - name: tap-slack
         config:
           start_date: ${DEFAULT_START_DATE}

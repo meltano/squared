@@ -25,6 +25,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE_HR=$(date +'%Y-%m-%d -%H:%M:%S' -d '3 hour ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Airflow
     - run: meltano install utility airflow
@@ -48,6 +49,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE_HR=$(date +'%Y-%m-%d -%H:%M:%S' -d '3 hour ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Run Test
     - run: meltano install utilities sqlfluff dbt-snowflake
@@ -71,6 +73,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE_HR=$(date +'%Y-%m-%d -%H:%M:%S' -d '3 hour ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
     - run: meltano install utility dbt-snowflake
@@ -98,6 +101,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE_HR=$(date +'%Y-%m-%d -%H:%M:%S' -d '3 hour ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
@@ -123,6 +127,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE_HR=$(date +'%Y-%m-%d -%H:%M:%S' -d '3 hour ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Run Test
     - run: meltano install utility dbt-snowflake
@@ -147,6 +152,7 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "DEFAULT_START_DATE=$(date +'%Y-%m-%d' -d '1 day ago')" >> $GITHUB_ENV
+    - run: echo "DEFAULT_START_DATE_HR=$(date +'%Y-%m-%d -%H:%M:%S' -d '3 hour ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
