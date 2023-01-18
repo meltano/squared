@@ -25,5 +25,9 @@ jobs:
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     - run: meltano install utility dbt-snowflake
     - run: meltano invoke dbt-snowflake run-operation clear_ci_schemas
