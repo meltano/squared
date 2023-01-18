@@ -491,18 +491,18 @@ models:
         description: The count of monthly pipelines by that project where they are active at the end of the month.
 
       - name: monthly_piplines_all_segment
-        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+        description: One of the segments - GUPPY (<50), MARLIN(50-2000), WHALE (>2000) referring to the amount of pipelines run by the project in the month.
         tests:
           - not_null
 
       - name: monthly_piplines_active_segment
-        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+        description: One of the segments - GUPPY (<50), MARLIN(50-2000), WHALE (>2000) referring to the amount of pipelines run by the project in the month.
           Applying the active filter based on whether the project was active when the execution happened.
         tests:
           - not_null
 
       - name: monthly_piplines_active_eom_segment
-        description: One of the segments - GUPPY (<50), MARLIN(50-5000), WHALE (>5000) referring to the amount of pipelines run by the project in the month.
+        description: One of the segments - GUPPY (<50), MARLIN(50-2000), WHALE (>2000) referring to the amount of pipelines run by the project in the month.
           Applying the active filter based on whether the project was active at the end of the month.
         tests:
           - not_null
