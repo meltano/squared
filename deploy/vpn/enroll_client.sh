@@ -10,7 +10,7 @@ set -o pipefail
 
 [ ! -x "$(command -v op)" ] && echo "The 1Password CLI must be installed: https://developer.1password.com/docs/cli/install-server/" && exit 1
 
-env | grep -e '^OP_SESSION_' > /dev/null
+op account get > /dev/null
 [ $? -ne 0 ] && echo "You must sign-in to the 1Password CLI by running: https://developer.1password.com/docs/cli/sign-in-manually" && exit 1
 
 # Exit early if the 1Password session token has expired
