@@ -36,7 +36,7 @@ schedules:
   job: github_search_el
 
 - name: github_meltano_el
-  interval: 0 6 * * *
+  interval: 0 7 * * *
   job: github_meltano_el
 
 - name: gitlab_el
