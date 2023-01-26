@@ -79,7 +79,6 @@ environments:
           warehouse: CORE
   env:
     USER_PREFIX: PNADOLNY
-    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin

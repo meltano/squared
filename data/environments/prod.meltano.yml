@@ -68,7 +68,6 @@ environments:
           role: TRANSFORMER
           warehouse: TRANSFORMER
   env:
-    HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/
     PERMISSION_BOT_USER: permission_bot
     PERMISSION_BOT_WAREHOUSE: ADMIN
     PERMISSION_BOT_DATABASE: SNOWFLAKE_SAMPLE_DATA

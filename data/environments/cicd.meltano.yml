@@ -98,4 +98,3 @@ environments:
     # DEFAULT_START_DATE: "2022-04-01"
     AIRFLOW__CORE__PLUGINS_FOLDER: $MELTANO_PROJECT_ROOT/orchestrate/plugins_local
     AIRFLOW_VAR_OPERATOR_TYPE: bash
-    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
