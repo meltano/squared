@@ -31,9 +31,8 @@ plugins:
     pip_url: awscli==1.21.7
     executable: aws
     commands:
-      s3_copy_metrics: s3 cp variant_metrics.yml ${HUB_METRICS_S3_PATH}
-      s3_copy_metrics_legacy: s3 cp metrics.yml ${HUB_METRICS_S3_PATH}
-      s3_copy_audit: s3 cp audit.yml ${HUB_METRICS_S3_PATH}
+      s3_copy_metrics: s3 cp variant_metrics.yml s3://hub-metrics-b8ba2d5/${MELTANO_ENVIRONMENT}/hub_metrics/
+      s3_copy_audit: s3 cp audit.yml s3://hub-metrics-b8ba2d5/${MELTANO_ENVIRONMENT}/hub_metrics/
   - name: superset
     variant: apache
     pip_url: apache-superset==1.5.0 markupsafe==2.0.1 snowflake-sqlalchemy
@@ -72,3 +71,7 @@ plugins:
     commands:
       encrypt: encrypt $KMS_PUBLIC_KEY_PATH --dotenv-path $KMS_DOTENV_PATH --output-path $KMS_SECTRETS_PATH
       decrypt: decrypt $KMS_KEY_ID --input-path $KMS_SECRETS_PATH --output-path $KMS_DOTENV_PATH
+    env:
+      KMS_PUBLIC_KEY_PATH: utilities/kms/Publickey.pem
+      KMS_DOTENV_PATH: .env
+      KMS_SECTRETS_PATH: secrets.yml

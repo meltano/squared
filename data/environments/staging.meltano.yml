@@ -70,5 +70,3 @@ environments:
           username: STAGING
           role: STAGING
           warehouse: STAGING
-  env:
-    HUB_METRICS_S3_PATH: s3://prod-meltano-bucket-01/hub_metrics/staging/

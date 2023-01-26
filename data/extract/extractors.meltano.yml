@@ -8,6 +8,8 @@ plugins:
       query: fields @timestamp, @message
       aws_region_name: us-west-2
       start_date: "2022-12-08"
+      aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+      aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
   - name: tap-meltanohub
     variant: autoidm
     pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git@1b99b0ee7853b2d9db36de6afa16b15c1affce7b
