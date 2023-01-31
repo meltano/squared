@@ -6,3 +6,4 @@ sources:
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}SNOWPLOW'
     tables:
       - name: events
+      - name: events_bad
