@@ -19,10 +19,9 @@ SELECT
     PARSE_JSON(jsontext):detail:data:payload:enriched AS payload_enriched,
     PARSE_JSON(jsontext):detail:data:processor AS processor
     {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
-
-FROM raw.snowplow.events_bad
-WHERE uploaded_at::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
-{% else %}
+    FROM raw.snowplow.events_bad
+    WHERE uploaded_at::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
+    {% else %}
 
     FROM {{ source('snowplow', 'events_bad') }}
 
