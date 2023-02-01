@@ -16,6 +16,7 @@ WITH base AS (
         MAX(context:data:windows_edition::STRING) AS windows_edition,
         MAX(context:data:is_dev_build::STRING) AS is_dev_build,
         MAX(context:data:is_ci_environment::STRING) AS is_ci_environment,
+        MAX(context:data:notable_flag_env_vars) AS notable_flag_env_vars,
         MAX(context:data:python_version::STRING) AS python_version,
         MAX(
             context:data:python_implementation::STRING
@@ -26,7 +27,7 @@ WITH base AS (
         MAX(context:data:freedesktop_id::STRING) AS freedesktop_id,
         MAX(context:data:freedesktop_id_like::STRING) AS freedesktop_id_like,
         MAX(context:data:num_cpu_cores::STRING) AS num_cpu_cores,
-        MAX(context:data:process_hierarchy::STRING) AS process_hierarchy
+        MAX(context:data:process_hierarchy) AS process_hierarchy
     FROM {{ ref('context_base') }}
     WHERE
         schema_name LIKE 'iglu:com.meltano/environment_context/%'
