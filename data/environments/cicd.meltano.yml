@@ -31,9 +31,11 @@ environments:
           searches:
           # In CI we dont search forks and limit orgs to save time and requests
           - name: tap non-forks
-            query: tap- fork:false language:Python singer in:readme org:MeltanoLabs org:transferwise
+            query: tap- fork:false language:Python singer in:readme org:MeltanoLabs
+              org:transferwise
           - name: target non-forks
-            query: target- fork:false language:Python singer in:readme org:MeltanoLabs org:transferwise
+            query: target- fork:false language:Python singer in:readme org:MeltanoLabs
+              org:transferwise
       # Reverse ETL connections:
       - name: tap-snowflake
         config:

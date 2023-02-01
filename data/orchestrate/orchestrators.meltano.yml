@@ -110,7 +110,7 @@ jobs:
 
 - name: slack_el
   tasks:
-  - tap-slack target-snowflake 
+  - tap-slack target-snowflake
   - tap-slack-public target-snowflake
   - dbt-snowflake:run_staging_slack
   - dbt-snowflake:test_staging_slack

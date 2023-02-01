@@ -5,7 +5,7 @@ environments:
       extractors:
       - name: tap-cloudwatch
         config:
-          start_date: "2023-01-16"
+          start_date: '2023-01-16'
       - name: tap-slack-public
         config:
           start_date: '2022-09-01'
@@ -49,9 +49,9 @@ environments:
         config:
           stream_maps:
             USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
-              TITLE: null
+              TITLE:
               title: TITLE
-              BODY: null
+              BODY:
               body: BODY
       utilities:
       - name: dbt-snowflake
@@ -59,7 +59,7 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
-          skip_pre_invoke: True
+          skip_pre_invoke: true
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
           # database_raw: RAW
