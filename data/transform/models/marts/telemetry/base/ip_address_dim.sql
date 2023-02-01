@@ -1,3 +1,7 @@
+{{
+    config(materialized='table')
+}}
+
 WITH unique_ips AS (
     SELECT DISTINCT
         user_ipaddress,
@@ -84,6 +88,21 @@ SELECT
 FROM base
 LEFT JOIN {{ ref('internal_data', 'ip_org_mapping') }}
     ON base.ip_address_hash = MD5(ip_org_mapping.ip_address)
+LEFT JOIN {{ ref('meltano_cloud_ips') }}
+    ON base.ip_address_hash = MD5(meltano_cloud_ips.ip_address)
+WHERE meltano_cloud_ips.ip_address IS NULL
+
+UNION ALL
+
+SELECT
+    MD5(ip_address) AS ip_address_hash,
+    'UNKNOWN' AS release_cloud_name,
+    'MELTANO_CLOUD' AS cloud_provider,
+    'REMOTE' AS execution_location,
+    '2022-11-16' AS active_from,
+    NULL AS active_to,
+    NULL AS org_name
+FROM {{ ref('meltano_cloud_ips') }}
 
 UNION ALL
 
