@@ -64,7 +64,7 @@ plugins:
       spec-test: spec-test utilities/permifrost/roles.yml
   - name: kms
     namespace: kms
-    pip_url: git+https://github.com/meltano/kms-ext.git
+    pip_url: git+https://github.com/meltano/kms-ext.git@2c8d6375cacea67fcfb7730b5f5d29a029d5fe0a
     executable: kms
     commands:
       encrypt: encrypt $KMS_PUBLIC_KEY_PATH --dotenv-path $KMS_DOTENV_PATH --output-path
