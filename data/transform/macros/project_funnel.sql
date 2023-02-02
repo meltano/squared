@@ -75,7 +75,7 @@ UNION ALL
 
 SELECT
     cohort_week,
-    '{{ loop.index }}' || '_' || '{{ filter_name }}' AS funnel_level,
+    '{{ filter_name }}' AS funnel_level,
     {{ loop.index }} AS funnel_level_index,
     {{ filter_name }} AS funnel_level_value,
     {{ attribs.get('parent_name', 'base_all') }} AS parent_level_value,
