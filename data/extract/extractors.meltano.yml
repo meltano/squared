@@ -7,7 +7,7 @@ plugins:
       log_group_name: API-Gateway-Execution-Logs_i32s35df22/prod
       query: fields @timestamp, @message
       aws_region_name: us-west-2
-      start_date: "2022-12-08"
+      start_date: '2022-12-08'
       aws_access_key_id: ${AWS_ACCESS_KEY_ID}
       aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
   - name: tap-meltanohub
@@ -20,27 +20,27 @@ plugins:
     pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git@5d9115985d3f9e7a568c6dcc68975f0c038253ff
     config:
       tables:
-        - path: https://ip-ranges.amazonaws.com
-          format: json
-          start_date: "2020-01-01T00:00:00Z"
-          key_properties: [ip_prefix]
-          name: aws_ips
-          pattern: "ip-ranges.json"
-          json_path: "prefixes"
-        - path: https://www.gstatic.com/ipranges
-          format: json
-          start_date: '2020-01-01T00:00:00Z'
-          key_properties: [id]
-          name: gcp_ips
-          pattern: cloud.json
-          json_path: prefixes
-        - path: https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63
-          format: json
-          start_date: "2020-01-01T00:00:00Z"
-          key_properties: [id]
-          name: azure_ips
-          pattern: "ServiceTags_Public_20230130.json"
-          json_path: "values"
+      - path: https://ip-ranges.amazonaws.com
+        format: json
+        start_date: '2020-01-01T00:00:00Z'
+        key_properties: [ip_prefix]
+        name: aws_ips
+        pattern: ip-ranges.json
+        json_path: prefixes
+      - path: https://www.gstatic.com/ipranges
+        format: json
+        start_date: '2020-01-01T00:00:00Z'
+        key_properties: [id]
+        name: gcp_ips
+        pattern: cloud.json
+        json_path: prefixes
+      - path: https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63
+        format: json
+        start_date: '2020-01-01T00:00:00Z'
+        key_properties: [id]
+        name: azure_ips
+        pattern: ServiceTags_Public_20230130.json
+        json_path: values
   - name: tap-slack
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.5

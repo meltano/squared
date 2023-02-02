@@ -46,9 +46,9 @@ environments:
         config:
           stream_maps:
             PROD-SLACK_NOTIFICATIONS-SLACK_ALERTS:
-              TITLE: null
+              TITLE:
               title: TITLE
-              BODY: null
+              BODY:
               body: BODY
       utilities:
       - name: dbt-snowflake
