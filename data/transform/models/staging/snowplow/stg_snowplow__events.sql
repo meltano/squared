@@ -3,8 +3,44 @@
         materialized='incremental'
     )
 }}
+WITH blended_source AS (
 
-WITH source AS (
+        SELECT
+            *,
+            FALSE AS snowplow_bad_parsed
+    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+
+        FROM raw.snowplow.events
+        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
+            -- only meltano events. For the first ~6 months no app_id was
+            -- sent from Meltano. So nulls are from meltano.
+            AND COALESCE(app_id, 'meltano') = 'meltano'
+    {% else %}
+
+        FROM {{ source('snowplow', 'events') }}
+
+        {% if is_incremental() %}
+
+            WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }} WHERE snowplow_bad_parsed = FALSE)
+
+        {% endif %}
+    {% endif %}
+
+        UNION ALL
+
+        SELECT
+            *,
+            TRUE AS snowplow_bad_parsed
+        FROM {{ ref('snowplow_bad_parsed') }}
+        {% if is_incremental() %}
+
+            WHERE event_id NOT IN (SELECT DISTINCT event_id FROM {{ this }} WHERE snowplow_bad_parsed = TRUE)
+
+        {% endif %}
+
+),
+
+source AS (
 
     SELECT
         *,
@@ -13,27 +49,7 @@ WITH source AS (
                 event_id
             ORDER BY derived_tstamp::TIMESTAMP DESC
         ) AS row_num
-
-        {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
-
-        FROM raw.snowplow.events
-        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
-            -- only meltano events. For the first ~6 months no app_id was
-            -- sent from Meltano. So nulls are from meltano.
-            AND COALESCE(app_id, 'meltano') = 'meltano'
-        {% else %}
-
-        FROM {{ source('snowplow', 'events') }}
-
-        {% if is_incremental() %}
-
-            WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }})
-
-            {% endif %}
-
-        {% endif %}
-
-
+        FROM blended_source
 
 ),
 
@@ -187,7 +203,8 @@ renamed AS (
         event_format,
         event_version,
         event_fingerprint,
-        MD5(user_ipaddress) AS ip_address_hash
+        MD5(user_ipaddress) AS ip_address_hash,
+        snowplow_bad_parsed
     FROM clean_new_source
 
 )
