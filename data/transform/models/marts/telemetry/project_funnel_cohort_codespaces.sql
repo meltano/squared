@@ -85,4 +85,8 @@
 	}
 %}
 
-{{ project_funnel(mapping, 'WHERE project_dim.is_codespace_demo = TRUE') }}
+{{ project_funnel(
+    mapping,
+    project_where_filter='WHERE project_dim.is_codespace_demo = TRUE',
+    alt_base_level='MINS_5_OR_LONGER'
+) }}
