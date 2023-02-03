@@ -160,11 +160,27 @@ SELECT -- noqa: L034
     PARSE_JSON(payload_enriched):refr_dvce_tstamp::string AS refr_dvce_tstamp,
     PARSE_JSON(payload_enriched):derived_contexts::string AS derived_contexts,
     PARSE_JSON(payload_enriched):domain_sessionid::string AS domain_sessionid,
-    PARSE_JSON(payload_enriched):derived_tstamp::string AS derived_tstamp,
-    PARSE_JSON(payload_enriched):event_vendor::string AS event_vendor,
-    PARSE_JSON(payload_enriched):event_name::string AS event_name,
-    PARSE_JSON(payload_enriched):event_format::string AS event_format,
-    PARSE_JSON(payload_enriched):event_version::string AS event_version,
+    collector_tstamp AS derived_tstamp,
+    SPLIT_PART(
+        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+        '/',
+        1
+    ) AS event_vendor,
+    SPLIT_PART(
+        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+        '/',
+        2
+    ) AS event_name,
+    SPLIT_PART(
+        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+        '/',
+        3
+    ) AS event_format,
+    SPLIT_PART(
+        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+        '/',
+        4
+    ) AS event_version,
     PARSE_JSON(payload_enriched):event_fingerprint::string AS event_fingerprint,
     PARSE_JSON(payload_enriched):true_tstamp::string AS true_tstamp,
     uploaded_at
