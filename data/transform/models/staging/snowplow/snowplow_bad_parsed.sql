@@ -21,8 +21,7 @@ WITH reparse_1 AS (
 UNION ALL
 {% endif -%}
 
-SELECT
-    uploaded_at,
+SELECT -- noqa: L034
     PARSE_JSON(payload_enriched):app_id::string AS app_id,
     PARSE_JSON(payload_enriched):platform::string AS platform,
     PARSE_JSON(payload_enriched):etl_tstamp::string AS etl_tstamp,
@@ -167,7 +166,8 @@ SELECT
     PARSE_JSON(payload_enriched):event_format::string AS event_format,
     PARSE_JSON(payload_enriched):event_version::string AS event_version,
     PARSE_JSON(payload_enriched):event_fingerprint::string AS event_fingerprint,
-    PARSE_JSON(payload_enriched):true_tstamp::string AS true_tstamp
+    PARSE_JSON(payload_enriched):true_tstamp::string AS true_tstamp,
+    uploaded_at
 FROM {{ cte_name }}
 
 {% endfor %}

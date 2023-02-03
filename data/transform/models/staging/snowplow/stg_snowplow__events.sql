@@ -69,7 +69,7 @@ clean_new_source AS (
 
 renamed AS (
 
-    SELECT
+    SELECT -- noqa: L034
         app_id,
         platform,
         etl_tstamp::TIMESTAMP AS etl_enriched_at,
@@ -203,8 +203,8 @@ renamed AS (
         event_format,
         event_version,
         event_fingerprint,
-        snowplow_bad_parsed,
-        MD5(user_ipaddress) AS ip_address_hash
+        MD5(user_ipaddress) AS ip_address_hash,
+        snowplow_bad_parsed
     FROM clean_new_source
 
 )
