@@ -7,3 +7,15 @@ models:
         tests:
           - unique
           - not_null
+      - name: event_vendor
+        tests:
+          - not_null
+      - name: event_name
+        tests:
+          - not_null
+      - name: event_format
+        tests:
+          - not_null
+      - name: event_version
+        tests:
+          - not_null

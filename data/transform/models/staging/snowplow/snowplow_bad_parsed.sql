@@ -202,26 +202,30 @@ SELECT -- noqa: L034
     PARSE_JSON(payload_enriched):derived_contexts::string AS derived_contexts,
     PARSE_JSON(payload_enriched):domain_sessionid::string AS domain_sessionid,
     collector_tstamp AS derived_tstamp,
-    SPLIT_PART(
-        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
-        '/',
-        1
-    ) AS event_vendor,
-    SPLIT_PART(
-        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
-        '/',
-        2
-    ) AS event_name,
-    SPLIT_PART(
-        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
-        '/',
-        3
-    ) AS event_format,
-    SPLIT_PART(
-        SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
-        '/',
-        4
-    ) AS event_version,
+    CASE WHEN unstruct_event IS NULL THEN 'com.google.analytics' ELSE
+        SPLIT_PART(
+            SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+            '/',
+            1
+        ) END AS event_vendor,
+    CASE WHEN unstruct_event IS NULL THEN 'event' ELSE
+        SPLIT_PART(
+            SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+            '/',
+            2
+        ) END AS event_name,
+    CASE WHEN unstruct_event IS NULL THEN 'jsonschema' ELSE
+        SPLIT_PART(
+            SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+            '/',
+            3
+        ) END AS event_format,
+    CASE WHEN unstruct_event IS NULL THEN '1-0-0' ELSE
+        SPLIT_PART(
+            SPLIT_PART(PARSE_JSON(unstruct_event):data:schema::string, ':', 2),
+            '/',
+            4
+        ) END AS event_version,
     PARSE_JSON(payload_enriched):event_fingerprint::string AS event_fingerprint,
     PARSE_JSON(payload_enriched):true_tstamp::string AS true_tstamp,
     uploaded_at
