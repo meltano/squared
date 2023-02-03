@@ -3,17 +3,11 @@
         materialized='incremental'
     )
 }}
-
-WITH source AS (
+WITH blended_source AS (
 
     SELECT
         *,
-        ROW_NUMBER() OVER (
-            PARTITION BY
-                event_id
-            ORDER BY derived_tstamp::TIMESTAMP DESC
-        ) AS row_num
-
+        FALSE AS snowplow_bad_parsed
         {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
         FROM raw.snowplow.events
@@ -27,13 +21,35 @@ WITH source AS (
 
         {% if is_incremental() %}
 
-            WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }})
-
-            {% endif %}
+        WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }} WHERE snowplow_bad_parsed = FALSE)
 
         {% endif %}
+        {% endif %}
 
+        UNION ALL
 
+        SELECT
+            *,
+            TRUE AS snowplow_bad_parsed
+        FROM {{ ref('snowplow_bad_parsed') }}
+        {% if is_incremental() %}
+
+        WHERE event_id NOT IN (SELECT DISTINCT event_id FROM {{ this }} WHERE snowplow_bad_parsed = TRUE)
+
+    {% endif %}
+
+),
+
+source AS (
+
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY
+                event_id
+            ORDER BY derived_tstamp::TIMESTAMP DESC
+        ) AS row_num
+    FROM blended_source
 
 ),
 
@@ -53,7 +69,7 @@ clean_new_source AS (
 
 renamed AS (
 
-    SELECT
+    SELECT -- noqa: L034
         app_id,
         platform,
         etl_tstamp::TIMESTAMP AS etl_enriched_at,
@@ -187,7 +203,8 @@ renamed AS (
         event_format,
         event_version,
         event_fingerprint,
-        MD5(user_ipaddress) AS ip_address_hash
+        MD5(user_ipaddress) AS ip_address_hash,
+        snowplow_bad_parsed
     FROM clean_new_source
 
 )
