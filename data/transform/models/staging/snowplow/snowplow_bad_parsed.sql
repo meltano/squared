@@ -13,9 +13,50 @@ WITH reparse_1 AS (
         ]:schemaKey::string
         = 'iglu:com.meltano/environment_context/jsonschema/1-2-0'
 
+),
+
+reparse_2 AS (
+    -- Incident: exit_event incorrectly required not null exit_code
+    -- Affected versions 2.0.3 - 2.6.0
+    -- Related issues: https://github.com/meltano/meltano/issues/6243 and
+    -- https://github.com/meltano/meltano/pull/6244
+    SELECT
+        payload_enriched,
+        uploaded_at
+    FROM {{ ref('stg_snowplow__events_bad') }}
+    WHERE failure_message[
+            0
+        ]:schemaKey::string
+        = 'iglu:com.meltano/exit_event/jsonschema/1-0-0'
+        AND failure_message[
+            0
+        ]:error:dataReports[0]:message::string
+        = '$.exit_code: null found, integer expected'
+
+),
+
+reparse_3 AS (
+    -- Incident: events sent with schema name exceptions_context vs
+    -- exception_context as registered in Snowcat
+    -- Affected versions 2.0.1 - 2.0.2
+    -- Related issues: https://github.com/meltano/meltano/issues/6213 and
+    -- https://github.com/meltano/meltano/pull/6212
+    SELECT
+        uploaded_at,
+        REPLACE(
+            payload_enriched,
+            'iglu:com.meltano/exceptions_context/jsonschema/1-0-0',
+            'iglu:com.meltano/exception_context/jsonschema/1-0-0'
+        ) AS payload_enriched
+    FROM {{ ref('stg_snowplow__events_bad') }}
+    WHERE failure_message[
+            0
+        ]:schemaKey::string
+        = 'iglu:com.meltano/exceptions_context/jsonschema/1-0-0'
+
 )
 
-{% for cte_name in ['reparse_1'] %}
+{% for cte_name in ['reparse_1', 'reparse_2', 'reparse_3'] %}
 
 {%- if not loop.first %}
 UNION ALL

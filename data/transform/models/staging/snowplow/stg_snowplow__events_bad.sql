@@ -17,7 +17,8 @@ SELECT
     ):detail:data:failure:timestamp::TIMESTAMP AS failure_timestamp,
     PARSE_JSON(jsontext):detail:data:payload:raw AS payload_raw,
     PARSE_JSON(jsontext):detail:data:payload:enriched AS payload_enriched,
-    PARSE_JSON(jsontext):detail:data:processor AS processor
+    PARSE_JSON(jsontext):detail:data:processor AS processor,
+    PARSE_JSON(payload_enriched):event_id::STRING AS event_id
     {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
     FROM raw.snowplow.events_bad
     WHERE uploaded_at::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
