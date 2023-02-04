@@ -10,7 +10,7 @@ meltano:
   outputs:
     jigsaw:
       type: snowflake
-      threads: 2
+      threads: 6
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
@@ -20,7 +20,7 @@ meltano:
       schema: "DEFAULT"
     userdev:
       type: snowflake
-      threads: 2
+      threads: 6
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
@@ -30,7 +30,7 @@ meltano:
       schema: "DEFAULT"
     staging:
       type: snowflake
-      threads: 4
+      threads: 6
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
@@ -50,7 +50,7 @@ meltano:
       schema: "DEFAULT"
     cicd:
       type: snowflake
-      threads: 4
+      threads: 6
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
