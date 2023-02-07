@@ -19,7 +19,7 @@ WITH gitlab_all AS (
         comment_count,
         COALESCE((merged_at_ts IS NOT NULL OR closed_at_ts IS NOT NULL),
             FALSE) AS is_completed
-   FROM {{ ref('stg_gitlab__merge_requests') }}
+    FROM {{ ref('stg_gitlab__merge_requests') }}
 
     UNION ALL
 
@@ -72,7 +72,7 @@ github_all AS (
         organization_name,
         'github' AS platform,
         created_at_ts,
-        NULL merged_at_ts,
+        NULL AS merged_at_ts,
         closed_at_ts,
         'issue' AS contribution_type,
         issue_id AS contribution_id,
@@ -93,8 +93,6 @@ gitlab_combined AS (
     SELECT
         gitlab_all.project_id,
         stg_gitlab__projects.repo_full_name,
-        CASE WHEN gitlab_all.contribution_type = 'issue' then 'https://gitlab.com/' || stg_gitlab__projects.repo_full_name || '/-/issues/' || gitlab_all.contribution_number::STRING
-        ELSE 'https://gitlab.com/' || stg_gitlab__projects.repo_full_name || '/-/merge_requests/' || gitlab_all.contribution_number::STRING END AS contribution_url,
         gitlab_all.platform,
         gitlab_all.created_at_ts,
         gitlab_all.merged_at_ts,
@@ -109,9 +107,22 @@ gitlab_combined AS (
         gitlab_all.is_draft,
         gitlab_all.comment_count,
         gitlab_all.is_completed,
+        CASE
+            WHEN
+                gitlab_all.contribution_type = 'issue'
+                THEN 'https://gitlab.com/'
+                || stg_gitlab__projects.repo_full_name
+                || '/-/issues/' || gitlab_all.contribution_number::STRING
+            ELSE 'https://gitlab.com/' || stg_gitlab__projects.repo_full_name
+                || '/-/merge_requests/'
+                || gitlab_all.contribution_number::STRING
+        END AS contribution_url,
         (
             team_gitlab_ids.user_id IS NOT NULL
-            AND gitlab_all.created_at_ts BETWEEN team_gitlab_ids.start_date AND  COALESCE(team_gitlab_ids.end_date, '2100-01-01')
+            AND gitlab_all.created_at_ts
+            BETWEEN team_gitlab_ids.start_date AND COALESCE(
+                team_gitlab_ids.end_date, '2100-01-01'
+            )
         ) AS is_team_contribution
     FROM gitlab_all
     LEFT JOIN
@@ -130,8 +141,6 @@ github_combined AS (
     SELECT
         stg_github__repositories.repo_id AS project_id,
         stg_github__repositories.repo_full_name,
-        CASE WHEN github_all.contribution_type = 'issue' then stg_github__repositories.html_url || '/issues/' || github_all.contribution_number::STRING
-        ELSE stg_github__repositories.html_url || '/pull/' || github_all.contribution_number::STRING END AS contribution_url,
         github_all.platform,
         github_all.created_at_ts,
         github_all.merged_at_ts,
@@ -146,9 +155,20 @@ github_combined AS (
         github_all.is_draft,
         github_all.comment_count,
         github_all.is_completed,
+        CASE
+            WHEN
+                github_all.contribution_type = 'issue'
+                THEN stg_github__repositories.html_url || '/issues/'
+                || github_all.contribution_number::STRING
+            ELSE stg_github__repositories.html_url || '/pull/'
+                || github_all.contribution_number::STRING
+        END AS contribution_url,
         (
             team_github_ids.user_id IS NOT NULL
-            AND github_all.created_at_ts BETWEEN team_github_ids.start_date AND COALESCE(team_github_ids.end_date, '2100-01-01')
+            AND github_all.created_at_ts
+            BETWEEN team_github_ids.start_date AND COALESCE(
+                team_github_ids.end_date, '2100-01-01'
+            )
         ) AS is_team_contribution
     FROM github_all
     LEFT JOIN
@@ -161,7 +181,7 @@ github_combined AS (
         {{ ref('username_mapping') }} ON
             github_all.author_id = username_mapping.github_author_id
     WHERE stg_github__repositories.visibility = 'public'
-    AND github_all.is_bot_user = FALSE
+        AND github_all.is_bot_user = FALSE
 )
 
 SELECT * FROM gitlab_combined

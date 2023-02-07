@@ -68,7 +68,7 @@ base AS (
         ) AS issues_closed
     FROM {{ ref('contributions') }}
     CROSS JOIN most_recent_date
-    WHERE is_team_contribution = FALSE
+    WHERE contributions.is_team_contribution = FALSE
 )
 
 SELECT
