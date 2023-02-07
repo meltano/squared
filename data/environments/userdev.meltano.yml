@@ -45,10 +45,18 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
           default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise
+      - name: target-apprise-singer-activity
         config:
           stream_maps:
             USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+              TITLE:
+              title: TITLE
+              BODY:
+              body: BODY
+      - name: target-apprise-meltano-activity
+        config:
+          stream_maps:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-GITHUB_ACTIVITY_NOTIFICATIONS:
               TITLE:
               title: TITLE
               BODY:
