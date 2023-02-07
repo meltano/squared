@@ -82,7 +82,7 @@ repos AS (
                 WHEN
                     stg_github_search__repositories.created_at_ts::DATE
                     = DATEADD(
-                        DAY, -20, most_recent_date.max_date
+                        DAY, -1, most_recent_date.max_date
                     )
                     THEN '\n     • <'
                     || stg_github_search__repositories.repo_url || ' | '
