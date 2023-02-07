@@ -34,6 +34,9 @@ environments:
       - name: tap-snowflake-singer-activity
         config:
           tables: PROD.SLACK_NOTIFICATIONS.SLACK_ALERTS
+      - name: tap-snowflake-meltano-activity
+        config:
+          tables: PROD.SLACK_NOTIFICATIONS.GITHUB_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -42,10 +45,18 @@ environments:
           role: LOADER
           warehouse: LOADER
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise
+      - name: target-apprise-singer-activity
         config:
           stream_maps:
             PROD-SLACK_NOTIFICATIONS-SLACK_ALERTS:
+              TITLE:
+              title: TITLE
+              BODY:
+              body: BODY
+      - name: target-apprise-meltano-activity
+        config:
+          stream_maps:
+            PROD-SLACK_NOTIFICATIONS-GITHUB_ACTIVITY_NOTIFICATIONS:
               TITLE:
               title: TITLE
               BODY:

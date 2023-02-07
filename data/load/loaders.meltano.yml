@@ -38,3 +38,7 @@ plugins:
   - name: target-apprise
     variant: AutoIDM
     pip_url: target-apprise==0.0.2
+  - name: target-apprise-singer-activity
+    inherit_from: target-apprise
+  - name: target-apprise-meltano-activity
+    inherit_from: target-apprise

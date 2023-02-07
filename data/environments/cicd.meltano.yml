@@ -55,6 +55,9 @@ environments:
       - name: tap-snowflake-singer-activity
         config:
           tables: CICD_PROD.${CI_BRANCH}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+      - name: tap-snowflake-meltano-activity
+        config:
+          tables: CICD_PROD.${CI_BRANCH}_SLACK_NOTIFICATIONS.GITHUB_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -64,10 +67,18 @@ environments:
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
       # Excluded from CI for now
-      # - name: target-apprise
+      # - name: target-apprise-singer-activity
       #   config:
       #     stream_maps:
       #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+      #         TITLE: null
+      #         title: TITLE
+      #         BODY: null
+      #         body: BODY
+      # - name: target-apprise-meltano-activity
+      #   config:
+      #     stream_maps:
+      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-GITHUB_ACTIVITY_NOTIFICATIONS:
       #         TITLE: null
       #         title: TITLE
       #         BODY: null

@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 WITH source AS (
 
     SELECT
@@ -34,7 +32,8 @@ renamed AS (
         user:id::INT AS author_id,
         user:login::STRING AS author_username,
         assignee:id::INT AS assignee_id,
-        assignee:login::STRING AS assignee_username
+        assignee:login::STRING AS assignee_username,
+        COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user
     FROM source
     WHERE row_num = 1
         AND type != 'pull_request'

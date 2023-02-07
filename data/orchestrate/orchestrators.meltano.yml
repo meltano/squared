@@ -64,7 +64,8 @@ jobs:
 - name: slack_notifications
   tasks:
   - dbt-snowflake:run_slack_notifications
-  - tap-snowflake-singer-activity target-apprise
+  - tap-snowflake-singer-activity target-apprise-singer-activity
+  - tap-snowflake-meltano-activity target-apprise-meltano-activity
 
 - name: dbt_docs
   tasks:

@@ -8,7 +8,7 @@ user_id,username,name,start_date,end_date
 2797769,afolson,Amanda Folson,2021-06-28,null
 159434,DouweM,Douwe Maan,1999-01-01,null
 49699333,dependabot[bot],DEPENDABOT,1999-01-01,null
-84082383,emilylucie,Emily Kyle,2021-06-28,2022-09-31
+84082383,emilylucie,Emily Kyle,2021-06-28,2022-09-30
 11428666,WillDaSilva,Will Da Silva,2022-05-09,null
 9891457,cjohnhanson,Cody Hanson,2022-03-07,null
 54377734,alexmarple,Alex Marple,2021-11-29,2022-09-08
@@ -25,3 +25,5 @@ user_id,username,name,start_date,end_date
 106620193,VictoriaGayton,Victoria Gayton,2022-05-02,2022-12-01
 43072233,sbalnojan,Sven Balnojan,2022-08-16,null
 69476188,magreenbaum,Melissa Greenbaum,2022-10-31,null
+746788,javajunky,Wil Chow,2023-01-02,null
+122309847,seth-meltano,Seth Turner,2023-01-09,null
