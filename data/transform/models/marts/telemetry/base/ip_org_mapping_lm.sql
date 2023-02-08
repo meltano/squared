@@ -5,7 +5,7 @@ WITH base AS (
         context_identify.leadmagic_company_domain,
         ROW_NUMBER() OVER (
             PARTITION BY
-                stg_snowplow__events.event_id
+                stg_snowplow__events.ip_address_hash
             ORDER BY stg_snowplow__events.event_created_at DESC
         ) AS row_num
     FROM {{ ref('stg_snowplow__events') }}

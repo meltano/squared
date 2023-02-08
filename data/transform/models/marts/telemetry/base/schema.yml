@@ -134,3 +134,21 @@ models:
       - name: sp_activate_date
         tests:
           - not_null
+
+  - name: project_org_mapping
+    description: A mapping of projects to the organization that we expect they're part of. This is currently based on attributes provided by LeadMagic.
+    columns:
+      - name: project_id
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
+
+  - name: ip_org_mapping_lm
+    description: A mapping of projects to the organization that we expect they're part of. This is currently based on attributes provided by LeadMagic.
+    columns:
+      - name: ip_address_hash
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
