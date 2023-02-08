@@ -84,10 +84,10 @@ SELECT
     END AS execution_location,
     base.active_from,
     base.active_to,
-    COALESCE(ip_org_mapping.org_name, 'UNKNOWN') AS org_name
+    ip_org_mapping_lm.leadmagic_company_name AS org_name
 FROM base
-LEFT JOIN {{ ref('internal_data', 'ip_org_mapping') }}
-    ON base.ip_address_hash = MD5(ip_org_mapping.ip_address)
+LEFT JOIN {{ ref('ip_org_mapping_lm') }}
+    ON base.ip_address_hash = ip_org_mapping_lm.ip_address_hash
 LEFT JOIN {{ ref('meltano_cloud_ips') }}
     ON base.ip_address_hash = MD5(meltano_cloud_ips.ip_address)
 WHERE meltano_cloud_ips.ip_address IS NULL

@@ -384,5 +384,5 @@ LEFT JOIN {{ ref('opt_outs') }}
     ON project_aggregates.project_id = opt_outs.project_id
 LEFT JOIN plugin_aggregates
     ON project_aggregates.project_id = plugin_aggregates.project_id
-LEFT JOIN project_org_mapping
+LEFT JOIN {{ ref('project_org_mapping') }}
     ON project_aggregates.project_id = project_org_mapping.project_id
