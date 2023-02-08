@@ -12,9 +12,6 @@ WITH blended_source AS (
 
         FROM raw.snowplow.events
         WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
-            -- only meltano events. For the first ~6 months no app_id was
-            -- sent from Meltano. So nulls are from meltano.
-            AND COALESCE(app_id, 'meltano') = 'meltano'
         {% else %}
 
         FROM {{ source('snowplow', 'events') }}
@@ -70,7 +67,9 @@ clean_new_source AS (
 renamed AS (
 
     SELECT -- noqa: L034
-        app_id,
+        -- only meltano events. For the first ~6 months no app_id was
+        -- sent from Meltano. So nulls are from meltano.
+        COALESCE(app_id, 'meltano') AS app_id,
         platform,
         etl_tstamp::TIMESTAMP AS etl_enriched_at,
         collector_tstamp::TIMESTAMP AS collector_received_at,

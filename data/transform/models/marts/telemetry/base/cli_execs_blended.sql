@@ -35,6 +35,7 @@ WHERE
     -- Only count legacy structured events without context.
     -- Structured with context will be rolled up into unstructured
     AND stg_snowplow__events.contexts IS NULL
+    AND stg_snowplow__events.app_id = 'meltano'
 
 UNION ALL
 

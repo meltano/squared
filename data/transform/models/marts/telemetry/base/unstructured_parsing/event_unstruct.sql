@@ -19,6 +19,7 @@ WITH base AS (
         ):data AS event_data
     FROM {{ ref('stg_snowplow__events') }}
     WHERE contexts IS NOT NULL
+        AND app_id = 'meltano'
 
 )
 
