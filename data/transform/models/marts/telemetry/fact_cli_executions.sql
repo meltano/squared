@@ -32,7 +32,7 @@ WITH base AS (
         cli_executions_base.ip_address_hash,
         COALESCE(
             ip_address_dim.cloud_provider, 'UNKNOWN'
-        ) as cloud_provider,
+        ) AS cloud_provider,
         COALESCE(
             ip_address_dim.execution_location, 'UNKNOWN'
         ) AS execution_location,
