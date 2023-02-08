@@ -74,6 +74,26 @@ base AS (
                 singer_contributions.repo_url
             ) = LOWER(stg_meltanohub__plugins.repo)
     WHERE singer_contributions.is_bot_user = FALSE
+),
+
+repos AS (
+    SELECT ARRAY_AGG(
+            CASE
+                WHEN
+                    stg_github_search__repositories.created_at_ts::DATE
+                    = DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN '\n     • <'
+                    || stg_github_search__repositories.repo_url || ' | '
+                    || stg_github_search__repositories.repo_full_name
+                    || '> - _' || stg_github_search__repositories.description
+                    || '_\n'
+
+            END
+        ) AS repos_created
+    FROM {{ ref('stg_github_search__repositories') }}
+    CROSS JOIN most_recent_date
 )
 
 SELECT
@@ -97,3 +117,12 @@ SELECT
         issues_closed, ''
     ) AS body
 FROM base
+
+UNION ALL
+
+SELECT
+    'New Repos' AS title,
+    ':sparkles:*Created*:sparkles::' || ARRAY_TO_STRING(
+        repos_created, ''
+    ) AS body
+FROM repos
