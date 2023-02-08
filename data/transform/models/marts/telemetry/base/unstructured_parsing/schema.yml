@@ -164,6 +164,19 @@ models:
           - accepted_values:
               values: ['1-0-0']
 
+  - name: context_identify
+    description: Snowplow identify context events parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
   - name: event_cli
     description: Snowplow cli events parsed.
     columns:

@@ -27,3 +27,8 @@ MINUS
 
 SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
 FROM {{ ref('context_project') }}
+
+MINUS
+
+SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
+FROM {{ ref('context_identify') }}
