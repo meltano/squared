@@ -30,9 +30,13 @@ WITH base AS (
         cli_executions_base.is_ci_environment,
         cli_executions_base.is_exec_event,
         cli_executions_base.ip_address_hash,
-        ip_address_dim.cloud_provider,
-        ip_address_dim.execution_location,
-        ip_address_dim.org_name,
+        COALESCE(
+            ip_address_dim.cloud_provider, 'UNKNOWN'
+        ) AS cloud_provider,
+        COALESCE(
+            ip_address_dim.execution_location, 'UNKNOWN'
+        ) AS execution_location,
+        COALESCE(ip_address_dim.org_name, 'UNKNOWN') AS org_name,
         COALESCE(
             daily_active_projects.project_id IS NOT NULL,
             FALSE

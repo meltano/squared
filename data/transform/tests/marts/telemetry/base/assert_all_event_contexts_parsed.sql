@@ -1,29 +1,52 @@
 -- All contexts from contexts_base should arrive in one of the
 -- parsed tables.
-SELECT DISTINCT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
+SELECT
+    event_id,
+    schema_name
 FROM {{ ref('context_base') }}
+WHERE schema_name
+    != 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
 
 MINUS
 
-SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
-FROM {{ ref('context_cli') }}
+SELECT * FROM (
+    SELECT
+        event_id,
+        schema_name
+    FROM {{ ref('context_cli') }}
 
-MINUS
+    UNION ALL
 
-SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
-FROM {{ ref('context_environment') }}
+    SELECT
+        event_id,
+        schema_name
+    FROM {{ ref('context_environment') }}
 
-MINUS
+    UNION ALL
 
-SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
-FROM {{ ref('context_exception') }}
+    SELECT
+        event_id,
+        schema_name
+    FROM {{ ref('context_exception') }}
 
-MINUS
+    UNION ALL
 
-SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
-FROM {{ ref('context_plugins') }}
+    SELECT
+        event_id,
+        schema_name
+    FROM {{ ref('context_plugins') }}
 
-MINUS
+    UNION ALL
 
-SELECT {{ dbt_utils.surrogate_key(['event_id', 'schema_name']) }}
-FROM {{ ref('context_project') }}
+    SELECT
+        event_id,
+        schema_name
+    FROM {{ ref('context_project') }}
+
+    UNION ALL
+
+    SELECT
+        event_id,
+        schema_name
+    FROM {{ ref('context_identify') }}
+)

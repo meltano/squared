@@ -1,6 +1,8 @@
 -- All events from event_unstruct should arrive in one of the
 -- parsed tables.
 SELECT DISTINCT event_id FROM {{ ref('event_unstruct') }}
+-- page views are parsed by the snowplow dbt package
+WHERE event_name != 'page_view'
 MINUS
 SELECT DISTINCT event_id FROM {{ ref('event_block') }}
 MINUS
