@@ -2,7 +2,7 @@
 -- parsed tables.
 SELECT DISTINCT event_id FROM {{ ref('event_unstruct') }}
 -- page views are parsed by the snowplow dbt package
-WHERE event != 'page_view'
+WHERE event_name != 'page_view'
 MINUS
 SELECT DISTINCT event_id FROM {{ ref('event_block') }}
 MINUS
