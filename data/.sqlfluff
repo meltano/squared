@@ -5,6 +5,8 @@ templater = dbt
 output_line_length = 80
 ignore_templated_areas = True
 runaway_limit = 100
+# Bug https://github.com/sqlfluff/sqlfluff/issues/4188
+exclude_rules = L071
 
 [sqlfluff:templater:dbt]
 project_dir = transform

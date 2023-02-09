@@ -1,7 +1,6 @@
 {% snapshot snapshot_ssa_azure_ips %}
 
-    {{
-        config(
+{{ config(
           target_schema=generate_schema_name('snapshot'),
           strategy='check',
           unique_key='ip_address',
