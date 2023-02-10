@@ -53,7 +53,8 @@ jobs:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
     - run: meltano install utilities sqlfluff dbt-snowflake
-    - run: meltano run dbt-snowflake:deps sqlfluff:lint
+    - run: meltano run dbt-snowflake:deps
+    - run: meltano invoke sqlfluff lint $(python sqlfluff_file_changes.py)
 
   dbt_seed:
     runs-on: ubuntu-latest
