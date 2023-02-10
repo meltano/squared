@@ -64,7 +64,7 @@
             ]
         }
     },
-    "postCreateCommand": "meltano install"
+    "postStartCommand": "meltano --cwd=./data install --paralellism=4"
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],
