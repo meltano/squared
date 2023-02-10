@@ -13,10 +13,10 @@
         "ghcr.io/devcontainers/features/docker-in-docker:1": {
             "version": "latest"
         },
-		"ghcr.io/devcontainers-contrib/features/meltano": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers-contrib/features/meltano:2": {}
+        "ghcr.io/devcontainers-contrib/features/meltano": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/node:1": {},
+        "ghcr.io/devcontainers-contrib/features/meltano:2": {}
     },
     "customizations": {
         "vscode": {
@@ -30,7 +30,7 @@
                 "z3z1ma.meltano-power-user",
                 "dorzey.vscode-sqlfluff",
                 "redhat.vscode-yaml",
-        
+
                 // git UX improvements:
                 "github.vscode-pull-request-github",
                 "eamodio.gitlens",
@@ -57,7 +57,7 @@
                 }
                 // any other settings go here
             }
-        }, 
+        },
         "codespaces": {
             "openFiles": [
                 "./README.md"
