@@ -131,4 +131,5 @@ jobs:
     - run: pip install -r requirements.txt
     # Seed Production
     - run: meltano install utility dbt-snowflake
-    - run: meltano run dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed
+    - run: meltano run dbt-snowflake:run_dbt_artifacts
+    - run: meltano invoke dbt-snowflake seed --full-refresh
