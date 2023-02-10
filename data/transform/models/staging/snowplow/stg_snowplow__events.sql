@@ -11,7 +11,7 @@ WITH blended_source AS (
         {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
         FROM raw.snowplow.events
-        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
+        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -3, CURRENT_DATE)
         {% else %}
 
         FROM {{ source('snowplow', 'events') }}
