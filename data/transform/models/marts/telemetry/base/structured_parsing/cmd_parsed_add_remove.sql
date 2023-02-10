@@ -3,10 +3,10 @@ WITH prep AS (
         unique_commands.command,
         args_parsed.args,
         args_parsed.environment,
+        GET(unique_commands.split_parts, 2)::STRING AS plugin_type,
         'meltano ' || GET(
             SPLIT(unique_commands.command, ' '), 1
         )::STRING AS command_category,
-        GET(unique_commands.split_parts, 2)::STRING AS plugin_type,
         CASE
             WHEN
                 GET(

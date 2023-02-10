@@ -37,11 +37,11 @@ renamed AS (
         draft AS is_draft,
         user:id::INT AS author_id,
         user:login::STRING AS author_username,
-        COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user,
         assignee:id::INT AS assignee_id,
         assignee:login::STRING AS assignee_username,
         head:ref::STRING AS head_branch_name,
-        base:ref::STRING AS base_branch_name
+        base:ref::STRING AS base_branch_name,
+        COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user
     FROM source
     WHERE row_num = 1
 

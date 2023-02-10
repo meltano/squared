@@ -56,9 +56,9 @@ _mappers AS (
     INNER JOIN
         target_pairs AS t2 ON
             target_pairs.command
-            = t2.command AND target_pairs.plugin_index >
-            t2.plugin_index AND target_pairs.plugin_index <
-            t2.target_pair_index
+            = t2.command AND target_pairs.plugin_index
+            > t2.plugin_index AND target_pairs.plugin_index
+            < t2.target_pair_index
 ),
 
 meltano_run AS (

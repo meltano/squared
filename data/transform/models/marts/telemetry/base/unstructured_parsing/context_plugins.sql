@@ -26,9 +26,9 @@ base_parsed AS (
     SELECT
         base.event_id,
         base.schema_name,
+        (base.context_index - min_index.first_index)::STRING AS plugin_index,
         SPLIT_PART(base.schema_name, '/', -1) AS schema_version,
-        base.context:data:plugins AS plugin_block,
-        (base.context_index - min_index.first_index)::STRING AS plugin_index
+        base.context:data:plugins AS plugin_block
     FROM base
     LEFT JOIN min_index ON base.event_id = min_index.event_id
 
