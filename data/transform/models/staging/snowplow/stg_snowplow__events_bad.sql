@@ -13,7 +13,9 @@ SELECT
     PARSE_JSON(
         jsontext
     ):detail:data:failure:timestamp::TIMESTAMP AS failure_timestamp,
-    PARSE_JSON(jsontext):detail:data:payload:enriched:event_id::STRING AS event_id,
+    PARSE_JSON(
+        jsontext
+    ):detail:data:payload:enriched:event_id::STRING AS event_id,
     PARSE_JSON(jsontext):resources AS resources,
     PARSE_JSON(jsontext):detail:data:failure:messages AS failure_message,
     PARSE_JSON(jsontext):detail:data:payload:raw AS payload_raw,
