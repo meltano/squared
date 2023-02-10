@@ -1,77 +1,80 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
-	"name": "Python 3",
-	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/devcontainers/python:0-3.9",
+    "name": "Python 3",
+    // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+    "image": "mcr.microsoft.com/devcontainers/python:0-3.9",
 
-	// Features to add to the dev container. More info: https://containers.dev/features.
-	"features": {
+    // Features to add to the dev container. More info: https://containers.dev/features.
+    "features": {
         "github-cli": {
             "version": "latest"
         },
         "ghcr.io/devcontainers/features/docker-in-docker:1": {
             "version": "latest"
+        },
+		"ghcr.io/devcontainers-contrib/features/meltano": {},
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers-contrib/features/meltano:2": {}
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                // BYO Settings:
+                "EditorConfig.EditorConfig",
+
+                // dbt and Meltano Support:
+                "innoverio.vscode-dbt-power-user",
+                "bastienboutonnet.vscode-dbt",
+                "z3z1ma.meltano-power-user",
+                "dorzey.vscode-sqlfluff",
+                "redhat.vscode-yaml",
+        
+                // git UX improvements:
+                "github.vscode-pull-request-github",
+                "eamodio.gitlens",
+                "vivaxy.vscode-conventional-commits",
+
+                // SQL Tools Database Explorer:
+                "mtxr.sqltools",
+                "mtxr.sqltools-driver-sqlite",
+                "RandomFractalsInc.duckdb-sql-tools",
+                "koszti.snowflake-driver-for-sqltools",
+
+                // Other Data Tools:
+                "mechatroner.rainbow-csv",
+
+                // Python Editing Support:
+                "ms-python.python",
+                "ms-python.black-formatter"
+            ],
+            "settings": {
+                "python.pythonPath": "/usr/local/bin/python",
+                "dbt.profilesDirOverride": "./data/transform/profiles/snowflake/",
+                "files.associations": {
+                    "*.sql": "jinja-sql"
+                }
+                // any other settings go here
+            }
+        }, 
+        "codespaces": {
+            "openFiles": [
+                "./README.md"
+            ]
         }
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				// BYO Settings:
-				"EditorConfig.EditorConfig",
+    },
+    "postCreateCommand": "meltano install"
 
-				// dbt and Meltano Support:
-				"innoverio.vscode-dbt-power-user",
-				"bastienboutonnet.vscode-dbt",
-				"z3z1ma.meltano-power-user",
-				"dorzey.vscode-sqlfluff",
-				"redhat.vscode-yaml",
-		
-				// git UX improvements:
-				"github.vscode-pull-request-github",
-				"eamodio.gitlens",
-				"vivaxy.vscode-conventional-commits",
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // "forwardPorts": [],
 
-				// SQL Tools Database Explorer:
-				"mtxr.sqltools",
-				"mtxr.sqltools-driver-sqlite",
-				"RandomFractalsInc.duckdb-sql-tools",
-				"koszti.snowflake-driver-for-sqltools",
+    // Use 'postCreateCommand' to run commands after the container is created.
+    // "postCreateCommand": "pip3 install --user -r requirements.txt",
 
-				// Other Data Tools:
-				"mechatroner.rainbow-csv",
+    // Configure tool-specific properties.
+    // "customizations": {},
 
-				// Python Editing Support:
-				"ms-python.python",
-				"ms-python.black-formatter"
-			],
-			"settings": {
-				"python.pythonPath": "/usr/local/bin/python",
-				"dbt.profilesDirOverride": "./data/transform/profiles/snowflake/",
-				"files.associations": {
-					"*.sql": "jinja-sql"
-				}
-				// any other settings go here
-			}
-		}, 
-		"codespaces": {
-			"openFiles": [
-				"./README.md"
-			]
-		}
-	},
-	"postCreateCommand": "meltano install",
-
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "pip3 install --user -r requirements.txt",
-
-	// Configure tool-specific properties.
-	// "customizations": {},
-
-	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	// "remoteUser": "root"
+    // Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+    // "remoteUser": "root"
 }
