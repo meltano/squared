@@ -1,7 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/python
 {
-    "name": "Python 3",
+    "name": "Meltano Devcontainer",
     // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
     "image": "mcr.microsoft.com/devcontainers/python:0-3.9",
 
@@ -13,10 +13,10 @@
         "ghcr.io/devcontainers/features/docker-in-docker:1": {
             "version": "latest"
         },
-		"ghcr.io/devcontainers-contrib/features/meltano": {},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
-		"ghcr.io/devcontainers/features/node:1": {},
-		"ghcr.io/devcontainers-contrib/features/meltano:2": {}
+        "ghcr.io/devcontainers-contrib/features/meltano": {},
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/node:1": {},
+        "ghcr.io/devcontainers-contrib/features/meltano:2": {}
     },
     "customizations": {
         "vscode": {
@@ -30,7 +30,7 @@
                 "z3z1ma.meltano-power-user",
                 "dorzey.vscode-sqlfluff",
                 "redhat.vscode-yaml",
-        
+
                 // git UX improvements:
                 "github.vscode-pull-request-github",
                 "eamodio.gitlens",
@@ -57,14 +57,14 @@
                 }
                 // any other settings go here
             }
-        }, 
+        },
         "codespaces": {
             "openFiles": [
                 "./README.md"
             ]
         }
     },
-    "postCreateCommand": "meltano install"
+    "postStartCommand": "meltano --cwd=./data install --paralellism=4"
 
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // "forwardPorts": [],
