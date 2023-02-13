@@ -47,4 +47,7 @@ for changed_file in changed_files_list:
     if os.path.basename(file_path) in SQLFLUFF_FILES:
         sys.exit(0)
 
-print(" ".join(changed_files))
+if changed_files:
+    print(" ".join(changed_files))
+else:
+    print("--version")
