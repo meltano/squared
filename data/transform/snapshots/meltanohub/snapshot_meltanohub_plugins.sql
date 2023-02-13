@@ -1,14 +1,12 @@
 {% snapshot snapshot_meltanohub_plugins %}
 
-    {{
-        config(
-          target_schema=generate_schema_name('snapshot'),
-          strategy='check',
-          unique_key='id',
-          check_cols='all',
-          invalidate_hard_deletes=True
-        )
-    }}
+{{ config(
+        target_schema=generate_schema_name('snapshot'),
+        strategy='check',
+        unique_key='id',
+        check_cols='all',
+        invalidate_hard_deletes=True
+    ) }}
 
     WITH source AS (
 

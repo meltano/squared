@@ -32,13 +32,13 @@ renamed AS (
         closed_at AS closed_at_ts,
         locked AS is_locked,
         type AS issue_type,
-        COALESCE(comments, 0) AS comment_count,
-        COALESCE(reactions:total_count::INT, 0) AS reactions_count,
         user:id::INT AS author_id,
         user:login::STRING AS author_username,
-        COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user,
         assignee:id::INT AS assignee_id,
-        assignee:login::STRING AS assignee_username
+        assignee:login::STRING AS assignee_username,
+        COALESCE(comments, 0) AS comment_count,
+        COALESCE(reactions:total_count::INT, 0) AS reactions_count,
+        COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user
     FROM source
     WHERE row_num = 1
 

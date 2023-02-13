@@ -1,3 +1,5 @@
+-- SQLFluff fails because dbt_utils casts differently then us. Ignore for file.
+-- noqa: disable=L067
 WITH base AS (
     SELECT
         unstructured_executions.*,
