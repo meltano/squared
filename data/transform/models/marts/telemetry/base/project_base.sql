@@ -283,6 +283,9 @@ project_aggregates AS (
                     ) = 0 THEN cli_executions_base.event_count
             END
         ) AS pipeline_runs_count_success,
+        COUNT(
+            DISTINCT cli_executions_base.ip_address_hash
+        ) AS unique_ip_address_count,
         {% for cli_command in [
             'add',
             'config',
@@ -354,11 +357,19 @@ SELECT
     plugin_aggregates.non_gsg_pipeline,
     plugin_aggregates.non_gsg_pipeline_success,
     opt_outs.opted_out_at,
-    COALESCE(
-        first_values.first_source,
-        -- TODO why would we ever get here?
-        'UNKNOWN'
-    ) AS project_id_source,
+    -- Handle random projects that look to have persisted their ID
+    -- https://github.com/meltano/internal-data/issues/80
+    CASE
+        WHEN first_values.first_source = 'random'
+            AND project_aggregates.unique_ip_address_count > 1
+            AND project_aggregates.lifespan_days > 7
+            THEN 'persisted_random'
+        ELSE COALESCE(
+            first_values.first_source,
+            -- Pre 2.0 so no project_uuid_source present or only command is init
+            'UNKNOWN'
+        )
+    END AS project_id_source,
     COALESCE(
         first_values.first_meltano_version,
         'UNKNOWN'

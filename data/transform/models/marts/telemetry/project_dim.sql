@@ -38,6 +38,9 @@ SELECT
     COALESCE(
         project_base.pipeline_runs_count_success, 0
     ) AS pipeline_runs_count_success,
+    COALESCE(
+        project_base.unique_ip_address_count, 0
+    ) AS unique_ip_address_count,
     COALESCE(project_base.add_count_all, 0) AS add_count_all,
     COALESCE(project_base.add_count_success, 0) AS add_count_success,
     COALESCE(project_base.config_count_all, 0) AS config_count_all,
