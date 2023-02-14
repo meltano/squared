@@ -87,7 +87,10 @@ repos AS (
                     THEN '\n     • <'
                     || stg_github_search__repositories.repo_url || ' | '
                     || stg_github_search__repositories.repo_full_name
-                    || '> - _' || stg_github_search__repositories.description
+                    || '> - _' || COALESCE(
+                        stg_github_search__repositories.description,
+                        'No Description'
+                    )
                     || '_\n'
 
             END
