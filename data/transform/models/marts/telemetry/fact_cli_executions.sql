@@ -82,9 +82,9 @@ aggregates AS (
         first_day_of_month,
         CEIL(SUM(
             CASE
-                WHEN is_active_eom_cli_execution THEN CLI_RUNTIME_MS
+                WHEN is_active_eom_cli_execution THEN cli_runtime_ms
             END
-        )/60000) as total_cli_runtime_mins,
+        ) / 60000) AS total_cli_runtime_mins,
         SUM(event_count) AS monthly_piplines_all,
         SUM(
             CASE WHEN is_active_cli_execution THEN event_count END
@@ -92,8 +92,10 @@ aggregates AS (
         SUM(
             CASE WHEN is_active_eom_cli_execution THEN event_count END
         ) AS monthly_piplines_active_eom,
-        COUNT(execution_id) as total_execs,
-        COUNT(case when MELTANO_VERSION != 'UNKNOWN' THEN execution_id end ) as total_execs_w_version
+        COUNT(execution_id) AS total_execs,
+        COUNT(
+            CASE WHEN meltano_version != 'UNKNOWN' THEN execution_id END
+        ) AS total_execs_w_version
     FROM base
     WHERE pipeline_fk IS NOT NULL
     GROUP BY 1, 2
@@ -118,15 +120,20 @@ project_segments_monthly AS (
         END AS monthly_piplines_active_eom_segment,
         CASE
             WHEN
-                (1.0*total_execs_w_version/total_execs) < 0.90 then 'INCONSISTENT_TIMING_DATA'
+                (
+                    1.0 * total_execs_w_version / total_execs
+                ) < 0.90 THEN 'INCONSISTENT_TIMING_DATA'
             WHEN
                 total_cli_runtime_mins < 1000 THEN '<1,000'
             WHEN
-                total_cli_runtime_mins BETWEEN 1000 AND 10000 THEN '1,000-10,000'
+                total_cli_runtime_mins
+                BETWEEN 1000 AND 10000 THEN '1,000-10,000'
             WHEN
-                total_cli_runtime_mins BETWEEN 10001 AND 30000 THEN '10,001-30,000'
+                total_cli_runtime_mins
+                BETWEEN 10001 AND 30000 THEN '10,001-30,000'
             WHEN
-                total_cli_runtime_mins BETWEEN 30001 AND 150000 THEN '30,001-150,000'
+                total_cli_runtime_mins
+                BETWEEN 30001 AND 150000 THEN '30,001-150,000'
             WHEN
                 total_cli_runtime_mins > 150001 THEN '150,001+'
         END AS monthly_runtime_mins_segment
