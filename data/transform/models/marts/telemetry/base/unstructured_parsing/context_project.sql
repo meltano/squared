@@ -2,6 +2,7 @@ WITH base AS (
 
     SELECT
         event_id,
+        MAX(event_created_at) AS event_created_at,
         MAX(context:schema::STRING) AS schema_name,
         MAX(context:data:context_uuid::STRING) AS context_uuid,
         MAX(context:data:project_uuid::STRING) AS project_uuid,

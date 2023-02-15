@@ -2,6 +2,7 @@ WITH base AS (
 
     SELECT
         event_id,
+        MAX(event_created_at) AS event_created_at,
         MAX(schema_name) AS schema_name,
         MAX(
             context:data:leadmagic_company_name::STRING
