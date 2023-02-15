@@ -75,11 +75,16 @@ WITH base AS (
             END = daily_active_projects_eom.date_day
 ),
 
-project_segments_monthly AS (
+aggregates AS (
 
     SELECT
         project_id,
         first_day_of_month,
+        CEIL(SUM(
+            CASE
+                WHEN is_active_eom_cli_execution THEN CLI_RUNTIME_MS
+            END
+        )/60000) as total_cli_runtime_mins,
         SUM(event_count) AS monthly_piplines_all,
         SUM(
             CASE WHEN is_active_cli_execution THEN event_count END
@@ -87,54 +92,45 @@ project_segments_monthly AS (
         SUM(
             CASE WHEN is_active_eom_cli_execution THEN event_count END
         ) AS monthly_piplines_active_eom,
-        CASE
-            WHEN SUM(event_count) < 50 THEN 'GUPPY'
-            WHEN SUM(event_count) BETWEEN 50 AND 2000 THEN 'MARLIN'
-            WHEN SUM(event_count) > 2000 THEN 'WHALE'
-        END AS monthly_piplines_all_segment,
-        CASE
-            WHEN
-                SUM(
-                    CASE
-                        WHEN is_active_cli_execution THEN event_count
-                    END
-                ) < 50 THEN 'GUPPY'
-            WHEN
-                SUM(
-                    CASE
-                        WHEN is_active_cli_execution THEN event_count
-                    END
-                ) BETWEEN 50 AND 2000 THEN 'MARLIN'
-            WHEN
-                SUM(
-                    CASE
-                        WHEN is_active_cli_execution THEN event_count
-                    END
-                ) > 2000 THEN 'WHALE'
-        END AS monthly_piplines_active_segment,
-        CASE
-            WHEN
-                SUM(
-                    CASE
-                        WHEN is_active_eom_cli_execution THEN event_count
-                    END
-                ) < 50 THEN 'GUPPY'
-            WHEN
-                SUM(
-                    CASE
-                        WHEN is_active_eom_cli_execution THEN event_count
-                    END
-                ) BETWEEN 50 AND 2000 THEN 'MARLIN'
-            WHEN
-                SUM(
-                    CASE
-                        WHEN is_active_eom_cli_execution THEN event_count
-                    END
-                ) > 2000 THEN 'WHALE'
-        END AS monthly_piplines_active_eom_segment
+        COUNT(execution_id) as total_execs,
+        COUNT(case when MELTANO_VERSION != 'UNKNOWN' THEN execution_id end ) as total_execs_w_version
     FROM base
     WHERE pipeline_fk IS NOT NULL
     GROUP BY 1, 2
+
+),
+
+project_segments_monthly AS (
+
+    SELECT
+        project_id,
+        first_day_of_month,
+        monthly_piplines_all,
+        monthly_piplines_active,
+        monthly_piplines_active_eom,
+        CASE
+            WHEN
+                monthly_piplines_active_eom < 50 THEN 'GUPPY'
+            WHEN
+                monthly_piplines_active_eom BETWEEN 50 AND 2000 THEN 'MARLIN'
+            WHEN
+                monthly_piplines_active_eom > 2000 THEN 'WHALE'
+        END AS monthly_piplines_active_eom_segment,
+        CASE
+            WHEN
+                (1.0*total_execs_w_version/total_execs) < 0.90 then 'INCONSISTENT_TIMING_DATA'
+            WHEN
+                total_cli_runtime_mins < 1000 THEN '<1,000'
+            WHEN
+                total_cli_runtime_mins BETWEEN 1000 AND 10000 THEN '1,000-10,000'
+            WHEN
+                total_cli_runtime_mins BETWEEN 10001 AND 30000 THEN '10,001-30,000'
+            WHEN
+                total_cli_runtime_mins BETWEEN 30001 AND 150000 THEN '30,001-150,000'
+            WHEN
+                total_cli_runtime_mins > 150001 THEN '150,001+'
+        END AS monthly_runtime_mins_segment
+    FROM aggregates
 )
 
 SELECT
@@ -175,21 +171,21 @@ SELECT
     prev_project_segments_monthly.monthly_piplines_active_eom
     AS monthly_piplines_previous,
     COALESCE(
-        project_segments_monthly.monthly_piplines_all_segment,
-        'NO_PIPELINES'
-    ) AS monthly_piplines_all_segment,
-    COALESCE(
-        project_segments_monthly.monthly_piplines_active_segment,
-        'NO_PIPELINES'
-    ) AS monthly_piplines_active_segment,
-    COALESCE(
         project_segments_monthly.monthly_piplines_active_eom_segment,
         'NO_PIPELINES'
     ) AS monthly_piplines_active_eom_segment,
     COALESCE(
         prev_project_segments_monthly.monthly_piplines_active_eom_segment,
         'NO_PIPELINES'
-    ) AS monthly_piplines_previous_segment
+    ) AS monthly_piplines_previous_segment,
+    COALESCE(
+        project_segments_monthly.monthly_runtime_mins_segment,
+        'NO_PIPELINES'
+    ) AS monthly_runtime_mins_segment,
+    COALESCE(
+        prev_project_segments_monthly.monthly_runtime_mins_segment,
+        'NO_PIPELINES'
+    ) AS monthly_runtime_mins_previous_segment
 FROM base
 LEFT JOIN project_segments_monthly
     ON base.project_id = project_segments_monthly.project_id
