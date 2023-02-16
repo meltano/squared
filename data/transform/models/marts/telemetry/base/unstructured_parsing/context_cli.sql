@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH base_1_0_0 AS (
     SELECT
         event_id,

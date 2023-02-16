@@ -15,46 +15,38 @@ SELECT
     NULL AS changed_from,
     NULL AS changed_to,
     NULL AS setting_name,
-    context_exception.exception,
-    context_plugins.plugins_obj,
-    context_cli.command,
-    context_cli.sub_command,
-    context_cli.options_obj,
-    context_environment.freedesktop_version_id,
-    context_environment.machine,
-    context_environment.meltano_version,
-    context_environment.num_cpu_cores_available,
-    context_environment.windows_edition,
-    context_environment.is_dev_build,
-    context_environment.is_ci_environment,
-    context_environment.python_version,
-    context_environment.python_implementation,
-    context_environment.system_name,
-    context_environment.system_release,
-    context_environment.system_version,
-    context_environment.freedesktop_id,
-    context_environment.freedesktop_id_like,
-    context_environment.num_cpu_cores,
-    context_environment.process_hierarchy,
-    context_environment.parent_context_uuid,
-    context_project.context_uuid,
-    context_project.project_uuid,
-    context_project.project_uuid_source,
-    context_project.environment_name_hash,
-    context_project.client_uuid,
-    context_project.send_anonymous_usage_stats,
-    context_project.send_anonymous_usage_stats_source
+    unstruct_context_flattened.exception,
+    unstruct_context_flattened.plugins_obj,
+    unstruct_context_flattened.command,
+    unstruct_context_flattened.sub_command,
+    unstruct_context_flattened.options_obj,
+    unstruct_context_flattened.freedesktop_version_id,
+    unstruct_context_flattened.machine,
+    unstruct_context_flattened.meltano_version,
+    unstruct_context_flattened.num_cpu_cores_available,
+    unstruct_context_flattened.windows_edition,
+    unstruct_context_flattened.is_dev_build,
+    unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.python_version,
+    unstruct_context_flattened.python_implementation,
+    unstruct_context_flattened.system_name,
+    unstruct_context_flattened.system_release,
+    unstruct_context_flattened.system_version,
+    unstruct_context_flattened.freedesktop_id,
+    unstruct_context_flattened.freedesktop_id_like,
+    unstruct_context_flattened.num_cpu_cores,
+    unstruct_context_flattened.process_hierarchy,
+    unstruct_context_flattened.parent_context_uuid,
+    unstruct_context_flattened.context_uuid,
+    unstruct_context_flattened.project_uuid,
+    unstruct_context_flattened.project_uuid_source,
+    unstruct_context_flattened.environment_name_hash,
+    unstruct_context_flattened.client_uuid,
+    unstruct_context_flattened.send_anonymous_usage_stats,
+    unstruct_context_flattened.send_anonymous_usage_stats_source
 FROM {{ ref('event_cli') }}
-LEFT JOIN {{ ref('context_cli') }}
-    ON event_cli.event_id = context_cli.event_id
-LEFT JOIN {{ ref('context_plugins') }}
-    ON event_cli.event_id = context_plugins.event_id
-LEFT JOIN {{ ref('context_exception') }}
-    ON event_cli.event_id = context_exception.event_id
-LEFT JOIN {{ ref('context_environment') }}
-    ON event_cli.event_id = context_environment.event_id
-LEFT JOIN {{ ref('context_project') }}
-    ON event_cli.event_id = context_project.event_id
+LEFT JOIN {{ ref('unstruct_context_flattened') }}
+    ON event_cli.event_id = unstruct_context_flattened.event_id
 
 UNION ALL
 
@@ -71,46 +63,38 @@ SELECT
     NULL AS changed_from,
     NULL AS changed_to,
     NULL AS setting_name,
-    context_exception.exception,
-    context_plugins.plugins_obj,
-    context_cli.command,
-    context_cli.sub_command,
-    context_cli.options_obj,
-    context_environment.freedesktop_version_id,
-    context_environment.machine,
-    context_environment.meltano_version,
-    context_environment.num_cpu_cores_available,
-    context_environment.windows_edition,
-    context_environment.is_dev_build,
-    context_environment.is_ci_environment,
-    context_environment.python_version,
-    context_environment.python_implementation,
-    context_environment.system_name,
-    context_environment.system_release,
-    context_environment.system_version,
-    context_environment.freedesktop_id,
-    context_environment.freedesktop_id_like,
-    context_environment.num_cpu_cores,
-    context_environment.process_hierarchy,
-    context_environment.parent_context_uuid,
-    context_project.context_uuid,
-    context_project.project_uuid,
-    context_project.project_uuid_source,
-    context_project.environment_name_hash,
-    context_project.client_uuid,
-    context_project.send_anonymous_usage_stats,
-    context_project.send_anonymous_usage_stats_source
+    unstruct_context_flattened.exception,
+    unstruct_context_flattened.plugins_obj,
+    unstruct_context_flattened.command,
+    unstruct_context_flattened.sub_command,
+    unstruct_context_flattened.options_obj,
+    unstruct_context_flattened.freedesktop_version_id,
+    unstruct_context_flattened.machine,
+    unstruct_context_flattened.meltano_version,
+    unstruct_context_flattened.num_cpu_cores_available,
+    unstruct_context_flattened.windows_edition,
+    unstruct_context_flattened.is_dev_build,
+    unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.python_version,
+    unstruct_context_flattened.python_implementation,
+    unstruct_context_flattened.system_name,
+    unstruct_context_flattened.system_release,
+    unstruct_context_flattened.system_version,
+    unstruct_context_flattened.freedesktop_id,
+    unstruct_context_flattened.freedesktop_id_like,
+    unstruct_context_flattened.num_cpu_cores,
+    unstruct_context_flattened.process_hierarchy,
+    unstruct_context_flattened.parent_context_uuid,
+    unstruct_context_flattened.context_uuid,
+    unstruct_context_flattened.project_uuid,
+    unstruct_context_flattened.project_uuid_source,
+    unstruct_context_flattened.environment_name_hash,
+    unstruct_context_flattened.client_uuid,
+    unstruct_context_flattened.send_anonymous_usage_stats,
+    unstruct_context_flattened.send_anonymous_usage_stats_source
 FROM {{ ref('event_block') }}
-LEFT JOIN {{ ref('context_cli') }}
-    ON event_block.event_id = context_cli.event_id
-LEFT JOIN {{ ref('context_plugins') }}
-    ON event_block.event_id = context_plugins.event_id
-LEFT JOIN {{ ref('context_exception') }}
-    ON event_block.event_id = context_exception.event_id
-LEFT JOIN {{ ref('context_environment') }}
-    ON event_block.event_id = context_environment.event_id
-LEFT JOIN {{ ref('context_project') }}
-    ON event_block.event_id = context_project.event_id
+LEFT JOIN {{ ref('unstruct_context_flattened') }}
+    ON event_block.event_id = unstruct_context_flattened.event_id
 
 UNION ALL
 
@@ -127,46 +111,38 @@ SELECT
     NULL AS changed_from,
     NULL AS changed_to,
     NULL AS setting_name,
-    context_exception.exception,
-    context_plugins.plugins_obj,
-    context_cli.command,
-    context_cli.sub_command,
-    context_cli.options_obj,
-    context_environment.freedesktop_version_id,
-    context_environment.machine,
-    context_environment.meltano_version,
-    context_environment.num_cpu_cores_available,
-    context_environment.windows_edition,
-    context_environment.is_dev_build,
-    context_environment.is_ci_environment,
-    context_environment.python_version,
-    context_environment.python_implementation,
-    context_environment.system_name,
-    context_environment.system_release,
-    context_environment.system_version,
-    context_environment.freedesktop_id,
-    context_environment.freedesktop_id_like,
-    context_environment.num_cpu_cores,
-    context_environment.process_hierarchy,
-    context_environment.parent_context_uuid,
-    context_project.context_uuid,
-    context_project.project_uuid,
-    context_project.project_uuid_source,
-    context_project.environment_name_hash,
-    context_project.client_uuid,
-    context_project.send_anonymous_usage_stats,
-    context_project.send_anonymous_usage_stats_source
+    unstruct_context_flattened.exception,
+    unstruct_context_flattened.plugins_obj,
+    unstruct_context_flattened.command,
+    unstruct_context_flattened.sub_command,
+    unstruct_context_flattened.options_obj,
+    unstruct_context_flattened.freedesktop_version_id,
+    unstruct_context_flattened.machine,
+    unstruct_context_flattened.meltano_version,
+    unstruct_context_flattened.num_cpu_cores_available,
+    unstruct_context_flattened.windows_edition,
+    unstruct_context_flattened.is_dev_build,
+    unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.python_version,
+    unstruct_context_flattened.python_implementation,
+    unstruct_context_flattened.system_name,
+    unstruct_context_flattened.system_release,
+    unstruct_context_flattened.system_version,
+    unstruct_context_flattened.freedesktop_id,
+    unstruct_context_flattened.freedesktop_id_like,
+    unstruct_context_flattened.num_cpu_cores,
+    unstruct_context_flattened.process_hierarchy,
+    unstruct_context_flattened.parent_context_uuid,
+    unstruct_context_flattened.context_uuid,
+    unstruct_context_flattened.project_uuid,
+    unstruct_context_flattened.project_uuid_source,
+    unstruct_context_flattened.environment_name_hash,
+    unstruct_context_flattened.client_uuid,
+    unstruct_context_flattened.send_anonymous_usage_stats,
+    unstruct_context_flattened.send_anonymous_usage_stats_source
 FROM {{ ref('event_exit') }}
-LEFT JOIN {{ ref('context_cli') }}
-    ON event_exit.event_id = context_cli.event_id
-LEFT JOIN {{ ref('context_plugins') }}
-    ON event_exit.event_id = context_plugins.event_id
-LEFT JOIN {{ ref('context_exception') }}
-    ON event_exit.event_id = context_exception.event_id
-LEFT JOIN {{ ref('context_environment') }}
-    ON event_exit.event_id = context_environment.event_id
-LEFT JOIN {{ ref('context_project') }}
-    ON event_exit.event_id = context_project.event_id
+LEFT JOIN {{ ref('unstruct_context_flattened') }}
+    ON event_exit.event_id = unstruct_context_flattened.event_id
 
 UNION ALL
 
@@ -183,49 +159,42 @@ SELECT
     event_telemetry_state_change.changed_from,
     event_telemetry_state_change.changed_to,
     event_telemetry_state_change.setting_name,
-    context_exception.exception,
-    context_plugins.plugins_obj,
-    context_cli.command,
-    context_cli.sub_command,
-    context_cli.options_obj,
-    context_environment.freedesktop_version_id,
-    context_environment.machine,
-    context_environment.meltano_version,
-    context_environment.num_cpu_cores_available,
-    context_environment.windows_edition,
-    context_environment.is_dev_build,
-    context_environment.is_ci_environment,
-    context_environment.python_version,
-    context_environment.python_implementation,
-    context_environment.system_name,
-    context_environment.system_release,
-    context_environment.system_version,
-    context_environment.freedesktop_id,
-    context_environment.freedesktop_id_like,
-    context_environment.num_cpu_cores,
-    context_environment.process_hierarchy,
-    context_environment.parent_context_uuid,
-    context_project.context_uuid,
-    context_project.project_uuid,
-    context_project.project_uuid_source,
-    context_project.environment_name_hash,
-    context_project.client_uuid,
-    context_project.send_anonymous_usage_stats,
-    context_project.send_anonymous_usage_stats_source
+    unstruct_context_flattened.exception,
+    unstruct_context_flattened.plugins_obj,
+    unstruct_context_flattened.command,
+    unstruct_context_flattened.sub_command,
+    unstruct_context_flattened.options_obj,
+    unstruct_context_flattened.freedesktop_version_id,
+    unstruct_context_flattened.machine,
+    unstruct_context_flattened.meltano_version,
+    unstruct_context_flattened.num_cpu_cores_available,
+    unstruct_context_flattened.windows_edition,
+    unstruct_context_flattened.is_dev_build,
+    unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.python_version,
+    unstruct_context_flattened.python_implementation,
+    unstruct_context_flattened.system_name,
+    unstruct_context_flattened.system_release,
+    unstruct_context_flattened.system_version,
+    unstruct_context_flattened.freedesktop_id,
+    unstruct_context_flattened.freedesktop_id_like,
+    unstruct_context_flattened.num_cpu_cores,
+    unstruct_context_flattened.process_hierarchy,
+    unstruct_context_flattened.parent_context_uuid,
+    unstruct_context_flattened.context_uuid,
+    unstruct_context_flattened.project_uuid,
+    unstruct_context_flattened.project_uuid_source,
+    unstruct_context_flattened.environment_name_hash,
+    unstruct_context_flattened.client_uuid,
+    unstruct_context_flattened.send_anonymous_usage_stats,
+    unstruct_context_flattened.send_anonymous_usage_stats_source
 FROM {{ ref('event_telemetry_state_change') }}
-LEFT JOIN {{ ref('context_cli') }}
-    ON event_telemetry_state_change.event_id = context_cli.event_id
-LEFT JOIN {{ ref('context_plugins') }}
-    ON event_telemetry_state_change.event_id = context_plugins.event_id
-LEFT JOIN {{ ref('context_exception') }}
-    ON event_telemetry_state_change.event_id = context_exception.event_id
-LEFT JOIN {{ ref('context_environment') }}
-    ON event_telemetry_state_change.event_id = context_environment.event_id
-LEFT JOIN {{ ref('context_project') }}
-    ON event_telemetry_state_change.event_id = context_project.event_id
+LEFT JOIN {{ ref('unstruct_context_flattened') }}
+    ON
+        event_telemetry_state_change.event_id = unstruct_context_flattened.event_id
 -- The original implementation didn't have a project_uuid so they aren't
 -- useful for anything and should be excluded.
-WHERE context_project.project_uuid IS NOT NULL
+WHERE unstruct_context_flattened.project_uuid IS NOT NULL
 
 UNION ALL
 
@@ -242,47 +211,39 @@ SELECT
     NULL AS changed_from,
     NULL AS changed_to,
     NULL AS setting_name,
-    context_exception.exception,
-    context_plugins.plugins_obj,
+    unstruct_context_flattened.exception,
+    unstruct_context_flattened.plugins_obj,
     SPLIT_PART(
         event_legacy_with_context.legacy_se_category,
         ' ',
         2
     ) AS command,
     NULL AS sub_command,
-    context_cli.options_obj,
-    context_environment.freedesktop_version_id,
-    context_environment.machine,
-    context_environment.meltano_version,
-    context_environment.num_cpu_cores_available,
-    context_environment.windows_edition,
-    context_environment.is_dev_build,
-    context_environment.is_ci_environment,
-    context_environment.python_version,
-    context_environment.python_implementation,
-    context_environment.system_name,
-    context_environment.system_release,
-    context_environment.system_version,
-    context_environment.freedesktop_id,
-    context_environment.freedesktop_id_like,
-    context_environment.num_cpu_cores,
-    context_environment.process_hierarchy,
-    context_environment.parent_context_uuid,
-    context_project.context_uuid,
-    context_project.project_uuid,
-    context_project.project_uuid_source,
-    context_project.environment_name_hash,
-    context_project.client_uuid,
-    context_project.send_anonymous_usage_stats,
-    context_project.send_anonymous_usage_stats_source
+    unstruct_context_flattened.options_obj,
+    unstruct_context_flattened.freedesktop_version_id,
+    unstruct_context_flattened.machine,
+    unstruct_context_flattened.meltano_version,
+    unstruct_context_flattened.num_cpu_cores_available,
+    unstruct_context_flattened.windows_edition,
+    unstruct_context_flattened.is_dev_build,
+    unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.python_version,
+    unstruct_context_flattened.python_implementation,
+    unstruct_context_flattened.system_name,
+    unstruct_context_flattened.system_release,
+    unstruct_context_flattened.system_version,
+    unstruct_context_flattened.freedesktop_id,
+    unstruct_context_flattened.freedesktop_id_like,
+    unstruct_context_flattened.num_cpu_cores,
+    unstruct_context_flattened.process_hierarchy,
+    unstruct_context_flattened.parent_context_uuid,
+    unstruct_context_flattened.context_uuid,
+    unstruct_context_flattened.project_uuid,
+    unstruct_context_flattened.project_uuid_source,
+    unstruct_context_flattened.environment_name_hash,
+    unstruct_context_flattened.client_uuid,
+    unstruct_context_flattened.send_anonymous_usage_stats,
+    unstruct_context_flattened.send_anonymous_usage_stats_source
 FROM {{ ref('event_legacy_with_context') }}
-LEFT JOIN {{ ref('context_cli') }}
-    ON event_legacy_with_context.event_id = context_cli.event_id
-LEFT JOIN {{ ref('context_plugins') }}
-    ON event_legacy_with_context.event_id = context_plugins.event_id
-LEFT JOIN {{ ref('context_exception') }}
-    ON event_legacy_with_context.event_id = context_exception.event_id
-LEFT JOIN {{ ref('context_environment') }}
-    ON event_legacy_with_context.event_id = context_environment.event_id
-LEFT JOIN {{ ref('context_project') }}
-    ON event_legacy_with_context.event_id = context_project.event_id
+LEFT JOIN {{ ref('unstruct_context_flattened') }}
+    ON event_legacy_with_context.event_id = unstruct_context_flattened.event_id
