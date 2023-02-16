@@ -1,6 +1,7 @@
 WITH base_1_0_0 AS (
     SELECT
         event_id,
+        MAX(event_created_at) AS event_created_at,
         MAX(schema_name) AS schema_name,
         MAX(context:data:command::STRING) AS command,
         MAX(context:data:sub_command::STRING) AS sub_command,
@@ -14,6 +15,7 @@ WITH base_1_0_0 AS (
 base_1_1_0_onward AS (
     SELECT
         event_id,
+        MAX(event_created_at) AS event_created_at,
         MAX(context:schema::STRING) AS schema_name,
         MAX(
             CASE WHEN
