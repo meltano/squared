@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 -- These are events that were sent during the transistion from
 -- structured to unstructured events. They are structured but
 -- have context. They were >2.0 launch but didnt get transisted
