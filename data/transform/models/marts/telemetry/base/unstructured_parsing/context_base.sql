@@ -20,7 +20,9 @@ WHERE event_unstruct.contexts IS NOT NULL
 
 {% if is_incremental() %}
 
-AND event_unstruct.event_created_at >= (SELECT max(event_created_at) FROM {{ this }})
+AND event_unstruct.event_created_at >= (
+    SELECT DATEADD(days, -1, MAX(event_created_at)) FROM {{ this }}
+)
 AND event_unstruct.event_id NOT IN (SELECT event_id FROM {{ this }}) 
 
 {% endif %}
