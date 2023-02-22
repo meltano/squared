@@ -2,8 +2,7 @@ WITH base AS (
     SELECT *
     FROM {{ ref('project_dim') }}
     WHERE project_org_name != 'UNKNOWN'
-)
-,
+),
 
 activity AS (
     SELECT
@@ -19,7 +18,7 @@ activity AS (
                 END
             ),
             0
-        ) AS pipeline_runs_lm,
+        ) AS pipeline_runs_l30,
         ARRAY_TO_STRING(
             ARRAY_AGG(
                 DISTINCT fact_cli_executions.monthly_piplines_active_eom_segment
@@ -34,7 +33,7 @@ activity AS (
     FROM {{ ref('fact_cli_executions') }}
     INNER JOIN base
         ON fact_cli_executions.project_id = base.project_id
-    WHERE fact_cli_executions.date_day >= DATEADD('month', -1, CURRENT_DATE())
+    WHERE fact_cli_executions.date_day >= DATEADD('day', -30, CURRENT_DATE())
     GROUP BY 1, 2
 ),
 
@@ -52,7 +51,8 @@ plugins AS (
 
 SELECT
     activity.*,
-    plugins.unique_plugins
+    plugins.unique_plugins,
+    CURRENT_DATE() AS current_as_of_date
 FROM activity
 LEFT JOIN plugins
     ON plugins.project_org_domain = activity.project_org_domain
