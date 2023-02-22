@@ -84,7 +84,8 @@ SELECT
     END AS execution_location,
     base.active_from,
     base.active_to,
-    ip_org_mapping_lm.leadmagic_company_name AS org_name
+    ip_org_mapping_lm.leadmagic_company_name AS org_name,
+    ip_org_mapping_lm.leadmagic_company_domain AS org_domain
 FROM base
 LEFT JOIN {{ ref('ip_org_mapping_lm') }}
     ON base.ip_address_hash = ip_org_mapping_lm.ip_address_hash
@@ -101,7 +102,8 @@ SELECT
     'REMOTE' AS execution_location,
     '2022-11-16' AS active_from,
     NULL AS active_to,
-    NULL AS org_name
+    NULL AS org_name,
+    NULL AS org_domain
 FROM {{ ref('meltano_cloud_ips') }}
 
 UNION ALL
@@ -113,4 +115,5 @@ SELECT
     'UNKNOWN' AS execution_location,
     NULL AS active_from,
     NULL AS active_to,
-    NULL AS org_name
+    NULL AS org_name,
+    NULL AS org_domain
