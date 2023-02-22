@@ -69,6 +69,7 @@ models:
         +materialized: view
         +schema: slack_notifications
       hubspot:
+        +materialized: view
         +schema: hubspot
     # ------------------
     # Common
