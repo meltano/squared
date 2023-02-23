@@ -386,7 +386,11 @@ SELECT
     COALESCE(
         project_org_mapping.org_name,
         'UNKNOWN'
-    ) AS project_org_name
+    ) AS project_org_name,
+    COALESCE(
+        project_org_mapping.org_domain,
+        'UNKNOWN'
+    ) AS project_org_domain
 FROM project_aggregates
 LEFT JOIN
     first_values ON

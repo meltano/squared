@@ -59,7 +59,16 @@ schedules:
   interval: 0 8 * * *
   job: marts_refresh
 
+- name: hubspot_publish
+  interval: 0 12 * * *
+  job: hubspot_publish
+
 jobs:
+
+- name: hubspot_publish
+  tasks:
+  - dbt-snowflake:run_hubspot_publish
+  - dbt-snowflake:test_hubspot_publish
 
 - name: slack_notifications
   tasks:

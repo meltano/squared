@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: org_activity
+    description: This table includes activity rolled up to the organization level.
+    columns:
+      - name: project_org_name
+        description: The organization name.
+        tests:
+          - not_null
+          - unique
+      - name: project_org_domain
+        description: The organization domain url.
+        tests:
+          - not_null
+          - unique

@@ -3,6 +3,7 @@ WITH base AS (
 
     SELECT
         ip_address_dim.org_name,
+        ip_address_dim.org_domain,
         cli_executions_base.project_id
     FROM {{ ref('cli_executions_base') }}
     LEFT JOIN {{ ref('ip_address_dim') }}
@@ -27,6 +28,7 @@ single_org_projects AS (
 
 SELECT DISTINCT
     base.org_name,
+    base.org_domain,
     base.project_id,
     'LEADMAGIC' AS org_source
 FROM base
@@ -37,6 +39,7 @@ UNION ALL
 
 SELECT DISTINCT
     org_name,
+    org_domain,
     project_id,
     'MANUAL' AS org_source
 FROM {{ ref('internal_data', 'project_org_manual') }}
