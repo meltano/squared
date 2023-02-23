@@ -365,7 +365,7 @@ models:
 
       - name: is_ephemeral_project_id
         description: A boolean whether the project is considered ephemeral or not. Ephemeral
-          means the project lifespan was <= 24 hours and their first event was not today.
+          means the project lifespan > 5 mins, the project_id_source is not random, and the project is not seen only in CI i.e. is_ci_only.
         tests:
           - not_null
 

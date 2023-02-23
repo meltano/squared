@@ -130,8 +130,9 @@ SELECT
         FALSE
     ) AS is_currently_active,
     COALESCE(
-        project_base.lifespan_hours <= 24
-        AND project_base.first_event_at::DATE != CURRENT_DATE,
+        project_base.project_id_source != 'random'
+        AND project_base.is_ci_only = FALSE 
+        AND project_base.lifespan_mins > 5,
         FALSE
     ) AS is_ephemeral_project_id,
     COALESCE(
