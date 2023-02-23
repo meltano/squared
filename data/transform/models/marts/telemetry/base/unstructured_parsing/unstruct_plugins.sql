@@ -52,7 +52,10 @@ SELECT
     CASE
         WHEN plugin_type IN ('extractors', 'loaders', 'mappers') THEN 'singer'
         -- This includes dbt-osmosis and dbt-dry-run
-        WHEN plugin_type IN ('transformers', 'utilities') AND plugin_name LIKE '%dbt%'
+        WHEN
+            plugin_type IN (
+                'transformers', 'utilities'
+            ) AND plugin_name LIKE '%dbt%'
             THEN 'dbt'
         ELSE parent_name END AS plugin_category
 FROM base
