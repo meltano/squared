@@ -14,7 +14,6 @@ WITH base AS (
         AND plugin_type NOT IN ('mappers', 'transforms', 'UNKNOWN')
         AND cli_command IN ('elt', 'run')
         AND pipeline_fk IS NOT NULL
-        AND date_day >= DATEADD('month', -6, CURRENT_DATE())
 ),
 
 pair_roll_up AS (
@@ -40,6 +39,7 @@ pair_roll_up AS (
 
 SELECT
     pair_roll_up.execution_id,
+    extractor.event_count,
     extractor.plugin_exec_pk AS extractor_plugin_exec_pk,
     extractor.plugin_started AS extractor_plugin_started,
     extractor.plugin_ended AS extractor_plugin_ended,
