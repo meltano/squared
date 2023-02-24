@@ -600,3 +600,26 @@ models:
         description: The ending timestamp of the request logs.
         tests:
           - not_null
+
+  - name: fact_el_executions
+    columns:
+      - name: execution_id
+        tests:
+          - not_null
+      - name: extractor_plugin_exec_pk
+        tests:
+          - not_null
+          - unique
+      - name: loader_plugin_exec_pk
+        tests:
+          - not_null
+          - unique
+      - name: cli_command
+        tests:
+          - not_null
+      - name: pipeline_fk
+        tests:
+          - not_null
+      - name: project_id
+        tests:
+          - not_null
