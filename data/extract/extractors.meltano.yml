@@ -2,7 +2,7 @@ plugins:
   extractors:
   - name: tap-cloudwatch
     variant: meltanolabs
-    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.0.1
+    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.2.0
     config:
       log_group_name: API-Gateway-Execution-Logs_i32s35df22/prod
       query: fields @timestamp, @message
