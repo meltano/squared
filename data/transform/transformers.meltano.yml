@@ -38,6 +38,7 @@ plugins:
       run_slack_notifications: run --select +publish.slack_notifications.*
       run_hubspot_publish: run --select publish.hubspot.*
       test_hubspot_publish: test --select publish.hubspot.*
+      build: run -x --defer --state=${MELTANO_PROJECT_ROOT}/.meltano/transformers/dbt/target/
 
     config:
       account: epa06486
