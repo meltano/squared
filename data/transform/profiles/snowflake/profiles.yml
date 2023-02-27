@@ -20,7 +20,7 @@ meltano:
       schema: "DEFAULT"
     dbt_dev:
       type: snowflake
-      threads: 6
+      threads: "{{ env_var('DBT_THREADS', 6) | as_number }}"
       account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
       user: "{{ env_var('SNOWFLAKE_USER') }}"
       password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
