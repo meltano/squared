@@ -9,3 +9,5 @@ include_paths:
 - ./orchestrate/*.meltano.yml
 - ./transform/*.meltano.yml
 - ./utilities/*.meltano.yml
+ff:
+  strict_env_var_mode: true
