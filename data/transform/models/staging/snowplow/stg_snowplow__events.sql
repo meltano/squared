@@ -4,14 +4,7 @@
     )
 }}
 
-WITH blended_source AS (
-
-    SELECT *
-    FROM {{ ref('stg_snowplow__events_union_all') }}
-
-),
-
-source AS (
+WITH source AS (
 
     SELECT
         *,
@@ -19,18 +12,11 @@ source AS (
             PARTITION BY
                 event_id
             ORDER BY event_created_at::TIMESTAMP DESC
-        ) AS row_num
-    FROM blended_source
-
-),
-
-clean_new_source AS (
-
-    SELECT *
-    FROM source
-    WHERE row_num = 1
+        ) AS dedupe_rank
+    FROM {{ ref('stg_snowplow__events_union_all') }}
 
 )
 
 SELECT *
-FROM clean_new_source
+FROM source
+WHERE dedupe_rank = 1
