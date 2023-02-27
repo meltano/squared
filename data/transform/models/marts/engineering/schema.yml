@@ -1,0 +1,15 @@
+version: 2
+
+models:
+  - name: list_issues
+    description: One row per item, describing all github issues and PRs.
+    columns:
+      - name: issue_number
+        description: The PR or Issue number.
+        tests:
+          - not_null
+      - name: issue_id
+        description: The unique key for the issue or PR.
+        tests:
+          - not_null
+          - unique
