@@ -19,6 +19,7 @@ WITH source AS (
     -- -- TODO: Is this safe or would we lose records?:
     -- WHERE uploaded_at >= (SELECT max(UPLOADED_AT) FROM {{ this }})
     -- {% endif %}
+)
 
 SELECT *
 FROM source
