@@ -21,6 +21,9 @@ databases:
     - asteers_prod:
         shared: no
 
+    - brooklyn_data_co_raw:
+        shared: no
+
     - cicd_raw:
         shared: no
     - cicd_prep:
@@ -28,17 +31,14 @@ databases:
     - cicd_prod:
         shared: no
 
-    - brooklyn_data_co_raw:
-        shared: no
-
-    - ryan_miranda_raw:
-        shared: no
-
     - pnadolny_raw:
         shared: no
     - pnadolny_prep:
         shared: no
     - pnadolny_prod:
+        shared: no
+
+    - ryan_miranda_raw:
         shared: no
 
     - staging_raw:
@@ -343,6 +343,26 @@ roles:
                     - asteers_prep.*.*
                     - asteers_prod.*.*
 
+    - brooklyn_data_co:
+        warehouses:
+            - brooklyn_data_co
+        privileges:
+            databases:
+                read:
+                    - brooklyn_data_co_raw
+                write:
+                    - brooklyn_data_co_raw
+            schemas:
+                read:
+                    - brooklyn_data_co_raw.*
+                write:
+                    - brooklyn_data_co_raw.*
+            tables:
+                read:
+                    - brooklyn_data_co_raw.*.*
+                write:
+                    - brooklyn_data_co_raw.*.*
+
     # System user role for CI tests
     - cicd:
         member_of:
@@ -485,6 +505,26 @@ roles:
     - rbaum: 
         member_of: []
 
+    - ryan_miranda:
+        warehouses:
+            - ryan_miranda
+        privileges:
+            databases:
+                read:
+                    - ryan_miranda_raw
+                write:
+                    - ryan_miranda_raw
+            schemas:
+                read:
+                    - ryan_miranda_raw.*
+                write:
+                    - ryan_miranda_raw.*
+            tables:
+                read:
+                    - ryan_miranda_raw.*.*
+                write:
+                    - ryan_miranda_raw.*.*
+
     - tmurphy:
         member_of:
             - developer
@@ -520,46 +560,6 @@ roles:
                 write:
                     - tmurphy_prep.*.*
                     - tmurphy_prod.*.*
-
-    - brooklyn_data_co:
-        warehouses:
-            - brooklyn_data_co
-        privileges:
-            databases:
-                read:
-                    - brooklyn_data_co_raw
-                write:
-                    - brooklyn_data_co_raw
-            schemas:
-                read:
-                    - brooklyn_data_co_raw.*
-                write:
-                    - brooklyn_data_co_raw.*
-            tables:
-                read:
-                    - brooklyn_data_co_raw.*.*
-                write:
-                    - brooklyn_data_co_raw.*.*
-
-    - ryan_miranda:
-        warehouses:
-            - ryan_miranda
-        privileges:
-            databases:
-                read:
-                    - ryan_miranda_raw
-                write:
-                    - ryan_miranda_raw
-            schemas:
-                read:
-                    - ryan_miranda_raw.*
-                write:
-                    - ryan_miranda_raw.*
-            tables:
-                read:
-                    - ryan_miranda_raw.*.*
-                write:
-                    - ryan_miranda_raw.*.*
 
 # ==========================================
 # Users (Data Team and Service Accounts)
@@ -638,6 +638,9 @@ warehouses:
     - admin:
         size: x-small
 
+    - brooklyn_data_co:
+        size: x-small
+
     - cicd:
         size: x-small
 
@@ -650,14 +653,11 @@ warehouses:
     - reporter:
         size: x-small
 
+    - ryan_miranda:
+        size: x-small
+
     - staging:
         size: x-small
 
     - transformer:
-        size: x-small
-
-    - brooklyn_data_co:
-        size: x-small
-
-    - ryan_miranda:
         size: x-small
