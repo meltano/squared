@@ -28,11 +28,10 @@ databases:
     - cicd_prod:
         shared: no
 
-    - jigsaw_labs_raw:
+    - brooklyn_data_co_raw:
         shared: no
-    - jigsaw_labs_prep:
-        shared: no
-    - jigsaw_labs_prod:
+
+    - ryan_miranda_raw:
         shared: no
 
     - pnadolny_raw:
@@ -284,38 +283,6 @@ roles:
             - loader
             - transformer
 
-    - jigsaw_labs_developer:
-        warehouses:
-            - core
-        privileges:
-            databases:
-                read:
-                    - jigsaw_labs_raw
-                    - jigsaw_labs_prep
-                    - jigsaw_labs_prod
-                write:
-                    - jigsaw_labs_raw
-                    - jigsaw_labs_prep
-                    - jigsaw_labs_prod
-            schemas:
-                read:
-                    - jigsaw_labs_raw.*
-                    - jigsaw_labs_prep.*
-                    - jigsaw_labs_prod.*
-                write:
-                    - jigsaw_labs_raw.*
-                    - jigsaw_labs_prep.*
-                    - jigsaw_labs_prod.*
-            tables:
-                read:
-                    - jigsaw_labs_raw.*.*
-                    - jigsaw_labs_prep.*.*
-                    - jigsaw_labs_prod.*.*
-                write:
-                    - jigsaw_labs_raw.*.*
-                    - jigsaw_labs_prep.*.*
-                    - jigsaw_labs_prod.*.*
-
 # ==========================================
 # User Roles ("Special" or elevated users)
 # ==========================================
@@ -554,6 +521,46 @@ roles:
                     - tmurphy_prep.*.*
                     - tmurphy_prod.*.*
 
+    - brooklyn_data_co:
+        warehouses:
+            - brooklyn_data_co
+        privileges:
+            databases:
+                read:
+                    - brooklyn_data_co_raw
+                write:
+                    - brooklyn_data_co_raw
+            schemas:
+                read:
+                    - brooklyn_data_co_raw.*
+                write:
+                    - brooklyn_data_co_raw.*
+            tables:
+                read:
+                    - brooklyn_data_co_raw.*.*
+                write:
+                    - brooklyn_data_co_raw.*.*
+
+    - ryan_miranda:
+        warehouses:
+            - ryan_miranda
+        privileges:
+            databases:
+                read:
+                    - ryan_miranda_raw
+                write:
+                    - ryan_miranda_raw
+            schemas:
+                read:
+                    - ryan_miranda_raw.*
+                write:
+                    - ryan_miranda_raw.*
+            tables:
+                read:
+                    - ryan_miranda_raw.*.*
+                write:
+                    - ryan_miranda_raw.*.*
+
 # ==========================================
 # Users (Data Team and Service Accounts)
 # ==========================================
@@ -614,15 +621,15 @@ users:
         member_of:
             - asteers
 
-    - rsanabani:
+    - brooklyn_data_co:
         can_login: yes
         member_of:
-            - jigsaw_labs_developer
+            - brooklyn_data_co
 
-    - wbanks:
+    - ryan_miranda:
         can_login: yes
         member_of:
-            - jigsaw_labs_developer
+            - ryan_miranda
 
 # ==========================================
 # Warehouses
@@ -647,4 +654,10 @@ warehouses:
         size: x-small
 
     - transformer:
+        size: x-small
+
+    - brooklyn_data_co:
+        size: x-small
+
+    - ryan_miranda:
         size: x-small
