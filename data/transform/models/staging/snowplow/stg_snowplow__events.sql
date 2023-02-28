@@ -1,5 +1,5 @@
+-- TODO: Debug performance. As of Feb 28, build time is approximately 40 minutes
 {{
-    -- TODO: Debug performance. As of Feb 28, build time is approximately 40 minutes
     config(
         materialized='table'
     )
