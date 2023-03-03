@@ -2,7 +2,7 @@ plugins:
   extractors:
   - name: tap-cloudwatch
     variant: meltanolabs
-    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.2.0
+    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.3.0
     config:
       log_group_name: API-Gateway-Execution-Logs_i32s35df22/prod
       query: fields @timestamp, @message
@@ -39,7 +39,7 @@ plugins:
         start_date: '2020-01-01T00:00:00Z'
         key_properties: [id]
         name: azure_ips
-        pattern: ServiceTags_Public_20230213.json
+        pattern: ServiceTags_Public_20230227.json
         json_path: values
   - name: tap-slack
     variant: meltanolabs
