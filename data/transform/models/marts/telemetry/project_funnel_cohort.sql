@@ -18,8 +18,12 @@
         'parent_name': 'NOT_OPT_OUT',
         'filter': "project_lifespan_mins > 5"
 	},
-    "ADD_OR_INSTALL_ATTEMPT": {
+    "NOT_STATE_FIRST_ELT": {
         'parent_name': 'MINS_5_OR_LONGER',
+        'filter': "(first_elt_uses_state IS NULL AND coalesce(ip_address_hash, '') != 'e6e4b47d8cd8840dd90ea08f5e54033f')"
+	},
+    "ADD_OR_INSTALL_ATTEMPT": {
+        'parent_name': 'NOT_STATE_FIRST_ELT',
         'filter': "(add_count_all > 0 OR install_count_all > 0)"
 	},
     "ADD_OR_INSTALL_SUCCESS": {

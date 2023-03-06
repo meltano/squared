@@ -133,7 +133,10 @@ SELECT
     COALESCE(
         project_base.project_id_source = 'random'
         OR project_base.is_ci_only = TRUE
-        OR project_base.lifespan_mins <= 5,
+        OR project_base.lifespan_mins <= 5
+        -- CI ONLY
+        -- state in first command
+        ,
         FALSE
     ) AS is_ephemeral_project_id,
     COALESCE(
