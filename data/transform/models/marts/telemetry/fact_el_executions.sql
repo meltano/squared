@@ -35,6 +35,8 @@ pair_roll_up AS (
         -- If one of the plugins is unknown type we want to exclude both.
         AND plugin_count > 1
     GROUP BY 1, 2
+    -- Exclude edge cases: 2 extractors, 2 loaders, etc.
+    HAVING extractor_plugin_exec_pk IS NOT NULL AND loader_plugin_exec_pk IS NOT NULL
 )
 
 SELECT
