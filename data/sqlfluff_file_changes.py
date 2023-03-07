@@ -14,27 +14,31 @@ SQLFLUFF_FILES = [
     "utilities.meltano.yml",
 ]
 
+try:
+    output = subprocess.run(
+        ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    branch_name = output.stdout.replace("\n", "")
+    output = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+    base_path = output.stdout.replace("\n", "")
+    output = subprocess.run(
+        ["git", "diff", "--name-status", f"main..{branch_name}"],
+        capture_output=True,
+        text=True,
+        check=True
+    )
+except subprocess.CalledProcessError as e:
+    print(e.returncode, e.output)
+    raise e
 
-output = subprocess.run(
-    ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-    capture_output=True,
-    text=True,
-    check=True
-)
-branch_name = output.stdout.replace("\n", "")
-output = subprocess.run(
-    ["git", "rev-parse", "--show-toplevel"],
-    capture_output=True,
-    text=True,
-    check=True
-)
-base_path = output.stdout.replace("\n", "")
-output = subprocess.run(
-    ["git", "diff", "--name-status", f"main..{branch_name}"],
-    capture_output=True,
-    text=True,
-    check=True
-)
 changed_files_raw = output.stdout
 changed_files_list = changed_files_raw.split("\n")
 
