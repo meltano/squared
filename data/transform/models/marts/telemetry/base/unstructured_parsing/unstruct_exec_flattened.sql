@@ -30,7 +30,6 @@ plugins AS (
 SELECT
     base.context_uuid AS execution_id,
     plugins.plugin_list_of_lists AS plugins,
-    CASE WHEN base.opt_obj_row_num = 1 THEN base.options_obj END AS options_obj,
     MIN(base.event_created_at) AS started_ts,
     MAX(base.event_created_at) AS finished_ts,
     MAX(base.ip_address_hash) AS ip_address_hash,
@@ -48,6 +47,12 @@ SELECT
     MAX(base.machine) AS machine,
     MAX(base.system_release) AS system_release,
     MAX(base.project_uuid_source) AS project_uuid_source,
+    GET(
+        ARRAY_AGG(
+            CASE WHEN base.opt_obj_row_num = 1 THEN base.options_obj END
+        ),
+        0
+    ) AS options_obj,
     MAX(base.freedesktop_id) AS freedesktop_id,
     MAX(base.freedesktop_id_like) AS freedesktop_id_like,
     MAX(base.is_dev_build) AS is_dev_build,
@@ -90,4 +95,4 @@ FROM base
 LEFT JOIN plugins
     ON base.context_uuid = plugins.context_uuid
 WHERE base.event_name != 'telemetry_state_change_event'
-GROUP BY 1, 2, 3
+GROUP BY 1, 2
