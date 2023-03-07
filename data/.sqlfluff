@@ -17,7 +17,9 @@ profile = meltano
 tab_space_size = 4
 max_line_length = 80
 indent_unit = space
-comma_style = trailing
+
+[sqlfluff:layout:type:comma]
+line_position = trailing
 
 [sqlfluff:rules:L010] # Keywords
 capitalisation_policy = upper
