@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH reparse_1 AS (
     -- Incident: new schema not registered to SnowcatCloud versions 2.14.0 and
     -- 2.15.0 (partial)

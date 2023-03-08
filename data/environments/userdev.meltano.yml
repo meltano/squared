@@ -22,8 +22,8 @@ environments:
       - name: tap-snowflake
         config:
           dbname: USERDEV_PROD
-          user: ${USER_PREFIX}
-          role: ${USER_PREFIX}
+          user: ${SNOWFLAKE_USER}
+          role: ${SNOWFLAKE_USER}
           warehouse: CORE
       - name: tap-snowflake-metrics-legacy
         config:
@@ -85,7 +85,7 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
   env:
-    USER_PREFIX: PNADOLNY
+    USER_PREFIX: ${SNOWFLAKE_USER}
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin
@@ -97,4 +97,4 @@ environments:
     # Secrets via KMS
     KMS_PUBLIC_KEY_PATH: utilities/kms/Publickey.pem
     KMS_DOTENV_PATH: .env
-    KMS_SECTRETS_PATH: secrets.yml
+    KMS_SECRETS_PATH: secrets.yml

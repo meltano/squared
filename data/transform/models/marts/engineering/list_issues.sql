@@ -1,0 +1,21 @@
+SELECT
+    repo_name,
+    organization_name,
+    state,
+    author_association,
+    labels,
+    reactions,
+    assignees,
+    milestone,
+    issue_id,
+    issue_number,
+    comment_count,
+    is_locked,
+    author_id,
+    author_username,
+    assignee_id,
+    assignee_username,
+    last_updated_ts,
+    created_at_ts,
+    closed_at_ts
+FROM {{ref('stg_github__issues')}}
