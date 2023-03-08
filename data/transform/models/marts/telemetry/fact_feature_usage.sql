@@ -1,7 +1,7 @@
 WITH interactive_config AS (
     SELECT
         'INTERACTIVE_CONFIG' AS feature_id,
-        cli_executions_base.execution_id
+        execution_id
     FROM {{ ref('cli_executions_base') }}
     WHERE cli_command = 'config'
         AND GET(COALESCE(GET(options_obj, 'set'), {}), 'interactive') = TRUE
@@ -10,7 +10,7 @@ WITH interactive_config AS (
 elt_state AS (
     SELECT
         'ELT_STATE_ARG' AS feature_id,
-        cli_executions_base.execution_id
+        execution_id
     FROM {{ ref('cli_executions_base') }}
     WHERE cli_command = 'elt'
         AND NULLIF(
