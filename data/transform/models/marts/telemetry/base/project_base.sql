@@ -25,7 +25,7 @@ WITH first_values AS (
             ORDER BY COALESCE(started_ts, finished_ts) ASC
         ) AS last_meltano_version,
         FIRST_VALUE(
-            GET(options_obj, 0):init:project_directory
+            options_obj:init:project_directory
         ) IGNORE NULLS OVER (
             PARTITION BY
                 project_id
