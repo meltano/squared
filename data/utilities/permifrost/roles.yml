@@ -502,6 +502,10 @@ roles:
                     - staging_prod.*.*
                     - staging_raw.*.*
 
+    - sbalnojan:
+        member_of:
+            - developer
+
     - rbaum: 
         member_of: []
 
@@ -630,6 +634,11 @@ users:
         can_login: yes
         member_of:
             - ryan_miranda
+
+    - sbalnojan:
+        can_login: yes
+        member_of:
+            - sbalnojan
 
 # ==========================================
 # Warehouses

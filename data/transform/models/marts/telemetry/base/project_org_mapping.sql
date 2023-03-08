@@ -20,9 +20,11 @@ single_org_projects AS (
 
     SELECT
         project_id,
-        COUNT(DISTINCT org_name) AS org_count
+        COUNT(DISTINCT org_name) AS org_count,
+        COUNT(DISTINCT org_domain) AS org_domain_count
     FROM base
-    GROUP BY 1 HAVING org_count = 1
+    GROUP BY 1
+    HAVING org_count = 1 AND org_domain_count = 1
 
 )
 
