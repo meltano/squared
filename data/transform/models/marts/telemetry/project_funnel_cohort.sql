@@ -89,4 +89,4 @@
 	}
 %}
 
-{{ project_funnel(mapping, alt_base_level='MINS_5_OR_LONGER') }}
+{{ project_funnel(mapping, alt_base_level='NOT_EPHEMERAL_OTHER') }}
