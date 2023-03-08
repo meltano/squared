@@ -13,7 +13,6 @@ WITH active_executions AS (
 
     SELECT
         project_id,
-        array_agg(distinct ip_address_hash) as ips,
         SUM(
             CASE WHEN is_active_cli_execution THEN 1 END
         ) AS active_executions_count
@@ -21,38 +20,15 @@ WITH active_executions AS (
     GROUP BY 1
 ),
 
-first_exec AS (
-
-    SELECT
-        project_id,
-	    GET(
-            FIRST_VALUE(
-                options_obj
-            ) OVER (
-                PARTITION BY
-                    project_id
-                ORDER BY COALESCE(started_ts, finished_ts) ASC
-            ),
-            0
-        ):elt:state::STRING AS first_elt_uses_state
-    FROM {{ ref('cli_executions_base') }}
-    WHERE CLI_COMMAND = 'elt'
-
-),
-
 project_base AS (
 
     SELECT
         project_dim.*,
-        first_exec.first_elt_uses_state,
-        case when array_size(ips) = 1 then ips[0] end as ip_address_hash,
         active_executions.active_executions_count,
         DATE_TRUNC(WEEK, project_dim.project_first_event_at) AS cohort_week
     FROM {{ ref('project_dim') }}
     LEFT JOIN active_executions
         ON project_dim.project_id = active_executions.project_id
-    LEFT JOIN first_exec
-        ON project_dim.project_id = first_exec.project_id
     {% if project_where_filter %}{{ project_where_filter }}{% endif %}
     
 

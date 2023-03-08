@@ -30,7 +30,14 @@ WITH first_values AS (
             PARTITION BY
                 project_id
             ORDER BY COALESCE(started_ts, finished_ts) ASC
-        ) AS first_project_directory
+        ) AS first_project_directory,
+        FIRST_VALUE(
+            CASE WHEN is_exec_event = TRUE THEN options_obj END
+        ) IGNORE NULLS OVER (
+            PARTITION BY
+                project_id
+            ORDER BY COALESCE(started_ts, finished_ts) ASC
+        ):elt:state::STRING AS first_elt_state
     FROM {{ ref('cli_executions_base') }}
 
 ),
@@ -227,6 +234,7 @@ plugin_aggregates AS (
 project_aggregates AS (
     SELECT
         cli_executions_base.project_id,
+        ARRAY_AGG(DISTINCT ip_address_hash) as ip_hash_list,
         MIN(cli_executions_base.event_created_at) AS first_event_at,
         MAX(cli_executions_base.event_created_at) AS last_event_at,
         DATEDIFF(
@@ -390,7 +398,8 @@ SELECT
     COALESCE(
         project_org_mapping.org_domain,
         'UNKNOWN'
-    ) AS project_org_domain
+    ) AS project_org_domain,
+    CASE WHEN first_values.first_elt_state IS NOT NULL THEN TRUE ELSE FALSE END AS is_state_in_first_exec
 FROM project_aggregates
 LEFT JOIN
     first_values ON

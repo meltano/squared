@@ -134,9 +134,14 @@ SELECT
         project_base.project_id_source = 'random'
         OR project_base.is_ci_only = TRUE
         OR project_base.lifespan_mins <= 5
-        -- CI ONLY
-        -- state in first command
-        ,
+        OR project_base.is_state_in_first_exec = TRUE
+        OR (
+            ARRAY_SIZE(project_base.ip_hash_list) = 1
+            -- Ephemeral IP exclude list
+            AND project_base.ip_hash_list[0] IN (
+                'e6e4b47d8cd8840dd90ea08f5e54033f'
+            )
+        ),
         FALSE
     ) AS is_ephemeral_project_id,
     COALESCE(

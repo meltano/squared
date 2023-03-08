@@ -18,12 +18,12 @@
         'parent_name': 'NOT_OPT_OUT',
         'filter': "project_lifespan_mins > 5"
 	},
-    "NOT_STATE_FIRST_ELT": {
+    "NOT_EPHEMERAL_OTHER": {
         'parent_name': 'MINS_5_OR_LONGER',
-        'filter': "(first_elt_uses_state IS NULL AND coalesce(ip_address_hash, '') != 'e6e4b47d8cd8840dd90ea08f5e54033f')"
+        'filter': "is_ephemeral_project_id = FALSE"
 	},
     "ADD_OR_INSTALL_ATTEMPT": {
-        'parent_name': 'NOT_STATE_FIRST_ELT',
+        'parent_name': 'NOT_EPHEMERAL_OTHER',
         'filter': "(add_count_all > 0 OR install_count_all > 0)"
 	},
     "ADD_OR_INSTALL_SUCCESS": {
