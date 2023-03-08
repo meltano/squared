@@ -58,10 +58,9 @@ run AS (
         execution_id
     FROM {{ ref('fact_cli_executions') }}
     WHERE cli_command = 'run'
-),
+)
 
-all_features AS (
-    {{ feature_usage_macro(
+{{ feature_usage_macro(
     [
         'interactive_config',
         'elt_state',
@@ -72,12 +71,3 @@ all_features AS (
         'run'
     ]
 ) }}
-
-)
-
-SELECT
-    fact_cli_executions.*,
-    all_features.feature_id
-FROM all_features
-LEFT JOIN {{ ref('fact_cli_executions') }}
-    ON all_features.execution_id = fact_cli_executions.execution_id
