@@ -3,6 +3,13 @@ WITH first_values AS (
     SELECT DISTINCT
         project_id,
         FIRST_VALUE(
+            CASE WHEN is_exec_event = TRUE THEN options_obj END
+        ) IGNORE NULLS OVER (
+            PARTITION BY
+                project_id
+            ORDER BY COALESCE(started_ts, finished_ts) ASC
+        ):elt:state::STRING AS first_elt_state,
+        FIRST_VALUE(
             CASE
                 WHEN cli_command != 'init'
                     THEN project_uuid_source
@@ -227,6 +234,7 @@ plugin_aggregates AS (
 project_aggregates AS (
     SELECT
         cli_executions_base.project_id,
+        ARRAY_AGG(DISTINCT cli_executions_base.ip_address_hash) AS ip_hash_list,
         MIN(cli_executions_base.event_created_at) AS first_event_at,
         MAX(cli_executions_base.event_created_at) AS last_event_at,
         DATEDIFF(
@@ -390,7 +398,10 @@ SELECT
     COALESCE(
         project_org_mapping.org_domain,
         'UNKNOWN'
-    ) AS project_org_domain
+    ) AS project_org_domain,
+    COALESCE(first_values.first_elt_state IS NOT NULL,
+        FALSE
+    ) AS is_state_in_first_exec
 FROM project_aggregates
 LEFT JOIN
     first_values ON

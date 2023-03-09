@@ -18,8 +18,12 @@
         'parent_name': 'NOT_OPT_OUT',
         'filter': "project_lifespan_mins > 5"
 	},
-    "ADD_OR_INSTALL_ATTEMPT": {
+    "NOT_EPHEMERAL_OTHER": {
         'parent_name': 'MINS_5_OR_LONGER',
+        'filter': "is_ephemeral_project_id = FALSE"
+	},
+    "ADD_OR_INSTALL_ATTEMPT": {
+        'parent_name': 'NOT_EPHEMERAL_OTHER',
         'filter': "(add_count_all > 0 OR install_count_all > 0)"
 	},
     "ADD_OR_INSTALL_SUCCESS": {
@@ -85,4 +89,4 @@
 	}
 %}
 
-{{ project_funnel(mapping, alt_base_level='MINS_5_OR_LONGER') }}
+{{ project_funnel(mapping, alt_base_level='NOT_EPHEMERAL_OTHER') }}
