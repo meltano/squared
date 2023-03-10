@@ -18,6 +18,16 @@ meltano:
       warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
       database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
       schema: "DEFAULT"
+    dbt_dev:
+      type: snowflake
+      threads: "{{ env_var('DBT_THREADS', 6) | as_number }}"
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('SNOWFLAKE_USER') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('DBT_SNOWFLAKE_ROLE', env_var('SNOWFLAKE_USER', )) }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE') }}"
+      database: "{{ env_var('DBT_SNOWFLAKE_DATABASE') }}"
+      schema: "DEFAULT"
     userdev:
       type: snowflake
       threads: 6

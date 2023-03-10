@@ -1,6 +1,7 @@
 {{
     config(
-        materialized='incremental'
+        materialized='incremental',
+        cluster_by=['event_id']
     )
 }}
 

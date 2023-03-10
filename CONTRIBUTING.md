@@ -35,3 +35,18 @@ terraform-docs .
 ```
 
 This will replace the readme file at `deploy/infrastructure/README.md` and `deploy/meltano/README.md` with any changes made to the module and header docs.
+
+## Developing transforms
+
+To develop transforms, you'll need to duplicate `.env.template` as `.env` and ensure that at least these env vars are declared:
+
+- `SNOWFLAKE_USER`
+- `SNOWFLAKE_PASSWORD`
+
+## Incremental build with `--defer` option
+
+```console
+meltano invoke dbt-snowflake:seed
+meltano invoke dbt-snowflake:snapshot
+meltano invoke dbt-snowflake:build
+```
