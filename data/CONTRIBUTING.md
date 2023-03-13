@@ -2,7 +2,7 @@
 
 ## Transforms
 
-#### Development Environments
+### Development Environments
 
 This Meltano project is configured to use a `userdev` environment by default which allows for developer isolation within the development databases in Snowflake.
 All developer users and roles are configured to be restrictive for all destructive behavior on production while also having loose restrictions on what developers can do in the development database (`USERDEV_PREP` and `USERDEV_PROD`).
@@ -11,15 +11,17 @@ In addition to being safely isolated from production, developers are configured 
 For example when dbt models are run in the userdev environment it maps a production model from `PREP.SCHEMA_NAME.TABLE_NAME` to `USERDEV_PREP.<USER_PREFIX>_SCHEMA_NAME.TABLE_NAME`.
 This allows multiple developers to work in isolation within the same Snowflake development databases.
 
-#### Configuration
+### Configuration
 
-To develop transforms, you'll need at least these env vars are declared in your `.env`:
+To develop transforms, you'll need at least these env vars declared in your `.env`:
 
 - `USER_PREFIX=<YOUR_SNOWFLAKE_USERNAME>`
 - `MELTANO_ENVIRONMENT="userdev"`
 - `SNOWFLAKE_PASSWORD="=<YOUR_SNOWFLAKE_PASSWORD>"`
 
-#### Clone a development environment
+### Clone a development environment
+
+Run the following command to clone or refresh a development environment:
 
 ```console
 meltano run clone_dbt_dev_env
@@ -32,9 +34,8 @@ If your Snowflake user has developer permissions then you will be able to run th
 2. Next it runs `dbt-snowflake:run_views` to build all dbt-owned views in your isolated development environment.
 
 Once this completes you have a full development environment cloned from production.
---select my_new_model`
 
-#### Common workflows and tips
+### Common workflows and tips
 
 A common workflow for a developer intending to make changes to the Meltano managed dbt project is:
 
@@ -56,7 +57,7 @@ Long running models of note:
 - marts.telemetry.base.unstructured_parsing.unstruct_exec_flattened
 
 
-#### Scheduling models
+### Scheduling models
 
 After the model changes are complete, evaluate whether the models need a new job/schedule or if theyre already managed by an existing schedule.
 If a schedule is needed:
