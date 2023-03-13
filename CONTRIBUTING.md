@@ -2,9 +2,7 @@
 
 ## `data/`
 
-Our Meltano Project.
-
-DETAILS COMING SOON
+See the [data/CONTRIBUTING.md](./data/CONTRIBUTING.md) guide for more details on contributing to our Meltano project.
 
 ## `infrastructure/`
 
