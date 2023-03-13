@@ -106,13 +106,11 @@ class SnowflakeCloner(ExtensionBase):
         })
 
         create_table = [
-            f"CREATE {'TRANSIENT ' if row[3] == 'YES' else ''}TABLE {clone_to_db}.{schema_prefix}{row[0]}.{row[1]} CLONE {clone_from_db}.{row[0]}.{row[1]};"
+            f"CREATE OR REPLACE {'TRANSIENT ' if row[3] == 'YES' else ''}TABLE {clone_to_db}.{schema_prefix}{row[0]}.{row[1]} CLONE {clone_from_db}.{row[0]}.{row[1]};"
             for row in tables if 'TABLE' in row[2]
         ]
 
-        # TODO: how to replicate views
         commands = create_schema + create_table
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=threads) as executor:
             results = list(tqdm(executor.map(snowflake.execute, commands), total=len(commands)))
-        log.info(commands)

@@ -17,7 +17,7 @@ To develop transforms, you'll need at least these env vars declared in your `.en
 
 - `USER_PREFIX=<YOUR_SNOWFLAKE_USERNAME>`
 - `MELTANO_ENVIRONMENT="userdev"`
-- `SNOWFLAKE_PASSWORD="=<YOUR_SNOWFLAKE_PASSWORD>"`
+- `SNOWFLAKE_PASSWORD="<YOUR_SNOWFLAKE_PASSWORD>"`
 
 ### Clone a development environment
 
