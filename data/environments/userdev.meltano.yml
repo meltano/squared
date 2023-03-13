@@ -69,10 +69,10 @@ environments:
           skip_pre_invoke: true
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
-          # database_raw: RAW
+          database_raw: RAW
           # Uncomment for reading a custom RAW schema
-          database_raw: USERDEV_RAW
-          source_schema_prefix: ${USER_PREFIX}_
+          # database_raw: USERDEV_RAW
+          # source_schema_prefix: ${USER_PREFIX}_
           target_schema_prefix: ${USER_PREFIX}_
       - name: sqlfluff
         config:
@@ -84,6 +84,20 @@ environments:
           username: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+      - name: snowflake-cloner
+        config:
+          clone_from_db_prep: PREP
+          clone_from_db_prod: PROD
+          clone_to_db_prep: USERDEV_PREP
+          clone_to_db_prod: USERDEV_PROD
+          account: epa06486
+          user: ${USER_PREFIX}
+          password: ${SNOWFLAKE_PASSWORD}
+          role: ${USER_PREFIX}
+          warehouse: CORE
+          threads: 6
+          schema_prefix: ${USER_PREFIX}_
+
   env:
     USER_PREFIX: PNADOLNY
     SUPERSET_API_URL: http://localhost:8088

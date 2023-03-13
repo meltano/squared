@@ -74,3 +74,32 @@ plugins:
       KMS_PUBLIC_KEY_PATH: utilities/kms/Publickey.pem
       KMS_DOTENV_PATH: .env
       KMS_SECTRETS_PATH: secrets.yml
+  - name: snowflake-cloner
+    pip_url: -e utilities/snowflake-cloner
+    namespace: snowflake-cloner
+    executable: snowflakecloner_extension
+    settings:
+    - name: clone_from_db_prep
+    - name: clone_to_db_prep
+    - name: clone_from_db_prod
+    - name: clone_to_db_prod
+    - name: account
+    - name: user
+    - name: password
+      kind: password
+    - name: role
+    - name: warehouse
+    - name: threads
+    - name: schema_prefix
+    settings_group_validation:
+    - - clone_from_db
+        clone_to_db
+        account
+        user
+        password
+        role
+        warehouse
+    commands:
+      clone_raw: clone ${SNOWFLAKE_CLONER_CLONE_FROM_DB_RAW} ${SNOWFLAKE_CLONER_CLONE_TO_DB_RAW} ${SNOWFLAKE_CLONER_ACCOUNT} ${SNOWFLAKE_CLONER_USER} ${SNOWFLAKE_CLONER_PASSWORD} ${SNOWFLAKE_CLONER_ROLE} ${SNOWFLAKE_CLONER_WAREHOUSE} ${SNOWFLAKE_CLONER_THREADS} ${SNOWFLAKE_CLONER_SCHEMA_PREFIX}
+      clone_prep: clone ${SNOWFLAKE_CLONER_CLONE_FROM_DB_PREP} ${SNOWFLAKE_CLONER_CLONE_TO_DB_PREP} ${SNOWFLAKE_CLONER_ACCOUNT} ${SNOWFLAKE_CLONER_USER} ${SNOWFLAKE_CLONER_PASSWORD} ${SNOWFLAKE_CLONER_ROLE} ${SNOWFLAKE_CLONER_WAREHOUSE} ${SNOWFLAKE_CLONER_THREADS} ${SNOWFLAKE_CLONER_SCHEMA_PREFIX}
+      clone_prod: clone ${SNOWFLAKE_CLONER_CLONE_FROM_DB_PROD} ${SNOWFLAKE_CLONER_CLONE_TO_DB_PROD} ${SNOWFLAKE_CLONER_ACCOUNT} ${SNOWFLAKE_CLONER_USER} ${SNOWFLAKE_CLONER_PASSWORD} ${SNOWFLAKE_CLONER_ROLE} ${SNOWFLAKE_CLONER_WAREHOUSE} ${SNOWFLAKE_CLONER_THREADS} ${SNOWFLAKE_CLONER_SCHEMA_PREFIX}
