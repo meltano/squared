@@ -1,0 +1,12 @@
+# Changes here will be overwritten by Copier
+_commit: v0.3.0
+_src_path: gh:meltano/edk
+admin_name: Pat Nadolny
+cli_prefix: snowflakecloner
+extension_description: A meltano utility extension for cloning Snowflake tables and
+    views into a development or testing environment.
+extension_id: snowflakecloner-ext
+extension_name: SnowflakeCloner
+extension_name_lower: snowflakecloner
+library_name: snowflakecloner_ext
+wrapper_target_name: null

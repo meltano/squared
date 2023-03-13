@@ -65,6 +65,12 @@ schedules:
 
 jobs:
 
+- name: clone_dbt_dev_env
+  tasks:
+  - snowflake-cloner:clone_prep
+  - snowflake-cloner:clone_prod
+  - dbt-snowflake:run_views
+
 - name: hubspot_publish
   tasks:
   - dbt-snowflake:run_hubspot_publish
