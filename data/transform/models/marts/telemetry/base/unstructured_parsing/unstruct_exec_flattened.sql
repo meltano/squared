@@ -9,7 +9,7 @@ WITH base AS (
         ROW_NUMBER() OVER (
             PARTITION BY
                 context_uuid
-            ORDER BY LEN(options_obj::string) DESC
+            ORDER BY COALESCE(LEN(options_obj::string), 0) DESC
         ) AS opt_obj_row_num
     FROM {{ ref('unstruct_event_flattened') }}
 
