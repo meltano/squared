@@ -63,6 +63,8 @@ SELECT
     ) AS environment_name_hash,
     MAX(base.client_uuid) AS client_uuid,
     MAX(base.is_ci_environment) AS is_ci_environment,
+    MAX(base.notable_flag_env_vars) AS notable_flag_env_vars,
+    MAX(base.notable_hashed_env_vars) AS notable_hashed_env_vars,
     MAX(base.num_cpu_cores) AS num_cpu_cores,
     MAX(
         base.python_implementation
