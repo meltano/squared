@@ -199,7 +199,8 @@ SELECT
 FROM {{ ref('event_telemetry_state_change') }}
 LEFT JOIN {{ ref('unstruct_context_flattened') }}
     ON
-        event_telemetry_state_change.event_id = unstruct_context_flattened.event_id
+        event_telemetry_state_change.event_id
+        = unstruct_context_flattened.event_id
 -- The original implementation didn't have a project_uuid so they aren't
 -- useful for anything and should be excluded.
 WHERE unstruct_context_flattened.project_uuid IS NOT NULL
