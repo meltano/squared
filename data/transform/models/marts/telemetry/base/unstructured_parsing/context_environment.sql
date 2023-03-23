@@ -24,6 +24,7 @@ WITH base AS (
         MAX(context:data:is_dev_build::STRING) AS is_dev_build,
         MAX(context:data:is_ci_environment::STRING) AS is_ci_environment,
         MAX(context:data:notable_flag_env_vars) AS notable_flag_env_vars,
+        MAX(context:data:notable_hashed_env_vars) AS notable_hashed_env_vars,
         MAX(context:data:python_version::STRING) AS python_version,
         MAX(
             context:data:python_implementation::STRING

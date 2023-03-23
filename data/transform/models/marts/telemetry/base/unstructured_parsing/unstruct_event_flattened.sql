@@ -27,6 +27,8 @@ SELECT
     unstruct_context_flattened.windows_edition,
     unstruct_context_flattened.is_dev_build,
     unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.notable_flag_env_vars,
+    unstruct_context_flattened.notable_hashed_env_vars,
     unstruct_context_flattened.python_version,
     unstruct_context_flattened.python_implementation,
     unstruct_context_flattened.system_name,
@@ -75,6 +77,8 @@ SELECT
     unstruct_context_flattened.windows_edition,
     unstruct_context_flattened.is_dev_build,
     unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.notable_flag_env_vars,
+    unstruct_context_flattened.notable_hashed_env_vars,
     unstruct_context_flattened.python_version,
     unstruct_context_flattened.python_implementation,
     unstruct_context_flattened.system_name,
@@ -123,6 +127,8 @@ SELECT
     unstruct_context_flattened.windows_edition,
     unstruct_context_flattened.is_dev_build,
     unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.notable_flag_env_vars,
+    unstruct_context_flattened.notable_hashed_env_vars,
     unstruct_context_flattened.python_version,
     unstruct_context_flattened.python_implementation,
     unstruct_context_flattened.system_name,
@@ -171,6 +177,8 @@ SELECT
     unstruct_context_flattened.windows_edition,
     unstruct_context_flattened.is_dev_build,
     unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.notable_flag_env_vars,
+    unstruct_context_flattened.notable_hashed_env_vars,
     unstruct_context_flattened.python_version,
     unstruct_context_flattened.python_implementation,
     unstruct_context_flattened.system_name,
@@ -191,7 +199,8 @@ SELECT
 FROM {{ ref('event_telemetry_state_change') }}
 LEFT JOIN {{ ref('unstruct_context_flattened') }}
     ON
-        event_telemetry_state_change.event_id = unstruct_context_flattened.event_id
+        event_telemetry_state_change.event_id
+        = unstruct_context_flattened.event_id
 -- The original implementation didn't have a project_uuid so they aren't
 -- useful for anything and should be excluded.
 WHERE unstruct_context_flattened.project_uuid IS NOT NULL
@@ -227,6 +236,8 @@ SELECT
     unstruct_context_flattened.windows_edition,
     unstruct_context_flattened.is_dev_build,
     unstruct_context_flattened.is_ci_environment,
+    unstruct_context_flattened.notable_flag_env_vars,
+    unstruct_context_flattened.notable_hashed_env_vars,
     unstruct_context_flattened.python_version,
     unstruct_context_flattened.python_implementation,
     unstruct_context_flattened.system_name,

@@ -19,6 +19,8 @@ SELECT
     context_environment.windows_edition,
     context_environment.is_dev_build,
     context_environment.is_ci_environment,
+    context_environment.notable_flag_env_vars,
+    context_environment.notable_hashed_env_vars,
     context_environment.python_version,
     context_environment.python_implementation,
     context_environment.system_name,

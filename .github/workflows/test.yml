@@ -54,7 +54,8 @@ jobs:
     # Run Test
     - run: meltano install utilities sqlfluff dbt-snowflake
     - run: meltano run dbt-snowflake:deps
-    - run: meltano invoke sqlfluff lint $(python sqlfluff_file_changes.py)
+    - run: meltano invoke sqlfluff lint
+    # - run: meltano invoke sqlfluff lint $(python sqlfluff_file_changes.py)
 
   dbt_seed:
     runs-on: ubuntu-latest
