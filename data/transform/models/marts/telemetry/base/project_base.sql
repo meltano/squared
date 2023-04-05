@@ -382,7 +382,8 @@ SELECT
         ELSE
             COALESCE(
                 first_values.first_source,
-                -- Pre 2.0 so no project_uuid_source present or only command is init
+                -- Pre 2.0 so no project_uuid_source present
+                -- or only command is init
                 'UNKNOWN'
             )
     END AS project_id_source,
