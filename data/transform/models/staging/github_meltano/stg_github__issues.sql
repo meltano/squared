@@ -35,7 +35,8 @@ renamed AS (
         assignee:login::STRING AS assignee_username,
         COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user
     FROM source
-    WHERE row_num = 1
+    WHERE
+        row_num = 1
         AND type != 'pull_request'
 
 )

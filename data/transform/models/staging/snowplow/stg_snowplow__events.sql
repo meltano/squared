@@ -23,13 +23,13 @@ WITH blended_source AS (
         {% endif %}
         {% endif %}
 
-        UNION ALL
+    UNION ALL
 
-        SELECT
-            *,
-            TRUE AS snowplow_bad_parsed
-        FROM {{ ref('snowplow_bad_parsed') }}
-        {% if is_incremental() %}
+    SELECT
+        *,
+        TRUE AS snowplow_bad_parsed
+    FROM {{ ref('snowplow_bad_parsed') }}
+    {% if is_incremental() %}
 
         WHERE event_id NOT IN (SELECT DISTINCT event_id FROM {{ this }} WHERE snowplow_bad_parsed = TRUE)
 
