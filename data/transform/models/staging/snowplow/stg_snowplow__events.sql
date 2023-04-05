@@ -8,11 +8,11 @@ WITH blended_source AS (
     SELECT
         *,
         FALSE AS snowplow_bad_parsed
-        {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
-        FROM raw.snowplow.events
-        WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -3, CURRENT_DATE)
-        {% else %}
+    FROM raw.snowplow.events
+    WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -3, CURRENT_DATE)
+    {% else %}
 
         FROM {{ source('snowplow', 'events') }}
 
