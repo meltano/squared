@@ -77,6 +77,7 @@ environments:
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
       - name: great_expectations
         config:
           prod_database: USERDEV_PROD

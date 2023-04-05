@@ -34,14 +34,19 @@ calculated AS (
             DAYOFWEEK, date_day
         ) + 1 AS day_of_week,
 
-        CASE WHEN day_name = 'Sun' THEN date_day
-            ELSE DATEADD(
-                'day', -1, DATE_TRUNC('week', date_day)
-            ) END AS first_day_of_week,
+        CASE
+            WHEN day_name = 'Sun' THEN date_day
+            ELSE
+                DATEADD(
+                    'day', -1, DATE_TRUNC('week', date_day)
+                )
+        END AS first_day_of_week,
 
-        CASE WHEN day_name = 'Sun' THEN WEEK(date_day) + 1
+        CASE
+            WHEN day_name = 'Sun' THEN WEEK(date_day) + 1
             --remove this column
-            ELSE WEEK(date_day) END AS week_of_year_temp,
+            ELSE WEEK(date_day)
+        END AS week_of_year_temp,
 
         CASE
             WHEN
@@ -49,7 +54,8 @@ calculated AS (
                     week_of_year_temp
                 ) OVER (ORDER BY date_day) = '1'
                 THEN '1'
-            ELSE week_of_year_temp END AS week_of_year,
+            ELSE week_of_year_temp
+        END AS week_of_year,
 
         DATE_PART(
             'day', date_day
@@ -63,15 +69,19 @@ calculated AS (
             PARTITION BY year_actual ORDER BY date_day
         ) AS day_of_year,
 
-        CASE WHEN month_actual < 2
-            THEN year_actual
-            ELSE (year_actual + 1) END AS fiscal_year,
+        CASE
+            WHEN month_actual < 2
+                THEN year_actual
+            ELSE (year_actual + 1)
+        END AS fiscal_year,
 
-        CASE WHEN month_actual < 2 THEN '4'
+        CASE
+            WHEN month_actual < 2 THEN '4'
             WHEN month_actual < 5 THEN '1'
             WHEN month_actual < 8 THEN '2'
             WHEN month_actual < 11 THEN '3'
-            ELSE '4' END AS fiscal_quarter,
+            ELSE '4'
+        END AS fiscal_quarter,
 
         ROW_NUMBER() OVER (
             PARTITION BY fiscal_year, fiscal_quarter ORDER BY date_day
@@ -145,8 +155,10 @@ calculated AS (
             'week', first_day_of_fiscal_year, date_day
         ) + 1 AS week_of_fiscal_year,
 
-        CASE WHEN EXTRACT('month', date_day) = 1 THEN 12
-            ELSE EXTRACT('month', date_day) - 1 END AS month_of_fiscal_year,
+        CASE
+            WHEN EXTRACT('month', date_day) = 1 THEN 12
+            ELSE EXTRACT('month', date_day) - 1
+        END AS month_of_fiscal_year,
 
         LAST_VALUE(
             date_day
@@ -158,7 +170,8 @@ calculated AS (
             year_actual || '-Q' || EXTRACT(QUARTER FROM date_day)
         ) AS quarter_name,
 
-        (fiscal_year || '-' || DECODE(fiscal_quarter,
+        (fiscal_year || '-' || DECODE(
+            fiscal_quarter,
             1, 'Q1',
             2, 'Q2',
             3, 'Q3',
