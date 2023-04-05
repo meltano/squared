@@ -36,7 +36,8 @@ SELECT
         'capabilities',
         CASE
             WHEN
-                stg_github_search__repositories.connector_type = 'tap' THEN [
+                stg_github_search__repositories.connector_type = 'tap' THEN
+                [
                     'catalog', 'discover', 'state'
                 ]
             ELSE []
@@ -54,15 +55,16 @@ SELECT
 FROM {{ ref('stg_github_search__repositories') }}
 LEFT JOIN
     {{ ref('stg_meltanohub__plugins') }} ON
-        stg_github_search__repositories.repo_url = stg_meltanohub__plugins.repo
+    stg_github_search__repositories.repo_url = stg_meltanohub__plugins.repo
 LEFT JOIN
     {{ ref('hub_repos_to_exclude') }} ON
-        stg_github_search__repositories.repo_url = hub_repos_to_exclude.repo_url
+    stg_github_search__repositories.repo_url = hub_repos_to_exclude.repo_url
 LEFT JOIN
     {{ ref('stg_github_search__readme') }} ON
-        stg_github_search__repositories.repo_url
-        = stg_github_search__readme.repo_url
-WHERE stg_github_search__repositories.visibility = 'public'
+    stg_github_search__repositories.repo_url
+    = stg_github_search__readme.repo_url
+WHERE
+    stg_github_search__repositories.visibility = 'public'
     AND stg_github_search__repositories.is_disabled = FALSE
     AND stg_github_search__repositories.is_archived = FALSE
     AND stg_github_search__repositories.size_kb > 30
