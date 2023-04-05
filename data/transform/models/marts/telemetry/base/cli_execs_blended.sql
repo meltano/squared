@@ -12,7 +12,7 @@ SELECT
 FROM {{ ref('unstruct_exec_flattened') }}
 INNER JOIN
     {{ ref('event_src_activation') }} ON
-        unstruct_exec_flattened.project_id = event_src_activation.project_id
+    unstruct_exec_flattened.project_id = event_src_activation.project_id
 WHERE
     unstruct_exec_flattened.started_ts >= event_src_activation.sp_activate_date
 
@@ -28,7 +28,7 @@ SELECT
 FROM {{ ref('stg_snowplow__events') }}
 INNER JOIN
     {{ ref('event_src_activation') }} ON
-        stg_snowplow__events.se_label = event_src_activation.project_id
+    stg_snowplow__events.se_label = event_src_activation.project_id
 WHERE
     stg_snowplow__events.event_created_date
     >= event_src_activation.sp_activate_date
@@ -49,8 +49,9 @@ SELECT
 FROM {{ ref('stg_ga__cli_events') }}
 LEFT JOIN
     {{ ref('event_src_activation') }} ON
-        stg_ga__cli_events.project_id = event_src_activation.project_id
+    stg_ga__cli_events.project_id = event_src_activation.project_id
 WHERE
-    (event_src_activation.sp_activate_date IS NULL
+    (
+        event_src_activation.sp_activate_date IS NULL
         OR stg_ga__cli_events.event_date < event_src_activation.sp_activate_date
     )

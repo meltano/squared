@@ -33,9 +33,10 @@ SELECT
 FROM {{ ref('structured_executions') }}
 LEFT JOIN
     {{ ref('cmd_parsed_all') }} ON
-        structured_executions.command = cmd_parsed_all.command
+    structured_executions.command = cmd_parsed_all.command
 LEFT JOIN
     {{ ref('struct_plugins') }} ON
-        structured_executions.command = struct_plugins.command
-WHERE cmd_parsed_all.command_type = 'plugin'
+    structured_executions.command = struct_plugins.command
+WHERE
+    cmd_parsed_all.command_type = 'plugin'
     AND struct_plugins.plugin_name IS NOT NULL

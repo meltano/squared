@@ -149,7 +149,8 @@ SELECT
             -- codespace original path - 'PosixPath(\'new_project\')'
             'e5ca2eeb4da09ea1a66c3d9391b5bf43296e309c619c04914ac5bffbb3e7cf54',
             -- updated uuid - 'PosixPath(\'b54c6cfe2f8f831389a5b9ca409f410c\')'
-            '781d839e18d017b347cf90a22e18b407e3cdacb2a9cc907d3693893a790fdc4c'),
+            '781d839e18d017b347cf90a22e18b407e3cdacb2a9cc907d3693893a790fdc4c'
+        ),
         FALSE
     ) AS is_codespace_demo,
     COALESCE(
@@ -157,10 +158,11 @@ SELECT
             -- full GSG tutorial path - 'PosixPath(\'my-meltano-project\')'
             'edd9334eaeaa3b81f964e18c5840955de8791ea220740459f7393deca03085f6',
             -- mulit part GSG tutorial path - 'PosixPath(\'my-new-project\')'
-            'ffd7f2044d5bf2efc6bd4353979041951c565125c08186e3160be926a6ee1e75'),
+            'ffd7f2044d5bf2efc6bd4353979041951c565125c08186e3160be926a6ee1e75'
+        ),
         FALSE
     ) AS is_gsg_tutorial
 FROM {{ ref('project_base') }}
 LEFT JOIN
     active_projects ON
-        project_base.project_id = active_projects.project_id
+    project_base.project_id = active_projects.project_id

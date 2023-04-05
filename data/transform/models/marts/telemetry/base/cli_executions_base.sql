@@ -107,7 +107,8 @@ combined AS (
         event_commands_parsed.is_os_feature_mappers,
         event_commands_parsed.is_os_feature_test,
         event_commands_parsed.is_os_feature_run,
-        COALESCE(NOT(event_commands_parsed.is_plugin_dbt
+        COALESCE(NOT(
+            event_commands_parsed.is_plugin_dbt
             OR event_commands_parsed.is_plugin_singer
             OR event_commands_parsed.is_plugin_airflow
             OR event_commands_parsed.is_plugin_dagster
@@ -118,10 +119,12 @@ combined AS (
         ), FALSE) AS is_plugin_other,
         COALESCE(
             retention.first_event_date = structured_executions.event_created_at,
-            FALSE) AS is_acquired_date,
+            FALSE
+        ) AS is_acquired_date,
         COALESCE(
             retention.last_event_date = structured_executions.event_created_at,
-            FALSE) AS is_churned_date,
+            FALSE
+        ) AS is_churned_date,
         COALESCE(
             structured_executions.event_created_at >= DATEADD(
                 MONTH, 1, DATE_TRUNC(
@@ -137,7 +140,7 @@ combined AS (
         ON structured_executions.command = event_commands_parsed.command
     LEFT JOIN
         {{ ref('cmd_parsed_all') }} ON
-            structured_executions.command = cmd_parsed_all.command
+        structured_executions.command = cmd_parsed_all.command
     LEFT JOIN retention
         ON structured_executions.project_id = retention.project_id
 
@@ -173,13 +176,13 @@ combined AS (
         unstructured_executions.is_ci_environment,
         unstructured_executions.options_obj,
         COALESCE(unstructured_executions.cli_command IN (
-                'meltano transforms',
-                'meltano dashboards',
-                'meltano models',
-                'transforms',
-                'dashboards',
-                'models'
-            ), FALSE) AS is_legacy_event,
+            'meltano transforms',
+            'meltano dashboards',
+            'meltano models',
+            'transforms',
+            'dashboards',
+            'models'
+        ), FALSE) AS is_legacy_event,
 
         -- Plugins
         COALESCE(unstruct_prep.is_plugin_dbt, FALSE) AS is_plugin_dbt,
@@ -281,5 +284,6 @@ SELECT
     ) AS cli_runtime_ms
 FROM combined
 LEFT JOIN {{ ref('hash_lookup') }}
-    ON combined.environment_name_hash = hash_lookup.hash_value
+    ON
+        combined.environment_name_hash = hash_lookup.hash_value
         AND hash_lookup.category = 'environment'

@@ -10,7 +10,8 @@ WITH base AS (
         ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
     LEFT JOIN {{ ref('internal_data', 'project_org_manual') }}
         ON cli_executions_base.project_id = project_org_manual.project_id
-    WHERE ip_address_dim.org_name IS NOT NULL
+    WHERE
+        ip_address_dim.org_name IS NOT NULL
         -- Exclude manual override of Leadmagic
         AND project_org_manual.project_id IS NULL
 

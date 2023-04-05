@@ -9,7 +9,8 @@ SELECT
     COALESCE(
         unique_commands.command LIKE '%--transform run%'
         OR unique_commands.command LIKE '%--transform only%',
-        FALSE) AS dbt_run
+        FALSE
+    ) AS dbt_run
 FROM {{ ref('unique_commands') }}
 LEFT JOIN
     {{ ref('args_parsed') }} ON unique_commands.command = args_parsed.command

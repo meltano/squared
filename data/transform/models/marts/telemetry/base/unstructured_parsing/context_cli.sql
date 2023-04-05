@@ -24,22 +24,26 @@ base_1_1_0_onward AS (
         MAX(event_created_at) AS event_created_at,
         MAX(context:schema::STRING) AS schema_name,
         MAX(
-            CASE WHEN
-                context:data:command::STRING != 'cli'
-                AND COALESCE(
-                    context:data:parent_command_hint,
-                    'cli'
-                ) = 'cli'
-                THEN context:data:command::STRING END
+            CASE
+                WHEN
+                    context:data:command::STRING != 'cli'
+                    AND COALESCE(
+                        context:data:parent_command_hint,
+                        'cli'
+                    ) = 'cli'
+                    THEN context:data:command::STRING
+            END
         ) AS command,
         MAX(
-            CASE WHEN
-                context:data:command::STRING != 'cli'
-                AND COALESCE(
-                    context:data:parent_command_hint,
-                    'cli'
-                ) != 'cli'
-                THEN context:data:command::STRING END
+            CASE
+                WHEN
+                    context:data:command::STRING != 'cli'
+                    AND COALESCE(
+                        context:data:parent_command_hint,
+                        'cli'
+                    ) != 'cli'
+                    THEN context:data:command::STRING
+            END
         ) AS sub_command,
         OBJECT_AGG(context:data:command, context:data:options) AS options_obj,
         MAX(SPLIT_PART(schema_name, '/', -1)) AS schema_version

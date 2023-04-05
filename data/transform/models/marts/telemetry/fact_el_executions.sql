@@ -10,7 +10,8 @@ WITH base AS (
             WHEN MOD(row_num, 2) = 0 THEN row_num ELSE row_num + 1
         END AS plugin_pair_index
     FROM {{ ref('fact_plugin_usage') }}
-    WHERE plugin_category = 'singer'
+    WHERE
+        plugin_category = 'singer'
         AND plugin_type NOT IN ('mappers', 'transforms', 'UNKNOWN')
         AND cli_command IN ('elt', 'run')
         AND pipeline_fk IS NOT NULL

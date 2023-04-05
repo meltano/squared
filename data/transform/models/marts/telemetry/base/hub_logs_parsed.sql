@@ -21,7 +21,8 @@ WITH base AS (
             WHEN
                 startswith(
                     payload, 'Method'
-                ) THEN array_to_string(
+                ) THEN
+                array_to_string(
                     array_slice(split(payload, ':'), 1, 100000000), ':'
                 )
         END AS method_body,
@@ -31,13 +32,15 @@ WITH base AS (
         END AS status_code,
         CASE
             WHEN
-                payload LIKE 'Received response.%' THEN split_part(
+                payload LIKE 'Received response.%' THEN
+                split_part(
                     split_part(payload, 'Integration latency: ', 2), ' ms', 1
                 )
         END AS integration_latency_ms,
         CASE
             WHEN
-                user_agent LIKE 'Meltano%' THEN replace(
+                user_agent LIKE 'Meltano%' THEN
+                replace(
                     user_agent, 'Meltano/', ''
                 )
         END AS meltano_version,

@@ -41,7 +41,8 @@ SELECT
                 SELECT
                     fact_cli_executions.date_day,
                     fact_cli_executions.project_id,
-                    COUNT(DISTINCT
+                    COUNT(
+                        DISTINCT
                         fact_cli_executions.pipeline_fk
                     ) AS pipeline_count
                 FROM {{ ref('fact_cli_executions') }}
@@ -54,6 +55,7 @@ SELECT
             AND pipe_exec.pipeline_count > 1
     ) AS unique_pipe_greater_1_monthly
 FROM {{ ref('date_dim') }}
-WHERE date_day
+WHERE
+    date_day
     BETWEEN DATEADD(YEAR, -2, CURRENT_TIMESTAMP())
     AND CURRENT_TIMESTAMP()

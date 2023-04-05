@@ -4,7 +4,7 @@ WITH base_singer AS (
         cmd_parsed_all.command,
         cmd_parsed_all.singer_mapper_plugins
     FROM {{ ref('cmd_parsed_all') }},
-        LATERAL FLATTEN(input=>singer_plugins) AS flat
+        LATERAL FLATTEN(input => singer_plugins) AS flat
     WHERE cmd_parsed_all.command_type = 'plugin'
 ),
 
@@ -13,7 +13,7 @@ base_other AS (
         flat.value::STRING AS plugin_name,
         cmd_parsed_all.command
     FROM {{ ref('cmd_parsed_all') }},
-        LATERAL FLATTEN(input=>other_plugins) AS flat
+        LATERAL FLATTEN(input => other_plugins) AS flat
     WHERE cmd_parsed_all.command_type = 'plugin'
 )
 
@@ -37,17 +37,20 @@ SELECT DISTINCT
                 OR base_singer.plugin_name LIKE 'target_%'
                 OR base_singer.plugin_name LIKE 'pipelinewise-target-%'
                 THEN 'loaders'
-            WHEN ARRAY_CONTAINS(
+            WHEN
+                ARRAY_CONTAINS(
                     base_singer.plugin_name::VARIANT,
                     base_singer.singer_mapper_plugins
                 )
                 THEN 'mappers'
             ELSE 'UNKNOWN'
-        END) AS plugin_type,
+        END
+    ) AS plugin_type,
     NULL AS plugin_command
 FROM base_singer
 LEFT JOIN {{ ref('hash_lookup') }}
-    ON SHA2_HEX(base_singer.plugin_name) = hash_lookup.hash_value
+    ON
+        SHA2_HEX(base_singer.plugin_name) = hash_lookup.hash_value
         AND hash_lookup.category = 'plugin_name'
 LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
     ON base_singer.plugin_name = stg_meltanohub__plugins.name
@@ -74,12 +77,14 @@ SELECT DISTINCT
     ) AS plugin_command
 FROM base_other
 LEFT JOIN {{ ref('hash_lookup') }} AS h1
-    ON SHA2_HEX(
-        SPLIT_PART(base_other.plugin_name, ':', 1)
-    ) = h1.hash_value
-    AND h1.category = 'plugin_name'
+    ON
+        SHA2_HEX(
+            SPLIT_PART(base_other.plugin_name, ':', 1)
+        ) = h1.hash_value
+        AND h1.category = 'plugin_name'
 LEFT JOIN {{ ref('hash_lookup') }} AS h2
-    ON SHA2_HEX(SPLIT_PART(base_other.plugin_name, ':', 2)) = h2.hash_value
+    ON
+        SHA2_HEX(SPLIT_PART(base_other.plugin_name, ':', 2)) = h2.hash_value
         AND h2.category = 'plugin_command'
 LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
     ON SPLIT_PART(base_other.plugin_name, ':', 1) = stg_meltanohub__plugins.name

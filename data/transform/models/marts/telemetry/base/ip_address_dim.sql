@@ -32,7 +32,8 @@ cloud_ips AS (
         LISTAGG(DISTINCT cloud_ip_ranges.service, ', ') AS cloud_services,
         LISTAGG(DISTINCT cloud_ip_ranges.region, ', ') AS cloud_regions
     FROM parsed, {{ ref('cloud_ip_ranges') }}
-    WHERE parsed.obj:ipv4 BETWEEN cloud_ip_ranges.ipv4_range_start
+    WHERE
+        parsed.obj:ipv4 BETWEEN cloud_ip_ranges.ipv4_range_start
         AND cloud_ip_ranges.ipv4_range_end
     GROUP BY 1, 2, 3
 

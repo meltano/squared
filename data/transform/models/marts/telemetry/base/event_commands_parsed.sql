@@ -103,7 +103,8 @@ singer AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
+    WHERE
+        command_category = 'meltano invoke'
         AND (
             split_part_3 LIKE 'tap%'
             OR split_part_3 LIKE 'pipelinewise-tap-%'
@@ -130,7 +131,8 @@ singer AS (
 dbt AS (
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano elt'
+    WHERE
+        command_category = 'meltano elt'
         AND command LIKE 'meltano elt% --transform run%'
 
     UNION ALL
@@ -143,14 +145,16 @@ dbt AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add transformers'
+    WHERE
+        command_category = 'meltano add transformers'
         AND split_part_4 LIKE 'dbt'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add files'
+    WHERE
+        command_category = 'meltano add files'
         AND split_part_4 LIKE 'dbt'
 
     UNION ALL
@@ -164,7 +168,8 @@ dbt AS (
 airflow AS (
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
+    WHERE
+        command_category = 'meltano invoke'
         AND split_part_3 LIKE 'airflow%'
 
     UNION ALL
@@ -177,14 +182,16 @@ airflow AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add orchestrators'
+    WHERE
+        command_category = 'meltano add orchestrators'
         AND split_part_4 LIKE 'airflow'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add files'
+    WHERE
+        command_category = 'meltano add files'
         AND split_part_4 LIKE 'airflow'
 
     UNION ALL
@@ -199,14 +206,16 @@ dagster AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
+    WHERE
+        command_category = 'meltano invoke'
         AND split_part_3 LIKE 'dagster%'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add utilities'
+    WHERE
+        command_category = 'meltano add utilities'
         AND split_part_4 LIKE 'dagster%'
 
     UNION ALL
@@ -221,21 +230,24 @@ lightdash AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
+    WHERE
+        command_category = 'meltano invoke'
         AND split_part_3 LIKE 'lightdash%'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add utilities'
+    WHERE
+        command_category = 'meltano add utilities'
         AND split_part_4 LIKE 'lightdash'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add files'
+    WHERE
+        command_category = 'meltano add files'
         AND split_part_4 LIKE 'lightdash'
 
     UNION ALL
@@ -250,14 +262,16 @@ superset AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
+    WHERE
+        command_category = 'meltano invoke'
         AND split_part_3 LIKE 'superset%'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add files'
+    WHERE
+        command_category = 'meltano add files'
         AND split_part_4 LIKE 'superset'
 
     UNION ALL
@@ -272,21 +286,24 @@ sqlfluff AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
+    WHERE
+        command_category = 'meltano invoke'
         AND split_part_3 LIKE 'sqlfluff%'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add files'
+    WHERE
+        command_category = 'meltano add files'
         AND split_part_4 LIKE 'sqlfluff'
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add utilities'
+    WHERE
+        command_category = 'meltano add utilities'
         AND split_part_4 LIKE 'sqlfluff'
 
     UNION ALL
@@ -301,22 +318,27 @@ great_expectations AS (
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano invoke'
-        AND (split_part_3 LIKE 'great-expectations%'
-            OR split_part_3 LIKE 'great_expectations%')
+    WHERE
+        command_category = 'meltano invoke'
+        AND (
+            split_part_3 LIKE 'great-expectations%'
+            OR split_part_3 LIKE 'great_expectations%'
+        )
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add files'
+    WHERE
+        command_category = 'meltano add files'
         AND split_part_4 IN ('great-expectations', 'great_expectations')
 
     UNION ALL
 
     SELECT command
     FROM unique_commands
-    WHERE command_category = 'meltano add utilities'
+    WHERE
+        command_category = 'meltano add utilities'
         AND split_part_4 IN ('great-expectations', 'great_expectations')
 
     UNION ALL
@@ -357,7 +379,8 @@ cli_mappers AS (
     SELECT command
     FROM _run_parse
     -- Commands need at least 3 plugins to be considered.
-    WHERE NOT(
+    WHERE
+        NOT(
             SPLIT_PART(
                 command, ' ', 5
             ) = '' OR STARTSWITH(SPLIT_PART(command, ' ', 5), '--environment')
