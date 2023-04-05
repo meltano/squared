@@ -61,10 +61,10 @@ blend_all AS (
     FROM name_matches
     LEFT JOIN
         {{ ref('contributor_id_mapping') }} AS hub ON
-            name_matches.github_author_id = hub.github_id
+        name_matches.github_author_id = hub.github_id
     LEFT JOIN
         {{ ref('contributor_id_mapping') }} AS lab ON
-            name_matches.gitlab_author_id = lab.gitlab_id
+        name_matches.gitlab_author_id = lab.gitlab_id
 )
 
 SELECT

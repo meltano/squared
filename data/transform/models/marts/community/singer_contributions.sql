@@ -52,7 +52,7 @@ LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
         ) = LOWER(stg_github_search__repositories.repo_url)
 LEFT JOIN
     {{ ref('team_github_ids') }} ON
-        stg_github_search__issues.author_id = team_github_ids.user_id
+    stg_github_search__issues.author_id = team_github_ids.user_id
 
 UNION ALL
 
@@ -110,4 +110,4 @@ LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
         ) = LOWER(stg_github_search__repositories.repo_url)
 LEFT JOIN
     {{ ref('team_github_ids') }} ON
-        stg_github_search__pull_requests.author_id = team_github_ids.user_id
+    stg_github_search__pull_requests.author_id = team_github_ids.user_id
