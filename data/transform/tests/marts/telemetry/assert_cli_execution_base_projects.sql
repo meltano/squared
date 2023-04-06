@@ -2,5 +2,5 @@ SELECT project_dim.project_id
 FROM {{ ref('cli_executions_base') }}
 LEFT JOIN
     {{ ref('project_dim') }} ON
-        cli_executions_base.project_id = project_dim.project_id
+    cli_executions_base.project_id = project_dim.project_id
 WHERE project_dim.project_id IS NULL

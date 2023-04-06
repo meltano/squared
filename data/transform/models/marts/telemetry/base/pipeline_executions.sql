@@ -9,10 +9,11 @@ WITH plugin_prep AS (
                 plugin_executions.plugin_name
             )
         ) WITHIN GROUP (
-            ORDER BY plugin_executions.plugin_started, COALESCE(
-                plugin_executions.plugin_surrogate_key,
-                plugin_executions.plugin_name
-            ) DESC
+            ORDER BY
+                plugin_executions.plugin_started, COALESCE(
+                    plugin_executions.plugin_surrogate_key,
+                    plugin_executions.plugin_name
+                ) DESC
         ) AS plugins
     FROM {{ ref('plugin_executions') }}
     LEFT JOIN {{ ref('cli_executions_base') }}

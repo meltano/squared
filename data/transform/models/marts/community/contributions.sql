@@ -1,4 +1,3 @@
-
 {{ config(materialized='view') }}
 
 WITH gitlab_all AS (
@@ -17,8 +16,10 @@ WITH gitlab_all AS (
         state,
         is_work_in_progress AS is_draft,
         comment_count,
-        COALESCE((merged_at_ts IS NOT NULL OR closed_at_ts IS NOT NULL),
-            FALSE) AS is_completed
+        COALESCE(
+            (merged_at_ts IS NOT NULL OR closed_at_ts IS NOT NULL),
+            FALSE
+        ) AS is_completed
     FROM {{ ref('stg_gitlab__merge_requests') }}
 
     UNION ALL
@@ -61,8 +62,10 @@ github_all AS (
         state,
         is_draft,
         comment_count,
-        COALESCE((merged_at_ts IS NOT NULL OR closed_at_ts IS NOT NULL),
-            FALSE) AS is_completed
+        COALESCE(
+            (merged_at_ts IS NOT NULL OR closed_at_ts IS NOT NULL),
+            FALSE
+        ) AS is_completed
     FROM {{ ref('stg_github__pull_requests') }}
 
     UNION ALL
@@ -110,10 +113,12 @@ gitlab_combined AS (
         CASE
             WHEN
                 gitlab_all.contribution_type = 'issue'
-                THEN 'https://gitlab.com/'
-                || stg_gitlab__projects.repo_full_name
-                || '/-/issues/' || gitlab_all.contribution_number::STRING
-            ELSE 'https://gitlab.com/' || stg_gitlab__projects.repo_full_name
+                THEN
+                    'https://gitlab.com/'
+                    || stg_gitlab__projects.repo_full_name
+                    || '/-/issues/' || gitlab_all.contribution_number::STRING
+            ELSE
+                'https://gitlab.com/' || stg_gitlab__projects.repo_full_name
                 || '/-/merge_requests/'
                 || gitlab_all.contribution_number::STRING
         END AS contribution_url,
@@ -127,13 +132,13 @@ gitlab_combined AS (
     FROM gitlab_all
     LEFT JOIN
         {{ ref('team_gitlab_ids') }} ON
-            gitlab_all.author_id = team_gitlab_ids.user_id
+        gitlab_all.author_id = team_gitlab_ids.user_id
     LEFT JOIN
         {{ ref('stg_gitlab__projects') }} ON
-            gitlab_all.project_id = stg_gitlab__projects.project_id
+        gitlab_all.project_id = stg_gitlab__projects.project_id
     LEFT JOIN
         {{ ref('username_mapping') }} ON
-            gitlab_all.author_id = username_mapping.gitlab_author_id
+        gitlab_all.author_id = username_mapping.gitlab_author_id
     WHERE stg_gitlab__projects.visibility = 'public'
 ),
 
@@ -158,9 +163,11 @@ github_combined AS (
         CASE
             WHEN
                 github_all.contribution_type = 'issue'
-                THEN stg_github__repositories.html_url || '/issues/'
-                || github_all.contribution_number::STRING
-            ELSE stg_github__repositories.html_url || '/pull/'
+                THEN
+                    stg_github__repositories.html_url || '/issues/'
+                    || github_all.contribution_number::STRING
+            ELSE
+                stg_github__repositories.html_url || '/pull/'
                 || github_all.contribution_number::STRING
         END AS contribution_url,
         (
@@ -173,14 +180,16 @@ github_combined AS (
     FROM github_all
     LEFT JOIN
         {{ ref('team_github_ids') }} ON
-            github_all.author_id = team_github_ids.user_id
-    LEFT JOIN {{ ref('stg_github__repositories') }} ON
+        github_all.author_id = team_github_ids.user_id
+    LEFT JOIN
+        {{ ref('stg_github__repositories') }} ON
         github_all.organization_name = stg_github__repositories.organization_name -- noqa: L016
         AND github_all.repo_name = stg_github__repositories.repo_name
     LEFT JOIN
         {{ ref('username_mapping') }} ON
-            github_all.author_id = username_mapping.github_author_id
-    WHERE stg_github__repositories.visibility = 'public'
+        github_all.author_id = username_mapping.github_author_id
+    WHERE
+        stg_github__repositories.visibility = 'public'
         AND github_all.is_bot_user = FALSE
 )
 

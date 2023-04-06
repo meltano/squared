@@ -18,7 +18,8 @@
             service
         FROM {{ source('tap_spreadsheets_anywhere', 'aws_ips') }}
         -- Handle hard deletes by only selecting most recent sync
-        QUALIFY RANK() OVER (
+        QUALIFY
+            RANK() OVER (
                 ORDER BY DATE_TRUNC('MINUTE', _sdc_batched_at) DESC
             ) = 1
 

@@ -3,7 +3,8 @@ WITH most_recent_date AS (
 
     {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
-        SELECT GREATEST(
+        SELECT
+            GREATEST(
                 MAX(created_at_ts),
                 MAX(pr_merged_at_ts),
                 MAX(closed_at_ts)
@@ -21,49 +22,59 @@ WITH most_recent_date AS (
 base AS (
     SELECT
         ARRAY_AGG(
-            CASE WHEN singer_contributions.contribution_type = 'pull_request'
-                AND singer_contributions.state = 'open'
-                AND singer_contributions.created_at_ts::DATE = DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ slack_message_generator() }}
+            CASE
+                WHEN
+                    singer_contributions.contribution_type = 'pull_request'
+                    AND singer_contributions.state = 'open'
+                    AND singer_contributions.created_at_ts::DATE = DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ slack_message_generator() }}
             END
         ) AS prs_opened,
         ARRAY_AGG(
-            CASE WHEN singer_contributions.contribution_type = 'pull_request'
-                AND singer_contributions.state = 'closed'
-                AND singer_contributions.pr_merged_at_ts::DATE = DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ slack_message_generator() }}
+            CASE
+                WHEN
+                    singer_contributions.contribution_type = 'pull_request'
+                    AND singer_contributions.state = 'closed'
+                    AND singer_contributions.pr_merged_at_ts::DATE = DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ slack_message_generator() }}
             END
         ) AS prs_merged,
         ARRAY_AGG(
-            CASE WHEN singer_contributions.contribution_type = 'pull_request'
-                AND singer_contributions.state = 'closed'
-                AND singer_contributions.pr_merged_at_ts IS NULL
-                AND singer_contributions.closed_at_ts::DATE = DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ slack_message_generator() }}
+            CASE
+                WHEN
+                    singer_contributions.contribution_type = 'pull_request'
+                    AND singer_contributions.state = 'closed'
+                    AND singer_contributions.pr_merged_at_ts IS NULL
+                    AND singer_contributions.closed_at_ts::DATE = DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ slack_message_generator() }}
             END
         ) AS prs_closed,
         ARRAY_AGG(
-            CASE WHEN singer_contributions.contribution_type = 'issue'
-                AND singer_contributions.state = 'open'
-                AND singer_contributions.created_at_ts::DATE = DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ slack_message_generator() }}
+            CASE
+                WHEN
+                    singer_contributions.contribution_type = 'issue'
+                    AND singer_contributions.state = 'open'
+                    AND singer_contributions.created_at_ts::DATE = DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ slack_message_generator() }}
             END
         ) AS issues_opened,
         ARRAY_AGG(
-            CASE WHEN singer_contributions.contribution_type = 'issue'
-                AND singer_contributions.state = 'closed'
-                AND singer_contributions.closed_at_ts::DATE = DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ slack_message_generator() }}
+            CASE
+                WHEN
+                    singer_contributions.contribution_type = 'issue'
+                    AND singer_contributions.state = 'closed'
+                    AND singer_contributions.closed_at_ts::DATE = DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ slack_message_generator() }}
             END
         ) AS issues_closed
     FROM {{ ref('singer_contributions') }}
@@ -77,21 +88,23 @@ base AS (
 ),
 
 repos AS (
-    SELECT ARRAY_AGG(
+    SELECT
+        ARRAY_AGG(
             CASE
                 WHEN
                     stg_github_search__repositories.created_at_ts::DATE
                     = DATEADD(
                         DAY, -1, most_recent_date.max_date
                     )
-                    THEN '\n     • <'
-                    || stg_github_search__repositories.repo_url || ' | '
-                    || stg_github_search__repositories.repo_full_name
-                    || '> - _' || COALESCE(
-                        stg_github_search__repositories.description,
-                        'No Description'
-                    )
-                    || '_\n'
+                    THEN
+                        '\n     • <'
+                        || stg_github_search__repositories.repo_url || ' | '
+                        || stg_github_search__repositories.repo_full_name
+                        || '> - _' || COALESCE(
+                            stg_github_search__repositories.description,
+                            'No Description'
+                        )
+                        || '_\n'
 
             END
         ) AS repos_created

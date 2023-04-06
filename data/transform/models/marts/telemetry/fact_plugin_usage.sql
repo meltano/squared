@@ -67,7 +67,8 @@ LEFT JOIN {{ ref('date_dim') }}
 LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
-    ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
+    ON
+        cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
         AND (
             ip_address_dim.active_from IS NULL
             OR cli_executions_base.event_created_at
@@ -78,5 +79,6 @@ LEFT JOIN {{ ref('ip_address_dim') }}
 LEFT JOIN {{ ref('pipeline_executions') }}
     ON cli_executions_base.execution_id = pipeline_executions.execution_id
 LEFT JOIN {{ ref('daily_active_projects') }}
-    ON cli_executions_base.project_id = daily_active_projects.project_id
+    ON
+        cli_executions_base.project_id = daily_active_projects.project_id
         AND date_dim.date_day = daily_active_projects.date_day

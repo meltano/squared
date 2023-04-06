@@ -55,7 +55,8 @@ WITH base AS (
     LEFT JOIN {{ ref('date_dim') }}
         ON cli_executions_base.event_date = date_dim.date_day
     LEFT JOIN {{ ref('ip_address_dim') }}
-        ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
+        ON
+            cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
             AND (
                 ip_address_dim.active_from IS NULL
                 OR cli_executions_base.event_created_at
@@ -64,13 +65,18 @@ WITH base AS (
                 )
             )
     LEFT JOIN {{ ref('daily_active_projects') }}
-        ON cli_executions_base.project_id = daily_active_projects.project_id
+        ON
+            cli_executions_base.project_id = daily_active_projects.project_id
             AND date_dim.date_day = daily_active_projects.date_day
-    LEFT JOIN {{ ref('daily_active_projects') }}
+    LEFT JOIN
+        {{ ref('daily_active_projects') }}
         AS daily_active_projects_eom -- noqa: L031
-        ON cli_executions_base.project_id = daily_active_projects_eom.project_id
-            AND CASE WHEN date_dim.last_day_of_month <= CURRENT_DATE
-                THEN date_dim.last_day_of_month
+        ON
+            cli_executions_base.project_id
+            = daily_active_projects_eom.project_id
+            AND CASE
+                WHEN date_dim.last_day_of_month <= CURRENT_DATE
+                    THEN date_dim.last_day_of_month
                 ELSE date_dim.date_day
             END = daily_active_projects_eom.date_day
 ),
@@ -195,11 +201,14 @@ SELECT
     ) AS monthly_runtime_mins_previous_segment
 FROM base
 LEFT JOIN project_segments_monthly
-    ON base.project_id = project_segments_monthly.project_id
+    ON
+        base.project_id = project_segments_monthly.project_id
         AND base.first_day_of_month
         = project_segments_monthly.first_day_of_month
-LEFT JOIN project_segments_monthly
+LEFT JOIN
+    project_segments_monthly
     AS prev_project_segments_monthly -- noqa: L031
-    ON base.project_id = prev_project_segments_monthly.project_id
+    ON
+        base.project_id = prev_project_segments_monthly.project_id
         AND DATEADD(MONTH, -1, base.first_day_of_month)
         = prev_project_segments_monthly.first_day_of_month

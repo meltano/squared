@@ -3,8 +3,9 @@ WITH interactive_config AS (
         'INTERACTIVE_CONFIG' AS feature_id,
         execution_id
     FROM {{ ref('cli_executions_base') }}
-    WHERE cli_command = 'config'
-        AND GET(COALESCE(GET(options_obj, 'set'), {}), 'interactive') = TRUE
+    WHERE
+        cli_command = 'config'
+        AND GET(COALESCE(GET(options_obj, 'set'), { }), 'interactive') = TRUE
 ),
 
 elt_state AS (
@@ -12,9 +13,10 @@ elt_state AS (
         'ELT_STATE_ARG' AS feature_id,
         execution_id
     FROM {{ ref('cli_executions_base') }}
-    WHERE cli_command = 'elt'
+    WHERE
+        cli_command = 'elt'
         AND NULLIF(
-            TRIM(GET(COALESCE(GET(options_obj, 'elt'), {}), 'state')), 'null'
+            TRIM(GET(COALESCE(GET(options_obj, 'elt'), { }), 'state')), 'null'
         ) IS NOT NULL
 
 ),
@@ -24,7 +26,8 @@ plugin_inherits_from AS (
         'PLUGIN_INHERITS_FROM' AS feature_id,
         execution_id
     FROM {{ ref('fact_plugin_usage') }}
-    WHERE parent_name != 'UNKNOWN'
+    WHERE
+        parent_name != 'UNKNOWN'
         AND parent_name != plugin_name
 ),
 

@@ -4,7 +4,8 @@ SELECT
     event_id,
     schema_name
 FROM {{ ref('context_base') }}
-WHERE schema_name
+WHERE
+    schema_name
     != 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
 
 MINUS

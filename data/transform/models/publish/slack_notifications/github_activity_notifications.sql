@@ -3,7 +3,8 @@ WITH most_recent_date AS (
 
     {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
-        SELECT GREATEST(
+        SELECT
+            GREATEST(
                 MAX(created_at_ts),
                 MAX(merged_at_ts),
                 MAX(closed_at_ts)
@@ -21,49 +22,59 @@ WITH most_recent_date AS (
 base AS (
     SELECT
         ARRAY_AGG(
-            CASE WHEN contributions.contribution_type = 'pull_request'
-                AND contributions.state = 'open'
-                AND contributions.created_at_ts::DATE >= DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ github_activity_slack_message_generator() }}
+            CASE
+                WHEN
+                    contributions.contribution_type = 'pull_request'
+                    AND contributions.state = 'open'
+                    AND contributions.created_at_ts::DATE >= DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ github_activity_slack_message_generator() }}
             END
         ) AS prs_opened,
         ARRAY_AGG(
-            CASE WHEN contributions.contribution_type = 'pull_request'
-                AND contributions.state = 'closed'
-                AND contributions.merged_at_ts::DATE >= DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ github_activity_slack_message_generator() }}
+            CASE
+                WHEN
+                    contributions.contribution_type = 'pull_request'
+                    AND contributions.state = 'closed'
+                    AND contributions.merged_at_ts::DATE >= DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ github_activity_slack_message_generator() }}
             END
         ) AS prs_merged,
         ARRAY_AGG(
-            CASE WHEN contributions.contribution_type = 'pull_request'
-                AND contributions.state = 'closed'
-                AND contributions.merged_at_ts IS NULL
-                AND contributions.closed_at_ts::DATE >= DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ github_activity_slack_message_generator() }}
+            CASE
+                WHEN
+                    contributions.contribution_type = 'pull_request'
+                    AND contributions.state = 'closed'
+                    AND contributions.merged_at_ts IS NULL
+                    AND contributions.closed_at_ts::DATE >= DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ github_activity_slack_message_generator() }}
             END
         ) AS prs_closed,
         ARRAY_AGG(
-            CASE WHEN contributions.contribution_type = 'issue'
-                AND contributions.state = 'open'
-                AND contributions.created_at_ts::DATE >= DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ github_activity_slack_message_generator() }}
+            CASE
+                WHEN
+                    contributions.contribution_type = 'issue'
+                    AND contributions.state = 'open'
+                    AND contributions.created_at_ts::DATE >= DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ github_activity_slack_message_generator() }}
             END
         ) AS issues_opened,
         ARRAY_AGG(
-            CASE WHEN contributions.contribution_type = 'issue'
-                AND contributions.state = 'closed'
-                AND contributions.closed_at_ts::DATE >= DATEADD(
-                    DAY, -1, most_recent_date.max_date
-                )
-                THEN {{ github_activity_slack_message_generator() }}
+            CASE
+                WHEN
+                    contributions.contribution_type = 'issue'
+                    AND contributions.state = 'closed'
+                    AND contributions.closed_at_ts::DATE >= DATEADD(
+                        DAY, -1, most_recent_date.max_date
+                    )
+                    THEN {{ github_activity_slack_message_generator() }}
             END
         ) AS issues_closed
     FROM {{ ref('contributions') }}

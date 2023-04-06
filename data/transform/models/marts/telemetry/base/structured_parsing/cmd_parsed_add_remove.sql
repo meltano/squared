@@ -48,14 +48,16 @@ WITH prep AS (
                         ) = 'transform-field'
                     )
                 )
-                THEN [
-                    GET(unique_commands.split_parts, 3)::STRING
-                ] END AS singer_plugins,
+                THEN
+                    [
+                        GET(unique_commands.split_parts, 3)::STRING
+                    ]
+        END AS singer_plugins,
         GET(unique_commands.split_parts, 3) AS plugin
     FROM {{ ref('unique_commands') }}
     LEFT JOIN
         {{ ref('args_parsed') }} ON
-            unique_commands.command = args_parsed.command
+        unique_commands.command = args_parsed.command
     WHERE
         unique_commands.command_category LIKE 'meltano add %'
         OR unique_commands.command LIKE 'meltano remove %'

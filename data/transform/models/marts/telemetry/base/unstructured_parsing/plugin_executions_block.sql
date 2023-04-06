@@ -67,11 +67,12 @@ incomplete_plugins AS (
         )::STRING AS hashed_nested_runtime_error
     FROM flattened
     LEFT JOIN {{ ref('hash_lookup') }} AS h1
-        ON GET(
-            PARSE_JSON(flattened.exception_dict),
-            'str_hash'
-        )::STRING = h1.hash_value
-        AND h1.category = 'runtime_error'
+        ON
+            GET(
+                PARSE_JSON(flattened.exception_dict),
+                'str_hash'
+            )::STRING = h1.hash_value
+            AND h1.category = 'runtime_error'
     LEFT JOIN {{ ref('hash_lookup') }} AS h2
         ON
             GET(
@@ -104,7 +105,8 @@ SELECT
         MILLISECOND, flattened.plugin_started, flattened.plugin_ended
     ) AS plugin_runtime_ms,
     CASE
-        WHEN flattened.cli_command = 'elt' THEN
+        WHEN
+            flattened.cli_command = 'elt' THEN
             CASE
                 WHEN incomplete_plugins.execution_id IS NULL THEN 'SUCCESS'
                 WHEN
@@ -116,17 +118,20 @@ SELECT
                     AND ex_map_nested.exception_message IS NULL
                     THEN 'EXCEPTION_PARSING_FAILED'
                 WHEN
-                    flattened.plugin_category = ex_map_nested.plugin_category
+                    flattened.plugin_category
+                    = ex_map_nested.plugin_category
                     THEN 'FAILED'
                 WHEN
-                    flattened.plugin_category != ex_map_nested.plugin_category
+                    flattened.plugin_category
+                    != ex_map_nested.plugin_category
                     THEN 'INCOMPLETE_EL_PAIR'
                 WHEN
                     incomplete_plugins.exception_dict IS NULL
                     THEN 'NULL_EXCEPTION'
                 ELSE 'OTHER_FAILURE'
             END
-        WHEN flattened.cli_command = 'run' THEN
+        WHEN
+            flattened.cli_command = 'run' THEN
             CASE
                 -- It had a completed event so it succeeded
                 WHEN incomplete_plugins.execution_id IS NULL THEN 'SUCCESS'
@@ -152,20 +157,23 @@ SELECT
                 -- plugin category. It caused the failure
                 WHEN
                     flattened.block_type = 'ExtractLoadBlocks'
-                    AND flattened.plugin_category = ex_map_top.plugin_category
+                    AND flattened.plugin_category
+                    = ex_map_top.plugin_category
                     THEN 'FAILED'
                 -- EL block and parsed/unhashed exception doesnt match 
                 -- plugin category, didnt fail but it also isnt successful
                 WHEN
                     flattened.block_type = 'ExtractLoadBlocks'
-                    AND flattened.plugin_category != ex_map_top.plugin_category
+                    AND flattened.plugin_category
+                    != ex_map_top.plugin_category
                     THEN 'INCOMPLETE_EL_PAIR'
                 -- Invoker has only 1 plugin involved,
                 -- failed no matter what the exception was
                 WHEN flattened.block_type = 'InvokerCommand' THEN 'FAILED'
                 ELSE 'OTHER_FAILURE'
             END
-        WHEN flattened.cli_command = 'invoke' THEN
+        WHEN
+            flattened.cli_command = 'invoke' THEN
             CASE
                 -- It had a completed event so it succeeded
                 WHEN incomplete_plugins.execution_id IS NULL THEN 'SUCCESS'

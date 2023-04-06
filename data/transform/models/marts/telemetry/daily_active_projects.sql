@@ -14,9 +14,10 @@ daily_project_active AS (
         base.project_id
     FROM {{ ref('date_dim') }}
     INNER JOIN base
-        ON base.exec_date BETWEEN DATEADD(
-            DAY, -28, date_dim.date_day
-        ) AND date_dim.date_day
+        ON
+            base.exec_date BETWEEN DATEADD(
+                DAY, -28, date_dim.date_day
+            ) AND date_dim.date_day
 ),
 
 project_activity_status AS (
@@ -132,5 +133,6 @@ SELECT
     ) AS eom_reactivated
 FROM base_daily
 LEFT JOIN base_monthly
-    ON base_daily.project_id = base_monthly.project_id
+    ON
+        base_daily.project_id = base_monthly.project_id
         AND base_daily.last_day_of_month = base_monthly.last_day_of_month

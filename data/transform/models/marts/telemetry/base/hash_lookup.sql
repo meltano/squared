@@ -62,7 +62,7 @@ WITH base AS (
         SHA2_HEX(command.value::STRING) AS hash_value,
         'plugin_command' AS category
     FROM {{ ref('snapshot_meltanohub_plugins') }},
-        LATERAL FLATTEN(input=>OBJECT_KEYS(commands)) AS command
+        LATERAL FLATTEN(input => OBJECT_KEYS(commands)) AS command
     WHERE snapshot_meltanohub_plugins.commands IS NOT NULL
 
     UNION ALL
