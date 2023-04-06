@@ -21,7 +21,8 @@ SELECT
     PARSE_JSON(jsontext):detail:data:payload:raw AS payload_raw,
     PARSE_JSON(jsontext):detail:data:payload:enriched AS payload_enriched,
     PARSE_JSON(jsontext):detail:data:processor AS processor
-{% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+{% if env_var("MELTANO_ENVIRONMENT") == "cicd" %} -- noqa: disable=LT02
+-- SQLFluff disabled due to https://github.com/sqlfluff/sqlfluff/issues/4680
 FROM raw.snowplow.events_bad
 WHERE uploaded_at::TIMESTAMP >= DATEADD('day', -7, CURRENT_DATE)
 {% else %}
