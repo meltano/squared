@@ -72,6 +72,8 @@ jobs:
 - name: dynanmodb_el
   tasks:
   - tap-dynamodb target-snowflake
+  - dbt-snowflake:run_staging_dynamodb
+  - dbt-snowflake:test_staging_dynamodb
 
 - name: clone_dbt_dev_env
   tasks:
