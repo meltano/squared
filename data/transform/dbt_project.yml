@@ -44,6 +44,8 @@ models:
       +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
       cloudwatch:
         +schema: cloudwatch
+      dynamodb:
+        +schema: dynamodb
       github_search:
         +schema: github_search
       google_analytics:
