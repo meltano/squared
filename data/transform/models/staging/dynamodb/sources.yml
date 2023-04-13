@@ -1,0 +1,8 @@
+config-version: 2
+version: 2
+sources:
+  - name: tap_dynamodb
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_DYNAMODB'
+    tables:
+      - name: workload_metadata_table

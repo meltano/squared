@@ -76,7 +76,7 @@ WITH base AS (
             FLATTEN(
                 input => PARSE_JSON(
                     '["prod", "staging", "dev", "cicd", "development", \
-                    "production", "ci", "stage"]'
+                    "production", "ci", "stage", "sandbox"]'
                 )
             )
         ) AS f

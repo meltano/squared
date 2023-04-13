@@ -1,0 +1,16 @@
+version: 2
+
+models:
+  - name: stg_dynamodb__workload_metadata_table
+    columns:
+      - name: cloud_execution_id
+        tests:
+          - unique
+          - not_null
+      # TODO: add 26 character length tests
+      - name: cloud_project_id
+        tests:
+          - not_null
+      - name: surrogate_tenant_resource_key
+        tests:
+          - not_null

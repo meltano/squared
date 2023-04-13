@@ -19,6 +19,10 @@ schedules:
   interval: 0 6 * * *
   job: cloudwatch_el
 
+- name: dynanmodb_el
+  interval: 0 6 * * *
+  job: dynanmodb_el
+
 - name: meltanohub_el
   interval: 0 6 * * *
   job: meltanohub_el
@@ -64,6 +68,12 @@ schedules:
   job: hubspot_publish
 
 jobs:
+
+- name: dynanmodb_el
+  tasks:
+  - tap-dynamodb target-snowflake
+  - dbt-snowflake:run_staging_dynamodb
+  - dbt-snowflake:test_staging_dynamodb
 
 - name: clone_dbt_dev_env
   tasks:
