@@ -19,10 +19,7 @@ renamed AS (
         NULLIF(source.start_time, 'N/A')::TIMESTAMP_TZ AS start_time_ts,
         source.ttl::INT AS cloud_run_ttl,
         SHA2_HEX(source.command_text) AS command_text_hash,
-        COALESCE(
-            hash_lookup.unhashed_value,
-            SHA2_HEX(source.environment_name)
-        ) AS cloud_environment_name,
+        SHA2_HEX(source.environment_name) AS cloud_environment_name_hash,
         SHA2_HEX(source.job_name) AS cloud_job_name_hash,
         SHA2_HEX(source.schedule_name) AS cloud_schedule_name_hash,
         SPLIT_PART(
@@ -32,10 +29,6 @@ renamed AS (
             source."TENANT_RESOURCE_KEY::PROJECT_ID", '::', 2 -- noqa: RF05
         ) AS cloud_project_id
     FROM source
-    LEFT JOIN {{ ref('hash_lookup') }}
-        ON
-            SHA2_HEX(source.environment_name) = hash_lookup.hash_value
-            AND hash_lookup.category = 'environment'
     WHERE source.row_num = 1
 
 )
