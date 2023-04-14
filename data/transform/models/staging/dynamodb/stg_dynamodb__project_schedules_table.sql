@@ -4,10 +4,10 @@ WITH source AS (
         *,
         {{ dbt_utils.surrogate_key(
             ['"TENANT_RESOURCE_KEY::PROJECT_ID"', '"DEPLOYMENT_NAME::SCHEDULE_NAME"']
-        ) }} schedule_surrogate_key,
+        ) }} AS schedule_surrogate_key,
         ROW_NUMBER() OVER (
             PARTITION BY schedule_surrogate_key
-            ORDER BY _sdc_batched_at::TIMESTAMP_TZ DESC
+            ORDER BY CAST (_sdc_batched_at AS TIMESTAMP_TZ) DESC
         ) AS row_num
     FROM {{ source('tap_dynamodb', 'project_schedules_table') }}
 ),
@@ -15,9 +15,9 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        schedule_surrogate_key,
-        interval,
-        enabled AS is_enabled,
+        source.schedule_surrogate_key,
+        source.interval,
+        source.enabled AS is_enabled,
         SHA2_HEX(
             SPLIT_PART(
                 source."DEPLOYMENT_NAME::SCHEDULE_NAME", '::', 1 -- noqa: RF05
