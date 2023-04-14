@@ -44,7 +44,11 @@ WITH base AS (
         COALESCE(
             daily_active_projects_eom.project_id IS NOT NULL,
             FALSE
-        ) AS is_active_eom_cli_execution
+        ) AS is_active_eom_cli_execution,
+        CASE
+            WHEN ip_address_dim.cloud_provider = 'MELTANO_CLOUD'
+                THEN REPLACE(cli_executions_base.client_uuid, '-', '')
+        END AS cloud_execution_id
     FROM {{ ref('cli_executions_base') }}
     LEFT JOIN {{ ref('project_dim') }}
         ON cli_executions_base.project_id = project_dim.project_id
@@ -176,6 +180,7 @@ SELECT
     base.execution_location,
     base.project_org_name,
     base.org_name,
+    base.cloud_execution_id,
     base.is_active_cli_execution,
     base.is_active_eom_cli_execution,
     project_segments_monthly.monthly_piplines_all,
