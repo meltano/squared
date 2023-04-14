@@ -11,6 +11,41 @@ models:
       - name: cloud_project_id
         tests:
           - not_null
-      - name: surrogate_tenant_resource_key
+      - name: tenant_resource_key
+        tests:
+          - not_null
+  - name: stg_dynamodb__project_schedules_table
+    columns:
+      - name: schedule_surrogate_key
+        tests:
+          - unique
+          - not_null
+      # TODO: add 26 character length tests
+      - name: cloud_project_id
+        tests:
+          - not_null
+      - name: tenant_resource_key
+        tests:
+          - not_null
+      - name: cloud_deployment_name_hash
+        tests:
+          - not_null
+      - name: cloud_schedule_name_hash
+        tests:
+          - not_null
+  - name: stg_dynamodb__projects_table
+    columns:
+      - name: project_surrogate_key
+        tests:
+          - unique
+          - not_null
+      # TODO: add 26 character length tests
+      - name: cloud_project_id
+        tests:
+          - not_null
+      - name: tenant_resource_key
+        tests:
+          - not_null
+      - name: project_name
         tests:
           - not_null
