@@ -6,3 +6,5 @@ sources:
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_DYNAMODB'
     tables:
       - name: workload_metadata_table
+      - name: projects_table
+      - name: project_schedules_table

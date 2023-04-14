@@ -24,7 +24,7 @@ renamed AS (
         SHA2_HEX(source.schedule_name) AS cloud_schedule_name_hash,
         SPLIT_PART(
             source."TENANT_RESOURCE_KEY::PROJECT_ID", '::', 1 -- noqa: RF05
-        ) AS surrogate_tenant_resource_key,
+        ) AS tenant_resource_key,
         SPLIT_PART(
             source."TENANT_RESOURCE_KEY::PROJECT_ID", '::', 2 -- noqa: RF05
         ) AS cloud_project_id

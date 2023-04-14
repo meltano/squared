@@ -9,9 +9,15 @@ plugins:
       aws_default_region: us-west-2
       tables:
       - workload-metadata-table
+      - projects-table
+      - project-schedules-table
       stream_maps:
         workload-metadata-table:
           __alias__: workload_metadata_table
+        projects-table:
+          __alias__: projects_table
+        project-schedules-table:
+          __alias__: project_schedules_table
   - name: tap-cloudwatch
     variant: meltanolabs
     pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.3.0
