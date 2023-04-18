@@ -4,7 +4,7 @@ WITH source AS (
         *,
         ROW_NUMBER() OVER (
             PARTITION BY execution_id
-            ORDER BY _sdc_batched_at::TIMESTAMP_TZ DESC
+            ORDER BY _sdc_batched_at::TIMESTAMP_NTZ DESC
         ) AS row_num
     FROM {{ source('tap_dynamodb', 'workload_metadata_table') }}
 ),
@@ -13,10 +13,10 @@ renamed AS (
 
     SELECT
         source.ecs_task_status,
-        NULLIF(source.end_time, 'N/A')::TIMESTAMP_TZ AS end_time_ts,
+        NULLIF(source.end_time, 'N/A')::TIMESTAMP_NTZ AS finished_ts,
         source.execution_id AS cloud_execution_id,
         NULLIF(source.exit_code, 'N/A')::INT AS cloud_exit_code,
-        NULLIF(source.start_time, 'N/A')::TIMESTAMP_TZ AS start_time_ts,
+        NULLIF(source.start_time, 'N/A')::TIMESTAMP_NTZ AS started_ts,
         source.ttl::INT AS cloud_run_ttl,
         SHA2_HEX(source.command_text) AS command_text_hash,
         SHA2_HEX(source.environment_name) AS cloud_environment_name_hash,
