@@ -22,6 +22,7 @@ WITH base AS (
         -- Pipeline Attributes
         pipeline_dim.pipeline_pk AS pipeline_fk,
         pipeline_executions.pipeline_runtime_bin,
+        pipeline_executions.is_test_pipeline,
         cli_executions_base.event_count,
         cli_executions_base.cli_command,
         cli_executions_base.meltano_version,
@@ -168,6 +169,7 @@ SELECT
     base.init_project_directory,
     base.pipeline_fk,
     base.pipeline_runtime_bin,
+    base.is_test_pipeline,
     base.event_count,
     base.cli_command,
     base.meltano_version,
