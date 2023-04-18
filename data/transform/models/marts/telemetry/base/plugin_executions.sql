@@ -97,7 +97,8 @@ SELECT
                 'FAILED_BLOCK_CLI_LEVEL'
             ) THEN 'UNKNOWN_FAILED_OR_ABORTED'
         ELSE 'OTHER'
-    END AS completion_status
+    END AS completion_status,
+    COALESCE(base.parent_name IN ('tap-smoke-test'), FALSE) AS is_test_plugin
 FROM base
 -- Exclude non-activated projects based on GA vs Snowplow
 INNER JOIN

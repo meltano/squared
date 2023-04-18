@@ -19,6 +19,7 @@ SELECT
     plugin_executions.plugin_type,
     plugin_executions.plugin_category,
     plugin_executions.plugin_surrogate_key,
+    plugin_executions.is_test_plugin,
     -- CLI Attributes
     cli_executions_base.cli_command,
     cli_executions_base.environment_name_hash AS env_id,
@@ -50,6 +51,7 @@ SELECT
     -- Pipeline Attributes
     pipeline_executions.pipeline_pk AS pipeline_fk,
     pipeline_executions.pipeline_runtime_bin,
+    pipeline_executions.is_test_pipeline,
     -- Host Attributes
     cli_executions_base.ip_address_hash,
     cli_executions_base.started_ts AS cli_started_ts,

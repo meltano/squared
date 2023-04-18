@@ -14,7 +14,8 @@ WITH plugin_prep AS (
                     plugin_executions.plugin_surrogate_key,
                     plugin_executions.plugin_name
                 ) DESC
-        ) AS plugins
+        ) AS plugins,
+        MAX(plugin_executions.is_test_plugin) AS is_test_pipeline
     FROM {{ ref('plugin_executions') }}
     LEFT JOIN {{ ref('cli_executions_base') }}
         ON plugin_executions.execution_id = cli_executions_base.execution_id
