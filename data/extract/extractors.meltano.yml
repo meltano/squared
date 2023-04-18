@@ -2,7 +2,7 @@ plugins:
   extractors:
   - name: tap-dynamodb
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-dynamodb.git
+    pip_url: git+https://github.com/MeltanoLabs/tap-dynamodb.git@v0.2.0
     config:
       aws_access_key_id: ${AWS_ACCESS_KEY_ID}
       aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
