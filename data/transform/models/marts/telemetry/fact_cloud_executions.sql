@@ -27,7 +27,6 @@ SELECT
     stg_dynamodb__project_schedules_table.interval AS schedule_interval,
     stg_dynamodb__project_schedules_table.is_enabled AS schedule_is_enabled,
     {# TRUE AS schedule_is_healthy, #}
-
     stg_dynamodb__project_schedules_table.cloud_deployment_name_hash,
     stg_dynamodb__workload_metadata_table.started_ts,
     stg_dynamodb__workload_metadata_table.finished_ts,
@@ -35,6 +34,8 @@ SELECT
     stg_dynamodb__workload_metadata_table.command_text_hash,
     stg_dynamodb__workload_metadata_table.cloud_job_name_hash,
     stg_dynamodb__workload_metadata_table.cloud_schedule_name_hash,
+    cloud_schedule_frequency.schedule_freq_day,
+    cloud_schedule_frequency.schedule_freq_rolling_avg,
     DATEDIFF(
         MILLISECOND,
         stg_dynamodb__workload_metadata_table.started_ts,
@@ -45,7 +46,9 @@ SELECT
         open_source_agg.oss_run_started_ts,
         open_source_agg.oss_run_finished_ts
     ) AS cloud_billable_runtime_ms,
-    -- TODO: schedule_frequency
+    COALESCE(
+        cloud_schedule_frequency.schedule_freq_rolling_avg > 24, FALSE
+    ) AS is_frequent_schedule,
     DATEDIFF(
         MILLISECOND,
         stg_dynamodb__workload_metadata_table.started_ts,
@@ -60,7 +63,7 @@ SELECT
     cloud_billable_runtime_ms / 60000.0 AS cloud_billable_runtime_minutes,
     CASE
         WHEN
-            1 > 24
+            is_frequent_schedule
             THEN 0.5 + GREATEST(cloud_billable_runtime_minutes - 5, 0) * 0.1
         ELSE 1 + GREATEST(cloud_billable_runtime_minutes - 10, 0) * 0.1
     END AS credits_used_estimate,
@@ -90,3 +93,9 @@ LEFT JOIN {{ ref('hash_lookup') }}
         stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
         = hash_lookup.hash_value
         AND hash_lookup.category = 'environment'
+LEFT JOIN {{ ref('cloud_schedule_frequency') }}
+    ON
+        stg_dynamodb__project_schedules_table.schedule_surrogate_key
+        = cloud_schedule_frequency.schedule_surrogate_key
+        AND stg_dynamodb__workload_metadata_table.started_ts::DATE
+        = cloud_schedule_frequency.date_day
