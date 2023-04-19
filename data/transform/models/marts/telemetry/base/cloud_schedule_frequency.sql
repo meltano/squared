@@ -12,8 +12,8 @@ WITH joined AS (
             = stg_dynamodb__project_schedules_table.tenant_resource_key
             AND stg_dynamodb__workload_metadata_table.cloud_project_id
             = stg_dynamodb__project_schedules_table.cloud_project_id
-    -- TODO: once workload metadata has deployments
-    -- AND stg_dynamodb__workload_metadata_table.cloud_deployment_name_hash = stg_dynamodb__project_schedules_table.cloud_deployment_name_hash
+            AND stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
+            = stg_dynamodb__project_schedules_table.cloud_deployment_name_hash
     WHERE
         stg_dynamodb__project_schedules_table.cloud_schedule_name_hash IS NOT NULL
 
