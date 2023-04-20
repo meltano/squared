@@ -7,7 +7,7 @@ WITH source AS (
         ) }} AS project_surrogate_key,
         ROW_NUMBER() OVER (
             PARTITION BY project_surrogate_key
-            ORDER BY CAST(_sdc_batched_at AS TIMESTAMP_TZ) DESC
+            ORDER BY CAST(_sdc_batched_at AS TIMESTAMP_NTZ) DESC
         ) AS row_num
     FROM {{ source('tap_dynamodb', 'projects_table') }}
 ),
