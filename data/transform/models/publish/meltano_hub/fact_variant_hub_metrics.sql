@@ -208,7 +208,8 @@ final AS (
             = stg_meltanohub__plugins.plugin_type
     LEFT JOIN {{ ref('singer_repo_dim') }}
         ON
-            LOWER(stg_meltanohub__plugins.repo) = LOWER(singer_repo_dim.repo_url)
+            LOWER(stg_meltanohub__plugins.repo)
+            = LOWER(singer_repo_dim.repo_url)
     LEFT JOIN agg_all_by_name
         ON
             REPLACE(

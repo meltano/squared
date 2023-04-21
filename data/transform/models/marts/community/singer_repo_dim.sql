@@ -11,13 +11,13 @@ SELECT
     num_stargazers,
     num_watchers,
     batch_ts,
-    COALESCE(description, 'No Description') as description,
     is_fork,
     is_archived,
     is_disabled,
     size_kb,
     repo_lifespan_days,
     homepage_url,
-    connector_type
+    connector_type,
+    COALESCE(description, 'No Description') AS description
 FROM {{ ref('stg_github_search__repositories') }}
 WHERE visibility = 'public'
