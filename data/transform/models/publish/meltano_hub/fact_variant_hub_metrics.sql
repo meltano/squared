@@ -206,15 +206,13 @@ final AS (
             = stg_meltanohub__plugins.name
             AND agg_unstruct_by_name.plugin_type
             = stg_meltanohub__plugins.plugin_type
-    LEFT JOIN {{ ref('fact_repo_metrics') }}
+    LEFT JOIN {{ ref('singer_repo_dim') }}
         ON
-            LOWER(stg_meltanohub__plugins.repo) = LOWER(
-                'https://github.com/' || fact_repo_metrics.repo_full_name
-            )
+            LOWER(stg_meltanohub__plugins.repo) = LOWER(singer_repo_dim.repo_url)
     LEFT JOIN agg_all_by_name
         ON
             REPLACE(
-                fact_repo_metrics.repo_name,
+                singer_repo_dim.repo_name,
                 'pipelinewise-',
                 ''
             ) = agg_all_by_name.plugin_name

@@ -87,3 +87,23 @@ models:
       - name: is_hub_listed
         tests:
           - not_null
+
+  - name: singer_repo_dim
+    description: This table includes attributes about Singer GitHub repos.
+    columns:
+      - name: repo_url
+        tests:
+          - not_null
+          - unique
+      - name: created_at_ts
+        tests:
+          - not_null
+      - name: repo_name
+        tests:
+          - not_null
+      - name: repo_full_name
+        tests:
+          - not_null
+      - name: description
+        tests:
+          - not_null
