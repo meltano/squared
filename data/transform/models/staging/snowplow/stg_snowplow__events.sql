@@ -8,7 +8,7 @@ WITH blended_source AS (
     SELECT
         *,
         FALSE AS snowplow_bad_parsed
-    {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
+        {% if env_var("MELTANO_ENVIRONMENT") == "cicd" %}
 
     FROM raw.snowplow.events
     WHERE derived_tstamp::TIMESTAMP >= DATEADD('day', -3, CURRENT_DATE)
@@ -21,7 +21,7 @@ WITH blended_source AS (
         WHERE UPLOADED_AT >= (SELECT max(UPLOADED_AT) FROM {{ this }} WHERE snowplow_bad_parsed = FALSE)
 
         {% endif %}
-            {% endif %}
+        {% endif %}
 
     UNION ALL
 
