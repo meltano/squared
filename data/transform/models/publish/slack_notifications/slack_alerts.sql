@@ -92,23 +92,20 @@ repos AS (
         ARRAY_AGG(
             CASE
                 WHEN
-                    stg_github_search__repositories.created_at_ts::DATE
+                    singer_repo_dim.created_at_ts::DATE
                     = DATEADD(
                         DAY, -1, most_recent_date.max_date
                     )
                     THEN
                         '\n     • <'
-                        || stg_github_search__repositories.repo_url || ' | '
-                        || stg_github_search__repositories.repo_full_name
-                        || '> - _' || COALESCE(
-                            stg_github_search__repositories.description,
-                            'No Description'
-                        )
+                        || singer_repo_dim.repo_url || ' | '
+                        || singer_repo_dim.repo_full_name
+                        || '> - _' || singer_repo_dim.description
                         || '_\n'
 
             END
         ) AS repos_created
-    FROM {{ ref('stg_github_search__repositories') }}
+    FROM {{ ref('singer_repo_dim') }}
     CROSS JOIN most_recent_date
 )
 
