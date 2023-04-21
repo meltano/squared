@@ -76,7 +76,6 @@ models:
         tests:
           - not_null
       - name: num_open_issues
-      - name: visibility
       - name: is_archived
       - name: repo_created_at_ts
       - name: repo_updated_at_ts

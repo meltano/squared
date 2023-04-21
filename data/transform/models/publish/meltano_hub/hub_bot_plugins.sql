@@ -64,8 +64,7 @@ LEFT JOIN
     singer_repo_dim.repo_url
     = stg_github_search__readme.repo_url
 WHERE
-    singer_repo_dim.visibility = 'public'
-    AND singer_repo_dim.is_disabled = FALSE
+    singer_repo_dim.is_disabled = FALSE
     AND singer_repo_dim.is_archived = FALSE
     AND singer_repo_dim.size_kb > 30
     AND singer_repo_dim.repo_lifespan_days > 7

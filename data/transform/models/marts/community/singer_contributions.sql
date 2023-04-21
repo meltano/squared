@@ -24,7 +24,6 @@ SELECT
     stg_github_search__issues.reactions_count,
     singer_repo_dim.repo_url,
     singer_repo_dim.num_open_issues,
-    singer_repo_dim.visibility,
     singer_repo_dim.is_archived,
     singer_repo_dim.connector_type,
     singer_repo_dim.created_at_ts AS repo_created_at_ts,
@@ -36,7 +35,7 @@ SELECT
     ) AS is_ownership_transferred,
     COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_github_search__issues') }}
-LEFT JOIN {{ ref('singer_repo_dim') }}
+INNER JOIN {{ ref('singer_repo_dim') }}
     ON
         LOWER(
             stg_github_search__issues.organization_name
@@ -82,7 +81,6 @@ SELECT
     stg_github_search__pull_requests.reactions_count,
     singer_repo_dim.repo_url,
     singer_repo_dim.num_open_issues,
-    singer_repo_dim.visibility,
     singer_repo_dim.is_archived,
     singer_repo_dim.connector_type,
     singer_repo_dim.created_at_ts AS repo_created_at_ts,
@@ -94,7 +92,7 @@ SELECT
     ) AS is_ownership_transferred,
     COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_github_search__pull_requests') }}
-LEFT JOIN {{ ref('singer_repo_dim') }}
+INNER JOIN {{ ref('singer_repo_dim') }}
     ON
         LOWER(
             stg_github_search__pull_requests.organization_name
