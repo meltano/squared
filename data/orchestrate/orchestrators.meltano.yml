@@ -67,6 +67,10 @@ schedules:
   interval: 0 12 * * *
   job: hubspot_publish
 
+- name: sample_schedule
+  interval: 0 12 * * *
+  job: sample_schedule
+
 jobs:
 
 - name: dynanmodb_el
@@ -166,3 +170,7 @@ jobs:
   - tap-cloudwatch target-snowflake
   - dbt-snowflake:run_staging_cloudwatch
   - dbt-snowflake:test_staging_cloudwatch
+
+- name: sample_schedule
+  tasks:
+  - dbt-snowflake:describe
