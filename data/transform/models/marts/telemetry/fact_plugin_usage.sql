@@ -60,7 +60,11 @@ SELECT
     COALESCE(
         daily_active_projects.project_id IS NOT NULL,
         FALSE
-    ) AS is_active_cli_execution
+    ) AS is_active_cli_execution,
+    CASE
+        WHEN ip_address_dim.cloud_provider = 'MELTANO_CLOUD'
+            THEN REPLACE(cli_executions_base.client_uuid, '-', '')
+    END AS cloud_execution_id
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id
