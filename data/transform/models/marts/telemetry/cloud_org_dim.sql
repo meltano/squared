@@ -1,4 +1,5 @@
 WITH credits AS (
+
     SELECT
         tenant_resource_key,
         SUM(credits_allocated) AS credits_allocated,
@@ -9,31 +10,64 @@ WITH credits AS (
 
 ),
 
-usage AS (
+schedules AS (
 
     SELECT
         tenant_resource_key,
-        SUM(credits_used_estimate) AS credits_used_estimate,
-        COUNT(DISTINCT cloud_project_id) AS cloud_projects,
-        MAX(is_currently_active) AS is_currently_active,
+        cloud_project_id,
+        cloud_schedule_name_hash,
+        cloud_exit_code AS latest_exit_code
+    FROM {{ ref('cloud_executions_base') }}
+    QUALIFY
+        RANK() OVER (
+            PARTITION BY
+                tenant_resource_key, cloud_project_id, cloud_schedule_name_hash
+            ORDER BY started_ts DESC
+        ) = 1
+
+),
+
+usage AS (
+
+    SELECT
+        cloud_executions_base.tenant_resource_key,
+        SUM(
+            cloud_executions_base.credits_used_estimate
+        ) AS credits_used_estimate,
+        COUNT(
+            DISTINCT cloud_executions_base.cloud_project_id
+        ) AS cloud_projects,
+        MAX(cloud_executions_base.is_currently_active) AS is_currently_active,
         -- TODO: this is not distinct across projects
         COUNT(
-            DISTINCT cloud_schedule_name_hash
+            DISTINCT cloud_executions_base.cloud_schedule_name_hash
         ) AS cloud_schedules,
         COUNT(
             DISTINCT CASE
-                WHEN schedule_is_enabled = TRUE THEN cloud_schedule_name_hash
+                WHEN
+                    cloud_executions_base.schedule_is_enabled = TRUE
+                    THEN cloud_executions_base.cloud_schedule_name_hash
             END
         ) AS cloud_schedules_enabled,
         COUNT(
             DISTINCT CASE
                 WHEN
-                    schedule_is_enabled = TRUE AND 1 = 1
-                    THEN cloud_schedule_name_hash
+                    cloud_executions_base.schedule_is_enabled = TRUE
+                    AND schedules.latest_exit_code = 0
+                    THEN cloud_executions_base.cloud_schedule_name_hash
             END
         ) AS cloud_schedules_healthy
     FROM {{ ref('cloud_executions_base') }}
+    LEFT JOIN schedules
+        ON
+            cloud_executions_base.tenant_resource_key
+            = schedules.tenant_resource_key
+            AND cloud_executions_base.cloud_project_id
+            = schedules.cloud_project_id
+            AND cloud_executions_base.cloud_schedule_name_hash
+            = schedules.cloud_schedule_name_hash
     GROUP BY 1
+
 )
 
 SELECT
