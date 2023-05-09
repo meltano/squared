@@ -24,8 +24,12 @@ renamed AS (
             )
         ) AS cloud_deployment_name_hash,
         SHA2_HEX(
-            SPLIT_PART(
-                source."DEPLOYMENT_NAME::SCHEDULE_NAME", '::', 2 -- noqa: RF05
+            REPLACE(
+                SPLIT_PART(
+                    source."DEPLOYMENT_NAME::SCHEDULE_NAME", -- noqa: RF05
+                    '::',
+                    2
+                ), '-', '_'
             )
         ) AS cloud_schedule_name_hash,
         SPLIT_PART(
