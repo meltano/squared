@@ -162,6 +162,7 @@ jobs:
 
 - name: marts_refresh
   tasks:
+  - dbt-snowflake:seed
   - dbt-snowflake:run_marts
   - dbt-snowflake:test_marts
 
