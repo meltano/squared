@@ -15,4 +15,7 @@ FROM cloud_execs
 LEFT JOIN
     {{ ref('cloud_org_dim') }}
     ON cloud_org_dim.org_name = cloud_execs.org_name
-WHERE COALESCE(sum_credits != credits_used_estimate, true)
+WHERE COALESCE(
+    cloud_execs.sum_credits != cloud_org_dim.credits_used_estimate,
+    TRUE
+)

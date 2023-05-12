@@ -67,7 +67,8 @@ SELECT
     DATEDIFF(
         MILLISECOND,
         stg_dynamodb__workload_metadata_table.started_ts,
-        -- Run started ts, install exec finished ts if install failed before run, or tasks finish ts if install never started
+        -- Run started ts, install exec finished ts if install failed before
+        -- run, or tasks finish ts if install never started
         COALESCE(
             COALESCE(
                 open_source_agg.oss_run_started_ts,
