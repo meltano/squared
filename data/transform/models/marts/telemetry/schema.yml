@@ -623,3 +623,48 @@ models:
       - name: project_id
         tests:
           - not_null
+
+  - name: cloud_org_dim
+    description: This table contains attributes about cloud organizations.
+    columns:
+
+      - name: tenant_resource_key
+        tests:
+          - not_null
+
+      - name: org_name
+        tests:
+          - not_null
+          - unique
+
+      - name: credits_allocated
+        tests:
+          - not_null
+
+      - name: spend_usd
+        tests:
+          - not_null
+
+      - name: credits_used_estimate
+        tests:
+          - not_null
+
+      - name: credits_balance_estimate
+        tests:
+          - not_null
+
+      - name: cloud_projects
+        tests:
+          - not_null
+
+      - name: cloud_schedules
+        tests:
+          - not_null
+
+      - name: cloud_schedules_enabled
+        tests:
+          - not_null
+
+      - name: cloud_schedules_healthy
+        tests:
+          - not_null
