@@ -29,9 +29,10 @@ renamed AS (
             "TENANT_RESOURCE_KEY::PROJECT_ID", '::', 2 -- noqa: RF05
         ) AS cloud_project_id
     FROM source
-    WHERE row_num = 1
-    AND ecs_task_status = 'STOPPED'
-    and started_ts IS NOT NULL
+    WHERE
+        row_num = 1
+        AND ecs_task_status = 'STOPPED'
+        AND started_ts IS NOT NULL
 
 )
 

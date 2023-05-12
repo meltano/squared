@@ -3,7 +3,7 @@ WITH source AS (
     SELECT
         *,
         SPLIT_PART(
-                "DEPLOYMENT_NAME::SCHEDULE_NAME", '::', 1 -- noqa: RF05
+            "DEPLOYMENT_NAME::SCHEDULE_NAME", '::', 1 -- noqa: RF05
         ) AS cloud_deployment_name,
         REPLACE(
             SPLIT_PART(
@@ -40,10 +40,10 @@ renamed AS (
         schedule_surrogate_key,
         interval,
         enabled AS is_enabled,
-        SHA2_HEX(cloud_deployment_name) AS cloud_deployment_name_hash,
-        SHA2_HEX(cloud_schedule_name) AS cloud_schedule_name_hash,
         tenant_resource_key,
-        cloud_project_id
+        cloud_project_id,
+        SHA2_HEX(cloud_deployment_name) AS cloud_deployment_name_hash,
+        SHA2_HEX(cloud_schedule_name) AS cloud_schedule_name_hash
     FROM clean_source
     WHERE row_num = 1
 

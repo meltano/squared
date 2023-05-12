@@ -66,14 +66,15 @@ SELECT
     -- Startup time can be null if it fails during startup or install
     DATEDIFF(
         MILLISECOND,
-        stg_dynamodb__workload_metadata_table.started_ts, 
+        stg_dynamodb__workload_metadata_table.started_ts,
         -- Run started ts, install exec finished ts if install failed before run, or tasks finish ts if install never started
         COALESCE(
             COALESCE(
-                open_source_agg.oss_run_started_ts, open_source_agg.oss_exec_finished_ts
+                open_source_agg.oss_run_started_ts,
+                open_source_agg.oss_exec_finished_ts
             ),
             stg_dynamodb__workload_metadata_table.finished_ts
-        ) 
+        )
     ) AS cloud_startup_ms,
     -- No teardown time if startup fails before install
     COALESCE(

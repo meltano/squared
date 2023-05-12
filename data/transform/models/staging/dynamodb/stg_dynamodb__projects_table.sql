@@ -20,7 +20,7 @@ renamed AS (
         project_name,
         tenant_resource_key
     FROM source
-    WHERE source.row_num = 1
+    WHERE row_num = 1
 
 )
 
