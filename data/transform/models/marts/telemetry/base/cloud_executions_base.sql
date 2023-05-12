@@ -52,23 +52,36 @@ SELECT
         stg_dynamodb__workload_metadata_table.started_ts,
         stg_dynamodb__workload_metadata_table.finished_ts
     ) AS cloud_full_runtime_ms,
-    DATEDIFF(
-        MILLISECOND,
-        open_source_agg.oss_run_started_ts,
-        open_source_agg.oss_run_finished_ts
+    -- No billable time if error during startup or install
+    COALESCE(
+        DATEDIFF(
+            MILLISECOND,
+            open_source_agg.oss_run_started_ts,
+            open_source_agg.oss_run_finished_ts
+        ), 0
     ) AS cloud_billable_runtime_ms,
     COALESCE(
         cloud_schedule_frequency.schedule_freq_rolling_avg > 24, FALSE
     ) AS is_frequent_schedule,
+    -- Startup time can be null if it fails during startup or install
     DATEDIFF(
         MILLISECOND,
-        stg_dynamodb__workload_metadata_table.started_ts,
-        open_source_agg.oss_run_started_ts
+        stg_dynamodb__workload_metadata_table.started_ts, 
+        -- Run started ts, install exec finished ts if install failed before run, or tasks finish ts if install never started
+        COALESCE(
+            COALESCE(
+                open_source_agg.oss_run_started_ts, open_source_agg.oss_exec_finished_ts
+            ),
+            stg_dynamodb__workload_metadata_table.finished_ts
+        ) 
     ) AS cloud_startup_ms,
-    DATEDIFF(
-        MILLISECOND,
-        open_source_agg.oss_exec_finished_ts,
-        stg_dynamodb__workload_metadata_table.finished_ts
+    -- No teardown time if startup fails before install
+    COALESCE(
+        DATEDIFF(
+            MILLISECOND,
+            open_source_agg.oss_exec_finished_ts,
+            stg_dynamodb__workload_metadata_table.finished_ts
+        ), 0
     ) AS cloud_teardown_ms,
     cloud_startup_ms + cloud_teardown_ms AS cloud_platform_runtime_ms,
     cloud_billable_runtime_ms / 60000.0 AS cloud_billable_runtime_minutes,
