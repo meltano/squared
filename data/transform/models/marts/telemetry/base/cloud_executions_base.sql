@@ -97,7 +97,8 @@ SELECT
         1
     ) AS credits_used_estimate
 FROM {{ ref('stg_dynamodb__workload_metadata_table') }}
-LEFT JOIN {{ ref('stg_dynamodb__projects_table') }}
+-- Exclude any projects that have been deleted
+INNER JOIN {{ ref('stg_dynamodb__projects_table') }}
     ON
         stg_dynamodb__workload_metadata_table.cloud_project_id
         = stg_dynamodb__projects_table.cloud_project_id
