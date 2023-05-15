@@ -158,3 +158,79 @@ models:
         tests:
           - not_null
           - unique
+
+
+  - name: cloud_executions_base
+    description: This table contains cloud executions at the day grain.
+    columns:
+
+      - name: cloud_execution_id
+        description: The unique identifier for a cloud execution.
+        tests:
+          - not_null
+          - unique
+
+      - name: cloud_project_id
+        tests:
+          - not_null
+
+      - name: tenant_resource_key
+        tests:
+          - not_null
+
+      - name: project_name
+        tests:
+          - not_null
+
+      - name: started_ts
+        tests:
+          - not_null
+
+      - name: finished_ts
+        tests:
+          - not_null
+
+      - name: cloud_schedule_name_hash
+        tests:
+          - not_null
+
+      - name: cloud_deployment_name
+        tests:
+          - not_null
+
+      - name: cloud_exit_code
+        tests:
+          - not_null
+
+      - name: cloud_full_runtime_ms
+        tests:
+          - not_null
+
+      - name: cloud_billable_runtime_ms
+        tests:
+          - not_null
+
+      - name: is_frequent_schedule
+        tests:
+          - not_null
+
+      - name: cloud_startup_ms
+        tests:
+          - not_null
+
+      - name: cloud_teardown_ms
+        tests:
+          - not_null
+
+      - name: cloud_platform_runtime_ms
+        tests:
+          - not_null
+
+      - name: cloud_billable_runtime_minutes
+        tests:
+          - not_null
+
+      - name: credits_used_estimate
+        tests:
+          - not_null
+

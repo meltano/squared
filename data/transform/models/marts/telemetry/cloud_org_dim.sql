@@ -19,7 +19,7 @@ schedules AS (
         cloud_exit_code AS latest_exit_code
     FROM {{ ref('cloud_executions_base') }}
     QUALIFY
-        RANK() OVER (
+        ROW_NUMBER() OVER (
             PARTITION BY
                 tenant_resource_key, cloud_project_id, cloud_schedule_name_hash
             ORDER BY started_ts DESC

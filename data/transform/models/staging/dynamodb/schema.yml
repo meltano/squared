@@ -14,6 +14,19 @@ models:
       - name: tenant_resource_key
         tests:
           - not_null
+      - name: started_ts
+        tests:
+          - not_null
+      - name: finished_ts
+        tests:
+          - not_null
+      - name: cloud_environment_name_hash
+        tests:
+          - not_null
+      - name: cloud_schedule_name_hash
+        tests:
+          - not_null
+
   - name: stg_dynamodb__project_schedules_table
     columns:
       - name: schedule_surrogate_key
