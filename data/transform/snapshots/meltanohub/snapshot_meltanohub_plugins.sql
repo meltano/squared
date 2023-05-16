@@ -38,7 +38,7 @@
         FROM {{ source('tap_meltanohub', 'plugins') }}
         -- Handle hard deletes by only selecting most recent sync
         QUALIFY
-            ROW_NUMBER() OVER (
+            RANK() OVER (
                 ORDER BY DATE_TRUNC('HOUR', _sdc_batched_at) DESC
             ) = 1
     )

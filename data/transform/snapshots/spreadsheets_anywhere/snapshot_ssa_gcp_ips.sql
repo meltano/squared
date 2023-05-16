@@ -20,7 +20,7 @@
         FROM {{ source('tap_spreadsheets_anywhere', 'gcp_ips') }}
         -- Handle hard deletes by only selecting most recent sync
         QUALIFY
-            ROW_NUMBER() OVER (
+            RANK() OVER (
                 ORDER BY DATE_TRUNC('MINUTE', _sdc_batched_at) DESC
             ) = 1
 
