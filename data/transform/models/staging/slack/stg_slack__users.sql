@@ -29,11 +29,11 @@ renamed AS (
         is_bot,
         is_app_user,
         is_email_confirmed,
-        profile:email::STRING AS email,
+        profile:title::STRING AS title,
+        MD5(profile:email::STRING) AS email_hash,
         SUBSTR(
             profile:email::STRING, CHARINDEX('@', profile:email::STRING) + 1
         ) AS email_domain,
-        profile:title::STRING AS title,
         TO_TIMESTAMP_NTZ(updated::INT) AS updated_at
     FROM source
     WHERE row_num = 1

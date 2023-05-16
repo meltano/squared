@@ -23,7 +23,10 @@ SELECT
     project_base.opted_out_at,
     project_base.first_meltano_version,
     project_base.last_meltano_version,
+    project_base.init_project_directory,
     project_base.has_opted_out,
+    project_base.project_org_name,
+    project_base.project_org_domain,
     COALESCE(project_base.event_total, 0) AS event_total,
     COALESCE(project_base.exec_event_total, 0) AS exec_event_total,
     COALESCE(
@@ -36,6 +39,9 @@ SELECT
     COALESCE(
         project_base.pipeline_runs_count_success, 0
     ) AS pipeline_runs_count_success,
+    COALESCE(
+        project_base.unique_ip_address_count, 0
+    ) AS unique_ip_address_count,
     COALESCE(project_base.add_count_all, 0) AS add_count_all,
     COALESCE(project_base.add_count_success, 0) AS add_count_success,
     COALESCE(project_base.config_count_all, 0) AS config_count_all,
@@ -125,11 +131,38 @@ SELECT
         FALSE
     ) AS is_currently_active,
     COALESCE(
-        project_base.lifespan_hours <= 24
-        AND project_base.first_event_at::DATE != CURRENT_DATE,
+        project_base.project_id_source = 'random'
+        OR project_base.is_ci_only = TRUE
+        OR project_base.lifespan_mins <= 5
+        OR project_base.is_state_in_first_exec = TRUE
+        OR (
+            ARRAY_SIZE(project_base.ip_hash_list) = 1
+            -- Ephemeral IP exclude list
+            AND project_base.ip_hash_list[0] IN (
+                'e6e4b47d8cd8840dd90ea08f5e54033f'
+            )
+        ),
         FALSE
-    ) AS is_ephemeral_project_id
+    ) AS is_ephemeral_project_id,
+    COALESCE(
+        project_base.init_project_directory IN (
+            -- codespace original path - 'PosixPath(\'new_project\')'
+            'e5ca2eeb4da09ea1a66c3d9391b5bf43296e309c619c04914ac5bffbb3e7cf54',
+            -- updated uuid - 'PosixPath(\'b54c6cfe2f8f831389a5b9ca409f410c\')'
+            '781d839e18d017b347cf90a22e18b407e3cdacb2a9cc907d3693893a790fdc4c'
+        ),
+        FALSE
+    ) AS is_codespace_demo,
+    COALESCE(
+        project_base.init_project_directory IN (
+            -- full GSG tutorial path - 'PosixPath(\'my-meltano-project\')'
+            'edd9334eaeaa3b81f964e18c5840955de8791ea220740459f7393deca03085f6',
+            -- mulit part GSG tutorial path - 'PosixPath(\'my-new-project\')'
+            'ffd7f2044d5bf2efc6bd4353979041951c565125c08186e3160be926a6ee1e75'
+        ),
+        FALSE
+    ) AS is_gsg_tutorial
 FROM {{ ref('project_base') }}
 LEFT JOIN
     active_projects ON
-        project_base.project_id = active_projects.project_id
+    project_base.project_id = active_projects.project_id

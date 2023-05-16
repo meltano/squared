@@ -50,8 +50,9 @@ renamed AS (
         SPLIT_PART(full_name, '/', 1) AS repo_namespace,
         DATEDIFF(DAY, created_at, CURRENT_TIMESTAMP()) AS repo_lifespan_days,
         CASE
-            WHEN name LIKE 'tap-%'
-                 OR name LIKE '%-tap-%'
+            WHEN
+                name LIKE 'tap-%'
+                OR name LIKE '%-tap-%'
                 THEN 'tap'
             ELSE 'target'
         END AS connector_type

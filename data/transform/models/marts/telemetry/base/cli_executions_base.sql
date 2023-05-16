@@ -73,6 +73,7 @@ combined AS (
         NULL AS cli_sub_command,
         structured_executions.project_id,
         NULL AS project_uuid_source,
+        NULL AS client_uuid,
         NULL AS started_ts,
         structured_executions.event_created_at AS finished_ts,
         NULL AS num_cpu_cores_available,
@@ -91,6 +92,9 @@ combined AS (
         NULL AS meltano_version,
         NULL AS python_version,
         NULL AS is_ci_environment,
+        NULL AS notable_flag_env_vars,
+        NULL AS notable_hashed_env_vars,
+        NULL AS options_obj,
         event_commands_parsed.is_legacy_event,
         -- Plugins
         event_commands_parsed.is_plugin_dbt,
@@ -106,7 +110,8 @@ combined AS (
         event_commands_parsed.is_os_feature_mappers,
         event_commands_parsed.is_os_feature_test,
         event_commands_parsed.is_os_feature_run,
-        COALESCE(NOT(event_commands_parsed.is_plugin_dbt
+        COALESCE(NOT(
+            event_commands_parsed.is_plugin_dbt
             OR event_commands_parsed.is_plugin_singer
             OR event_commands_parsed.is_plugin_airflow
             OR event_commands_parsed.is_plugin_dagster
@@ -117,10 +122,12 @@ combined AS (
         ), FALSE) AS is_plugin_other,
         COALESCE(
             retention.first_event_date = structured_executions.event_created_at,
-            FALSE) AS is_acquired_date,
+            FALSE
+        ) AS is_acquired_date,
         COALESCE(
             retention.last_event_date = structured_executions.event_created_at,
-            FALSE) AS is_churned_date,
+            FALSE
+        ) AS is_churned_date,
         COALESCE(
             structured_executions.event_created_at >= DATEADD(
                 MONTH, 1, DATE_TRUNC(
@@ -136,7 +143,7 @@ combined AS (
         ON structured_executions.command = event_commands_parsed.command
     LEFT JOIN
         {{ ref('cmd_parsed_all') }} ON
-            structured_executions.command = cmd_parsed_all.command
+        structured_executions.command = cmd_parsed_all.command
     LEFT JOIN retention
         ON structured_executions.project_id = retention.project_id
 
@@ -152,6 +159,7 @@ combined AS (
         unstructured_executions.cli_sub_command AS cli_sub_command,
         unstructured_executions.project_id,
         unstructured_executions.project_uuid_source,
+        unstructured_executions.client_uuid,
         unstructured_executions.started_ts,
         unstructured_executions.finished_ts,
         unstructured_executions.num_cpu_cores_available,
@@ -166,18 +174,21 @@ combined AS (
         unstructured_executions.exit_code,
         FALSE AS is_tracking_disabled,
         1 AS event_count,
-        MD5(unstructured_executions.user_ipaddress) AS ip_address_hash,
+        unstructured_executions.ip_address_hash,
         unstructured_executions.meltano_version,
         unstructured_executions.python_version,
         unstructured_executions.is_ci_environment,
+        unstructured_executions.notable_flag_env_vars,
+        unstructured_executions.notable_hashed_env_vars,
+        unstructured_executions.options_obj,
         COALESCE(unstructured_executions.cli_command IN (
-                'meltano transforms',
-                'meltano dashboards',
-                'meltano models',
-                'transforms',
-                'dashboards',
-                'models'
-            ), FALSE) AS is_legacy_event,
+            'meltano transforms',
+            'meltano dashboards',
+            'meltano models',
+            'transforms',
+            'dashboards',
+            'models'
+        ), FALSE) AS is_legacy_event,
 
         -- Plugins
         COALESCE(unstruct_prep.is_plugin_dbt, FALSE) AS is_plugin_dbt,
@@ -226,6 +237,7 @@ SELECT
     combined.cli_sub_command,
     combined.project_id,
     combined.project_uuid_source,
+    combined.client_uuid,
     combined.event_count,
     combined.ip_address_hash,
     combined.meltano_version,
@@ -245,6 +257,9 @@ SELECT
     combined.exit_code,
     combined.is_tracking_disabled,
     combined.is_ci_environment,
+    combined.notable_flag_env_vars,
+    combined.notable_hashed_env_vars,
+    combined.options_obj,
     combined.is_legacy_event,
     combined.is_plugin_dbt,
     combined.is_plugin_singer,
@@ -278,5 +293,6 @@ SELECT
     ) AS cli_runtime_ms
 FROM combined
 LEFT JOIN {{ ref('hash_lookup') }}
-    ON combined.environment_name_hash = hash_lookup.hash_value
+    ON
+        combined.environment_name_hash = hash_lookup.hash_value
         AND hash_lookup.category = 'environment'

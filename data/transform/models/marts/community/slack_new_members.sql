@@ -7,20 +7,22 @@ WITH new_member_message AS (
         ) AS parsed_user_id
     FROM {{ ref('stg_slack__messages') }}
     -- new-member-notice channel
-    WHERE channel_id = 'C01SK13R9NJ'
+    WHERE
+        channel_id = 'C01SK13R9NJ'
         AND slack_username = 'New User Alert [bot]'
 
 )
 
 SELECT
     stg_slack__users.user_id,
-    stg_slack__users.email,
+    stg_slack__users.email_hash,
     stg_slack__users.email_domain,
     new_member_message.message_created_at,
     stg_slack__users.is_deleted
 FROM {{ ref('stg_slack__users') }}
 LEFT JOIN
     new_member_message ON
-        stg_slack__users.user_id = new_member_message.parsed_user_id
-WHERE NOT stg_slack__users.is_bot
+    stg_slack__users.user_id = new_member_message.parsed_user_id
+WHERE
+    NOT stg_slack__users.is_bot
     AND stg_slack__users.user_id != 'USLACKBOT'

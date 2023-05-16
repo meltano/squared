@@ -134,3 +134,103 @@ models:
       - name: sp_activate_date
         tests:
           - not_null
+
+  - name: project_org_mapping
+    description: A mapping of projects to the organization that we expect they're part of. This is currently based on attributes provided by LeadMagic.
+    columns:
+      - name: project_id
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
+      - name: org_source
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['MANUAL', 'LEADMAGIC']
+
+  - name: ip_org_mapping_lm
+    description: A mapping of projects to the organization that we expect they're part of. This is currently based on attributes provided by LeadMagic.
+    columns:
+      - name: ip_address_hash
+        description: The unique plugin execution ID.
+        tests:
+          - not_null
+          - unique
+
+
+  - name: cloud_executions_base
+    description: This table contains cloud executions at the day grain.
+    columns:
+
+      - name: cloud_execution_id
+        description: The unique identifier for a cloud execution.
+        tests:
+          - not_null
+          - unique
+
+      - name: cloud_project_id
+        tests:
+          - not_null
+
+      - name: tenant_resource_key
+        tests:
+          - not_null
+
+      - name: project_name
+        tests:
+          - not_null
+
+      - name: started_ts
+        tests:
+          - not_null
+
+      - name: finished_ts
+        tests:
+          - not_null
+
+      - name: cloud_schedule_name_hash
+        tests:
+          - not_null
+
+      - name: cloud_deployment_name
+        tests:
+          - not_null
+
+      - name: cloud_exit_code
+        tests:
+          - not_null
+
+      - name: cloud_full_runtime_ms
+        tests:
+          - not_null
+
+      - name: cloud_billable_runtime_ms
+        tests:
+          - not_null
+
+      - name: is_frequent_schedule
+        tests:
+          - not_null
+
+      - name: cloud_startup_ms
+        tests:
+          - not_null
+
+      - name: cloud_teardown_ms
+        tests:
+          - not_null
+
+      - name: cloud_platform_runtime_ms
+        tests:
+          - not_null
+
+      - name: cloud_billable_runtime_minutes
+        tests:
+          - not_null
+
+      - name: credits_used_estimate
+        tests:
+          - not_null
+

@@ -19,6 +19,7 @@ SELECT
     plugin_executions.plugin_type,
     plugin_executions.plugin_category,
     plugin_executions.plugin_surrogate_key,
+    plugin_executions.is_test_plugin,
     -- CLI Attributes
     cli_executions_base.cli_command,
     cli_executions_base.environment_name_hash AS env_id,
@@ -42,11 +43,15 @@ SELECT
     project_dim.is_ephemeral_project_id,
     project_dim.is_currently_active,
     project_dim.project_id_source,
+    project_dim.init_project_directory,
+    project_dim.project_org_name,
     ip_address_dim.cloud_provider,
     ip_address_dim.execution_location,
+    ip_address_dim.org_name,
     -- Pipeline Attributes
     pipeline_executions.pipeline_pk AS pipeline_fk,
     pipeline_executions.pipeline_runtime_bin,
+    pipeline_executions.is_test_pipeline,
     -- Host Attributes
     cli_executions_base.ip_address_hash,
     cli_executions_base.started_ts AS cli_started_ts,
@@ -55,7 +60,11 @@ SELECT
     COALESCE(
         daily_active_projects.project_id IS NOT NULL,
         FALSE
-    ) AS is_active_cli_execution
+    ) AS is_active_cli_execution,
+    CASE
+        WHEN ip_address_dim.cloud_provider = 'MELTANO_CLOUD'
+            THEN REPLACE(cli_executions_base.client_uuid, '-', '')
+    END AS cloud_execution_id
 FROM {{ ref('plugin_executions') }}
 LEFT JOIN {{ ref('cli_executions_base') }}
     ON plugin_executions.execution_id = cli_executions_base.execution_id
@@ -64,13 +73,18 @@ LEFT JOIN {{ ref('date_dim') }}
 LEFT JOIN {{ ref('project_dim') }}
     ON cli_executions_base.project_id = project_dim.project_id
 LEFT JOIN {{ ref('ip_address_dim') }}
-    ON cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
-        AND cli_executions_base.event_created_at
-        BETWEEN ip_address_dim.active_from AND COALESCE(
-            ip_address_dim.active_to, CURRENT_TIMESTAMP
+    ON
+        cli_executions_base.ip_address_hash = ip_address_dim.ip_address_hash
+        AND (
+            ip_address_dim.active_from IS NULL
+            OR cli_executions_base.event_created_at
+            BETWEEN ip_address_dim.active_from AND COALESCE(
+                ip_address_dim.active_to, CURRENT_TIMESTAMP
+            )
         )
 LEFT JOIN {{ ref('pipeline_executions') }}
     ON cli_executions_base.execution_id = pipeline_executions.execution_id
 LEFT JOIN {{ ref('daily_active_projects') }}
-    ON cli_executions_base.project_id = daily_active_projects.project_id
+    ON
+        cli_executions_base.project_id = daily_active_projects.project_id
         AND date_dim.date_day = daily_active_projects.date_day

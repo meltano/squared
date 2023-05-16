@@ -100,7 +100,7 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['1-0-0']
+              values: ['1-0-0', '1-1-0', '1-2-0', '1-3-0']
 
   - name: context_exception
     description: Snowplow exception contexts parsed.
@@ -153,6 +153,19 @@ models:
 
   - name: context_plugins
     description: Snowplow plugins context events parsed.
+    columns:
+      - name: event_id
+        tests:
+          - not_null
+          - unique
+      - name: schema_version
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['1-0-0']
+
+  - name: context_identify
+    description: Snowplow identify context events parsed.
     columns:
       - name: event_id
         tests:

@@ -1,7 +1,14 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 WITH base AS (
 
     SELECT
         event_id,
+        MAX(event_created_at) AS event_created_at,
         MAX(schema_name) AS schema_name,
         MAX(context:data:context_uuid::STRING) AS context_uuid,
         MAX(context:data:exception::STRING) AS exception

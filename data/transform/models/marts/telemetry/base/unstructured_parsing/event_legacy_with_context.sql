@@ -1,3 +1,9 @@
+{{
+    config(
+        materialized='table'
+    )
+}}
+
 -- These are events that were sent during the transistion from
 -- structured to unstructured events. They are structured but
 -- have context. They were >2.0 launch but didnt get transisted
@@ -9,7 +15,7 @@ SELECT
     event_id,
     'legacy' AS event_name,
     event_created_at,
-    user_ipaddress,
+    ip_address_hash,
     legacy_se_category,
     legacy_se_action,
     legacy_se_label

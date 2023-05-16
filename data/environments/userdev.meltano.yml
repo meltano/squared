@@ -3,6 +3,9 @@ environments:
   config:
     plugins:
       extractors:
+      - name: tap-cloudwatch
+        config:
+          start_date: '2023-01-16'
       - name: tap-slack-public
         config:
           start_date: '2022-09-01'
@@ -26,17 +29,22 @@ environments:
         config:
           schema: ${USER_PREFIX}_MELTANO_HUB
           tables:
-            - ${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+           - ${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           schema: ${USER_PREFIX}_MELTANO_HUB
           tables:
-            - ${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
+           - ${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           schema: ${USER_PREFIX}_SLACK_NOTIFICATIONS
           tables:
-            - ${USER_PREFIX}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+           - ${USER_PREFIX}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+      - name: tap-snowflake-meltano-activity
+        config:
+          schema: ${USER_PREFIX}_SLACK_NOTIFICATIONS
+          tables:
+           - ${USER_PREFIX}_SLACK_NOTIFICATIONS.GITHUB_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -45,22 +53,36 @@ environments:
           role: ${USER_PREFIX}
           warehouse: CORE
           default_target_schema: ${USER_PREFIX}_${MELTANO_EXTRACT__LOAD_SCHEMA}
+      - name: target-apprise-singer-activity
+        config:
+          stream_maps:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+              title: TITLE
+              body: BODY
+      - name: target-apprise-meltano-activity
+        config:
+          stream_maps:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-GITHUB_ACTIVITY_NOTIFICATIONS:
+              title: TITLE
+              body: BODY
       utilities:
       - name: dbt-snowflake
         config:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+          skip_pre_invoke: true
           database: USERDEV_PROD
           database_prep: USERDEV_PREP
           database_raw: RAW
-          # Uncomment for reading custom a RAW schema
+          # Uncomment for reading a custom RAW schema
           # database_raw: USERDEV_RAW
           # source_schema_prefix: ${USER_PREFIX}_
           target_schema_prefix: ${USER_PREFIX}_
       - name: sqlfluff
         config:
           user: ${USER_PREFIX}
+          role: ${USER_PREFIX}
       - name: great_expectations
         config:
           prod_database: USERDEV_PROD
@@ -68,9 +90,22 @@ environments:
           username: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
+      - name: snowflake-cloner
+        config:
+          clone_from_db_prep: PREP
+          clone_from_db_prod: PROD
+          clone_to_db_prep: USERDEV_PREP
+          clone_to_db_prod: USERDEV_PROD
+          account: epa06486
+          user: ${USER_PREFIX}
+          password: ${SNOWFLAKE_PASSWORD}
+          role: ${USER_PREFIX}
+          warehouse: CORE
+          threads: 6
+          schema_prefix: ${USER_PREFIX}_
+
   env:
     USER_PREFIX: PNADOLNY
-    HUB_METRICS_S3_PATH: s3://devtest-meltano-bucket-01/hub_metrics/
     SUPERSET_API_URL: http://localhost:8088
     SUPERSET_USER: admin
     SUPERSET_PASS: admin

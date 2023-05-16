@@ -24,7 +24,7 @@ WITH cohort_snapshots AS (
     FROM {{ ref('cli_executions_base') }}
     LEFT JOIN
         {{ ref('project_dim') }} ON
-            cli_executions_base.project_id = project_dim.project_id
+        cli_executions_base.project_id = project_dim.project_id
     GROUP BY 1, 2
 ),
 

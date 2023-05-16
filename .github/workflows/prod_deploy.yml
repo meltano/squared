@@ -28,6 +28,15 @@ jobs:
     - run: pip install -r data/requirements.txt
     - run: cd data && meltano schedule list --format=json > orchestrate/airflow/schedules.cache.json
 
+    # Install deps while we have access to the private git repo
+    # skip_pre_invoke config is overridden to true in self hosted deployment using env var.
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+    - run: cd data && meltano install utility dbt-snowflake
+    - run: cd data && meltano invoke dbt-snowflake:deps
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -115,7 +124,12 @@ jobs:
       with:
         python-version: '3.8'
         cache: 'pip'
+    # Add SSH key for accessing private dbt package repo
+    - uses: webfactory/ssh-agent@v0.7.0
+      with:
+          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     - run: pip install -r requirements.txt
     # Seed Production
-    - run: meltano install transformer dbt-snowflake
-    - run: meltano run dbt-snowflake:run_dbt_artifacts dbt-snowflake:seed
+    - run: meltano install utility dbt-snowflake
+    - run: meltano run dbt-snowflake:run_dbt_artifacts
+    - run: meltano invoke dbt-snowflake seed --full-refresh

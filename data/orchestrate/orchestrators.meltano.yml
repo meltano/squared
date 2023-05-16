@@ -2,8 +2,8 @@ plugins:
   utilities:
   - name: airflow
     variant: apache
-    pip_url: git+https://github.com/meltano/airflow-ext.git@main apache-airflow==2.3.3
-      --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.3/constraints-no-providers-${MELTANO__PYTHON_VERSION}.txt
+    pip_url: git+https://github.com/meltano/airflow-ext.git@f0771f858f73a1b4ae5fbfb149ffc20fbfffc102
+      apache-airflow==2.3.3 --constraint https://raw.githubusercontent.com/apache/airflow/constraints-2.3.3/constraints-no-providers-${MELTANO__PYTHON_VERSION}.txt
       pytest kubernetes==23.6.0 apache-airflow-providers-cncf-kubernetes==4.4.0
     commands:
       test_dag_generator:
@@ -14,6 +14,14 @@ schedules:
 - name: slack_notifications
   interval: 0 12 * * *
   job: slack_notifications
+
+- name: cloudwatch_el
+  interval: 0 6 * * *
+  job: cloudwatch_el
+
+- name: dynanmodb_el
+  interval: 0 6 * * *
+  job: dynanmodb_el
 
 - name: meltanohub_el
   interval: 0 6 * * *
@@ -32,7 +40,7 @@ schedules:
   job: github_search_el
 
 - name: github_meltano_el
-  interval: 0 6 * * *
+  interval: 0 7 * * *
   job: github_meltano_el
 
 - name: gitlab_el
@@ -48,19 +56,45 @@ schedules:
   job: google_analytics_el
 
 - name: hub_metrics_publish
-  interval: 0 9 * * *
+  interval: 0 12 * * *
   job: hub_metrics_publish
 
 - name: marts_refresh
   interval: 0 8 * * *
   job: marts_refresh
 
+- name: hubspot_publish
+  interval: 0 12 * * *
+  job: hubspot_publish
+
+- name: sample_schedule
+  interval: 0 12 * * *
+  job: sample_schedule
+
 jobs:
+
+- name: dynanmodb_el
+  tasks:
+  - tap-dynamodb target-snowflake
+  - dbt-snowflake:run_staging_dynamodb
+  - dbt-snowflake:test_staging_dynamodb
+
+- name: clone_dbt_dev_env
+  tasks:
+  - snowflake-cloner:clone_prep
+  - snowflake-cloner:clone_prod
+  - dbt-snowflake:run_views
+
+- name: hubspot_publish
+  tasks:
+  - dbt-snowflake:run_hubspot_publish
+  - dbt-snowflake:test_hubspot_publish
 
 - name: slack_notifications
   tasks:
   - dbt-snowflake:run_slack_notifications
-  - tap-snowflake-singer-activity target-apprise
+  - tap-snowflake-singer-activity target-apprise-singer-activity
+  - tap-snowflake-meltano-activity target-apprise-meltano-activity
 
 - name: dbt_docs
   tasks:
@@ -106,7 +140,7 @@ jobs:
 
 - name: slack_el
   tasks:
-  - tap-slack target-snowflake 
+  - tap-slack target-snowflake
   - tap-slack-public target-snowflake
   - dbt-snowflake:run_staging_slack
   - dbt-snowflake:test_staging_slack
@@ -128,5 +162,16 @@ jobs:
 
 - name: marts_refresh
   tasks:
+  - dbt-snowflake:seed
   - dbt-snowflake:run_marts
   - dbt-snowflake:test_marts
+
+- name: cloudwatch_el
+  tasks:
+  - tap-cloudwatch target-snowflake
+  - dbt-snowflake:run_staging_cloudwatch
+  - dbt-snowflake:test_staging_cloudwatch
+
+- name: sample_schedule
+  tasks:
+  - dbt-snowflake:describe

@@ -77,26 +77,30 @@ SELECT
     base.plugin_surrogate_key,
     base.completion_status AS completion_sub_status,
     CASE
-        WHEN base.completion_status IN (
-            'SUCCESS',
-            'SUCCESS_STRUCT',
-            'SUCCESS_BLOCK_CLI_LEVEL'
-        ) THEN 'SUCCESS'
+        WHEN
+            base.completion_status IN (
+                'SUCCESS',
+                'SUCCESS_STRUCT',
+                'SUCCESS_BLOCK_CLI_LEVEL'
+            ) THEN 'SUCCESS'
         WHEN base.completion_status IN ('FAILED') THEN 'FAILED'
-        WHEN base.completion_status IN (
-            'ABORTED-SKIPPED',
-            'INCOMPLETE_EL_PAIR'
-        ) THEN 'ABORTED'
-        WHEN base.completion_status IN (
-            'NULL_EXCEPTION',
-            'EXCEPTION_PARSING_FAILED',
-            'OTHER_FAILURE',
-            'FAILED_BLOCK_CLI_LEVEL'
-        ) THEN 'UNKNOWN_FAILED_OR_ABORTED'
+        WHEN
+            base.completion_status IN (
+                'ABORTED-SKIPPED',
+                'INCOMPLETE_EL_PAIR'
+            ) THEN 'ABORTED'
+        WHEN
+            base.completion_status IN (
+                'NULL_EXCEPTION',
+                'EXCEPTION_PARSING_FAILED',
+                'OTHER_FAILURE',
+                'FAILED_BLOCK_CLI_LEVEL'
+            ) THEN 'UNKNOWN_FAILED_OR_ABORTED'
         ELSE 'OTHER'
-    END AS completion_status
+    END AS completion_status,
+    COALESCE(base.parent_name IN ('tap-smoke-test'), FALSE) AS is_test_plugin
 FROM base
 -- Exclude non-activated projects based on GA vs Snowplow
 INNER JOIN
     {{ ref('cli_execs_blended') }} ON
-        base.execution_id = cli_execs_blended.execution_id
+    base.execution_id = cli_execs_blended.execution_id

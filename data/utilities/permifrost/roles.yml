@@ -21,6 +21,9 @@ databases:
     - asteers_prod:
         shared: no
 
+    - brooklyn_data_co_raw:
+        shared: no
+
     - cicd_raw:
         shared: no
     - cicd_prep:
@@ -28,18 +31,14 @@ databases:
     - cicd_prod:
         shared: no
 
-    - jigsaw_labs_raw:
-        shared: no
-    - jigsaw_labs_prep:
-        shared: no
-    - jigsaw_labs_prod:
-        shared: no
-
     - pnadolny_raw:
         shared: no
     - pnadolny_prep:
         shared: no
     - pnadolny_prod:
+        shared: no
+
+    - ryan_miranda_raw:
         shared: no
 
     - staging_raw:
@@ -284,38 +283,6 @@ roles:
             - loader
             - transformer
 
-    - jigsaw_labs_developer:
-        warehouses:
-            - core
-        privileges:
-            databases:
-                read:
-                    - jigsaw_labs_raw
-                    - jigsaw_labs_prep
-                    - jigsaw_labs_prod
-                write:
-                    - jigsaw_labs_raw
-                    - jigsaw_labs_prep
-                    - jigsaw_labs_prod
-            schemas:
-                read:
-                    - jigsaw_labs_raw.*
-                    - jigsaw_labs_prep.*
-                    - jigsaw_labs_prod.*
-                write:
-                    - jigsaw_labs_raw.*
-                    - jigsaw_labs_prep.*
-                    - jigsaw_labs_prod.*
-            tables:
-                read:
-                    - jigsaw_labs_raw.*.*
-                    - jigsaw_labs_prep.*.*
-                    - jigsaw_labs_prod.*.*
-                write:
-                    - jigsaw_labs_raw.*.*
-                    - jigsaw_labs_prep.*.*
-                    - jigsaw_labs_prod.*.*
-
 # ==========================================
 # User Roles ("Special" or elevated users)
 # ==========================================
@@ -375,6 +342,26 @@ roles:
                 write:
                     - asteers_prep.*.*
                     - asteers_prod.*.*
+
+    - brooklyn_data_co:
+        warehouses:
+            - brooklyn_data_co
+        privileges:
+            databases:
+                read:
+                    - brooklyn_data_co_raw
+                write:
+                    - brooklyn_data_co_raw
+            schemas:
+                read:
+                    - brooklyn_data_co_raw.*
+                write:
+                    - brooklyn_data_co_raw.*
+            tables:
+                read:
+                    - brooklyn_data_co_raw.*.*
+                write:
+                    - brooklyn_data_co_raw.*.*
 
     # System user role for CI tests
     - cicd:
@@ -515,6 +502,33 @@ roles:
                     - staging_prod.*.*
                     - staging_raw.*.*
 
+    - sbalnojan:
+        member_of:
+            - developer
+
+    - rbaum: 
+        member_of: []
+
+    - ryan_miranda:
+        warehouses:
+            - ryan_miranda
+        privileges:
+            databases:
+                read:
+                    - ryan_miranda_raw
+                write:
+                    - ryan_miranda_raw
+            schemas:
+                read:
+                    - ryan_miranda_raw.*
+                write:
+                    - ryan_miranda_raw.*
+            tables:
+                read:
+                    - ryan_miranda_raw.*.*
+                write:
+                    - ryan_miranda_raw.*.*
+
     - tmurphy:
         member_of:
             - developer
@@ -582,6 +596,11 @@ users:
             - sysadmin
             - maintainer
 
+    - rbaum:
+        can_login: yes
+        member_of:
+            - accountadmin
+
     - staging:
         can_login: yes
         member_of:
@@ -606,21 +625,29 @@ users:
         member_of:
             - asteers
 
-    - rsanabani:
+    - brooklyn_data_co:
         can_login: yes
         member_of:
-            - jigsaw_labs_developer
+            - brooklyn_data_co
 
-    - wbanks:
+    - ryan_miranda:
         can_login: yes
         member_of:
-            - jigsaw_labs_developer
+            - ryan_miranda
+
+    - sbalnojan:
+        can_login: yes
+        member_of:
+            - sbalnojan
 
 # ==========================================
 # Warehouses
 # ==========================================
 warehouses:
     - admin:
+        size: x-small
+
+    - brooklyn_data_co:
         size: x-small
 
     - cicd:
@@ -633,6 +660,9 @@ warehouses:
         size: x-small
 
     - reporter:
+        size: x-small
+
+    - ryan_miranda:
         size: x-small
 
     - staging:

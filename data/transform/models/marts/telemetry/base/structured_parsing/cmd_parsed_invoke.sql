@@ -5,7 +5,8 @@ WITH prep AS (
         args_parsed.args,
         args_parsed.environment,
         CASE
-            WHEN GET(unique_commands.split_parts, 2) NOT LIKE '--%'
+            WHEN
+                GET(unique_commands.split_parts, 2) NOT LIKE '--%'
                 AND (
                     GET(unique_commands.split_parts, 2) LIKE 'tap-%'
                     OR GET(unique_commands.split_parts, 2) LIKE 'tap_%'
@@ -28,7 +29,7 @@ WITH prep AS (
     FROM {{ ref('unique_commands') }}
     LEFT JOIN
         {{ ref('args_parsed') }} ON
-            unique_commands.command = args_parsed.command
+        unique_commands.command = args_parsed.command
     WHERE unique_commands.command_category = 'meltano invoke'
 )
 

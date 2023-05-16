@@ -2,8 +2,7 @@ plugins:
   utilities:
   - name: sqlfluff
     variant: sqlfluff
-    pip_url: sqlfluff==1.2.1; sqlfluff-templater-dbt==1.2.1; dbt-core~=1.2.0;
-      dbt-snowflake~=1.2.0
+    pip_url: sqlfluff==2.0.3; sqlfluff-templater-dbt==2.0.3; dbt-core~=1.3.0; dbt-snowflake~=1.3.0
     settings:
     - name: user
       env: DBT_SNOWFLAKE_USER
@@ -31,9 +30,8 @@ plugins:
     pip_url: awscli==1.21.7
     executable: aws
     commands:
-      s3_copy_metrics: s3 cp variant_metrics.yml ${HUB_METRICS_S3_PATH}
-      s3_copy_metrics_legacy: s3 cp metrics.yml ${HUB_METRICS_S3_PATH}
-      s3_copy_audit: s3 cp audit.yml ${HUB_METRICS_S3_PATH}
+      s3_copy_metrics: s3 cp variant_metrics.yml s3://hub-metrics-b8ba2d5/${MELTANO_ENVIRONMENT}/hub_metrics/
+      s3_copy_audit: s3 cp audit.yml s3://hub-metrics-b8ba2d5/${MELTANO_ENVIRONMENT}/hub_metrics/
   - name: superset
     variant: apache
     pip_url: apache-superset==1.5.0 markupsafe==2.0.1 snowflake-sqlalchemy
@@ -41,7 +39,6 @@ plugins:
     variant: great-expectations
     pip_url: great_expectations==0.15.20; sqlalchemy==1.4.40; snowflake-sqlalchemy==1.4.1
     settings:
-    # Custom settings
     - name: raw_database
       env: GE_RAW_DATABASE
     - name: prod_database
@@ -67,8 +64,42 @@ plugins:
       spec-test: spec-test utilities/permifrost/roles.yml
   - name: kms
     namespace: kms
-    pip_url: git+https://github.com/meltano/kms-ext.git
+    pip_url: git+https://github.com/meltano/kms-ext.git@2c8d6375cacea67fcfb7730b5f5d29a029d5fe0a
     executable: kms
     commands:
-      encrypt: encrypt $KMS_PUBLIC_KEY_PATH --dotenv-path $KMS_DOTENV_PATH --output-path $KMS_SECTRETS_PATH
+      encrypt: encrypt $KMS_PUBLIC_KEY_PATH --dotenv-path $KMS_DOTENV_PATH --output-path
+        $KMS_SECTRETS_PATH
       decrypt: decrypt $KMS_KEY_ID --input-path $KMS_SECRETS_PATH --output-path $KMS_DOTENV_PATH
+    env:
+      KMS_PUBLIC_KEY_PATH: utilities/kms/Publickey.pem
+      KMS_DOTENV_PATH: .env
+      KMS_SECTRETS_PATH: secrets.yml
+  - name: snowflake-cloner
+    pip_url: -e utilities/snowflake-cloner
+    namespace: snowflake-cloner
+    executable: snowflakecloner_extension
+    settings:
+    - name: clone_from_db_prep
+    - name: clone_to_db_prep
+    - name: clone_from_db_prod
+    - name: clone_to_db_prod
+    - name: account
+    - name: user
+    - name: password
+      kind: password
+    - name: role
+    - name: warehouse
+    - name: threads
+    - name: schema_prefix
+    settings_group_validation:
+    - - clone_from_db
+        clone_to_db
+        account
+        user
+        password
+        role
+        warehouse
+    commands:
+      clone_raw: clone ${SNOWFLAKE_CLONER_CLONE_FROM_DB_RAW} ${SNOWFLAKE_CLONER_CLONE_TO_DB_RAW} ${SNOWFLAKE_CLONER_ACCOUNT} ${SNOWFLAKE_CLONER_USER} ${SNOWFLAKE_CLONER_PASSWORD} ${SNOWFLAKE_CLONER_ROLE} ${SNOWFLAKE_CLONER_WAREHOUSE} ${SNOWFLAKE_CLONER_THREADS} ${SNOWFLAKE_CLONER_SCHEMA_PREFIX}
+      clone_prep: clone ${SNOWFLAKE_CLONER_CLONE_FROM_DB_PREP} ${SNOWFLAKE_CLONER_CLONE_TO_DB_PREP} ${SNOWFLAKE_CLONER_ACCOUNT} ${SNOWFLAKE_CLONER_USER} ${SNOWFLAKE_CLONER_PASSWORD} ${SNOWFLAKE_CLONER_ROLE} ${SNOWFLAKE_CLONER_WAREHOUSE} ${SNOWFLAKE_CLONER_THREADS} ${SNOWFLAKE_CLONER_SCHEMA_PREFIX}
+      clone_prod: clone ${SNOWFLAKE_CLONER_CLONE_FROM_DB_PROD} ${SNOWFLAKE_CLONER_CLONE_TO_DB_PROD} ${SNOWFLAKE_CLONER_ACCOUNT} ${SNOWFLAKE_CLONER_USER} ${SNOWFLAKE_CLONER_PASSWORD} ${SNOWFLAKE_CLONER_ROLE} ${SNOWFLAKE_CLONER_WAREHOUSE} ${SNOWFLAKE_CLONER_THREADS} ${SNOWFLAKE_CLONER_SCHEMA_PREFIX}

@@ -22,8 +22,9 @@ SELECT
 FROM {{ ref('unique_commands') }}
 LEFT JOIN
     {{ ref('args_parsed') }} ON
-        unique_commands.command = args_parsed.command
-WHERE unique_commands.command_category = 'meltano schedule'
+    unique_commands.command = args_parsed.command
+WHERE
+    unique_commands.command_category = 'meltano schedule'
     -- its a plugin name
     AND GET(unique_commands.split_parts, 2) NOT IN ('run', 'list', 'add')
 
@@ -55,8 +56,9 @@ SELECT
 FROM {{ ref('unique_commands') }}
 LEFT JOIN
     {{ ref('args_parsed') }} ON
-        unique_commands.command = args_parsed.command
-WHERE unique_commands.command_category = 'meltano schedule'
+    unique_commands.command = args_parsed.command
+WHERE
+    unique_commands.command_category = 'meltano schedule'
     -- its a plugin name just offset
     AND GET(unique_commands.split_parts, 2) IN ('add', 'run')
 
@@ -76,7 +78,8 @@ SELECT
 FROM {{ ref('unique_commands') }}
 LEFT JOIN
     {{ ref('args_parsed') }} ON
-        unique_commands.command = args_parsed.command
-WHERE unique_commands.command_category = 'meltano schedule'
+    unique_commands.command = args_parsed.command
+WHERE
+    unique_commands.command_category = 'meltano schedule'
     -- null plugins
     AND GET(unique_commands.split_parts, 2) = 'list'

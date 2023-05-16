@@ -1,7 +1,6 @@
 {% snapshot snapshot_ssa_aws_ips %}
 
-    {{
-        config(
+{{ config(
           target_schema=generate_schema_name('snapshot'),
           strategy='check',
           unique_key='ip_address',
@@ -19,7 +18,8 @@
             service
         FROM {{ source('tap_spreadsheets_anywhere', 'aws_ips') }}
         -- Handle hard deletes by only selecting most recent sync
-        QUALIFY RANK() OVER (
+        QUALIFY
+            ROW_NUMBER() OVER (
                 ORDER BY DATE_TRUNC('MINUTE', _sdc_batched_at) DESC
             ) = 1
 

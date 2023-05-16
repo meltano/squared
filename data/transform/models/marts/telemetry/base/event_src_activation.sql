@@ -17,7 +17,8 @@ snow_pre_v2 AS (
         COUNT(DISTINCT event_id) AS events
     FROM
         {{ ref('stg_snowplow__events') }}
-    WHERE contexts IS NULL
+    WHERE
+        contexts IS NULL
         AND event = 'struct'
         AND se_label IS NOT NULL
     GROUP BY 1, 2
@@ -38,7 +39,8 @@ prep_snow AS (
     FROM
         snow_v2
     FULL JOIN snow_pre_v2
-        ON snow_v2.project_id = snow_pre_v2.project_id
+        ON
+            snow_v2.project_id = snow_pre_v2.project_id
             AND snow_v2.event_week_start_date
             = snow_pre_v2.event_week_start_date
 
@@ -58,7 +60,9 @@ SELECT
     prep_snow.project_id,
     MIN(prep_snow.event_week_start_date) AS sp_activate_date
 FROM prep_snow
-LEFT JOIN prep_ga ON prep_snow.project_id = prep_ga.project_id
+LEFT JOIN
+    prep_ga ON
+    prep_snow.project_id = prep_ga.project_id
     AND prep_snow.event_week_start_date = prep_ga.event_week_start_date
 WHERE COALESCE(100 * (prep_snow.events * 1.0 / prep_ga.events), 100) >= 100
 GROUP BY 1

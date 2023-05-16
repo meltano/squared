@@ -41,17 +41,23 @@ agg_all_by_name AS (
         END AS plugin_name,
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
-            DISTINCT CASE WHEN
-                is_success AND is_exec
-                THEN project_id END
+            DISTINCT CASE
+                WHEN
+                    is_success AND is_exec
+                    THEN project_id
+            END
         ) AS success_projects,
         SUM(
-            CASE WHEN is_success AND is_exec
-                THEN event_count END
+            CASE
+                WHEN is_success AND is_exec
+                    THEN event_count
+            END
         ) AS success_execs,
         SUM(
-            CASE WHEN is_exec
-                THEN event_count END
+            CASE
+                WHEN is_exec
+                    THEN event_count
+            END
         ) AS all_execs
     FROM base
     WHERE plugin_category = 'singer'
@@ -68,7 +74,8 @@ unstruct_base AS (
         base.is_exec,
         base.project_id,
         base.event_count
-    FROM {{ ref('stg_meltanohub__plugins') }}
+    FROM
+        {{ ref('stg_meltanohub__plugins') }}
     -- Usage is attributed if the variant matches whats on the hub or if the
     -- pip_url matches but the variant does not. That accounts for the
     -- `original` variant case where the python package is the same but the
@@ -94,17 +101,23 @@ agg_unstruct_by_name AS (
         plugin_type,
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
-            DISTINCT CASE WHEN
-                is_success AND is_exec
-                THEN project_id END
+            DISTINCT CASE
+                WHEN
+                    is_success AND is_exec
+                    THEN project_id
+            END
         ) AS success_projects,
         SUM(
-            CASE WHEN is_success AND is_exec
-                THEN event_count END
+            CASE
+                WHEN is_success AND is_exec
+                    THEN event_count
+            END
         ) AS success_execs,
         SUM(
-            CASE WHEN is_exec
-                THEN event_count END
+            CASE
+                WHEN is_exec
+                    THEN event_count
+            END
         ) AS all_execs
     FROM base
     WHERE event_type = 'unstructured'
@@ -118,17 +131,23 @@ agg_unstruct_by_variant AS (
         variant,
         COUNT(DISTINCT project_id) AS all_projects,
         COUNT(
-            DISTINCT CASE WHEN
-                is_success AND is_exec
-                THEN project_id END
+            DISTINCT CASE
+                WHEN
+                    is_success AND is_exec
+                    THEN project_id
+            END
         ) AS success_projects,
         SUM(
-            CASE WHEN is_success AND is_exec
-                THEN event_count END
+            CASE
+                WHEN is_success AND is_exec
+                    THEN event_count
+            END
         ) AS success_execs,
         SUM(
-            CASE WHEN is_exec
-                THEN event_count END
+            CASE
+                WHEN is_exec
+                    THEN event_count
+            END
         ) AS all_execs
     FROM unstruct_base
     GROUP BY 1, 2, 3
@@ -175,26 +194,29 @@ final AS (
         ) AS success_execs_unstruct_by_variant
     FROM {{ ref('stg_meltanohub__plugins') }}
     LEFT JOIN agg_unstruct_by_variant
-        ON agg_unstruct_by_variant.name = stg_meltanohub__plugins.name
+        ON
+            agg_unstruct_by_variant.name = stg_meltanohub__plugins.name
             AND agg_unstruct_by_variant.plugin_type
             = stg_meltanohub__plugins.plugin_type
             AND agg_unstruct_by_variant.variant
             = stg_meltanohub__plugins.variant
     LEFT JOIN agg_unstruct_by_name
-        ON agg_unstruct_by_name.plugin_name
+        ON
+            agg_unstruct_by_name.plugin_name
             = stg_meltanohub__plugins.name
             AND agg_unstruct_by_name.plugin_type
             = stg_meltanohub__plugins.plugin_type
-    LEFT JOIN {{ ref('fact_repo_metrics') }}
-        ON LOWER(stg_meltanohub__plugins.repo) = LOWER(
-            'https://github.com/' || fact_repo_metrics.repo_full_name
-        )
+    LEFT JOIN {{ ref('singer_repo_dim') }}
+        ON
+            LOWER(stg_meltanohub__plugins.repo)
+            = LOWER(singer_repo_dim.repo_url)
     LEFT JOIN agg_all_by_name
-        ON REPLACE(
-            fact_repo_metrics.repo_name,
-            'pipelinewise-',
-            ''
-        ) = agg_all_by_name.plugin_name
+        ON
+            REPLACE(
+                singer_repo_dim.repo_name,
+                'pipelinewise-',
+                ''
+            ) = agg_all_by_name.plugin_name
 )
 
 SELECT

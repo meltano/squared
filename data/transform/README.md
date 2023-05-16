@@ -3,7 +3,7 @@
 The [dbt plugin](https://github.com/dbt-labs/dbt-core) in used to as part of the T step in ELT.
 It manages all of the SQL transformation logic that happens after the source data has been replicated to the data warehouse.
 Follow the [data transformation docs](https://docs.meltano.com/guide/transformation) to get dbt installed in your project.
-Visit [MeltanoHub](https://hub.meltano.com/transformers/) to get the most up to date installation instructions.
+Visit [MeltanoHub](https://hub.meltano.com/utilities/dbt-snowflake) to get the most up to date installation instructions.
 
 ## Squared Implementation Notes
 
@@ -100,6 +100,18 @@ Then run the following and paste the output into the appropriate file and finish
 ```bash
 meltano invoke dbt-snowflake run-operation generate_model_yaml --args '{"model_name": "fact_plugin_usage"}'
 ```
+
+### Private dbt Packages
+
+This project uses dbt packages from private repositories.
+In order to access them [GitHub deploy keys](https://docs.github.com/en/developers/overview/managing-deploy-keys#deploy-keys) are used.
+The public key needs to be configured on the private repo and this repo installs the private key via a CI environment variable and the [webfactory/ssh-agent](https://github.com/webfactory/ssh-agent) GitHub action.
+
+Refer to the GitHub documentation for more details but use the following command to generate a set of keys:
+
+`ssh-keygen -t ed25519 -C "git@github.com:owner/repo.git"`
+
+Using the repo name in the comments is important in order for the GitHub action to recognize it as a deploy key.
 
 ### dbt Docs
 

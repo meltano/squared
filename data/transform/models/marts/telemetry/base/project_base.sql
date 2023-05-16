@@ -3,6 +3,13 @@ WITH first_values AS (
     SELECT DISTINCT
         project_id,
         FIRST_VALUE(
+            CASE WHEN is_exec_event = TRUE THEN options_obj END
+        ) IGNORE NULLS OVER (
+            PARTITION BY
+                project_id
+            ORDER BY COALESCE(started_ts, finished_ts) ASC
+        ):elt:state::STRING AS first_elt_state,
+        FIRST_VALUE(
             CASE
                 WHEN cli_command != 'init'
                     THEN project_uuid_source
@@ -23,7 +30,14 @@ WITH first_values AS (
             PARTITION BY
                 project_id
             ORDER BY COALESCE(started_ts, finished_ts) ASC
-        ) AS last_meltano_version
+        ) AS last_meltano_version,
+        FIRST_VALUE(
+            options_obj:init:project_directory
+        ) IGNORE NULLS OVER (
+            PARTITION BY
+                project_id
+            ORDER BY COALESCE(started_ts, finished_ts) ASC
+        ) AS first_project_directory
     FROM {{ ref('cli_executions_base') }}
 
 ),
@@ -117,7 +131,8 @@ plugin_aggregates AS (
         ) AS el_plugin_pip_url_count_success,
         COUNT(
             DISTINCT CASE
-                WHEN cli_executions_base.cli_command IN ('add', 'install')
+                WHEN
+                    cli_executions_base.cli_command IN ('add', 'install')
                     AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
@@ -132,7 +147,8 @@ plugin_aggregates AS (
         ) AS non_gsg_add,
         COUNT(
             DISTINCT CASE
-                WHEN cli_executions_base.cli_command IN ('add', 'install')
+                WHEN
+                    cli_executions_base.cli_command IN ('add', 'install')
                     AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
@@ -148,7 +164,8 @@ plugin_aggregates AS (
         ) AS non_gsg_add_success,
         COUNT(
             DISTINCT CASE
-                WHEN cli_executions_base.is_exec_event
+                WHEN
+                    cli_executions_base.is_exec_event
                     AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
@@ -163,7 +180,8 @@ plugin_aggregates AS (
         ) AS non_gsg_exec,
         COUNT(
             DISTINCT CASE
-                WHEN cli_executions_base.is_exec_event
+                WHEN
+                    cli_executions_base.is_exec_event
                     AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
@@ -179,7 +197,8 @@ plugin_aggregates AS (
         ) AS non_gsg_exec_success,
         COUNT(
             DISTINCT CASE
-                WHEN pipeline_executions.pipeline_pk IS NOT NULL
+                WHEN
+                    pipeline_executions.pipeline_pk IS NOT NULL
                     AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
@@ -194,7 +213,8 @@ plugin_aggregates AS (
         ) AS non_gsg_pipeline,
         COUNT(
             DISTINCT CASE
-                WHEN pipeline_executions.pipeline_pk IS NOT NULL
+                WHEN
+                    pipeline_executions.pipeline_pk IS NOT NULL
                     AND plugin_executions.plugin_name NOT IN (
                         'tap-gitlab',
                         'tap-github',
@@ -220,6 +240,7 @@ plugin_aggregates AS (
 project_aggregates AS (
     SELECT
         cli_executions_base.project_id,
+        ARRAY_AGG(DISTINCT cli_executions_base.ip_address_hash) AS ip_hash_list,
         MIN(cli_executions_base.event_created_at) AS first_event_at,
         MAX(cli_executions_base.event_created_at) AS last_event_at,
         DATEDIFF(
@@ -276,6 +297,9 @@ project_aggregates AS (
                     ) = 0 THEN cli_executions_base.event_count
             END
         ) AS pipeline_runs_count_success,
+        COUNT(
+            DISTINCT cli_executions_base.ip_address_hash
+        ) AS unique_ip_address_count,
         {% for cli_command in [
             'add',
             'config',
@@ -298,24 +322,24 @@ project_aggregates AS (
             'upgrade',
             'version',
         ] %}
-        SUM(
-            CASE
-                WHEN
-                    cli_executions_base.cli_command = '{{ cli_command }}'
-                    THEN cli_executions_base.event_count
-            END
-        ) AS {{ cli_command }}_count_all,
-        SUM(
-            CASE
-                WHEN
-                    cli_executions_base.cli_command = '{{ cli_command }}'
-                    AND COALESCE(
-                        cli_executions_base.exit_code, 1
-                    ) = 0 THEN cli_executions_base.event_count
-            END
-        ) AS {{ cli_command }}_count_success
+            SUM(
+                CASE
+                    WHEN
+                        cli_executions_base.cli_command = '{{ cli_command }}'
+                        THEN cli_executions_base.event_count
+                END
+            ) AS {{ cli_command }}_count_all,
+            SUM(
+                CASE
+                    WHEN
+                        cli_executions_base.cli_command = '{{ cli_command }}'
+                        AND COALESCE(
+                            cli_executions_base.exit_code, 1
+                        ) = 0 THEN cli_executions_base.event_count
+                END
+            ) AS {{ cli_command }}_count_success
             {%- if not loop.last %},{% endif -%}
-		{% endfor %}
+        {% endfor %}
     -- Active execution events
     -- Current segment
     FROM {{ ref('cli_executions_base') }}
@@ -347,11 +371,22 @@ SELECT
     plugin_aggregates.non_gsg_pipeline,
     plugin_aggregates.non_gsg_pipeline_success,
     opt_outs.opted_out_at,
-    COALESCE(
-        first_values.first_source,
-        -- TODO why would we ever get here?
-        'UNKNOWN'
-    ) AS project_id_source,
+    -- Handle random projects that look to have persisted their ID
+    -- https://github.com/meltano/internal-data/issues/80
+    CASE
+        WHEN
+            first_values.first_source = 'random'
+            AND project_aggregates.unique_ip_address_count > 1
+            AND project_aggregates.lifespan_days > 7
+            THEN 'persisted_random'
+        ELSE
+            COALESCE(
+                first_values.first_source,
+                -- Pre 2.0 so no project_uuid_source present
+                -- or only command is init
+                'UNKNOWN'
+            )
+    END AS project_id_source,
     COALESCE(
         first_values.first_meltano_version,
         'UNKNOWN'
@@ -360,12 +395,30 @@ SELECT
         first_values.last_meltano_version,
         'UNKNOWN'
     ) AS last_meltano_version,
-    COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out
+    COALESCE(
+        first_values.first_project_directory,
+        'UNKNOWN'
+    ) AS init_project_directory,
+    COALESCE(opt_outs.project_id IS NOT NULL, FALSE) AS has_opted_out,
+    COALESCE(
+        project_org_mapping.org_name,
+        'UNKNOWN'
+    ) AS project_org_name,
+    COALESCE(
+        project_org_mapping.org_domain,
+        'UNKNOWN'
+    ) AS project_org_domain,
+    COALESCE(
+        first_values.first_elt_state IS NOT NULL,
+        FALSE
+    ) AS is_state_in_first_exec
 FROM project_aggregates
 LEFT JOIN
     first_values ON
-        project_aggregates.project_id = first_values.project_id
+    project_aggregates.project_id = first_values.project_id
 LEFT JOIN {{ ref('opt_outs') }}
     ON project_aggregates.project_id = opt_outs.project_id
 LEFT JOIN plugin_aggregates
     ON project_aggregates.project_id = plugin_aggregates.project_id
+LEFT JOIN {{ ref('project_org_mapping') }}
+    ON project_aggregates.project_id = project_org_mapping.project_id

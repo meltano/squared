@@ -38,7 +38,8 @@ target_pairs AS (
         plugin_index,
         CASE
             WHEN
-                tap_index IS NOT NULL THEN LAG(
+                tap_index IS NOT NULL THEN
+                LAG(
                     target_index
                 ) IGNORE NULLS OVER (
                     PARTITION BY command ORDER BY plugin_index DESC
@@ -55,10 +56,10 @@ _mappers AS (
     FROM target_pairs
     INNER JOIN
         target_pairs AS t2 ON
-            target_pairs.command
-            = t2.command AND target_pairs.plugin_index >
-            t2.plugin_index AND target_pairs.plugin_index <
-            t2.target_pair_index
+        target_pairs.command
+        = t2.command AND target_pairs.plugin_index
+        > t2.plugin_index AND target_pairs.plugin_index
+        < t2.target_pair_index
 ),
 
 meltano_run AS (
@@ -66,31 +67,39 @@ meltano_run AS (
         _cmd_prep.command,
         _cmd_prep.command_category,
         ARRAY_AGG(
-            CASE WHEN
-                _cmd_prep.tap_index IS NOT NULL
-                OR _cmd_prep.target_index IS NOT NULL
-                OR _mappers.plugin_index IS NOT NULL
-                THEN _cmd_prep.plugin_element END
+            CASE
+                WHEN
+                    _cmd_prep.tap_index IS NOT NULL
+                    OR _cmd_prep.target_index IS NOT NULL
+                    OR _mappers.plugin_index IS NOT NULL
+                    THEN _cmd_prep.plugin_element
+            END
         ) WITHIN GROUP (ORDER BY _cmd_prep.plugin_index ASC) AS singer_plugins,
         ARRAY_AGG(
-            CASE WHEN _mappers.plugin_index IS NOT NULL
-                THEN _cmd_prep.plugin_element END
+            CASE
+                WHEN _mappers.plugin_index IS NOT NULL
+                    THEN _cmd_prep.plugin_element
+            END
         ) WITHIN GROUP (
             ORDER BY _cmd_prep.plugin_index ASC
         ) AS singer_mapper_plugins,
         ARRAY_AGG(
-            CASE WHEN _cmd_prep.tap_index IS NULL
-                AND _cmd_prep.target_index IS NULL
-                AND _mappers.plugin_index IS NULL
-                AND _cmd_prep.plugin_element NOT LIKE '--environment%'
-                THEN _cmd_prep.plugin_element END
+            CASE
+                WHEN
+                    _cmd_prep.tap_index IS NULL
+                    AND _cmd_prep.target_index IS NULL
+                    AND _mappers.plugin_index IS NULL
+                    AND _cmd_prep.plugin_element NOT LIKE '--environment%'
+                    THEN _cmd_prep.plugin_element
+            END
         ) WITHIN GROUP (ORDER BY _cmd_prep.plugin_index ASC) AS other_plugins
     FROM _cmd_prep
     LEFT JOIN
         _mappers ON
-            _cmd_prep.command = _mappers.command
-            AND _cmd_prep.plugin_index = _mappers.plugin_index
-    WHERE _cmd_prep.command_category = 'meltano run'
+        _cmd_prep.command = _mappers.command
+        AND _cmd_prep.plugin_index = _mappers.plugin_index
+    WHERE
+        _cmd_prep.command_category = 'meltano run'
         AND _cmd_prep.plugin_element NOT IN ('meltano', 'run')
     GROUP BY _cmd_prep.command, _cmd_prep.command_category
 )

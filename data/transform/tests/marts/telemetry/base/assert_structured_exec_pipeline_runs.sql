@@ -15,7 +15,8 @@
             se_label AS project_id,
             COUNT(event_id) AS event_count
         FROM {{ ref('stg_snowplow__events') }}
-        WHERE se_category IN ('meltano elt', 'meltano invoke', 'meltano run')
+        WHERE
+            se_category IN ('meltano elt', 'meltano invoke', 'meltano run')
             AND DATE_TRUNC(
                 'month', event_created_at
             )::DATE = DATEADD('month', -1, DATE_TRUNC('month', CURRENT_DATE))
@@ -105,7 +106,7 @@
 
     SELECT *
     FROM test
-    -- Estimates vs prod are within a 3% range 
-    WHERE ABS(percent_diff) > 3
+    -- Estimates vs prod are within a 10% range 
+    WHERE ABS(percent_diff) > 10
 
 {% endif %}

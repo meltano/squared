@@ -1,19 +1,36 @@
 plugins:
   extractors:
+  - name: tap-dynamodb
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-dynamodb.git@v0.2.0
+    config:
+      aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+      aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+      aws_default_region: us-west-2
+      tables:
+      - workload-metadata-table
+      - projects-table
+      - project-schedules-table
+      stream_maps:
+        workload-metadata-table:
+          __alias__: workload_metadata_table
+        projects-table:
+          __alias__: projects_table
+        project-schedules-table:
+          __alias__: project_schedules_table
+  - name: tap-cloudwatch
+    variant: meltanolabs
+    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.3.0
+    config:
+      log_group_name: API-Gateway-Execution-Logs_i32s35df22/prod
+      query: fields @timestamp, @message
+      aws_region_name: us-west-2
+      start_date: '2022-12-08'
+      aws_access_key_id: ${AWS_ACCESS_KEY_ID}
+      aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
   - name: tap-meltanohub
-    namespace: tap_meltanohub
+    variant: autoidm
     pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git@1b99b0ee7853b2d9db36de6afa16b15c1affce7b
-    executable: tap-meltanohub
-    capabilities:
-    - catalog
-    - state
-    - discover
-    - about
-    - stream-maps
-    settings:
-      - name: api_url
-        label: API URL
-        description: The url for the MeltanoHub API service.
     select:
     - plugins.*
   - name: tap-spreadsheets-anywhere
@@ -21,27 +38,27 @@ plugins:
     pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git@5d9115985d3f9e7a568c6dcc68975f0c038253ff
     config:
       tables:
-        - path: https://ip-ranges.amazonaws.com
-          format: json
-          start_date: "2020-01-01T00:00:00Z"
-          key_properties: [ip_prefix]
-          name: aws_ips
-          pattern: "ip-ranges.json"
-          json_path: "prefixes"
-        - path: https://www.gstatic.com/ipranges
-          format: json
-          start_date: '2020-01-01T00:00:00Z'
-          key_properties: [id]
-          name: gcp_ips
-          pattern: cloud.json
-          json_path: prefixes
-        - path: https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63
-          format: json
-          start_date: "2020-01-01T00:00:00Z"
-          key_properties: [id]
-          name: azure_ips
-          pattern: "ServiceTags_Public_20221128.json"
-          json_path: "values"
+      - path: https://ip-ranges.amazonaws.com
+        format: json
+        start_date: '2020-01-01T00:00:00Z'
+        key_properties: [ip_prefix]
+        name: aws_ips
+        pattern: ip-ranges.json
+        json_path: prefixes
+      - path: https://www.gstatic.com/ipranges
+        format: json
+        start_date: '2020-01-01T00:00:00Z'
+        key_properties: [id]
+        name: gcp_ips
+        pattern: cloud.json
+        json_path: prefixes
+      - path: https://download.microsoft.com/download/7/1/D/71D86715-5596-4529-9B13-DA13A5DE5B63
+        format: json
+        start_date: '2020-01-01T00:00:00Z'
+        key_properties: [id]
+        name: azure_ips
+        pattern: ServiceTags_Public_20230508.json
+        json_path: values
   - name: tap-slack
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.5
@@ -86,6 +103,10 @@ plugins:
     - projects.*
     - merge_requests.*
     - issues.*
+    - '!issues.description'
+    - '!issues.title'
+    - '!merge_requests.description'
+    - '!merge_requests.title'
   - name: tap-github
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
@@ -102,6 +123,11 @@ plugins:
     - repositories.*
     - pull_requests.*
     - issues.*
+    # Exclude text descriptions for internal issues on private repos.
+    - '!issues.body'
+    - '!issues.title'
+    - '!pull_requests.body'
+    - '!pull_requests.title'
   - name: tap-github-search
     inherit_from: tap-github
     config:
@@ -184,3 +210,11 @@ plugins:
     select:
     - '*slack_alerts.title'
     - '*slack_alerts.body'
+  - name: tap-snowflake-meltano-activity
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+    - '*github_activity_notifications.title'
+    - '*github_activity_notifications.body'

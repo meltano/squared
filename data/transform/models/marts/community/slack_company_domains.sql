@@ -5,7 +5,8 @@ WITH company_domains AS (
             message_created_at, CAST('1900-01-01' AS DATE)
         ) AS first_joined_date
     FROM {{ ref('slack_new_members') }}
-    WHERE email_domain
+    WHERE
+        email_domain
         NOT IN (
             'gmail.com',
             'meltano.com',

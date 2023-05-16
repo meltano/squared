@@ -12,8 +12,7 @@ COPY . .
 RUN meltano install extractors
 RUN meltano install loaders
 RUN meltano install mappers
-RUN meltano install transformer dbt-snowflake
-RUN meltano install utilities great_expectations awscli
+RUN meltano install utilities great_expectations awscli dbt-snowflake
 
 # Configure Meltano
 ENV MELTANO_PROJECT_ROOT /project

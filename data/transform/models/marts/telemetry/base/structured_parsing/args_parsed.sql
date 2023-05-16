@@ -13,5 +13,5 @@ SELECT
     ) AS args
 FROM
     {{ ref('unique_commands') }},
-    LATERAL FLATTEN(input=>unique_commands.split_parts) AS flat
+    LATERAL FLATTEN(input => unique_commands.split_parts) AS flat
 GROUP BY 1, 2

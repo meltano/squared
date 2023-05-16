@@ -1,4 +1,4 @@
-{% macro compounding_funnel_filters(stop_index, name, mapping, start, end) -%}
+{% macro compounding_funnel_filters(stop_index, mapping, start, end) -%}
     {{ start }}
     {% for filter_name, attribs in mapping.items() %}
         {% if loop.index <= stop_index %}

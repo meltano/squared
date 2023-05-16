@@ -1,24 +1,24 @@
-user_id,username,name,start_date
-22132,pandemicsyn,Florian,2021-07-12
-87854,DouweM,Douwe Maan,1999-01-01
-220186,Emily,Emily Kyle,2021-06-28
-394049,afolson,Amanda Folson,2021-06-28
-1134865,edgarrmondragon,Edgar R. Mondragón,2021-07-05
-1942272,tayloramurphy,Taylor A Murphy,2021-03-15
-1985266,suripatel,Suri Patel,2021-08-02
-4809760,aaronsteers,AJ Steers,2021-03-15
-7646034,kgpayne,Ken Payne,2021-08-23
-8668050,pnadolny13,Pat Nadolny,2021-09-27
-10324033,alex1126,Alex Marple,2021-11-29
-434338,xyzzy,Reb,2022-01-04
-3014451,derek-knox,Derek Knox,1999-01-01
-253119,bencodezen,Ben Hong,1999-01-01
-1982738,iroussos,Yannis Roussos,1999-01-01
-1491026,mbergeron,Micael Bergeron,1999-01-01
-3601799,dmor,Danielle Morrill,1999-01-01
-9463199,project_7603319_bot,CI_COMMITS,1999-01-01
-9524891,project_22672923_bot,CI_COMMITS,1999-01-01
-10989674,athar.meltano,Athar Hameed,2022-02-28
-4025463,cjohnhanson,Cody Hanson,2022-03-07
-11542635,laurameltano,Laura Pérez,2022-05-09
-1522656,WillDaSilva,Will Da Silva,2022-05-09
+user_id,username,name,start_date,end_date
+22132,pandemicsyn,Florian,2021-07-12,2022-10-28
+87854,DouweM,Douwe Maan,1999-01-01,null
+220186,Emily,Emily Kyle,2021-06-28,2022-09-30
+394049,afolson,Amanda Folson,2021-06-28,2023-01-23
+1134865,edgarrmondragon,Edgar R. Mondragón,2021-07-05,null
+1942272,tayloramurphy,Taylor A Murphy,2021-03-15,null
+1985266,suripatel,Suri Patel,2021-08-02,null
+4809760,aaronsteers,AJ Steers,2021-03-15,null
+7646034,kgpayne,Ken Payne,2021-08-23,null
+8668050,pnadolny13,Pat Nadolny,2021-09-27,null
+10324033,alex1126,Alex Marple,2021-11-29,2022-09-08
+434338,xyzzy,Reb,2022-01-04,null
+3014451,derek-knox,Derek Knox,1999-01-01,null
+253119,bencodezen,Ben Hong,1999-01-01,null
+1982738,iroussos,Yannis Roussos,1999-01-01,null
+1491026,mbergeron,Micael Bergeron,1999-01-01,null
+3601799,dmor,Danielle Morrill,1999-01-01,null
+9463199,project_7603319_bot,CI_COMMITS,1999-01-01,null
+9524891,project_22672923_bot,CI_COMMITS,1999-01-01,null
+10989674,athar.meltano,Athar Hameed,2022-02-28,null
+4025463,cjohnhanson,Cody Hanson,2022-03-07,null
+11542635,laurameltano,Laura Pérez,2022-05-09,2022-10-31
+1522656,WillDaSilva,Will Da Silva,2022-05-09,null

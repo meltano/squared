@@ -34,7 +34,8 @@ SELECT
     *,
     100 * ((ga_event_count - struct_event_count) / ga_event_count) AS diff_pct
 FROM test
-WHERE ga_event_count > struct_event_count
+WHERE
+    ga_event_count > struct_event_count
     -- These are slightly off but are vs exec events
     AND command_category NOT LIKE 'meltano add %'
     AND command_category != 'meltano select'
