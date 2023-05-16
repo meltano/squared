@@ -25,12 +25,18 @@ environments:
       - name: tap-snowflake-metrics
         config:
           schema: ${USER_PREFIX}_MELTANO_HUB
+          tables:
+            - ${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           schema: ${USER_PREFIX}_MELTANO_HUB
+          tables:
+            - ${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           schema: ${USER_PREFIX}_SLACK_NOTIFICATIONS
+          tables:
+            - ${USER_PREFIX}_SLACK_NOTIFICATIONS.SLACK_ALERTS
       loaders:
       - name: target-snowflake
         config:
