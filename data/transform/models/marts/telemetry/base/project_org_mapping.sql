@@ -31,12 +31,17 @@ single_org_projects AS (
 
 SELECT DISTINCT
     base.org_name,
-    base.org_domain,
+    COALESCE(
+        project_org_domain_mapping.clean_org_domain,
+        base.org_domain
+    ) AS org_domain,
     base.project_id,
     'LEADMAGIC' AS org_source
 FROM base
 INNER JOIN single_org_projects
     ON base.project_id = single_org_projects.project_id
+LEFT JOIN {{ ref('internal_data', 'project_org_domain_mapping') }}
+    ON base.org_domain = project_org_domain_mapping.org_domain
 
 UNION ALL
 
