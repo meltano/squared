@@ -41,12 +41,18 @@ environments:
       - name: tap-snowflake-metrics
         config:
           schema: ${CI_BRANCH}_MELTANO_HUB
+          tables:
+            - ${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           schema: ${CI_BRANCH}_MELTANO_HUB
+          tables:
+            - ${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           schema: ${CI_BRANCH}_SLACK_NOTIFICATIONS
+          tables:
+            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.SLACK_ALERTS
       loaders:
       - name: target-snowflake
         config:

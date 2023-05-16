@@ -132,7 +132,7 @@ plugins:
     # - issue_comments.*
   - name: tap-snowflake
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-snowflake.git@v0.0.6
+    pip_url: git+https://github.com/MeltanoLabs/tap-snowflake.git@v0.0.22
     config:
       account: epa06486
       password: ${SNOWFLAKE_PASSWORD}
