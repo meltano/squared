@@ -15,8 +15,8 @@ locals {
 }
 
 module "infrastructure" {
-  source = "git::https://github.com/meltano/terraform-meltano.git//aws/modules/infrastructure?ref=v0.1.0"
-  # source = "../../../infrastructure/terraform/aws/modules/infrastructure"
+  # source = "git::https://github.com/meltano/terraform-meltano.git//aws/modules/infrastructure?ref=v0.1.0"
+  source     = "../../../terraform-meltano/aws/modules/infrastructure"
   aws_region = local.aws_region
 }
 
