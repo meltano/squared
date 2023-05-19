@@ -17,7 +17,6 @@ environments:
           start_date: ${DEFAULT_START_DATE_1D}
       - name: tap-gitlab
         config:
-          groups: meltano
           start_date: ${DEFAULT_START_DATE_24HR}
       - name: tap-github
         config:

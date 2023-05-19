@@ -11,6 +11,17 @@ WITH source AS (
         ) AS row_num
     FROM {{ source('tap_gitlab', 'projects') }}
 
+    UNION ALL
+
+    SELECT
+        *,
+        ROW_NUMBER() OVER (
+            PARTITION BY
+                id
+            ORDER BY _sdc_batched_at DESC
+        ) AS row_num
+    FROM {{ source('tap_gitlab_hotglue', 'projects') }}
+
 ),
 
 renamed AS (
@@ -23,7 +34,8 @@ renamed AS (
         description,
         merge_method,
         name AS project_name,
-        namespace AS project_namespace,
+        namespace:full_path::STRING AS project_namespace,
+        namespace AS namespace_details,
         only_allow_merge_if_all_discussions_are_resolved,
         only_allow_merge_if_build_succeeds,
         owner_id,

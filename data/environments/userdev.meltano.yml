@@ -14,7 +14,6 @@ environments:
           start_date: '2022-02-20'
       - name: tap-gitlab
         config:
-          groups: meltano
           start_date: '2020-01-01T00:00:00Z'
       - name: tap-github
         config:
