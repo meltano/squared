@@ -35,7 +35,7 @@ environments:
           tables: USERDEV_PROD.${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
-          tables: USERDEV_PROD.${USER_PREFIX}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+          tables: USERDEV_PROD.${USER_PREFIX}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
           tables: USERDEV_PROD.${USER_PREFIX}_SLACK_NOTIFICATIONS.GITHUB_ACTIVITY_NOTIFICATIONS
@@ -50,13 +50,13 @@ environments:
       - name: target-apprise-singer-activity
         config:
           stream_maps:
-            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SLACK_ALERTS:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
               title: TITLE
               body: BODY
       - name: target-apprise-meltano-activity
         config:
           stream_maps:
-            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-GITHUB_ACTIVITY_NOTIFICATIONS:
+            USERDEV_PROD-PNADOLNY_SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
               title: TITLE
               body: BODY
       utilities:
