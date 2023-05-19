@@ -212,13 +212,13 @@ plugins:
       '*':
         replication-method: FULL_TABLE
     select:
-    - '*SLACK_ALERTS.TITLE'
-    - '*SLACK_ALERTS.BODY'
+    - '*SINGER_ACTIVITY_NOTIFICATIONS.TITLE'
+    - '*SINGER_ACTIVITY_NOTIFICATIONS.BODY'
   - name: tap-snowflake-meltano-activity
     inherit_from: tap-snowflake
     metadata:
       '*':
         replication-method: FULL_TABLE
     select:
-    - '*GITHUB_ACTIVITY_NOTIFICATIONS.TITLE'
-    - '*GITHUB_ACTIVITY_NOTIFICATIONS.BODY'
+    - '*MELTANO_ACTIVITY_NOTIFICATIONS.TITLE'
+    - '*MELTANO_ACTIVITY_NOTIFICATIONS.BODY'
