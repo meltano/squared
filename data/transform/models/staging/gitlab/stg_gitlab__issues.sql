@@ -47,6 +47,7 @@ renamed AS (
         downvotes,
         merge_requests_count,
         user_notes_count AS comment_count,
+        web_url AS html_url,
         NULL AS description,
         NULL AS title
     FROM source_meltano
@@ -73,6 +74,7 @@ renamed AS (
         downvotes,
         merge_requests_count,
         user_notes_count AS comment_count,
+        web_url AS html_url,
         description,
         title
     FROM source_hotglue
@@ -100,10 +102,10 @@ SELECT
     renamed.comment_count,
     renamed.description,
     renamed.title,
+    renamed.html_url,
+    FALSE AS is_bot_user,
     stg_gitlab__projects.project_namespace,
     stg_gitlab__projects.project_name,
-    NULL AS html_url,
-    FALSE AS is_bot_user,
     CASE
         WHEN
             renamed.state = 'opened'
