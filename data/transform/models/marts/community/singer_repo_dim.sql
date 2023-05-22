@@ -35,7 +35,7 @@ SELECT
     forks_count,
     open_issues_count,
     star_count,
-    NULL AS num_watchers,
+    0 AS num_watchers,
     batched_at_ts,
     FALSE AS is_fork,
     archived,
