@@ -1,1 +1,44 @@
 version: 2
+
+models:
+  - name: stg_github_search__issues
+    columns:
+      - name: issue_id
+        description: The unique identifier for the issue.
+        tests:
+          - unique
+          - not_null
+      - name: repo_name
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the issue was created.
+        tests:
+          - not_null
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['closed', 'open']
+
+  - name: stg_github_search__pull_requests
+    columns:
+      - name: pull_request_id
+        description: The unique identifier for the PR request.
+        tests:
+          - unique
+          - not_null
+      - name: repo_name
+        tests:
+          - not_null
+      - name: author_id
+        description: The authors unique identifier.
+        tests:
+          - not_null
+      - name: created_at_ts
+        description: Timestamp when the PR was created.
+        tests:
+          - not_null
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['closed', 'open', 'merged']

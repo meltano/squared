@@ -81,7 +81,30 @@ renamed AS (
 )
 
 SELECT
-    renamed.*,
+    CASE WHEN
+        renamed.state = 'opened'
+        THEN 'open'
+        ELSE renamed.state
+    END AS state,
+    renamed.labels,
+    renamed.author_username,
+    renamed.issue_id,
+    renamed.project_id,
+    renamed.issue_internal_id,
+    renamed.milestone_id,
+    renamed.epic_id,
+    renamed.author_id,
+    renamed.assignee_id,
+    renamed.closed_by_id,
+    renamed.created_at_ts,
+    renamed.updated_at_ts,
+    renamed.closed_at_ts,
+    renamed.upvotes,
+    renamed.downvotes,
+    renamed.merge_requests_count,
+    renamed.comment_count,
+    renamed.description,
+    renamed.title,
     stg_gitlab__projects.project_namespace,
     stg_gitlab__projects.project_name,
     NULL AS html_url,

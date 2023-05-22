@@ -17,7 +17,12 @@ renamed AS (
         org AS organization_name,
         node_id AS graphql_node_id,
         html_url,
-        state,
+        CASE
+            WHEN state = 'closed'
+            AND merged_at IS NOT NULL
+            THEN 'merged'
+            ELSE state
+        END AS state,
         title,
         author_association,
         body,
