@@ -96,11 +96,6 @@ renamed AS (
 )
 
 SELECT
-    CASE WHEN
-        renamed.state = 'opened'
-        THEN 'open'
-        ELSE renamed.state
-    END AS state,
     renamed.target_branch,
     renamed.source_branch,
     renamed.labels,
@@ -130,7 +125,13 @@ SELECT
     stg_gitlab__projects.project_namespace,
     stg_gitlab__projects.project_name,
     NULL AS html_url,
-    FALSE AS is_bot_user
+    FALSE AS is_bot_user,
+    CASE
+        WHEN
+            renamed.state = 'opened'
+            THEN 'open'
+        ELSE renamed.state
+    END AS state
 FROM renamed
 LEFT JOIN {{ ref('stg_gitlab__projects') }}
     ON renamed.project_id = stg_gitlab__projects.project_id

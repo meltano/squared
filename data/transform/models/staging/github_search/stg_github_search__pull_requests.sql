@@ -17,12 +17,6 @@ renamed AS (
         org AS organization_name,
         node_id AS graphql_node_id,
         html_url,
-        CASE
-            WHEN state = 'closed'
-            AND merged_at IS NOT NULL
-            THEN 'merged'
-            ELSE state
-        END AS state,
         title,
         author_association,
         body,
@@ -46,6 +40,13 @@ renamed AS (
         assignee:login::STRING AS assignee_username,
         head:ref::STRING AS head_branch_name,
         base:ref::STRING AS base_branch_name,
+        CASE
+            WHEN
+                state = 'closed'
+                AND merged_at IS NOT NULL
+                THEN 'merged'
+            ELSE state
+        END AS state,
         COALESCE(user:type::STRING = 'Bot', FALSE) AS is_bot_user
     FROM source
     WHERE row_num = 1
