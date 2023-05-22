@@ -141,8 +141,9 @@ gitlab_combined AS (
     LEFT JOIN
         {{ ref('username_mapping') }} ON
         gitlab_all.author_id = username_mapping.gitlab_author_id
-    WHERE stg_gitlab__projects.project_namespace = 'meltano'
-    AND stg_gitlab__projects.visibility = 'public'
+    WHERE
+        stg_gitlab__projects.project_namespace = 'meltano'
+        AND stg_gitlab__projects.visibility = 'public'
 ),
 
 github_combined AS (

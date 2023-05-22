@@ -135,7 +135,9 @@ SELECT
     stg_gitlab__issues.author_username,
     stg_gitlab__issues.assignee_id::STRING AS assignee_username,
     stg_gitlab__issues.comment_count,
-    (stg_gitlab__issues.upvotes + stg_gitlab__issues.downvotes) AS reactions_count,
+    (
+        stg_gitlab__issues.upvotes + stg_gitlab__issues.downvotes
+    ) AS reactions_count,
     singer_repo_dim.repo_url,
     singer_repo_dim.num_open_issues,
     singer_repo_dim.is_archived,
@@ -188,11 +190,16 @@ SELECT
     stg_gitlab__merge_requests.state,
     singer_repo_dim.is_fork,
     COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
-    COALESCE(stg_gitlab__merge_requests.is_work_in_progress, FALSE) AS is_draft_pr,
+    COALESCE(
+        stg_gitlab__merge_requests.is_work_in_progress, FALSE
+    ) AS is_draft_pr,
     stg_gitlab__merge_requests.author_username,
     stg_gitlab__merge_requests.assignee_id::STRING AS assignee_username,
     stg_gitlab__merge_requests.comment_count,
-    (stg_gitlab__merge_requests.upvotes + stg_gitlab__merge_requests.downvotes) AS reactions_count,
+    (
+        stg_gitlab__merge_requests.upvotes
+        + stg_gitlab__merge_requests.downvotes
+    ) AS reactions_count,
     singer_repo_dim.repo_url,
     singer_repo_dim.num_open_issues,
     singer_repo_dim.is_archived,

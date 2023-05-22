@@ -57,8 +57,8 @@ renamed AS (
         open_issues_count,
         snippets_enabled AS is_snippets_enabled,
         star_count,
-        REPLACE(name_with_namespace, ' ', '') AS repo_full_name,
         _sdc_batched_at AS batched_at_ts,
+        REPLACE(name_with_namespace, ' ', '') AS repo_full_name,
         DATEDIFF(DAY, created_at, CURRENT_TIMESTAMP()) AS repo_lifespan_days
     FROM source
     WHERE row_num = 1

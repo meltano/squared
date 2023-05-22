@@ -35,14 +35,14 @@ SELECT
     forks_count,
     open_issues_count,
     star_count,
-    NULL,
+    NULL AS num_watchers,
     batched_at_ts,
-    FALSE,
+    FALSE AS is_fork,
     archived,
-    FALSE,
-    NULL,
+    FALSE AS is_disabled,
+    NULL AS size_kb,
     repo_lifespan_days,
-    NULL,
+    NULL AS homepage_url,
     CASE
         WHEN
             project_name LIKE 'tap-%'
