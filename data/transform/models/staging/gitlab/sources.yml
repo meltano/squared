@@ -8,3 +8,10 @@ sources:
       - name: issues
       - name: merge_requests
       - name: projects
+  - name: tap_gitlab_hotglue
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_GITLAB_HOTGLUE'
+    tables:
+      - name: issues
+      - name: merge_requests
+      - name: projects

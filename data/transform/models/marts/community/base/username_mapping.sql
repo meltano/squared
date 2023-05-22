@@ -3,7 +3,9 @@ WITH github AS (
         author_id,
         author_username
     FROM {{ ref('stg_github__issues') }}
+
     UNION DISTINCT
+
     SELECT DISTINCT
         author_id,
         author_username
@@ -17,11 +19,15 @@ gitlab AS (
         author_id,
         author_username
     FROM {{ ref('stg_gitlab__merge_requests') }}
+    WHERE project_namespace = 'meltano'
+
     UNION DISTINCT
+
     SELECT DISTINCT
         author_id,
         author_username
     FROM {{ ref('stg_gitlab__issues') }}
+    WHERE project_namespace = 'meltano'
 
 ),
 

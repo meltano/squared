@@ -11,7 +11,6 @@ environments:
           start_date: '2022-02-20'
       - name: tap-gitlab
         config:
-          groups: meltano
           start_date: '2020-01-01T00:00:00Z'
       - name: tap-github
         config:
@@ -33,10 +32,10 @@ environments:
           tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
-          tables: PROD.SLACK_NOTIFICATIONS.SLACK_ALERTS
+          tables: PROD.SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
-          tables: PROD.SLACK_NOTIFICATIONS.GITHUB_ACTIVITY_NOTIFICATIONS
+          tables: PROD.SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -48,13 +47,13 @@ environments:
       - name: target-apprise-singer-activity
         config:
           stream_maps:
-            PROD-SLACK_NOTIFICATIONS-SLACK_ALERTS:
+            PROD-SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
               title: TITLE
               body: BODY
       - name: target-apprise-meltano-activity
         config:
           stream_maps:
-            PROD-SLACK_NOTIFICATIONS-GITHUB_ACTIVITY_NOTIFICATIONS:
+            PROD-SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
               title: TITLE
               body: BODY
       utilities:
