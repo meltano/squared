@@ -47,8 +47,7 @@ base AS (
             CASE
                 WHEN
                     contributions.contribution_type = 'pull_request'
-                    AND contributions.state = 'closed'
-                    AND contributions.merged_at_ts IS NULL
+                    AND contributions.state = 'merged'
                     AND contributions.closed_at_ts::DATE >= DATEADD(
                         DAY, -1, most_recent_date.max_date
                     )
