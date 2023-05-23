@@ -127,7 +127,7 @@ SELECT
         >= team_gitlab_ids.start_date
     ) AS is_team_contribution,
     stg_gitlab__issues.is_bot_user,
-    stg_gitlab__issues.title,
+    COALESCE(stg_gitlab__issues.title, '') AS title,
     stg_gitlab__issues.state,
     singer_repo_dim.is_fork,
     COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
@@ -186,7 +186,7 @@ SELECT
         >= team_gitlab_ids.start_date
     ) AS is_team_contribution,
     stg_gitlab__merge_requests.is_bot_user,
-    stg_gitlab__merge_requests.title,
+    COALESCE(stg_gitlab__merge_requests.title, '') AS title,
     stg_gitlab__merge_requests.state,
     singer_repo_dim.is_fork,
     COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
