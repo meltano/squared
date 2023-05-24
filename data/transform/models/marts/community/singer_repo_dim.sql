@@ -52,4 +52,10 @@ SELECT
     END AS connector_type,
     COALESCE(description, 'No Description') AS description
 FROM {{ ref('stg_gitlab__projects') }}
-WHERE project_namespace = 'hotglue'
+WHERE
+    project_namespace = 'hotglue'
+    AND (
+        LOWER(project_name) LIKE 'tap-%'
+        OR
+        LOWER(project_name) LIKE 'target-%'
+    )
