@@ -17,7 +17,6 @@ jobs:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
-      TAP_SNOWFLAKE_METRICS_TABLES: '["b${{ github.SHA }}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"]'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -27,7 +26,6 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Airflow
-    - run: meltano install extractor tap-snowflake-metrics && meltano config tap-snowflake-metrics
     - run: meltano install utility airflow
     - run: meltano test airflow
 
@@ -158,6 +156,10 @@ jobs:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
+      TAP_SNOWFLAKE_METRICS_TABLES: '["b${{ github.SHA }}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"]'
+      TAP_SNOWFLAKE_AUDIT_TABLES: '["b${{ github.SHA }}_MELTANO_HUB.HUB_METRICS_AUDIT"]'
+      TAP_SNOWFLAKE_SINGER_ACTIVITY: '["b${{ github.SHA }}_MELTANO_HUB.SINGER_ACTIVITY_NOTIFICATIONS"]'
+      TAP_SNOWFLAKE_MELTANO_ACTIVITY: '["b${{ github.SHA }}_MELTANO_HUB.MELTANO_ACTIVITY_NOTIFICATIONS"]'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -173,4 +175,4 @@ jobs:
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
-    - run: TAP_SNOWFLAKE_METRICS_TABLES=["${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"] TAP_SNOWFLAKE_AUDIT_TABLES=["${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT"] TAP_SNOWFLAKE_SINGER_ACTIVITY=["${CI_BRANCH}_MELTANO_HUB.SINGER_ACTIVITY_NOTIFICATIONS"] TAP_SNOWFLAKE_MELTANO_ACTIVITY=["${CI_BRANCH}_MELTANO_HUB.MELTANO_ACTIVITY_NOTIFICATIONS"] meltano run hub_metrics_publish
+    - run: meltano run hub_metrics_publish
