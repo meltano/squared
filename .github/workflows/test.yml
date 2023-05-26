@@ -26,6 +26,7 @@ jobs:
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
     # Airflow
+    - run: TAP_SNOWFLAKE_METRICS_TABLES=["${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"] echo $TAP_SNOWFLAKE_METRICS_TABLES
     - run: meltano install utility airflow
     - run: meltano test airflow
 
@@ -171,4 +172,4 @@ jobs:
     # Install Plugins
     - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
     # Run Test
-    - run: meltano run hub_metrics_publish
+    - run: TAP_SNOWFLAKE_METRICS_TABLES=["${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"] TAP_SNOWFLAKE_AUDIT_TABLES=["${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT"] TAP_SNOWFLAKE_SINGER_ACTIVITY=["${CI_BRANCH}_MELTANO_HUB.SINGER_ACTIVITY_NOTIFICATIONS"] TAP_SNOWFLAKE_MELTANO_ACTIVITY=["${CI_BRANCH}_MELTANO_HUB.MELTANO_ACTIVITY_NOTIFICATIONS"] meltano run hub_metrics_publish
