@@ -17,6 +17,7 @@ jobs:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
+      TAP_SNOWFLAKE_METRICS_TABLES: '["b${{ github.SHA }}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"]'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
@@ -24,9 +25,9 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Airflow
-    - run: TAP_SNOWFLAKE_METRICS_TABLES=["${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"] echo $TAP_SNOWFLAKE_METRICS_TABLES
+    - run: meltano install extractor tap-snowflake-metrics && meltano config tap-snowflake-metrics
     - run: meltano install utility airflow
     - run: meltano test airflow
 
