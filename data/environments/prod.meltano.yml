@@ -25,7 +25,7 @@ environments:
         config:
           schema: MELTANO_HUB
           tables:
-           - MELTANO_HUB.FACT_HUB_METRICS
+           - FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
           schema: MELTANO_HUB

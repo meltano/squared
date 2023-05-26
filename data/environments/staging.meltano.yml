@@ -22,11 +22,6 @@ environments:
           user: STAGING
           role: STAGING
           warehouse: STAGING
-      - name: tap-snowflake-metrics-legacy
-        config:
-          schema: MELTANO_HUB
-          tables:
-          - FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
           schema: MELTANO_HUB
