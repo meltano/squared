@@ -57,7 +57,7 @@ plugins:
         start_date: '2020-01-01T00:00:00Z'
         key_properties: [id]
         name: azure_ips
-        pattern: ServiceTags_Public_20230508.json
+        pattern: ServiceTags_Public_20230522.json
         json_path: values
   - name: tap-slack
     variant: meltanolabs
@@ -99,6 +99,8 @@ plugins:
   - name: tap-gitlab
     variant: meltanolabs
     pip_url: git+https://github.com/pnadolny13/tap-gitlab.git@author_usernames
+    config:
+      groups: meltano
     select:
     - projects.*
     - merge_requests.*
@@ -107,6 +109,14 @@ plugins:
     - '!issues.title'
     - '!merge_requests.description'
     - '!merge_requests.title'
+  - name: tap-gitlab-hotglue
+    inherit_from: tap-gitlab
+    config:
+      groups: hotglue
+    select:
+    - projects.*
+    - merge_requests.*
+    - issues.*
   - name: tap-github
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
@@ -208,13 +218,13 @@ plugins:
     config:
       schema: SLACK_NOTIFICATIONS
     select:
-    - '*slack_alerts.title'
-    - '*slack_alerts.body'
+    - '*singer_activity_notifications.title'
+    - '*singer_activity_notifications.body'
   - name: tap-snowflake-meltano-activity
     inherit_from: tap-snowflake
     metadata:
       '*':
         replication-method: FULL_TABLE
     select:
-    - '*github_activity_notifications.title'
-    - '*github_activity_notifications.body'
+    - '*meltano_activity_notifications.title'
+    - '*meltano_activity_notifications.body'

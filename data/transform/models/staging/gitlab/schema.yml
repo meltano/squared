@@ -20,6 +20,10 @@ models:
         description: Timestamp when the issue was created.
         tests:
           - not_null
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['closed', 'open']
 
   - name: stg_gitlab__merge_requests
     columns:
@@ -37,9 +41,13 @@ models:
         tests:
           - not_null
       - name: created_at_ts
-        description: Timestamp when the issue was created.
+        description: Timestamp when the MR was created.
         tests:
           - not_null
+      - name: state
+        tests:
+          - accepted_values:
+              values: ['closed', 'open', 'merged']
 
   - name: stg_gitlab__projects
     columns:

@@ -17,7 +17,6 @@ environments:
           start_date: ${DEFAULT_START_DATE_1D}
       - name: tap-gitlab
         config:
-          groups: meltano
           start_date: ${DEFAULT_START_DATE_24HR}
       - name: tap-github
         config:
@@ -47,22 +46,22 @@ environments:
         config:
           schema: ${CI_BRANCH}_MELTANO_HUB
           tables:
-            - ${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+            - FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           schema: ${CI_BRANCH}_MELTANO_HUB
           tables:
-            - ${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
+            - HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           schema: ${CI_BRANCH}_SLACK_NOTIFICATIONS
           tables:
-            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.SLACK_ALERTS
+            - SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
           schema: ${CI_BRANCH}_SLACK_NOTIFICATIONS
           tables:
-            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.GITHUB_ACTIVITY_NOTIFICATIONS
+            - MELTANO_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -71,6 +70,19 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
+      # Excluded from CI for now
+      # - name: target-apprise-singer-activity
+      #   config:
+      #     stream_maps:
+      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
+      #         title: TITLE
+      #         body: BODY
+      # - name: target-apprise-meltano-activity
+      #   config:
+      #     stream_maps:
+      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
+      #         title: TITLE
+      #         body: BODY
       utilities:
       - name: dbt-snowflake
         config:

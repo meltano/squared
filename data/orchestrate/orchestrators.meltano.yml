@@ -135,6 +135,7 @@ jobs:
 - name: gitlab_el
   tasks:
   - tap-gitlab target-snowflake
+  - tap-gitlab-hotglue target-snowflake
   - dbt-snowflake:run_staging_gitlab
   - dbt-snowflake:test_staging_gitlab
 

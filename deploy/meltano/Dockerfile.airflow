@@ -1,3 +1,0 @@
-FROM apache/airflow:2.2.2
-# Copy over airflow/orchestrate dir
-COPY --chown=airflow:root orchestrate/airflow/ /opt/airflow/
