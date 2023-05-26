@@ -177,8 +177,6 @@ plugins:
     metadata:
       '*':
         replication-method: FULL_TABLE
-    config:
-      schema: MELTANO_HUB
     select:
     - '*fact_variant_hub_metrics.name'
     - '*fact_variant_hub_metrics.variant'
@@ -205,8 +203,6 @@ plugins:
     metadata:
       '*':
         replication-method: FULL_TABLE
-    config:
-      schema: MELTANO_HUB
     select:
     - '*hub_metrics_audit.updated_date'
     - '*hub_metrics_audit.metric_type'

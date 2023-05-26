@@ -42,26 +42,23 @@ environments:
           user: CICD
           role: CICD
           warehouse: CICD
+      # https://github.com/meltano/meltano/issues/3171 is blocking this templating from working
       - name: tap-snowflake-metrics
         config:
-          schema: ${CI_BRANCH}_MELTANO_HUB
           tables:
-            - FACT_VARIANT_HUB_METRICS
+            - ${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          schema: ${CI_BRANCH}_MELTANO_HUB
           tables:
-            - HUB_METRICS_AUDIT
+            - ${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
-          schema: ${CI_BRANCH}_SLACK_NOTIFICATIONS
           tables:
-            - SINGER_ACTIVITY_NOTIFICATIONS
+            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
-          schema: ${CI_BRANCH}_SLACK_NOTIFICATIONS
           tables:
-            - MELTANO_ACTIVITY_NOTIFICATIONS
+            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
