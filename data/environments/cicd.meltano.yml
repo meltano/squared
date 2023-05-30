@@ -38,25 +38,27 @@ environments:
       # Reverse ETL connections:
       - name: tap-snowflake
         config:
-          dbname: CICD_PROD
+          database: CICD_PROD
           user: CICD
           role: CICD
           warehouse: CICD
-      - name: tap-snowflake-metrics-legacy
-        config:
-          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_HUB_METRICS
+      # https://github.com/meltano/meltano/issues/3171 is blocking this templating from working
       - name: tap-snowflake-metrics
         config:
-          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          tables:
+            - ${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          tables: CICD_PROD.${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
+          tables:
+            - ${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
-          tables: CICD_PROD.${CI_BRANCH}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
+          tables:
+            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
-          tables: CICD_PROD.${CI_BRANCH}_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+          tables:
+            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -65,19 +67,6 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      # Excluded from CI for now
-      # - name: target-apprise-singer-activity
-      #   config:
-      #     stream_maps:
-      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
-      #         title: TITLE
-      #         body: BODY
-      # - name: target-apprise-meltano-activity
-      #   config:
-      #     stream_maps:
-      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
-      #         title: TITLE
-      #         body: BODY
       utilities:
       - name: dbt-snowflake
         config:

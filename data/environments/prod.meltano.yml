@@ -17,25 +17,30 @@ environments:
           start_date: '2020-01-01'
       - name: tap-snowflake
         config:
-          dbname: PROD
+          database: PROD
           user: MELTANO
           role: REPORTER
           warehouse: REPORTER
       - name: tap-snowflake-metrics-legacy
         config:
-          tables: PROD.MELTANO_HUB.FACT_HUB_METRICS
+          tables:
+           - MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
-          tables: PROD.MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          tables:
+           - MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
-          tables: PROD.MELTANO_HUB.HUB_METRICS_AUDIT
+          tables:
+           - MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
-          tables: PROD.SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
+          tables:
+           - SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
-          tables: PROD.SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+          tables:
+          - SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
       loaders:
       - name: target-snowflake
         config:
@@ -44,18 +49,6 @@ environments:
           role: LOADER
           warehouse: LOADER
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise-singer-activity
-        config:
-          stream_maps:
-            PROD-SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
-              title: TITLE
-              body: BODY
-      - name: target-apprise-meltano-activity
-        config:
-          stream_maps:
-            PROD-SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
-              title: TITLE
-              body: BODY
       utilities:
       - name: dbt-snowflake
         config:

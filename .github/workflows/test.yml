@@ -24,7 +24,7 @@ jobs:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env 
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Airflow
     - run: meltano install utility airflow
     - run: meltano test airflow
@@ -156,6 +156,10 @@ jobs:
       MELTANO_ENVIRONMENT: cicd
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
+      TAP_SNOWFLAKE_METRICS_TABLES: '["b${{ github.SHA }}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS"]'
+      TAP_SNOWFLAKE_AUDIT_TABLES: '["b${{ github.SHA }}_MELTANO_HUB.HUB_METRICS_AUDIT"]'
+      TAP_SNOWFLAKE_SINGER_ACTIVITY: '["b${{ github.SHA }}_MELTANO_HUB.SINGER_ACTIVITY_NOTIFICATIONS"]'
+      TAP_SNOWFLAKE_MELTANO_ACTIVITY: '["b${{ github.SHA }}_MELTANO_HUB.MELTANO_ACTIVITY_NOTIFICATIONS"]'
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-python@v4
