@@ -49,18 +49,6 @@ environments:
           role: LOADER
           warehouse: LOADER
           default_target_schema: ${MELTANO_EXTRACT__LOAD_SCHEMA}
-      - name: target-apprise-singer-activity
-        config:
-          stream_maps:
-            PROD-SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
-              title: TITLE
-              body: BODY
-      - name: target-apprise-meltano-activity
-        config:
-          stream_maps:
-            PROD-SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
-              title: TITLE
-              body: BODY
       utilities:
       - name: dbt-snowflake
         config:

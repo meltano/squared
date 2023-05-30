@@ -67,19 +67,6 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-      # Excluded from CI for now
-      # - name: target-apprise-singer-activity
-      #   config:
-      #     stream_maps:
-      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-SINGER_ACTIVITY_NOTIFICATIONS:
-      #         title: TITLE
-      #         body: BODY
-      # - name: target-apprise-meltano-activity
-      #   config:
-      #     stream_maps:
-      #       CICD_PROD-${CI_BRANCH}_SLACK_NOTIFICATIONS-MELTANO_ACTIVITY_NOTIFICATIONS:
-      #         title: TITLE
-      #         body: BODY
       utilities:
       - name: dbt-snowflake
         config:
