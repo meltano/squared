@@ -1,0 +1,101 @@
+{
+  "plugin_type": "extractors",
+  "name": "tap-snowflake",
+  "namespace": "tap_snowflake",
+  "variant": "meltanolabs",
+  "label": "Snowflake",
+  "docs": "https://hub.meltano.com/extractors/tap-snowflake--meltanolabs",
+  "repo": "https://github.com/MeltanoLabs/tap-snowflake",
+  "pip_url": "meltanolabs-tap-snowflake",
+  "description": "Extractor for Snowflake data warehouse",
+  "logo_url": "https://hub.meltano.com/assets/logos/extractors/snowflake.png",
+  "capabilities": [
+    "about",
+    "catalog",
+    "discover",
+    "schema-flattening",
+    "state",
+    "stream-maps"
+  ],
+  "settings_group_validation": [
+    [
+      "account",
+      "password",
+      "user"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "account",
+      "kind": "string",
+      "label": "Account",
+      "description": "Your account identifier. See [Account Identifiers](https://docs.snowflake.com/en/user-guide/admin-account-identifier.html)."
+    },
+    {
+      "name": "database",
+      "kind": "string",
+      "label": "Database",
+      "description": "The initial database for the Snowflake session."
+    },
+    {
+      "name": "flattening_enabled",
+      "kind": "boolean",
+      "label": "Flattening Enabled",
+      "description": "'True' to enable schema flattening and automatically expand nested properties."
+    },
+    {
+      "name": "flattening_max_depth",
+      "kind": "integer",
+      "label": "Flattening Max Depth",
+      "description": "The max depth to flatten schemas."
+    },
+    {
+      "name": "password",
+      "kind": "password",
+      "label": "Password",
+      "description": "The password for your Snowflake user."
+    },
+    {
+      "name": "role",
+      "kind": "string",
+      "label": "Role",
+      "description": "The initial role for the session."
+    },
+    {
+      "name": "schema",
+      "kind": "string",
+      "label": "Schema",
+      "description": "The initial schema for the Snowflake session."
+    },
+    {
+      "name": "stream_map_config",
+      "kind": "object",
+      "label": "Stream Map Config",
+      "description": "User-defined config values to be used within map expressions."
+    },
+    {
+      "name": "stream_maps",
+      "kind": "object",
+      "label": "Stream Maps",
+      "description": "Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html)."
+    },
+    {
+      "name": "tables",
+      "kind": "array",
+      "label": "Tables",
+      "description": "An array of the table names that you want to sync. The table names should be fully qualified, including schema and table name. NOTE: this limits discovery to the tables specified, for performance reasons. Do not specify `tables` if you intend to discover the entire available catalog."
+    },
+    {
+      "name": "user",
+      "kind": "string",
+      "label": "User",
+      "description": "The login name for your Snowflake user."
+    },
+    {
+      "name": "warehouse",
+      "kind": "string",
+      "label": "Warehouse",
+      "description": "The initial warehouse for the session."
+    }
+  ]
+}

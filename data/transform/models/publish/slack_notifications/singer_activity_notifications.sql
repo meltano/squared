@@ -36,7 +36,7 @@ base AS (
             CASE
                 WHEN
                     singer_contributions.contribution_type = 'pull_request'
-                    AND singer_contributions.state = 'closed'
+                    AND singer_contributions.state = 'merged'
                     AND singer_contributions.pr_merged_at_ts::DATE = DATEADD(
                         DAY, -1, most_recent_date.max_date
                     )
@@ -48,7 +48,6 @@ base AS (
                 WHEN
                     singer_contributions.contribution_type = 'pull_request'
                     AND singer_contributions.state = 'closed'
-                    AND singer_contributions.pr_merged_at_ts IS NULL
                     AND singer_contributions.closed_at_ts::DATE = DATEADD(
                         DAY, -1, most_recent_date.max_date
                     )

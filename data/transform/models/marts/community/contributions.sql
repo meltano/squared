@@ -21,6 +21,7 @@ WITH gitlab_all AS (
             FALSE
         ) AS is_completed
     FROM {{ ref('stg_gitlab__merge_requests') }}
+    WHERE project_namespace = 'meltano'
 
     UNION ALL
 
@@ -41,6 +42,7 @@ WITH gitlab_all AS (
         comment_count,
         COALESCE((closed_at_ts IS NOT NULL), FALSE) AS is_completed
     FROM {{ ref('stg_gitlab__issues') }}
+    WHERE project_namespace = 'meltano'
 
 ),
 
@@ -139,7 +141,9 @@ gitlab_combined AS (
     LEFT JOIN
         {{ ref('username_mapping') }} ON
         gitlab_all.author_id = username_mapping.gitlab_author_id
-    WHERE stg_gitlab__projects.visibility = 'public'
+    WHERE
+        stg_gitlab__projects.project_namespace = 'meltano'
+        AND stg_gitlab__projects.visibility = 'public'
 ),
 
 github_combined AS (

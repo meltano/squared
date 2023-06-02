@@ -15,12 +15,12 @@ WITH source AS (
 renamed AS (
 
     SELECT
-        source.project_surrogate_key,
-        source.project_id AS cloud_project_id,
-        source.project_name,
-        source.tenant_resource_key
+        project_surrogate_key,
+        project_id AS cloud_project_id,
+        project_name,
+        tenant_resource_key
     FROM source
-    WHERE source.row_num = 1
+    WHERE row_num = 1
 
 )
 

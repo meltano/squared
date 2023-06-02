@@ -57,7 +57,7 @@ plugins:
         start_date: '2020-01-01T00:00:00Z'
         key_properties: [id]
         name: azure_ips
-        pattern: ServiceTags_Public_20230424.json
+        pattern: ServiceTags_Public_20230522.json
         json_path: values
   - name: tap-slack
     variant: meltanolabs
@@ -99,6 +99,8 @@ plugins:
   - name: tap-gitlab
     variant: meltanolabs
     pip_url: git+https://github.com/pnadolny13/tap-gitlab.git@author_usernames
+    config:
+      groups: meltano
     select:
     - projects.*
     - merge_requests.*
@@ -107,6 +109,14 @@ plugins:
     - '!issues.title'
     - '!merge_requests.description'
     - '!merge_requests.title'
+  - name: tap-gitlab-hotglue
+    inherit_from: tap-gitlab
+    config:
+      groups: hotglue
+    select:
+    - projects.*
+    - merge_requests.*
+    - issues.*
   - name: tap-github
     variant: meltanolabs
     pip_url: git+https://github.com/MeltanoLabs/tap-github@d99378778c0cebc446c12b552ee4fd386fdc2610
@@ -157,8 +167,8 @@ plugins:
     - pull_requests.*
     # - issue_comments.*
   - name: tap-snowflake
-    variant: transferwise
-    pip_url: git+https://github.com/transferwise/pipelinewise-tap-snowflake.git@15699411cc0ff87f11a3f7e637f01a2eb8cbf9da
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/tap-snowflake.git@v0.0.22
     config:
       account: epa06486
       password: ${SNOWFLAKE_PASSWORD}
@@ -168,47 +178,49 @@ plugins:
       '*':
         replication-method: FULL_TABLE
     select:
-    - '*FACT_VARIANT_HUB_METRICS.NAME'
-    - '*FACT_VARIANT_HUB_METRICS.VARIANT'
-    - '*FACT_VARIANT_HUB_METRICS.REPO'
-    - '*FACT_VARIANT_HUB_METRICS.PLUGIN_TYPE'
-    - '*FACT_VARIANT_HUB_METRICS.PIP_URL'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_PROJECTS'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_EXECS'
+    - '*fact_variant_hub_metrics.name'
+    - '*fact_variant_hub_metrics.variant'
+    - '*fact_variant_hub_metrics.repo'
+    - '*fact_variant_hub_metrics.plugin_type'
+    - '*fact_variant_hub_metrics.pip_url'
+    - '*fact_variant_hub_metrics.all_projects'
+    - '*fact_variant_hub_metrics.all_execs'
     # NEW ATTRIBUTES
-    - '*FACT_VARIANT_HUB_METRICS.ALL_PROJECTS_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_PROJECTS_UNSTRUCT_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_PROJECTS_UNSTRUCT_BY_VARIANT'
-    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_PROJECTS_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_PROJECTS_UNSTRUCT_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_PROJECTS_UNSTRUCT_BY_VARIANT'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_EXECS_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_EXECS_UNSTRUCT_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.ALL_EXECS_UNSTRUCT_BY_VARIANT'
-    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_EXECS_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_EXECS_UNSTRUCT_BY_NAME'
-    - '*FACT_VARIANT_HUB_METRICS.SUCCESS_EXECS_UNSTRUCT_BY_VARIANT'
+    - '*fact_variant_hub_metrics.all_projects_by_name'
+    - '*fact_variant_hub_metrics.all_projects_unstruct_by_name'
+    - '*fact_variant_hub_metrics.all_projects_unstruct_by_variant'
+    - '*fact_variant_hub_metrics.success_projects_by_name'
+    - '*fact_variant_hub_metrics.success_projects_unstruct_by_name'
+    - '*fact_variant_hub_metrics.success_projects_unstruct_by_variant'
+    - '*fact_variant_hub_metrics.all_execs_by_name'
+    - '*fact_variant_hub_metrics.all_execs_unstruct_by_name'
+    - '*fact_variant_hub_metrics.all_execs_unstruct_by_variant'
+    - '*fact_variant_hub_metrics.success_execs_by_name'
+    - '*fact_variant_hub_metrics.success_execs_unstruct_by_name'
+    - '*fact_variant_hub_metrics.success_execs_unstruct_by_variant'
   - name: tap-snowflake-audit
     inherit_from: tap-snowflake
     metadata:
       '*':
         replication-method: FULL_TABLE
     select:
-    - '*HUB_METRICS_AUDIT.UPDATED_DATE'
-    - '*HUB_METRICS_AUDIT.METRIC_TYPE'
+    - '*hub_metrics_audit.updated_date'
+    - '*hub_metrics_audit.metric_type'
   - name: tap-snowflake-singer-activity
     inherit_from: tap-snowflake
     metadata:
       '*':
         replication-method: FULL_TABLE
+    config:
+      schema: SLACK_NOTIFICATIONS
     select:
-    - '*SLACK_ALERTS.TITLE'
-    - '*SLACK_ALERTS.BODY'
+    - '*singer_activity_notifications.title'
+    - '*singer_activity_notifications.body'
   - name: tap-snowflake-meltano-activity
     inherit_from: tap-snowflake
     metadata:
       '*':
         replication-method: FULL_TABLE
     select:
-    - '*GITHUB_ACTIVITY_NOTIFICATIONS.TITLE'
-    - '*GITHUB_ACTIVITY_NOTIFICATIONS.BODY'
+    - '*meltano_activity_notifications.title'
+    - '*meltano_activity_notifications.body'
