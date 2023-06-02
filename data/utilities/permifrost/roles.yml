@@ -41,6 +41,9 @@ databases:
     - ryan_miranda_raw:
         shared: no
 
+    - meltanolabs_raw:
+        shared: no
+
     - staging_raw:
         shared: no
     - staging_prep:
@@ -509,6 +512,26 @@ roles:
     - rbaum: 
         member_of: []
 
+    - meltanolabs:
+        warehouses:
+            - meltanolabs
+        privileges:
+            databases:
+                read:
+                    - meltanolabs_raw
+                write:
+                    - meltanolabs_raw
+            schemas:
+                read:
+                    - meltanolabs_raw.*
+                write:
+                    - meltanolabs_raw.*
+            tables:
+                read:
+                    - meltanolabs_raw.*.*
+                write:
+                    - meltanolabs_raw.*.*
+
     - ryan_miranda:
         warehouses:
             - ryan_miranda
@@ -630,6 +653,11 @@ users:
         member_of:
             - brooklyn_data_co
 
+    - meltanolabs:
+        can_login: yes
+        member_of:
+            - meltanolabs
+
     - ryan_miranda:
         can_login: yes
         member_of:
@@ -660,6 +688,9 @@ warehouses:
         size: x-small
 
     - reporter:
+        size: x-small
+
+    - meltanolabs:
         size: x-small
 
     - ryan_miranda:
