@@ -114,7 +114,7 @@ jobs:
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Install Plugins
-    - run: eval $(meltano job list --format=json | python ci_get_install_script.py ${{ matrix.extract-source }})
+    - run: meltano install --schedule=${{ matrix.extract-source }}
     # Run Test
     - run: meltano run ${{ matrix.extract-source }}
 
@@ -173,6 +173,6 @@ jobs:
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Install Plugins
-    - run: eval $(meltano job list --format=json | python ci_get_install_script.py hub_metrics_publish)
+    - run: meltano install --schedule=hub_metrics_publish
     # Run Test
     - run: meltano run hub_metrics_publish
