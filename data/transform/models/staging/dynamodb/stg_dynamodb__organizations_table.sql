@@ -12,11 +12,11 @@ WITH source AS (
 renamed AS (
 
     SELECT
-		org_name,
-		display_name AS org_display_name,
-		tenant_resource_key
+        org_name,
+        display_name AS org_display_name,
+        tenant_resource_key
     FROM source
-	WHERE row_num = 1
+    WHERE row_num = 1
 
 )
 

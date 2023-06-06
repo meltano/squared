@@ -30,11 +30,13 @@ renamed AS (
         deployment_surrogate_key,
         tenant_resource_key,
         cloud_project_id,
-        SHA2_HEX(deployment_name) AS cloud_deployment_name_hash,
-        SHA2_HEX(environment_name) AS cloud_environment_name_hash,
         git_rev,
         git_rev_hash,
-        CAST(last_deployed_timestamp AS TIMESTAMP_NTZ) AS last_deployed_timestamp
+        SHA2_HEX(deployment_name) AS cloud_deployment_name_hash,
+        SHA2_HEX(environment_name) AS cloud_environment_name_hash,
+        CAST(
+            last_deployed_timestamp AS TIMESTAMP_NTZ
+        ) AS last_deployed_timestamp
     FROM clean_source
     WHERE row_num = 1
 

@@ -88,6 +88,10 @@ SELECT
     COALESCE(usage.cloud_schedules_healthy, 0) AS cloud_schedules_healthy
 FROM {{ ref('stg_dynamodb__organizations_table') }}
 LEFT JOIN credits
-    ON stg_dynamodb__organizations_table.tenant_resource_key = credits.tenant_resource_key
+    ON
+        stg_dynamodb__organizations_table.tenant_resource_key
+        = credits.tenant_resource_key
 LEFT JOIN usage
-    ON stg_dynamodb__organizations_table.tenant_resource_key = usage.tenant_resource_key
+    ON
+        stg_dynamodb__organizations_table.tenant_resource_key
+        = usage.tenant_resource_key
