@@ -62,3 +62,33 @@ models:
       - name: project_name
         tests:
           - not_null
+
+  - name: stg_dynamodb__organizations_table
+    columns:
+      - name: tenant_resource_key
+        tests:
+          - unique
+          - not_null
+      - name: org_name
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_dynamodb__project_deployments
+    columns:
+      - name: deployment_surrogate_key
+        tests:
+          - unique
+          - not_null
+      - name: tenant_resource_key
+        tests:
+          - not_null
+      - name: cloud_project_id
+        tests:
+          - not_null
+      - name: cloud_deployment_name_hash
+        tests:
+          - not_null
+      - name: cloud_environment_name_hash
+        tests:
+          - not_null

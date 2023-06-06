@@ -8,3 +8,5 @@ sources:
       - name: workload_metadata_table
       - name: projects_table
       - name: project_schedules_table
+      - name: project_deployments_table
+      - name: organizations_table

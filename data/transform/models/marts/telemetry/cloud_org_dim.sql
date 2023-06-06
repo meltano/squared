@@ -71,8 +71,9 @@ usage AS (
 )
 
 SELECT
-    cloud_orgs.tenant_resource_key,
-    cloud_orgs.org_name,
+    stg_dynamodb__organizations_table.tenant_resource_key,
+    stg_dynamodb__organizations_table.org_name,
+    stg_dynamodb__organizations_table.org_display_name,
     COALESCE(credits.credits_allocated, 0) AS credits_allocated,
     COALESCE(credits.spend_usd, 0) AS spend_usd,
     COALESCE(usage.credits_used_estimate, 0) AS credits_used_estimate,
@@ -85,8 +86,8 @@ SELECT
     COALESCE(usage.cloud_schedules, 0) AS cloud_schedules,
     COALESCE(usage.cloud_schedules_enabled, 0) AS cloud_schedules_enabled,
     COALESCE(usage.cloud_schedules_healthy, 0) AS cloud_schedules_healthy
-FROM {{ ref('cloud_orgs') }}
+FROM {{ ref('stg_dynamodb__organizations_table') }}
 LEFT JOIN credits
-    ON cloud_orgs.tenant_resource_key = credits.tenant_resource_key
+    ON stg_dynamodb__organizations_table.tenant_resource_key = credits.tenant_resource_key
 LEFT JOIN usage
-    ON cloud_orgs.tenant_resource_key = usage.tenant_resource_key
+    ON stg_dynamodb__organizations_table.tenant_resource_key = usage.tenant_resource_key

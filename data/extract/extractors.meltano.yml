@@ -2,15 +2,21 @@ plugins:
   extractors:
   - name: tap-dynamodb
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-dynamodb.git@v0.2.0
+    pip_url: git+https://github.com/MeltanoLabs/tap-dynamodb.git@v0.3.0
     config:
       aws_access_key_id: ${AWS_ACCESS_KEY_ID}
       aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
       aws_default_region: us-west-2
+      table_scan_kwargs:
+        organizations-table:
+          Select: SPECIFIC_ATTRIBUTES
+          ProjectionExpression: 'org_name, display_name, tenant_resource_key'
       tables:
       - workload-metadata-table
       - projects-table
       - project-schedules-table
+      - organizations-table
+      - project-deployments-table
       stream_maps:
         workload-metadata-table:
           __alias__: workload_metadata_table
@@ -18,6 +24,10 @@ plugins:
           __alias__: projects_table
         project-schedules-table:
           __alias__: project_schedules_table
+        project-deployments-table:
+          __alias__: project_deployments_table
+        organizations-table:
+          __alias__: organizations_table
   - name: tap-cloudwatch
     variant: meltanolabs
     pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.3.0
