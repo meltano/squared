@@ -68,8 +68,8 @@ schedules:
   job: hubspot_publish
 
 - name: sample_schedule
-  interval: 0 12 * * *
-  job: sample_schedule
+  interval: 0 0 * * *
+  job: sample_job
 
 jobs:
 
@@ -173,6 +173,6 @@ jobs:
   - dbt-snowflake:run_staging_cloudwatch
   - dbt-snowflake:test_staging_cloudwatch
 
-- name: sample_schedule
+- name: sample_job
   tasks:
-  - dbt-snowflake:describe
+  - tap-smoke-test target-jsonl
