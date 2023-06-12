@@ -41,7 +41,7 @@ environments:
       loaders:
       - name: target-snowflake
         config:
-          dbname: STAGING_RAW
+          database: STAGING_RAW
           user: STAGING
           role: STAGING
           warehouse: STAGING

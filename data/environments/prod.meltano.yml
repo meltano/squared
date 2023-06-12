@@ -44,7 +44,7 @@ environments:
       loaders:
       - name: target-snowflake
         config:
-          dbname: RAW
+          database: RAW
           user: MELTANO
           role: LOADER
           warehouse: LOADER

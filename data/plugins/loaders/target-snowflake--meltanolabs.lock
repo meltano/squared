@@ -1,0 +1,114 @@
+{
+  "plugin_type": "loaders",
+  "name": "target-snowflake",
+  "namespace": "target_snowflake",
+  "variant": "meltanolabs",
+  "label": "Snowflake",
+  "docs": "https://hub.meltano.com/loaders/target-snowflake--meltanolabs",
+  "repo": "https://github.com/MeltanoLabs/target-snowflake",
+  "pip_url": "git+https://github.com/MeltanoLabs/target-snowflake.git",
+  "executable": "target-snowflake",
+  "description": "Snowflake database loader",
+  "logo_url": "https://hub.meltano.com/assets/logos/loaders/snowflake.png",
+  "capabilities": [
+    "about",
+    "schema-flattening",
+    "stream-maps"
+  ],
+  "settings_group_validation": [
+    [
+      "account",
+      "database",
+      "password",
+      "user"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "account",
+      "kind": "string",
+      "label": "Account",
+      "description": "Your account identifier. See [Account Identifiers](https://docs.snowflake.com/en/user-guide/admin-account-identifier.html)."
+    },
+    {
+      "name": "add_record_metadata",
+      "kind": "boolean",
+      "value": true,
+      "label": "Add Record Metadata",
+      "description": "Whether to add metadata columns."
+    },
+    {
+      "name": "clean_up_batch_files",
+      "kind": "boolean",
+      "value": true,
+      "label": "Clean Up Batch Files",
+      "description": "Whether to remove batch files after processing."
+    },
+    {
+      "name": "database",
+      "kind": "string",
+      "label": "Database",
+      "description": "The initial database for the Snowflake session."
+    },
+    {
+      "name": "default_target_schema",
+      "kind": "string",
+      "label": "Default Target Schema",
+      "description": "The default target database schema name to use for all streams."
+    },
+    {
+      "name": "flattening_enabled",
+      "kind": "boolean",
+      "label": "Flattening Enabled",
+      "description": "'True' to enable schema flattening and automatically expand nested properties."
+    },
+    {
+      "name": "flattening_max_depth",
+      "kind": "integer",
+      "label": "Flattening Max Depth",
+      "description": "The max depth to flatten schemas."
+    },
+    {
+      "name": "password",
+      "kind": "password",
+      "label": "Password",
+      "description": "The password for your Snowflake user."
+    },
+    {
+      "name": "role",
+      "kind": "string",
+      "label": "Role",
+      "description": "The initial role for the session."
+    },
+    {
+      "name": "schema",
+      "kind": "string",
+      "label": "Schema",
+      "description": "The initial schema for the Snowflake session."
+    },
+    {
+      "name": "stream_map_config",
+      "kind": "object",
+      "label": "Stream Map Config",
+      "description": "User-defined config values to be used within map expressions."
+    },
+    {
+      "name": "stream_maps",
+      "kind": "object",
+      "label": "Stream Maps",
+      "description": "Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html)."
+    },
+    {
+      "name": "user",
+      "kind": "string",
+      "label": "User",
+      "description": "The login name for your Snowflake user."
+    },
+    {
+      "name": "warehouse",
+      "kind": "string",
+      "label": "Warehouse",
+      "description": "The initial warehouse for the session."
+    }
+  ]
+}
