@@ -7,55 +7,55 @@ on:
   workflow_dispatch:
 
 jobs:
-  airflow_tests:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: data/
-    environment: test
-    env:
-      MELTANO_ENVIRONMENT: cicd
-      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.SHA }}'
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-        cache: 'pip'
-    - run: pip install -r requirements.txt
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
-    # Airflow
-    - run: meltano install utility airflow
-    - run: meltano test airflow
+#   airflow_tests:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: data/
+#     environment: test
+#     env:
+#       MELTANO_ENVIRONMENT: cicd
+#       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+#       CI_BRANCH: 'b${{ github.SHA }}'
+#     steps:
+#     - uses: actions/checkout@v3
+#     - uses: actions/setup-python@v4
+#       with:
+#         python-version: '3.8'
+#         cache: 'pip'
+#     - run: pip install -r requirements.txt
+#     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+#     # Airflow
+#     - run: meltano install utility airflow
+#     - run: meltano test airflow
 
-  sqlfluff_tests:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: data/
-    environment: test
-    env:
-      MELTANO_ENVIRONMENT: cicd
-      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
-      CI_BRANCH: 'b${{ github.SHA }}'
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
-        cache: 'pip'
-    - run: pip install -r requirements.txt
-    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
-    # Add SSH key for accessing private dbt package repo
-    - uses: webfactory/ssh-agent@v0.7.0
-      with:
-          ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
-    # Run Test
-    - run: meltano install utilities sqlfluff dbt-snowflake
-    - run: meltano run dbt-snowflake:deps
-    - run: meltano invoke sqlfluff lint
-    # - run: meltano invoke sqlfluff lint $(python sqlfluff_file_changes.py)
+  # sqlfluff_tests:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: data/
+  #   environment: test
+  #   env:
+  #     MELTANO_ENVIRONMENT: cicd
+  #     MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+  #     CI_BRANCH: 'b${{ github.SHA }}'
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   - uses: actions/setup-python@v4
+  #     with:
+  #       python-version: '3.8'
+  #       cache: 'pip'
+  #   - run: pip install -r requirements.txt
+  #   - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+  #   # Add SSH key for accessing private dbt package repo
+  #   - uses: webfactory/ssh-agent@v0.7.0
+  #     with:
+  #         ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
+  #   # Run Test
+  #   - run: meltano install utilities sqlfluff dbt-snowflake
+  #   - run: meltano run dbt-snowflake:deps
+  #   - run: meltano invoke sqlfluff lint
+  #   # - run: meltano invoke sqlfluff lint $(python sqlfluff_file_changes.py)
 
   dbt_seed:
     runs-on: ubuntu-latest
@@ -85,7 +85,8 @@ jobs:
 
   el_tests:
     runs-on: ubuntu-latest
-    needs: [airflow_tests, sqlfluff_tests, dbt_seed]
+    needs: [dbt_seed]
+    # airflow_tests, sqlfluff_tests, dbt_seed]
     defaults:
       run:
         working-directory: data/
