@@ -1,11 +1,11 @@
 user_id,username,name,start_date,end_date
 16805946,edgarrmondragon,Edgar R. Mondragón,2021-07-05,null
-18150651,aaronsteers,AJ Steers,2021-03-15,null
+18150651,aaronsteers,AJ Steers,2021-03-15,2023-04-17
 27376735,pnadolny13,Pat Nadolny,2021-09-27,null
 5394188,tayloramurphy,Taylor A Murphy,2021-03-15,null
 333354,pandemicsyn,Florian,2021-07-12,2022-10-28
 5585874,kgpayne,Ken Payne,2021-08-23,null
-2797769,afolson,Amanda Folson,2021-06-28,null
+2797769,afolson,Amanda Folson,2021-06-28,2023-01-26
 159434,DouweM,Douwe Maan,1999-01-01,null
 49699333,dependabot[bot],DEPENDABOT,1999-01-01,null
 84082383,emilylucie,Emily Kyle,2021-06-28,2022-09-30
@@ -17,7 +17,7 @@ user_id,username,name,start_date,end_date
 105680035,therebbie,Reb,2022-01-04,null
 106713602,NicholeG,Nicole Garrett,2022-05-23,null
 105683978,lauraperezco,Laura Pérez,2022-05-09,2022-10-31
-6589528,rwfeather,Reina Feather,2022-06-13,null
+6589528,rwfeather,Reina Feather,2022-06-13,2023-02-17
 8680264,visch,Derek Visch,2022-05-09,null
 106707901,sarahddaily,Sarah Daily,2022-01-31,2022-12-01
 64617429,pre-commit-ci,PreCommitCI,1999-01-01,null
@@ -27,3 +27,5 @@ user_id,username,name,start_date,end_date
 69476188,magreenbaum,Melissa Greenbaum,2022-10-31,null
 746788,javajunky,Wil Chow,2023-01-02,null
 122309847,seth-meltano,Seth Turner,2023-01-09,null
+10601513,BraedonLeonard,Braedon Leonard,2023-06-06,null
+14004680,leoroese,Leo Roese,2023-06-06,null
