@@ -4,6 +4,10 @@ WITH joined AS (
         stg_dynamodb__workload_metadata_table.started_ts::DATE AS date_day,
         stg_dynamodb__workload_metadata_table.cloud_execution_id
     FROM {{ ref('stg_dynamodb__workload_metadata_table') }}
+    LEFT JOIN {{ ref('stg_dynamodb__project_deployments') }}
+        ON
+            stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
+            = stg_dynamodb__project_deployments.cloud_environment_name_hash
     LEFT JOIN {{ ref('stg_dynamodb__project_schedules_table') }}
         ON
             stg_dynamodb__workload_metadata_table.cloud_schedule_name_hash
@@ -13,7 +17,7 @@ WITH joined AS (
             AND stg_dynamodb__workload_metadata_table.cloud_project_id
             = stg_dynamodb__project_schedules_table.cloud_project_id
             AND
-            stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
+            stg_dynamodb__project_deployments.cloud_deployment_name_hash
             = stg_dynamodb__project_schedules_table.cloud_deployment_name_hash
     WHERE
         stg_dynamodb__project_schedules_table.cloud_schedule_name_hash

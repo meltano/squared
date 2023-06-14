@@ -102,6 +102,12 @@ INNER JOIN {{ ref('stg_dynamodb__projects_table') }}
     ON
         stg_dynamodb__workload_metadata_table.cloud_project_id
         = stg_dynamodb__projects_table.cloud_project_id
+LEFT JOIN {{ ref('stg_dynamodb__project_deployments') }}
+    ON
+        stg_dynamodb__workload_metadata_table.cloud_project_id
+        = stg_dynamodb__project_deployments.cloud_project_id
+        AND stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
+        = stg_dynamodb__project_deployments.cloud_environment_name_hash
 LEFT JOIN {{ ref('stg_dynamodb__project_schedules_table') }}
     ON
         stg_dynamodb__workload_metadata_table.cloud_project_id
@@ -110,7 +116,7 @@ LEFT JOIN {{ ref('stg_dynamodb__project_schedules_table') }}
         = stg_dynamodb__project_schedules_table.tenant_resource_key
         AND stg_dynamodb__workload_metadata_table.cloud_schedule_name_hash
         = stg_dynamodb__project_schedules_table.cloud_schedule_name_hash
-        AND stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
+        AND stg_dynamodb__project_deployments.cloud_deployment_name_hash
         = stg_dynamodb__project_schedules_table.cloud_deployment_name_hash
 LEFT JOIN open_source_agg
     ON
