@@ -40,7 +40,7 @@ plugins:
       run_hubspot_publish: run --select publish.hubspot.*
       test_hubspot_publish: test --select publish.hubspot.*
       run_staging_dynamodb: run --select staging.dynamodb.*
-      test_staging_dynamodb: test --select staging.dynamodb.*,test_type:generic
+      test_staging_dynamodb: test --select staging.dynamodb.*
     config:
       account: epa06486
       database_raw: RAW
