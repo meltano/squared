@@ -95,7 +95,9 @@ SELECT
     COALESCE(usage.cloud_schedules, 0) AS cloud_schedules,
     COALESCE(usage.cloud_schedules_enabled, 0) AS cloud_schedules_enabled,
     COALESCE(usage.cloud_schedules_healthy, 0) AS cloud_schedules_healthy,
-    COALESCE(stg_dynamodb__organizations_table.org_name IS NULL, FALSE) AS is_deleted
+    COALESCE(
+        stg_dynamodb__organizations_table.org_name IS NULL, FALSE
+    ) AS is_deleted
 FROM {{ ref('stg_dynamodb__organizations_table') }}
 LEFT JOIN credits
     ON
