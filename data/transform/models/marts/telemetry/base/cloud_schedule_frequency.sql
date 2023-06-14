@@ -6,7 +6,7 @@ WITH joined AS (
     FROM {{ ref('stg_dynamodb__workload_metadata_table') }}
     LEFT JOIN {{ ref('stg_dynamodb__project_deployments') }}
         ON
-            stg_dynamodb__workload_metadata_table.environment
+            stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
             = stg_dynamodb__project_deployments.cloud_environment_name_hash
     LEFT JOIN {{ ref('stg_dynamodb__project_schedules_table') }}
         ON
