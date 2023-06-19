@@ -9,9 +9,7 @@ sources:
         columns:
           - name: ip_prefix
             tests:
-              # issue: target snowflake doesnt dedupe within batches
-              # https://github.com/MeltanoLabs/target-snowflake/issues/41
-              # - unique
+              - unique
               - not_null
       - name: gcp_ips
         columns:
