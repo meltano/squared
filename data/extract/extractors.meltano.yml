@@ -71,7 +71,7 @@ plugins:
         json_path: values
   - name: tap-slack
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.5
+    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.6
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
