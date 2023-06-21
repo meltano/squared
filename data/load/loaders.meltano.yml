@@ -29,7 +29,7 @@ plugins:
         audit_log: {}
   - name: target-snowflake
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/target-snowflake.git@fix_json_type_casting
+    pip_url: meltanolabs-target-snowflake==0.3.0
     config:
       account: epa06486
       add_record_metadata: true
