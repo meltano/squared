@@ -8,8 +8,8 @@ WITH open_source_agg AS (
         MIN(
             CASE WHEN cli_command = 'schedule' THEN started_ts END
         ) AS oss_run_started_ts,
-        MIN(
-            CASE WHEN cli_command = 'schedule' THEN finished_ts END
+        MAX(
+            finished_ts
         ) AS oss_run_finished_ts
     FROM {{ ref('fact_cli_executions') }}
     WHERE cloud_execution_id IS NOT NULL
@@ -34,6 +34,7 @@ SELECT
     stg_dynamodb__workload_metadata_table.command_text_hash,
     stg_dynamodb__workload_metadata_table.cloud_job_name_hash,
     stg_dynamodb__workload_metadata_table.cloud_schedule_name_hash,
+    stg_dynamodb__workload_metadata_table.cloud_deployment_name_hash,
     cloud_schedule_frequency.schedule_freq_day,
     cloud_schedule_frequency.schedule_freq_rolling_avg,
     COALESCE(
@@ -102,12 +103,6 @@ INNER JOIN {{ ref('stg_dynamodb__projects_table') }}
     ON
         stg_dynamodb__workload_metadata_table.cloud_project_id
         = stg_dynamodb__projects_table.cloud_project_id
-LEFT JOIN {{ ref('stg_dynamodb__project_deployments') }}
-    ON
-        stg_dynamodb__workload_metadata_table.cloud_project_id
-        = stg_dynamodb__project_deployments.cloud_project_id
-        AND stg_dynamodb__workload_metadata_table.cloud_environment_name_hash
-        = stg_dynamodb__project_deployments.cloud_environment_name_hash
 LEFT JOIN {{ ref('stg_dynamodb__project_schedules_table') }}
     ON
         stg_dynamodb__workload_metadata_table.cloud_project_id
@@ -116,7 +111,7 @@ LEFT JOIN {{ ref('stg_dynamodb__project_schedules_table') }}
         = stg_dynamodb__project_schedules_table.tenant_resource_key
         AND stg_dynamodb__workload_metadata_table.cloud_schedule_name_hash
         = stg_dynamodb__project_schedules_table.cloud_schedule_name_hash
-        AND stg_dynamodb__project_deployments.cloud_deployment_name_hash
+        AND stg_dynamodb__workload_metadata_table.cloud_deployment_name_hash
         = stg_dynamodb__project_schedules_table.cloud_deployment_name_hash
 LEFT JOIN open_source_agg
     ON

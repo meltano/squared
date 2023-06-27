@@ -42,6 +42,7 @@ renamed AS (
         enabled AS is_enabled,
         tenant_resource_key,
         cloud_project_id,
+        eventbridge_name,
         SHA2_HEX(cloud_deployment_name) AS cloud_deployment_name_hash,
         SHA2_HEX(cloud_schedule_name) AS cloud_schedule_name_hash
     FROM clean_source
