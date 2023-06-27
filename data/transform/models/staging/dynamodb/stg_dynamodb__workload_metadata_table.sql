@@ -27,7 +27,9 @@ renamed AS (
         ) AS tenant_resource_key,
         SPLIT_PART(
             "TENANT_RESOURCE_KEY::PROJECT_ID", '::', 2 -- noqa: RF05
-        ) AS cloud_project_id
+        ) AS cloud_project_id,
+        SHA2_HEX(deployment_name) AS cloud_deployment_name_hash,
+        stopped_reason
     FROM source
     WHERE
         row_num = 1

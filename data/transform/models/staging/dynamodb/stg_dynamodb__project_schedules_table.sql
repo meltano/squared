@@ -43,7 +43,8 @@ renamed AS (
         tenant_resource_key,
         cloud_project_id,
         SHA2_HEX(cloud_deployment_name) AS cloud_deployment_name_hash,
-        SHA2_HEX(cloud_schedule_name) AS cloud_schedule_name_hash
+        SHA2_HEX(cloud_schedule_name) AS cloud_schedule_name_hash,
+        eventbridge_name
     FROM clean_source
     WHERE row_num = 1
 

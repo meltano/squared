@@ -18,7 +18,9 @@ renamed AS (
         project_surrogate_key,
         project_id AS cloud_project_id,
         project_name,
-        tenant_resource_key
+        tenant_resource_key,
+        SHA2_HEX(git_repository) AS git_repository_hash,
+        SHA2_HEX(project_root_path) AS project_root_path_hash
     FROM source
     WHERE row_num = 1
 
