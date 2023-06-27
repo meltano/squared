@@ -41,3 +41,6 @@ plugins:
     inherit_from: target-apprise
   - name: target-apprise-meltano-activity
     inherit_from: target-apprise
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl
