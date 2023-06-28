@@ -43,7 +43,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: file://
+          root: file://output/tap-cloudwatch/
   - name: tap-meltanohub
     variant: autoidm
     pip_url: git+https://github.com/pnadolny13/tap-meltanohub.git@update_dependencies
@@ -56,7 +56,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: file://
+          root: file://output/tap-meltanohub/
   - name: tap-spreadsheets-anywhere
     variant: ets
     pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git@5d9115985d3f9e7a568c6dcc68975f0c038253ff
@@ -98,7 +98,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: file://
+          root: file://output/tap-slack/
     select:
     - users.*
     - channels.*
@@ -207,7 +207,7 @@ plugins:
           format: jsonl
           compression: gzip
         storage:
-          root: file://
+          root: file://output/tap-snowflake/
   - name: tap-snowflake-metrics
     inherit_from: tap-snowflake
     metadata:
