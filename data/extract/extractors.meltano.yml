@@ -30,7 +30,7 @@ plugins:
           __alias__: organizations_table
   - name: tap-cloudwatch
     variant: meltanolabs
-    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.3.0
+    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.4.0
     config:
       log_group_name: API-Gateway-Execution-Logs_i32s35df22/prod
       query: fields @timestamp, @message
@@ -38,9 +38,16 @@ plugins:
       start_date: '2022-12-08'
       aws_access_key_id: ${AWS_ACCESS_KEY_ID}
       aws_secret_access_key: ${AWS_SECRET_ACCESS_KEY}
+      batch_config:
+        encoding:
+          format: jsonl
+          compression: gzip
+        storage:
+          root: file://output/tap-cloudwatch/
   - name: tap-meltanohub
     variant: autoidm
-    pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git@1b99b0ee7853b2d9db36de6afa16b15c1affce7b
+    pip_url: git+https://github.com/pnadolny13/tap-meltanohub.git@update_dependencies
+    # pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git@1b99b0ee7853b2d9db36de6afa16b15c1affce7b
     select:
     - plugins.*
   - name: tap-spreadsheets-anywhere
@@ -71,7 +78,7 @@ plugins:
         json_path: values
   - name: tap-slack
     variant: meltanolabs
-    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.1.6
+    pip_url: git+https://github.com/MeltanoLabs/tap-slack.git@0.2.0
     config:
       start_date: '2021-01-01'
       auto_join_channels: false
@@ -79,6 +86,12 @@ plugins:
       - C01SK13R9NJ
       channel_types:
       - private_channel
+      batch_config:
+        encoding:
+          format: jsonl
+          compression: gzip
+        storage:
+          root: file://output/tap-slack/
     select:
     - users.*
     - channels.*
