@@ -50,13 +50,6 @@ plugins:
     # pip_url: git+https://github.com/AutoIDM/tap-meltanohub.git@1b99b0ee7853b2d9db36de6afa16b15c1affce7b
     select:
     - plugins.*
-    config:
-      batch_config:
-        encoding:
-          format: jsonl
-          compression: gzip
-        storage:
-          root: file://output/tap-meltanohub/
   - name: tap-spreadsheets-anywhere
     variant: ets
     pip_url: git+https://github.com/ets/tap-spreadsheets-anywhere.git@5d9115985d3f9e7a568c6dcc68975f0c038253ff
@@ -202,12 +195,6 @@ plugins:
     config:
       account: epa06486
       password: ${SNOWFLAKE_PASSWORD}
-      batch_config:
-        encoding:
-          format: jsonl
-          compression: gzip
-        storage:
-          root: file://output/tap-snowflake/
   - name: tap-snowflake-metrics
     inherit_from: tap-snowflake
     metadata:

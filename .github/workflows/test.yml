@@ -117,12 +117,6 @@ jobs:
     - run: meltano install --schedule=${{ matrix.extract-source }}
     # Run Test
     - run: meltano run ${{ matrix.extract-source }}
-    - name: Store Outputs for Debugging
-      uses: actions/upload-artifact@v3
-      with:
-        name: output
-        path: |
-          output
 
   transform_tests:
     runs-on: ubuntu-latest
