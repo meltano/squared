@@ -118,7 +118,6 @@ jobs:
     # Run Test
     - run: meltano run ${{ matrix.extract-source }}
     - name: Store Outputs for Debugging
-      if: always()
       uses: actions/upload-artifact@v3
       with:
         name: output
