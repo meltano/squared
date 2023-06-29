@@ -67,7 +67,6 @@ environments:
           role: CICD
           warehouse: CICD
           default_target_schema: ${CI_BRANCH}_${MELTANO_EXTRACT__LOAD_SCHEMA}
-          clean_up_batch_files: false
       utilities:
       - name: dbt-snowflake
         config:
