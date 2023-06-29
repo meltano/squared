@@ -122,7 +122,7 @@ jobs:
       with:
         name: output
         path: |
-          data/output/
+          output
 
   transform_tests:
     runs-on: ubuntu-latest
