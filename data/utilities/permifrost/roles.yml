@@ -381,6 +381,10 @@ roles:
                 write:
                     - raw.metronome_integration.*
 
+    - pnadolny:
+        member_of:
+            - developer
+
     # System user role for Staging
     - staging:
         warehouses:
@@ -428,6 +432,10 @@ roles:
                     - staging_raw.*.*
 
     - sbalnojan:
+        member_of:
+            - developer
+
+    - tmurphy:
         member_of:
             - developer
 
@@ -504,7 +512,7 @@ users:
     - pnadolny:
         can_login: yes
         member_of:
-            - developer
+            - pnadolny
             - accountadmin
             - securityadmin
             - useradmin
@@ -524,7 +532,7 @@ users:
     - tmurphy:
         can_login: yes
         member_of:
-            - developer
+            - tmurphy
             - accountadmin
             - securityadmin
             - useradmin
