@@ -16,11 +16,6 @@ databases:
 
   # User / Testing
 
-    - asteers_prep:
-        shared: no
-    - asteers_prod:
-        shared: no
-
     - brooklyn_data_co_raw:
         shared: no
 
@@ -29,13 +24,6 @@ databases:
     - cicd_prep:
         shared: no
     - cicd_prod:
-        shared: no
-
-    - pnadolny_raw:
-        shared: no
-    - pnadolny_prep:
-        shared: no
-    - pnadolny_prod:
         shared: no
 
     - ryan_miranda_raw:
@@ -49,11 +37,6 @@ databases:
     - staging_prep:
         shared: no
     - staging_prod:
-        shared: no
-
-    - tmurphy_prep:
-        shared: no
-    - tmurphy_prod:
         shared: no
 
     - userdev_raw:
@@ -305,46 +288,10 @@ roles:
 # ==========================================
 
     # Adding new users:
-    # 1. Copy-paste below `asteers` entry as a template for the new user. Exclude user environment unless needed.
+    # 1. Copy-paste below `pnadolny` entry as a template for the new user. Exclude user environment unless needed.
     # 2. Alpha sort the new user amongst other user names.
     # 3. Users are named by first-initial-last-name ("jsmith" for "John Smith").
     # 4. Be sure to also add the new DB names at the top of the file.
-
-    - asteers:
-        member_of:
-            - developer
-        owns:
-            databases:
-                - asteers_prep
-                - asteers_prod
-            schemas:
-                - asteers_prep.*
-                - asteers_prod.*
-            tables:
-                - asteers_prep.*.*
-                - asteers_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - asteers_prep
-                    - asteers_prod
-                write:
-                    - asteers_prep
-                    - asteers_prod
-            schemas:
-                read:
-                    - asteers_prep.*
-                    - asteers_prod.*
-                write:
-                    - asteers_prep.*
-                    - asteers_prod.*
-            tables:
-                read:
-                    - asteers_prep.*.*
-                    - asteers_prod.*.*
-                write:
-                    - asteers_prep.*.*
-                    - asteers_prod.*.*
 
     - brooklyn_data_co:
         warehouses:
@@ -414,50 +361,29 @@ roles:
                     - cicd_prep.*.*
                     - cicd_prod.*.*
 
-    - pnadolny:
-        member_of:
-            - developer
-        owns:
-            databases:
-                - pnadolny_prep
-                - pnadolny_prod
-                - pnadolny_raw
-            schemas:
-                - pnadolny_prep.*
-                - pnadolny_prod.*
-                - pnadolny_raw.*
-            tables:
-                - pnadolny_prep.*.*
-                - pnadolny_prod.*.*
-                - pnadolny_raw.*.*
+    - metronome:
+        warehouses:
+            - loader
         privileges:
             databases:
                 read:
-                    - pnadolny_prep
-                    - pnadolny_prod
-                    - pnadolny_raw
+                    - raw
                 write:
-                    - pnadolny_prep
-                    - pnadolny_prod
-                    - pnadolny_raw
+                    - raw
             schemas:
                 read:
-                    - pnadolny_prep.*
-                    - pnadolny_prod.*
-                    - pnadolny_raw.*
+                    - raw.metronome_integration
                 write:
-                    - pnadolny_prep.*
-                    - pnadolny_prod.*
-                    - pnadolny_raw.*
+                    - raw.metronome_integration
             tables:
                 read:
-                    - pnadolny_prep.*.*
-                    - pnadolny_prod.*.*
-                    - pnadolny_raw.*.*
+                    - raw.metronome_integration.*
                 write:
-                    - pnadolny_prep.*.*
-                    - pnadolny_prod.*.*
-                    - pnadolny_raw.*.*
+                    - raw.metronome_integration.*
+
+    - pnadolny:
+        member_of:
+            - developer
 
     # System user role for Staging
     - staging:
@@ -509,6 +435,10 @@ roles:
         member_of:
             - developer
 
+    - tmurphy:
+        member_of:
+            - developer
+
     - rbaum: 
         member_of: []
 
@@ -552,41 +482,6 @@ roles:
                 write:
                     - ryan_miranda_raw.*.*
 
-    - tmurphy:
-        member_of:
-            - developer
-        owns:
-            databases:
-                - tmurphy_prep
-                - tmurphy_prod
-            schemas:
-                - tmurphy_prep.*
-                - tmurphy_prod.*
-            tables:
-                - tmurphy_prep.*.*
-                - tmurphy_prod.*.*
-        privileges:
-            databases:
-                read:
-                    - tmurphy_prep
-                    - tmurphy_prod
-                write:
-                    - tmurphy_prep
-                    - tmurphy_prod
-            schemas:
-                read:
-                    - tmurphy_prep.*
-                    - tmurphy_prod.*
-                write:
-                    - tmurphy_prep.*
-                    - tmurphy_prod.*
-            tables:
-                read:
-                    - tmurphy_prep.*.*
-                    - tmurphy_prod.*.*
-                write:
-                    - tmurphy_prep.*.*
-                    - tmurphy_prod.*.*
 
 # ==========================================
 # Users (Data Team and Service Accounts)
@@ -601,6 +496,11 @@ users:
         can_login: yes
         member_of:
             - meltano
+
+    - metronome:
+        can_login: yes
+        member_of:
+            - metronome
 
     - permission_bot:
         can_login: yes
@@ -632,7 +532,7 @@ users:
     - tmurphy:
         can_login: yes
         member_of:
-            - tmurphy  # TODO - migrate to generic 'developer' role?
+            - tmurphy
             - accountadmin
             - securityadmin
             - useradmin
@@ -642,11 +542,6 @@ users:
 # ==========================================
 # Users (non-elevated)
 # ==========================================
-
-    - asteers:
-        can_login: yes
-        member_of:
-            - asteers
 
     - brooklyn_data_co:
         can_login: yes
