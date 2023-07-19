@@ -28,19 +28,29 @@ environments:
       - name: tap-snowflake-metrics
         config:
           tables:
-           -  PNADOLNY_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          - PNADOLNY_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables:
-           - PNADOLNY_MELTANO_HUB.HUB_METRICS_AUDIT
+          - PNADOLNY_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           tables:
-           - PNADOLNY_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
+          - PNADOLNY_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
           tables:
-           - PNADOLNY_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+          - PNADOLNY_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+      - name: tap-snowflake-hubspot-companies
+        config:
+          tables:
+          - PNADOLNY_HUBSPOT.ORG_ACTIVITY
+          stream_maps:
+            pnadolny_hubspot-org_activity:
+              org_first_active_date: str(record.get('org_first_active_date')[:10])
+                if record.get('org_first_active_date') else None
+              org_last_active_date: str(record.get('org_last_active_date')[:10]) if
+                record.get('org_last_active_date') else None
       loaders:
       - name: target-snowflake
         config:

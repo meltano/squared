@@ -89,6 +89,7 @@ jobs:
   tasks:
   - dbt-snowflake:run_hubspot_publish
   - dbt-snowflake:test_hubspot_publish
+  - tap-snowflake-hubspot-companies target-hubspot-companies
 
 - name: slack_notifications
   tasks:

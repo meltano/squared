@@ -10,7 +10,7 @@ plugins:
       table_scan_kwargs:
         organizations-table:
           Select: SPECIFIC_ATTRIBUTES
-          ProjectionExpression: 'org_name, display_name, tenant_resource_key'
+          ProjectionExpression: org_name, display_name, tenant_resource_key
       tables:
       - workload-metadata-table
       - projects-table
@@ -231,11 +231,11 @@ plugins:
     - '*hub_metrics_audit.metric_type'
   - name: tap-snowflake-singer-activity
     inherit_from: tap-snowflake
+    config:
+      schema: SLACK_NOTIFICATIONS
     metadata:
       '*':
         replication-method: FULL_TABLE
-    config:
-      schema: SLACK_NOTIFICATIONS
     select:
     - '*singer_activity_notifications.title'
     - '*singer_activity_notifications.body'
@@ -247,6 +247,23 @@ plugins:
     select:
     - '*meltano_activity_notifications.title'
     - '*meltano_activity_notifications.body'
+  - name: tap-snowflake-hubspot-companies
+    inherit_from: tap-snowflake
+    metadata:
+      '*':
+        replication-method: FULL_TABLE
+    select:
+    - '*org_activity.project_org_name'
+    - '*org_activity.project_org_domain'
+    - '*org_activity.project_ids'
+    - '*org_activity.pipeline_runs_l30'
+    - '*org_activity.segments'
+    - '*org_activity.org_first_event_at'
+    - '*org_activity.org_last_event_at'
+    - '*org_activity.org_first_active_date'
+    - '*org_activity.org_last_active_date'
+    - '*org_activity.is_currently_active'
+    - '*org_activity.unique_plugins'
   - name: tap-smoke-test
     variant: meltano
     pip_url: git+https://github.com/meltano/tap-smoke-test.git
