@@ -8,6 +8,11 @@ models:
         tests:
           - unique
           - not_null
+      - name: html_url
+        description: The unique url for the issue.
+        tests:
+          - unique
+          - not_null
       - name: repo_name
         tests:
           - not_null
@@ -24,6 +29,11 @@ models:
     columns:
       - name: pull_request_id
         description: The unique identifier for the PR request.
+        tests:
+          - unique
+          - not_null
+      - name: html_url
+        description: The unique url for the PR request.
         tests:
           - unique
           - not_null

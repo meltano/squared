@@ -1,3 +1,10 @@
+WITH hub_unique AS (
+    SELECT
+        repo,
+        MAX(is_default) AS is_default
+    FROM {{ ref('stg_meltanohub__plugins') }}
+    GROUP BY 1
+)
 SELECT
     'issue' AS contribution_type,
     stg_github_search__issues.organization_name,
@@ -16,7 +23,7 @@ SELECT
     stg_github_search__issues.title,
     stg_github_search__issues.state,
     singer_repo_dim.is_fork,
-    COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
+    COALESCE(hub_unique.is_default, FALSE) AS is_hub_default,
     FALSE AS is_draft_pr,
     stg_github_search__issues.author_username,
     stg_github_search__issues.assignee_username,
@@ -33,7 +40,7 @@ SELECT
         singer_repo_dim.created_at_ts IS NULL,
         FALSE
     ) AS is_ownership_transferred,
-    COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
+    COALESCE(hub_unique.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_github_search__issues') }}
 INNER JOIN {{ ref('singer_repo_dim') }}
     ON
@@ -44,10 +51,10 @@ INNER JOIN {{ ref('singer_repo_dim') }}
         ) AND LOWER(
             stg_github_search__issues.repo_name
         ) = LOWER(singer_repo_dim.repo_name)
-LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
+LEFT JOIN hub_unique
     ON
         LOWER(
-            stg_meltanohub__plugins.repo
+            hub_unique.repo
         ) = LOWER(singer_repo_dim.repo_url)
 LEFT JOIN
     {{ ref('team_github_ids') }} ON
@@ -73,7 +80,7 @@ SELECT
     stg_github_search__pull_requests.title,
     stg_github_search__pull_requests.state,
     singer_repo_dim.is_fork,
-    COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
+    COALESCE(hub_unique.is_default, FALSE) AS is_hub_default,
     COALESCE(stg_github_search__pull_requests.is_draft, FALSE) AS is_draft_pr,
     stg_github_search__pull_requests.author_username,
     stg_github_search__pull_requests.assignee_username,
@@ -90,7 +97,7 @@ SELECT
         singer_repo_dim.created_at_ts IS NULL,
         FALSE
     ) AS is_ownership_transferred,
-    COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
+    COALESCE(hub_unique.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_github_search__pull_requests') }}
 INNER JOIN {{ ref('singer_repo_dim') }}
     ON
@@ -101,10 +108,10 @@ INNER JOIN {{ ref('singer_repo_dim') }}
         ) AND LOWER(
             stg_github_search__pull_requests.repo_name
         ) = LOWER(singer_repo_dim.repo_name)
-LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
+LEFT JOIN hub_unique
     ON
         LOWER(
-            stg_meltanohub__plugins.repo
+            hub_unique.repo
         ) = LOWER(singer_repo_dim.repo_url)
 LEFT JOIN
     {{ ref('team_github_ids') }} ON
@@ -130,7 +137,7 @@ SELECT
     COALESCE(stg_gitlab__issues.title, '') AS title,
     stg_gitlab__issues.state,
     singer_repo_dim.is_fork,
-    COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
+    COALESCE(hub_unique.is_default, FALSE) AS is_hub_default,
     FALSE AS is_draft_pr,
     stg_gitlab__issues.author_username,
     stg_gitlab__issues.assignee_id::STRING AS assignee_username,
@@ -149,7 +156,7 @@ SELECT
         singer_repo_dim.created_at_ts IS NULL,
         FALSE
     ) AS is_ownership_transferred,
-    COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
+    COALESCE(hub_unique.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_gitlab__issues') }}
 INNER JOIN {{ ref('singer_repo_dim') }}
     ON
@@ -160,10 +167,10 @@ INNER JOIN {{ ref('singer_repo_dim') }}
         ) AND LOWER(
             stg_gitlab__issues.project_name
         ) = LOWER(singer_repo_dim.repo_name)
-LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
+LEFT JOIN hub_unique
     ON
         LOWER(
-            stg_meltanohub__plugins.repo
+            hub_unique.repo
         ) = LOWER(singer_repo_dim.repo_url)
 LEFT JOIN
     {{ ref('team_gitlab_ids') }} ON
@@ -189,7 +196,7 @@ SELECT
     COALESCE(stg_gitlab__merge_requests.title, '') AS title,
     stg_gitlab__merge_requests.state,
     singer_repo_dim.is_fork,
-    COALESCE(stg_meltanohub__plugins.is_default, FALSE) AS is_hub_default,
+    COALESCE(hub_unique.is_default, FALSE) AS is_hub_default,
     COALESCE(
         stg_gitlab__merge_requests.is_work_in_progress, FALSE
     ) AS is_draft_pr,
@@ -211,7 +218,7 @@ SELECT
         singer_repo_dim.created_at_ts IS NULL,
         FALSE
     ) AS is_ownership_transferred,
-    COALESCE(stg_meltanohub__plugins.repo IS NOT NULL, FALSE) AS is_hub_listed
+    COALESCE(hub_unique.repo IS NOT NULL, FALSE) AS is_hub_listed
 FROM {{ ref('stg_gitlab__merge_requests') }}
 INNER JOIN {{ ref('singer_repo_dim') }}
     ON
@@ -222,10 +229,10 @@ INNER JOIN {{ ref('singer_repo_dim') }}
         ) AND LOWER(
             stg_gitlab__merge_requests.project_name
         ) = LOWER(singer_repo_dim.repo_name)
-LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
+LEFT JOIN hub_unique
     ON
         LOWER(
-            stg_meltanohub__plugins.repo
+            hub_unique.repo
         ) = LOWER(singer_repo_dim.repo_url)
 LEFT JOIN
     {{ ref('team_gitlab_ids') }} ON
