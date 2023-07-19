@@ -42,6 +42,7 @@ models:
       - name: html_url
         tests:
           - not_null
+          - unique
       - name: last_updated_ts
         tests:
           - not_null
