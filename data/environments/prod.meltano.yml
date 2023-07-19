@@ -24,23 +24,33 @@ environments:
       - name: tap-snowflake-metrics-legacy
         config:
           tables:
-           - MELTANO_HUB.FACT_HUB_METRICS
+          - MELTANO_HUB.FACT_HUB_METRICS
       - name: tap-snowflake-metrics
         config:
           tables:
-           - MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          - MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables:
-           - MELTANO_HUB.HUB_METRICS_AUDIT
+          - MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           tables:
-           - SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
+          - SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
           tables:
           - SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+      - name: tap-snowflake-hubspot-companies
+        config:
+          tables:
+          - HUBSPOT.ORG_ACTIVITY
+          stream_maps:
+            hubspot-org_activity:
+              org_first_active_date: str(record.get('org_first_active_date')[:10])
+                if record.get('org_first_active_date') else None
+              org_last_active_date: str(record.get('org_last_active_date')[:10]) if
+                record.get('org_last_active_date') else None
       loaders:
       - name: target-snowflake
         config:

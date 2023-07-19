@@ -46,19 +46,31 @@ environments:
       - name: tap-snowflake-metrics
         config:
           tables:
-            - ${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          - ${CI_BRANCH}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables:
-            - ${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
+          - ${CI_BRANCH}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           tables:
-            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
+          - ${CI_BRANCH}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
           tables:
-            - ${CI_BRANCH}_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+          - ${CI_BRANCH}_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+      - name: tap-snowflake-hubspot-companies
+        config:
+          tables:
+          - ${CI_BRANCH}_HUBSPOT.ORG_ACTIVITY
+          stream_maps:
+            # TODO: This wont actually work until the nested env vars issue is fixed
+            ${CI_BRANCH}_hubspot-org_activity:
+              org_first_active_date: str(record.get('org_first_active_date')[:10])
+                if record.get('org_first_active_date') else None
+              org_last_active_date: str(record.get('org_last_active_date')[:10]) if
+                record.get('org_last_active_date') else None
+
       loaders:
       - name: target-snowflake
         config:
