@@ -56,3 +56,4 @@ SELECT
 FROM activity
 LEFT JOIN plugins
     ON plugins.project_org_domain = activity.project_org_domain
+WHERE activity.project_org_domain != "-"

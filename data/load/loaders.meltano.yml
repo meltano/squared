@@ -44,3 +44,46 @@ plugins:
   - name: target-jsonl
     variant: andyh1203
     pip_url: target-jsonl
+  - name: target-hubspot
+    variant: meltanolabs
+    pip_url: git+https://github.com/MeltanoLabs/target-hubspot.git
+  - name: target-hubspot-companies
+    inherit_from: target-hubspot
+    config:
+      date_format: YEAR_MONTH_DAY
+      import_operations: UPSERT
+      column_mapping:
+      - columnObjectTypeId: 0-2
+        columnName: project_org_name
+        propertyName: name
+      - columnObjectTypeId: 0-2
+        columnName: project_org_domain
+        propertyName: domain
+        columnType: HUBSPOT_ALTERNATE_ID
+      - columnObjectTypeId: 0-2
+        columnName: project_ids
+        propertyName: telemetry__number_of_projects
+      - columnObjectTypeId: 0-2
+        columnName: unique_plugins
+        propertyName: telemetry__unique_plugins
+      - columnObjectTypeId: 0-2
+        columnName: segments
+        propertyName: telemetry__segments
+      - columnObjectTypeId: 0-2
+        columnName: pipeline_runs_l30
+        propertyName: telemetry__pipeline_runs__30_days_
+      - columnObjectTypeId: 0-2
+        columnName: is_currently_active
+        propertyName: telemetry__currently_active
+      - columnObjectTypeId: 0-2
+        columnName: org_first_event_at
+        propertyName: telemetry__first_event_at
+      - columnObjectTypeId: 0-2
+        columnName: org_last_event_at
+        propertyName: telemetry__last_event_at
+      - columnObjectTypeId: 0-2
+        columnName: org_first_active_date
+        propertyName: telemetry__first_active_at
+      - columnObjectTypeId: 0-2
+        columnName: org_last_active_date
+        propertyName: telemetry__last_active_at
