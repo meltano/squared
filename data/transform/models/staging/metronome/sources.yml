@@ -1,0 +1,14 @@
+config-version: 2
+version: 2
+sources:
+  - name: metronome
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}METRONOME_INTEGRATION'
+    tables:
+      - name: credit_grant_deduction
+      - name: credit_grant
+      - name: credit_type
+      - name: customer
+      - name: invoice
+      - name: line_item
+      - name: sub_line_item
