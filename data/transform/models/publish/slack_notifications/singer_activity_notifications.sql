@@ -19,6 +19,14 @@ WITH most_recent_date AS (
 
 ),
 
+hub_unique AS (
+    SELECT
+        repo,
+        MAX(docs) AS docs
+    FROM {{ ref('stg_meltanohub__plugins') }}
+    GROUP BY 1
+),
+
 base AS (
     SELECT
         ARRAY_AGG(
@@ -78,11 +86,11 @@ base AS (
         ) AS issues_closed
     FROM {{ ref('singer_contributions') }}
     CROSS JOIN most_recent_date
-    LEFT JOIN {{ ref('stg_meltanohub__plugins') }}
+    LEFT JOIN hub_unique
         ON
             LOWER(
                 singer_contributions.repo_url
-            ) = LOWER(stg_meltanohub__plugins.repo)
+            ) = LOWER(hub_unique.repo)
     WHERE singer_contributions.is_bot_user = FALSE
 ),
 
