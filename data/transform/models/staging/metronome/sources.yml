@@ -12,3 +12,4 @@ sources:
       - name: invoice
       - name: line_item
       - name: sub_line_item
+      - name: plan_charge
