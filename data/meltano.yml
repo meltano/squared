@@ -9,3 +9,4 @@ include_paths:
 - ./orchestrate/*.meltano.yml
 - ./transform/*.meltano.yml
 - ./utilities/*.meltano.yml
+- ./mappers/*.meltano.yml

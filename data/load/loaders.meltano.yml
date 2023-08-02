@@ -87,3 +87,12 @@ plugins:
       - columnObjectTypeId: 0-2
         columnName: org_last_active_date
         propertyName: telemetry__last_active_at
+  - name: target-pinecone
+    variant: meltanolabs
+    config:
+      index_name: target-pinecone-index
+      environment: asia-southeast1-gcp-free
+      document_text_property: page_content
+      embeddings_property: embeddings
+      metadata_property: metadata
+      pinecone_metadata_text_key: text

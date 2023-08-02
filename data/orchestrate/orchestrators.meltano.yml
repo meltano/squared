@@ -71,6 +71,10 @@ schedules:
   interval: 0 0 * * *
   job: sample_job
 
+- name: reload_pinecone
+  interval: 0 0 * * 0
+  job: reload_pinecone
+
 jobs:
 
 - name: dynanmodb_el
@@ -177,3 +181,7 @@ jobs:
 - name: sample_job
   tasks:
   - tap-smoke-test target-jsonl
+
+- name: reload_pinecone
+  tasks:
+  - tap-beautifulsoup-sdk clean-text add-embeddings target-pinecone

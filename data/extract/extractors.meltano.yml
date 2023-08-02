@@ -271,3 +271,38 @@ plugins:
       streams:
       - stream_name: animals
         input_filename: https://raw.githubusercontent.com/meltano/tap-smoke-test/main/demo-data/animals-data.jsonl
+  - name: tap-beautifulsoup
+    variant: meltanolabs
+    pip_url: git+https://github.com/meltanolabs/tap-beautifulsoup.git
+  - name: tap-beautifulsoup-sdk
+    inherit_from: tap-beautifulsoup
+    config:
+      source_name: sdk-docs
+      site_url: https://sdk.meltano.com/en/latest/
+      output_folder: output
+      parser: html.parser
+      download_recursively: true
+      find_all_kwargs:
+        attrs:
+          role: main
+  - name: tap-beautifulsoup-edk
+    inherit_from: tap-beautifulsoup
+    config:
+      source_name: edk-docs
+      site_url: https://edk.meltano.com/en/latest/
+      output_folder: output
+      parser: html.parser
+      download_recursively: true
+      find_all_kwargs:
+        attrs:
+          role: main
+  - name: tap-beautifulsoup-meltano
+    inherit_from: tap-beautifulsoup
+    config:
+      source_name: meltano-docs
+      site_url: https://docs.meltano.com/
+      output_folder: output
+      parser: html.parser
+      download_recursively: true
+      find_all_kwargs:
+        text: true
