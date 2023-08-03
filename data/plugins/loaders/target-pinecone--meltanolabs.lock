@@ -1,0 +1,105 @@
+{
+  "plugin_type": "loaders",
+  "name": "target-pinecone",
+  "namespace": "target_pinecone",
+  "variant": "meltanolabs",
+  "label": "Pinecone",
+  "docs": "https://hub.meltano.com/loaders/target-pinecone--meltanolabs",
+  "repo": "https://github.com/MeltanoLabs/target-pinecone",
+  "pip_url": "git+https://github.com/MeltanoLabs/target-pinecone.git",
+  "executable": "target-pinecone",
+  "description": "Vector Database for Vector Search",
+  "logo_url": "https://hub.meltano.com/assets/logos/loaders/pinecone.png",
+  "capabilities": [
+    "about",
+    "schema-flattening",
+    "stream-maps"
+  ],
+  "settings_group_validation": [
+    [
+      "api_key",
+      "document_text_property",
+      "index_name",
+      "pinecone_metadata_text_key"
+    ]
+  ],
+  "settings": [
+    {
+      "name": "api_key",
+      "kind": "password",
+      "label": "API Key",
+      "description": "Your Pinecone API key."
+    },
+    {
+      "name": "dimensions",
+      "kind": "integer",
+      "value": 1536,
+      "label": "Dimensions",
+      "description": "The amount of dimensions to use if creating a new index. An index is only created if it doesn't already exist. The default is `1536` which is the dimensions of the embeddings using OpenAI's text-embedding-ada-002 model."
+    },
+    {
+      "name": "document_text_property",
+      "kind": "string",
+      "value": "text",
+      "label": "Document Text Property",
+      "description": "The property containing the document text in the input records."
+    },
+    {
+      "name": "embeddings_property",
+      "kind": "string",
+      "value": "embeddings",
+      "label": "Embeddings Property",
+      "description": "The property containing the embeddings in the input records."
+    },
+    {
+      "name": "environment",
+      "kind": "string",
+      "label": "Environment",
+      "description": "Your Pinecone index name to write data to."
+    },
+    {
+      "name": "flattening_enabled",
+      "kind": "boolean",
+      "label": "Flattening Enabled",
+      "description": "'True' to enable schema flattening and automatically expand nested properties."
+    },
+    {
+      "name": "flattening_max_depth",
+      "kind": "integer",
+      "label": "Flattening Max Depth",
+      "description": "The max depth to flatten schemas."
+    },
+    {
+      "name": "index_name",
+      "kind": "string",
+      "label": "Index Name",
+      "description": "Your Pinecone index name to write data to."
+    },
+    {
+      "name": "metadata_property",
+      "kind": "string",
+      "value": "metadata",
+      "label": "Metadata Property",
+      "description": "The property containing the document metadata in the input records."
+    },
+    {
+      "name": "pinecone_metadata_text_key",
+      "kind": "password",
+      "value": "text",
+      "label": "Pinecone Metadata Text Key",
+      "description": "The key in the Pinecone metadata entry that will contain the text document."
+    },
+    {
+      "name": "stream_map_config",
+      "kind": "object",
+      "label": "Stream Map Config",
+      "description": "User-defined config values to be used within map expressions."
+    },
+    {
+      "name": "stream_maps",
+      "kind": "object",
+      "label": "Stream Maps",
+      "description": "Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html)."
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+plugins:
+  mappers:
+  - name: meltano-map-transformer
+    variant: meltano
+    pip_url: git+https://github.com/MeltanoLabs/meltano-map-transform.git@v0.0.4
+    mappings:
+    - name: coalesce-gcp-ips
+      config:
+        stream_maps:
+          gcp_ips:
+            ipv4prefix:
+            ipv6prefix:
+            ipv4: record.get('ipv4prefix', '')
+            ipv6: record.get('ipv6prefix', '')
+            id: md5(record.get('ipv4prefix', record.get('ipv6prefix')))
+  - name: map-gpt-embeddings
+    namespace: map_gpt_embeddings
+    pip_url: git+https://github.com/MeltanoLabs/map-gpt-embeddings.git@tap_mapper
+    executable: map-gpt-embeddings
+    mappings:
+    - name: add-embeddings
+      config:
+        document_text_property: page_content
+        document_metadata_property: metadata
+  - name: mapper-generic
+    namespace: mapper_generic
+    pip_url: git+https://github.com/pnadolny13/mapper-generic.git
+    executable: mapper-generic
+    mappings:
+    - name: clean-text
+      config:
+        code_path: mappers/clean_text.py
