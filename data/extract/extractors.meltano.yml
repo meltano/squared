@@ -14,7 +14,6 @@ plugins:
       tables:
       - workload-metadata-table
       - projects-table
-      - project-schedules-table
       - organizations-table
       - project-deployments-table
       stream_maps:
@@ -22,8 +21,6 @@ plugins:
           __alias__: workload_metadata_table
         projects-table:
           __alias__: projects_table
-        project-schedules-table:
-          __alias__: project_schedules_table
         project-deployments-table:
           __alias__: project_deployments_table
         organizations-table:
