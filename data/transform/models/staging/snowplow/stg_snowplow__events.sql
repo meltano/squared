@@ -88,7 +88,7 @@ renamed AS (
         v_collector,
         v_etl,
         user_id,
-        user_ipaddress,
+        NULLIF(user_ipaddress, 'unknown') AS user_ipaddress,
         user_fingerprint,
         domain_userid,
         domain_sessionidx,
@@ -202,7 +202,7 @@ renamed AS (
         event_format,
         event_version,
         event_fingerprint,
-        MD5(user_ipaddress) AS ip_address_hash,
+        MD5(NULLIF(user_ipaddress, 'unknown')) AS ip_address_hash,
         snowplow_bad_parsed
     FROM clean_new_source
 
