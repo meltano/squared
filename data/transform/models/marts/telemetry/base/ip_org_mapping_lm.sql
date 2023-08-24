@@ -12,6 +12,7 @@ WITH base AS (
     LEFT JOIN {{ ref('context_identify') }}
         ON stg_snowplow__events.event_id = context_identify.event_id
     WHERE context_identify.leadmagic_company_name IS NOT NULL
+    AND stg_snowplow__events.ip_address_hash IS NOT NULL
 )
 
 SELECT DISTINCT
