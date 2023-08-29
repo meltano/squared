@@ -7,6 +7,7 @@ WITH unique_ips AS (
         user_ipaddress,
         ip_address_hash
     FROM {{ ref('stg_snowplow__events') }}
+    WHERE ip_address_hash IS NOT NULL
 ),
 
 parsed AS (

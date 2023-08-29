@@ -14,7 +14,6 @@ plugins:
       tables:
       - workload-metadata-table
       - projects-table
-      - project-schedules-table
       - organizations-table
       - project-deployments-table
       stream_maps:
@@ -22,8 +21,6 @@ plugins:
           __alias__: workload_metadata_table
         projects-table:
           __alias__: projects_table
-        project-schedules-table:
-          __alias__: project_schedules_table
         project-deployments-table:
           __alias__: project_deployments_table
         organizations-table:
@@ -74,7 +71,7 @@ plugins:
         start_date: '2020-01-01T00:00:00Z'
         key_properties: [id]
         name: azure_ips
-        pattern: ServiceTags_Public_20230807.json
+        pattern: ServiceTags_Public_20230821.json
         json_path: values
   - name: tap-slack
     variant: meltanolabs
