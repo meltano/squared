@@ -71,7 +71,7 @@ plugins:
         start_date: '2020-01-01T00:00:00Z'
         key_properties: [id]
         name: azure_ips
-        pattern: ServiceTags_Public_20230821.json
+        pattern: ServiceTags_Public_20230903.json
         json_path: values
   - name: tap-slack
     variant: meltanolabs
