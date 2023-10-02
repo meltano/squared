@@ -56,15 +56,15 @@ schedules:
   job: google_analytics_el
 
 - name: hub_metrics_publish
-  interval: 0 12 * * *
+  interval: 0 12 * * 1,3,5
   job: hub_metrics_publish
 
 - name: marts_refresh
-  interval: 0 8 * * *
+  interval: 0 8 * * 1,3,5
   job: marts_refresh
 
 - name: hubspot_publish
-  interval: 0 12 * * *
+  interval: 0 12 * * 1,3,5
   job: hubspot_publish
 
 - name: sample_schedule
