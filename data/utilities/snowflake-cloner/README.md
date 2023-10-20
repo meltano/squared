@@ -25,3 +25,25 @@ This project was generated with [copier](https://copier.readthedocs.io/en/stable
 Answers to the questions asked during the generation process are stored in the `.copier_answers.yml` file.
 
 Removing this file can potentially cause unwanted changes to the project if the supplied answers differ from the original when using `copier update`.
+
+## Using with Meltano
+After the utility is installed you will need to configure it in meltano.
+
+1) Specify config in your meltano.yml file -- usually a .yml file you have created for development like dev.meltano.yml
+
+```
+      utilities:
+      - name: snowflake-cloner
+        config:
+           clone_from_db_raw: RAW
+           clone_to_db_raw: DEV_TEST
+           account: xyzabc.us-east-1
+           user: ${USER_PREFIX}
+           password: ${SNOWFLAKE_PASSWORD}
+           role: loader
+           warehouse: GENERAL_WH
+           threads: 1
+           schema_prefix: ${USER_PREFIX}_
+```
+2) ensure you set the ```$USER_PREFIX``` and ```$SNOWFLAKE_PASSWORD``` variables in your .env file
+3) run using ```meltano run snowflake-cloner:clone_raw``` replace raw with prep or prod to use the default commands. See the utilities/snowflakecloner/utilities_meltano.yml file to understand the ```clone``` command configuration or add your own command. 
