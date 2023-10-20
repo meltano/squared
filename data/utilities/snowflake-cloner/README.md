@@ -46,4 +46,4 @@ After the utility is installed you will need to configure it in meltano.
            schema_prefix: ${USER_PREFIX}_
 ```
 2) ensure you set the ```$USER_PREFIX``` and ```$SNOWFLAKE_PASSWORD``` variables in your .env file
-3) run using ```meltano run snowflake-cloner:clone_raw``` replace raw with prep or prod to use the default commands. See the utilities/snowflakecloner/utilities_meltano.yml file to understand the ```clone``` command configuration or add your own command. 
+3) run using ```meltano run snowflake-cloner:clone_raw``` replace raw with prep or prod to use another one of the default commands. See the utilities/snowflakecloner/utilities_meltano.yml file to understand the ```clone``` command configuration or add your own command. 
