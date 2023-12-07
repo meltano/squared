@@ -218,6 +218,9 @@ plugins:
     - '*fact_variant_hub_metrics.success_execs_by_name'
     - '*fact_variant_hub_metrics.success_execs_unstruct_by_name'
     - '*fact_variant_hub_metrics.success_execs_unstruct_by_variant'
+    config:
+      tables:
+      - MELTANO_HUB.FACT_VARIANT_HUB_METRICS
   - name: tap-snowflake-audit
     inherit_from: tap-snowflake
     metadata:
@@ -226,10 +229,15 @@ plugins:
     select:
     - '*hub_metrics_audit.updated_date'
     - '*hub_metrics_audit.metric_type'
+    config:
+      tables:
+      - MELTANO_HUB.HUB_METRICS_AUDIT
   - name: tap-snowflake-singer-activity
     inherit_from: tap-snowflake
     config:
       schema: SLACK_NOTIFICATIONS
+      tables:
+      - SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
     metadata:
       '*':
         replication-method: FULL_TABLE
@@ -244,6 +252,9 @@ plugins:
     select:
     - '*meltano_activity_notifications.title'
     - '*meltano_activity_notifications.body'
+    config:
+      tables:
+      - SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
   - name: tap-snowflake-hubspot-companies
     inherit_from: tap-snowflake
     metadata:
