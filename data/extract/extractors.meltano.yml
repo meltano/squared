@@ -27,7 +27,7 @@ plugins:
           __alias__: organizations_table
   - name: tap-cloudwatch
     variant: meltanolabs
-    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.4.0
+    pip_url: git+https://github.com/meltanolabs/tap-cloudwatch.git@0.4.1
     config:
       log_group_name: API-Gateway-Execution-Logs_i32s35df22/prod
       query: fields @timestamp, @message
