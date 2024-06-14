@@ -56,6 +56,8 @@ models:
         +schema: github_meltano
       meltanohub:
         +schema: meltanohub
+      metronome:
+        +schema: metronome
       slack:
         +schema: slack
       snowplow:
