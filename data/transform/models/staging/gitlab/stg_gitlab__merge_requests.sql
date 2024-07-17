@@ -1,5 +1,3 @@
-{{ config(materialized='table') }}
-
 WITH source_meltano AS (
 
     SELECT
