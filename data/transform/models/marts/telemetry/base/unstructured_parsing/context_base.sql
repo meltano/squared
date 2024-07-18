@@ -18,6 +18,8 @@ WHERE
     event_unstruct.contexts IS NOT NULL
     AND context.value:schema::STRING
     != 'iglu:com.snowplowanalytics.snowplow/web_page/jsonschema/1-0-0'
+    -- limit to last 6 months for performance purposes
+    AND event_unstruct.event_created_at::DATE > DATEADD(MONTH, -6, CURRENT_DATE())
 
 {% if is_incremental() %}
 
