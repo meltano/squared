@@ -23,14 +23,14 @@ clean-targets:
 - dbt_packages
 - logs
 
-on-run-end: "{% if target.name in ('prod', 'cicd') %}{{ dbt_artifacts.upload_results(results) }}{% endif %}"
+on-run-end: "{% if target.name in ('prod', 'cicd') %} {{ dbt_artifacts.upload_results(results) }} {% endif %}"
 
 seeds:
   quote_columns: false
   +schema: SEED
 
 snapshots:
-  target_database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+  target_database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
   target_schema: snapshots
   transient: false
 
@@ -41,7 +41,7 @@ models:
     # Staging
     # ------------------
     staging:
-      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
       cloudwatch:
         +schema: cloudwatch
       dynamodb:
@@ -77,7 +77,7 @@ models:
     # Common
     # ------------------
     common:
-      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
       +schema: workspace
       +materialized: view
     # ------------------
@@ -87,21 +87,21 @@ models:
       +materialized: table
       telemetry:
         base:
-          +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+          +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
           +schema: workspace
           +materialized: view
         +schema: telemetry
       community:
         base:
-          +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+          +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
           +schema: workspace
           +materialized: view
         +schema: community
   dbt_artifacts:
     +schema: dbt_artifacts
     staging:
-      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
       +schema: dbt_artifacts
     sources:
-      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP') }}"
+      +database: "{{ env_var('DBT_SNOWFLAKE_DATABASE_PREP', 'PREP') }}"
       +schema: "{{ env_var('DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX', '') }}SOURCE_DBT_ARTIFACTS"
