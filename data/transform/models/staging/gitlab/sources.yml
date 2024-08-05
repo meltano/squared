@@ -2,14 +2,14 @@ config-version: 2
 version: 2
 sources:
   - name: tap_gitlab
-    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW", "RAW") }}'
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_GITLAB'
     tables:
       - name: issues
       - name: merge_requests
       - name: projects
   - name: tap_gitlab_hotglue
-    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW", "RAW") }}'
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_GITLAB_HOTGLUE'
     tables:
       - name: issues

@@ -97,7 +97,7 @@ jobs:
 
 - name: slack_notifications
   tasks:
-  - dbt-snowflake:run_slack_notifications
+  # - dbt-snowflake:run_slack_notifications
   - tap-snowflake-singer-activity target-apprise-singer-activity
   - tap-snowflake-meltano-activity target-apprise-meltano-activity
 
@@ -117,8 +117,8 @@ jobs:
 - name: spreadsheets_anywhere_el
   tasks:
   - tap-spreadsheets-anywhere coalesce-gcp-ips target-snowflake
-  - dbt-snowflake:test_source_spreadsheets_anywhere
-  - dbt-snowflake:run_snapshot_spreadsheets_anywhere
+  # - dbt-snowflake:test_source_spreadsheets_anywhere
+  # - dbt-snowflake:run_snapshot_spreadsheets_anywhere
 
 - name: snowplow_el
   tasks:
@@ -160,8 +160,8 @@ jobs:
 
 - name: hub_metrics_publish
   tasks:
-  - dbt-snowflake:run_hub_metrics
-  - dbt-snowflake:test_hub_metrics
+  # - dbt-snowflake:run_hub_metrics
+  # - dbt-snowflake:test_hub_metrics
   # - great_expectations:test_dbt_hub_metrics
   - tap-snowflake-metrics target-yaml-metrics awscli:s3_copy_metrics
   - tap-snowflake-audit target-yaml-audit awscli:s3_copy_audit

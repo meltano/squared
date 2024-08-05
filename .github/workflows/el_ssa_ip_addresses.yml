@@ -1,0 +1,31 @@
+name: Meltano - Spreadsheets Anywhere IP Addresses
+
+on:
+  schedule:
+    - cron:  '0 10 * * *'
+
+  workflow_dispatch:
+
+jobs:
+  el_ssa_ip_addresses:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data/
+    environment: prod
+    env:
+      MELTANO_ENVIRONMENT: prod
+      MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
+      SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        cache: 'pip'
+    - run: pip install -r requirements.txt
+    - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
+    # Install Plugins
+    - run: meltano install --schedule=spreadsheets_anywhere_el
+    # Run Test
+    - run: meltano run spreadsheets_anywhere_el
