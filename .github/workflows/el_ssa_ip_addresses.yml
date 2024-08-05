@@ -2,7 +2,7 @@ name: Meltano - Spreadsheets Anywhere IP Addresses
 
 on:
   schedule:
-    - cron:  '0 10 * * *'
+    - cron:  '0 8 * * *'
 
   workflow_dispatch:
 
