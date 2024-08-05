@@ -2,14 +2,14 @@ config-version: 2
 version: 2
 sources:
   - name: tap_slack
-    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW", "RAW") }}'
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_SLACK'
     tables:
       - name: users
       - name: messages
       - name: channels
   - name: tap_slack_public
-    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW") }}'
+    database: '{{ env_var("DBT_SNOWFLAKE_DATABASE_RAW", "RAW") }}'
     schema: '{{ env_var("DBT_SNOWFLAKE_SOURCE_SCHEMA_PREFIX", "") }}TAP_SLACK_PUBLIC'
     tables:
       - name: messages
