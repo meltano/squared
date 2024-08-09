@@ -28,6 +28,7 @@ WITH base AS (
     FROM {{ ref('context_base') }}
     WHERE
         schema_name LIKE 'iglu:com.meltano/project_context/%'
+        AND context_base.event_created_at::DATE > DATEADD(MONTH, -6, CURRENT_DATE())
     GROUP BY 1
 
 )

@@ -15,6 +15,7 @@ WITH base_1_0_0 AS (
         MAX(SPLIT_PART(schema_name, '/', -1)) AS schema_version
     FROM {{ ref('context_base') }}
     WHERE schema_name = 'iglu:com.meltano/cli_context/jsonschema/1-0-0'
+        AND context_base.event_created_at::DATE > DATEADD(MONTH, -6, CURRENT_DATE())
     GROUP BY 1
 ),
 
@@ -51,6 +52,7 @@ base_1_1_0_onward AS (
     WHERE
         schema_name LIKE 'iglu:com.meltano/cli_context/%'
         AND schema_name != 'iglu:com.meltano/cli_context/jsonschema/1-0-0'
+        AND context_base.event_created_at::DATE > DATEADD(MONTH, -6, CURRENT_DATE())
     GROUP BY 1
 
 )
