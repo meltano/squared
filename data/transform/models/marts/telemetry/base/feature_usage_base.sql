@@ -16,6 +16,7 @@ elt_state AS (
     WHERE
         cli_command = 'elt'
         AND NULLIF(
+            -- WARNING: this is likely not accurate anymore 
             TRIM(GET(COALESCE(GET(options_obj, 'elt'), { }), 'state')), 'null'
         ) IS NOT NULL
 

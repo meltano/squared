@@ -298,9 +298,6 @@ models:
 
       - name: exception_cause
 
-      - name: event_states
-        description: A list of events states that occured during the CLI execution (e.g. started, completed, failed, etc.)
-
       - name: event_block_types
         description: A list of the type of block events that were received. 
 
