@@ -2,13 +2,14 @@ WITH first_values AS (
 
     SELECT DISTINCT
         project_id,
-        FIRST_VALUE(
-            CASE WHEN is_exec_event = TRUE THEN options_obj END
-        ) IGNORE NULLS OVER (
-            PARTITION BY
-                project_id
-            ORDER BY COALESCE(started_ts, finished_ts) ASC
-        ):elt:state::STRING AS first_elt_state,
+        -- FIRST_VALUE(
+        --     CASE WHEN is_exec_event = TRUE THEN options_obj END
+        -- ) IGNORE NULLS OVER (
+        --     PARTITION BY
+        --         project_id
+        --     ORDER BY COALESCE(started_ts, finished_ts) ASC
+        -- ):elt:state::STRING
+        NULL AS first_elt_state,
         FIRST_VALUE(
             CASE
                 WHEN cli_command != 'init'
@@ -31,13 +32,14 @@ WITH first_values AS (
                 project_id
             ORDER BY COALESCE(started_ts, finished_ts) ASC
         ) AS last_meltano_version,
-        FIRST_VALUE(
-            options_obj:init:project_directory
-        ) IGNORE NULLS OVER (
-            PARTITION BY
-                project_id
-            ORDER BY COALESCE(started_ts, finished_ts) ASC
-        ) AS first_project_directory
+        -- FIRST_VALUE(
+        --     options_obj:init:project_directory
+        -- ) IGNORE NULLS OVER (
+        --     PARTITION BY
+        --         project_id
+        --     ORDER BY COALESCE(started_ts, finished_ts) ASC
+        -- ) 
+        NULL AS first_project_directory
     FROM {{ ref('cli_executions_base') }}
 
 ),
