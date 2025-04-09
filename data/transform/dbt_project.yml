@@ -18,10 +18,6 @@ snapshot-paths:
 target-path: ../.meltano/transformers/dbt/target
 log-path: logs
 packages-install-path: dbt_packages
-clean-targets:
-- ../.meltano/transformers/dbt/target
-- dbt_packages
-- logs
 
 on-run-end: "{% if target.name in ('prod', 'cicd') %} {{ dbt_artifacts.upload_results(results) }} {% endif %}"
 
