@@ -18,8 +18,8 @@ jobs:
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
       with:
         python-version: '3.8'
         cache: 'pip'
@@ -40,15 +40,15 @@ jobs:
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
       with:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Add SSH key for accessing private dbt package repo
-    - uses: webfactory/ssh-agent@v0.7.0
+    - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
@@ -68,15 +68,15 @@ jobs:
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
       with:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Add SSH key for accessing private dbt package repo
-    - uses: webfactory/ssh-agent@v0.7.0
+    - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
@@ -98,8 +98,8 @@ jobs:
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
       with:
         python-version: '3.8'
         cache: 'pip'
@@ -110,7 +110,7 @@ jobs:
     - run: echo "DEFAULT_START_DATE_2HR=$(date +'%Y-%m-%d %H:%M:%S' -d '2 hours ago')" >> $GITHUB_ENV
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Add SSH key for accessing private dbt package repo
-    - uses: webfactory/ssh-agent@v0.7.0
+    - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Install Plugins
@@ -130,15 +130,15 @@ jobs:
       MELTANO_SEND_ANONYMOUS_USAGE_STATS: 'false'
       CI_BRANCH: 'b${{ github.SHA }}'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
       with:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Add SSH key for accessing private dbt package repo
-    - uses: webfactory/ssh-agent@v0.7.0
+    - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Run Test
@@ -161,15 +161,15 @@ jobs:
       TAP_SNOWFLAKE_SINGER_ACTIVITY: '["b${{ github.SHA }}_MELTANO_HUB.SINGER_ACTIVITY_NOTIFICATIONS"]'
       TAP_SNOWFLAKE_MELTANO_ACTIVITY: '["b${{ github.SHA }}_MELTANO_HUB.MELTANO_ACTIVITY_NOTIFICATIONS"]'
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+    - uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # v5.4.0
       with:
         python-version: '3.8'
         cache: 'pip'
     - run: pip install -r requirements.txt
     - run: echo "${{secrets.MELTANO_ENV_FILE }}" > .env
     # Add SSH key for accessing private dbt package repo
-    - uses: webfactory/ssh-agent@v0.7.0
+    - uses: webfactory/ssh-agent@dc588b651fe13675774614f8e6a936a468676387 # v0.9.0
       with:
           ssh-private-key: ${{ secrets.GIT_SSH_PRIVATE_KEY }}
     # Install Plugins
