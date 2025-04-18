@@ -24,27 +24,26 @@ environments:
           user: ${USER_PREFIX}
           role: ${USER_PREFIX}
           warehouse: CORE
-      # https://github.com/meltano/meltano/issues/3171 is blocking templating from working so I had to hardcode the user prefix
       - name: tap-snowflake-metrics
         config:
           tables:
-          - PNADOLNY_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
+          - ${USER_PREFIX}_MELTANO_HUB.FACT_VARIANT_HUB_METRICS
       - name: tap-snowflake-audit
         config:
           tables:
-          - PNADOLNY_MELTANO_HUB.HUB_METRICS_AUDIT
+          - ${USER_PREFIX}_MELTANO_HUB.HUB_METRICS_AUDIT
       - name: tap-snowflake-singer-activity
         config:
           tables:
-          - PNADOLNY_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
+          - ${USER_PREFIX}_SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-meltano-activity
         config:
           tables:
-          - PNADOLNY_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
+          - ${USER_PREFIX}_SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-hubspot-companies
         config:
           tables:
-          - PNADOLNY_HUBSPOT.ORG_ACTIVITY
+          - ${USER_PREFIX}_HUBSPOT.ORG_ACTIVITY
           stream_maps:
             pnadolny_hubspot-org_activity:
               org_first_active_date: str(record.get('org_first_active_date')[:10])

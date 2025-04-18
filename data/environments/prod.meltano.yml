@@ -21,26 +21,6 @@ environments:
           user: MELTANO
           role: REPORTER
           warehouse: REPORTER
-      - name: tap-snowflake-metrics-legacy
-        config:
-          tables:
-          - MELTANO_HUB.FACT_HUB_METRICS
-      - name: tap-snowflake-metrics
-        config:
-          tables:
-          - MELTANO_HUB.FACT_VARIANT_HUB_METRICS
-      - name: tap-snowflake-audit
-        config:
-          tables:
-          - MELTANO_HUB.HUB_METRICS_AUDIT
-      - name: tap-snowflake-singer-activity
-        config:
-          tables:
-          - SLACK_NOTIFICATIONS.SINGER_ACTIVITY_NOTIFICATIONS
-      - name: tap-snowflake-meltano-activity
-        config:
-          tables:
-          - SLACK_NOTIFICATIONS.MELTANO_ACTIVITY_NOTIFICATIONS
       - name: tap-snowflake-hubspot-companies
         config:
           tables:
